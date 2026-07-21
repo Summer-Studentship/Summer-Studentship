@@ -6,21 +6,15 @@ development, headless Docker/CI validation, and release packaging.
 ## 1. Clone
 
 ```sh
-git clone https://github.com/Helios-MEOW/Summer-Studentship.git
+git clone https://github.com/Summer-Studentship/Summer-Studentship.git
 cd Summer-Studentship
 ```
 
-If using mathplot targets:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/bootstrap_external.ps1
-```
-
-or on Linux/macOS:
-
-```sh
-sh scripts/bootstrap_external.sh
-```
+Restore C++ packages from the repository manifest by following
+[`dependencies.md`](dependencies.md). There is no external mathplot checkout or
+bootstrap step. Optional diagnostic plotting uses the `diagnostics` manifest
+feature and remains disabled until its external backend is approved and smoke
+tested.
 
 ## 2. Configure Locally
 
@@ -53,21 +47,20 @@ VCPKG_ROOT
 
 ## 3. Build During Development
 
-For the Windows GUI:
+The existing MinGW commands are pre-WBS development routes:
 
 ```powershell
 cmake --preset windows-mingw-vcpkg
 cmake --build --preset windows-mingw-vcpkg-debug
 ```
 
-For the all-dependencies package route:
+Do not use `windows-mingw-vcpkg-all`: it still names removed vcpkg
+`visualization;gui` features. Shared developer/release/CI preset selection and
+the accepted MSVC Windows route are pending `SWE-ENV-PRS-WP1`; target migration
+is pending `SWE-ENV-BLD-WP1`.
 
-```powershell
-cmake --preset windows-mingw-vcpkg-all
-cmake --build --preset windows-mingw-vcpkg-all-debug
-```
-
-For the portable headless core:
+The Docker build is also pre-WBS evidence, not yet the authorised clean-clone
+smoke test:
 
 ```sh
 docker build -t summer-studentship-build-check .
@@ -105,14 +98,17 @@ tiny curated examples under `data/examples/`.
 
 ## 6. Before Sharing Work
 
-Run the native build you changed. For the usual GUI path:
+Run the native build relevant to the change. The existing MinGW GUI command is
+available only as historical prototype validation until the preset Work Package
+replaces it:
 
 ```powershell
 cmake --build --preset windows-mingw-vcpkg-debug
 ```
 
-Use `windows-mingw-vcpkg-all-debug` only when validating the heavier vcpkg GUI
-or visualisation manifest feature set.
+Do not use the historical `windows-mingw-vcpkg-all-debug` route. Inspect optional
+dependency groups directly with the manifest commands in `dependencies.md`
+until `SWE-ENV-PRS-WP1` provides supported feature-aware presets.
 
 Run the portability check:
 

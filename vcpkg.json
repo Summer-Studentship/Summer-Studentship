@@ -1,52 +1,82 @@
 {
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
   "name": "tsunami-barrier-studio",
   "version-string": "0.1.0",
   "dependencies": [
+    "cli11",
     "eigen3",
+    "fmt",
     {
       "name": "hdf5",
+      "default-features": false,
       "features": [
-        "cpp",
-        "hl",
         "zlib"
       ]
     },
-    "highfive",
-    "nlohmann-json"
-  ],
-  "features": {
-    "visualization": {
-      "description": "OpenGL/mathplot dependencies for native C++ plotting and visualisation targets.",
-      "dependencies": [
-        "armadillo",
-        {
-          "name": "freetype",
-          "default-features": false
-        },
-        "glfw3",
-        "opengl",
-        "rapidxml"
+    "nlohmann-json",
+    "pugixml",
+    {
+      "name": "spdlog",
+      "default-features": false,
+      "features": [
+        "fmt"
       ]
     },
-    "gui": {
-      "description": "Qt dependencies when Qt is provided by vcpkg rather than by the Qt online installer.",
+    "yaml-cpp"
+  ],
+  "features": {
+    "diagnostics": {
+      "description": "Optional Matplot++ diagnostics adapter; not a production field visualiser.",
       "dependencies": [
         {
-          "name": "qtbase",
+          "name": "matplotplusplus",
+          "default-features": false
+        }
+      ]
+    },
+    "geospatial": {
+      "description": "Production geospatial import and coordinate transformation dependencies; feature-gated until the owning targets exist.",
+      "dependencies": [
+        {
+          "name": "gdal",
+          "default-features": false
+        },
+        {
+          "name": "proj",
           "default-features": false,
           "features": [
-            "freetype",
-            "gui",
-            "opengl",
-            "png",
-            "widgets"
+            "tiff"
           ]
-        },
-        "qtdeclarative",
-        "qtquick3d",
-        "qtquicktimeline",
-        "qtshadertools"
+        }
+      ]
+    },
+    "netcdf": {
+      "description": "Optional direct netCDF-C ingestion; enable only when GDAL cannot preserve required multidimensional data or metadata.",
+      "dependencies": [
+        {
+          "name": "netcdf-c",
+          "default-features": false,
+          "features": [
+            "netcdf-4"
+          ]
+        }
+      ]
+    },
+    "tests": {
+      "description": "Catch2 unit and benchmark test framework.",
+      "dependencies": [
+        "catch2"
       ]
     }
-  }
+  },
+  "overrides": [
+    {
+      "name": "hdf5",
+      "version": "1.14.6"
+    },
+    {
+      "name": "netcdf-c",
+      "version": "4.9.3"
+    }
+  ]
 }

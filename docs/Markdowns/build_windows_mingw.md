@@ -1,6 +1,8 @@
-# Windows Build With Qt MinGW
+# Historical Windows Build With Qt MinGW
 
-This is the native Windows route for day-to-day GUI development.
+This records the pre-WBS native Windows prototype route. The accepted stack uses
+MSVC as the primary supported Windows compiler; shared replacement presets are
+owned by `SWE-ENV-PRS-WP1`. Do not treat this page as release authority.
 
 ## Required Tools
 
@@ -36,11 +38,11 @@ $env:VCPKG_MAX_CONCURRENCY = "2"
 $env:PATH = "$env:MINGW_ROOT/bin;C:/Qt/Tools/Ninja;$env:PATH"
 ```
 
-Restore external source dependencies when using mathplot:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/bootstrap_external.ps1
-```
+Restore package dependencies only through `vcpkg.json`, following
+[`dependencies.md`](dependencies.md). The superseded external mathplot checkout
+has no bootstrap step. Optional plotting is the disabled-by-default
+`diagnostics` manifest group and has a separately recorded Gnuplot backend
+decision.
 
 ## Configure And Build
 
@@ -51,16 +53,11 @@ cmake --preset windows-mingw-vcpkg
 cmake --build --preset windows-mingw-vcpkg-debug
 ```
 
-All-dependencies package route, including the vcpkg GUI and visualisation
-manifest features:
-
-```powershell
-cmake --preset windows-mingw-vcpkg-all
-cmake --build --preset windows-mingw-vcpkg-all-debug
-```
-
-The all-dependencies preset makes vcpkg responsible for additional packages. It
-does not add new CMake targets by itself.
+The existing `windows-mingw-vcpkg-all` configure/build presets and the
+`-Visualization` switch in `scripts/build_windows_qt.ps1` select removed
+`visualization;gui` features. They are unsupported historical names pending
+`SWE-ENV-PRS-WP1`; Qt is now acquired only through the Qt installer/Maintenance
+Tool, never through a vcpkg GUI feature.
 
 Run/debug from VS Code through CMake Tools or through the checked launch
 configuration. Avoid the C++ extension's raw "build active file" action because

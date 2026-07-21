@@ -1,9 +1,9 @@
 # Linux And Docker Build
 
-Docker is the reproducibility check for the non-GUI core. It checks that a
-clean Linux image can configure the project with the vcpkg toolchain, discover
-manifest dependencies, compile the configured targets, and invoke CTest without
-depending on a developer workstation.
+Docker is the pre-WBS portability check for the non-GUI core. It exercises a
+clean Linux image, but it is not yet the authorised clean-clone smoke test;
+replacement target/preset/smoke evidence belongs to `SWE-ENV-BLD-WP1`,
+`SWE-ENV-PRS-WP1` and `SWE-ENV-SMK-WP1`.
 
 ## Build The Image
 
@@ -16,8 +16,12 @@ docker build -t summer-studentship-build-check .
 The Dockerfile:
 
 - installs compiler, CMake, Ninja, Git, and archive tools
-- clones vcpkg to `/opt/vcpkg`
-- checks out the pinned vcpkg baseline
+- clones the vcpkg tool to `/opt/vcpkg`
+- checks out exact vcpkg **tool** commit
+  `cea592f4772491abdb7c483387a59ea89889f4be`; package/port resolution is
+  separately governed by the exact default-registry baseline
+  `d015e31e90838a4c9dfa3eed45979bc70d9357fc` in
+  `vcpkg-configuration.json`
 - configures `linux-vcpkg-headless` with
   `CMAKE_TOOLCHAIN_FILE=$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake`
 - builds `linux-vcpkg-headless-build`
@@ -51,7 +55,9 @@ TSUNAMI_BUILD_MATPLOT_SMOKE
 TSUNAMI_BUILD_TESTS
 ```
 
-That is intentional. GUI builds and interactive plotting should be checked
-natively on developer machines, while Docker checks the portable numerical core.
-The Linux GUI preset, `linux-gui-debug`, uses system Qt while the shared Linux
-vcpkg toolchain remains available for non-Qt manifest dependencies.
+That reflects the historical target scaffold. Optional plotting now comes from
+the `diagnostics` manifest group and remains disabled until its external backend
+is approved and smoke tested. The Linux GUI preset, `linux-gui-debug`, uses
+system Qt while the shared Linux vcpkg toolchain remains available for non-Qt
+manifest dependencies. Shared replacement presets are pending
+`SWE-ENV-PRS-WP1`.
