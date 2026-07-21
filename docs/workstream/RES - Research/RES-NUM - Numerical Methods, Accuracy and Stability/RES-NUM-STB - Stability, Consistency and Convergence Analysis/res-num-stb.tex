@@ -1,0 +1,325 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-STB
+% Deliverable: Stability, Consistency and Convergence Analysis
+% Status: In progress
+% Evidence status: Local URANS--VOF boundedness and convergence requirements established
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-NUM-FRM, RES-NUM-TIM, RES-NUM-SPEC
+% Downstream interfaces: RES-VER-CNV, RES-VER-MET, Software solver controls
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-STB --- Stability, Consistency and Convergence Analysis}
+\label{sec:res-num-stb}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-stb-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable records stability, boundedness and convergence
+requirements for the local three-dimensional URANS--VOF finite-volume
+model. It defines numerical acceptance checks; it does not replace
+physical validation against observations or experiments.
+
+\subsection{Research Questions}
+\label{sec:res-num-stb-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-stb-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-stb-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{hirt1981vof}, \textcite{roenby2016computational} and
+\textcite{vukcevic2018sharp} are retained for VOF boundedness,
+interface sharpness and finite-volume phase conservation. Source role:
+`3D-VOF`. \textcite{issa1986operator} is retained for pressure
+correction and residual convergence in segregated incompressible
+solves. Source role: `3D-FVM`. Project conclusion: a local timestep
+shall be accepted only when phase boundedness, mass conservation,
+pressure correction and turbulence-variable admissibility are all
+within tolerance. Limitation: exact tolerances remain validation and
+implementation parameters.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-stb-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-stb-discrete-formulation}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The local solver is accepted at a time level only after the segregated
+VOF, momentum, pressure-correction and turbulence solves have produced
+admissible fields. The discrete accepted state is:
+
+\begin{align}
+  \mathcal{Q}^{n+1}_{\mathrm{local}}
+  &=
+  \left\{
+    \alpha^{n+1},\,
+    \rho^{n+1},\,
+    \mu^{n+1},\,
+    \mathbf{u}^{n+1},\,
+    p^{n+1},\,
+    k^{n+1},\,
+    \omega^{n+1},\,
+    \mu_t^{n+1},\,
+    \phi^{n+1}
+  \right\}
+  \label{eq:res-num-stb-local-accepted-state}
+\end{align}
+
+\subsection{Conservation Properties}
+\label{sec:res-num-stb-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The discrete mass residual in a cell is:
+
+\begin{align}
+  R_{m,i}
+  &=
+  \sum_{f\in\partial K_i}
+  \phi_f
+  \label{eq:res-num-stb-local-mass-residual}
+\end{align}
+
+The normalised mass residual is:
+
+\begin{align}
+  \widehat{R}_{m,i}
+  &=
+  \frac{
+    \left|
+      R_{m,i}
+    \right|
+  }{
+    \sum_{f\in\partial K_i}
+    \left|
+      \phi_f
+    \right|
+    +
+    \epsilon_{\phi}
+  }
+  \label{eq:res-num-stb-local-normalised-mass-residual}
+\end{align}
+
+The global phase-volume balance shall be reported using:
+
+\begin{align}
+  M_{\alpha}
+  &=
+  \sum_i
+  V_i\alpha_i
+  \label{eq:res-num-stb-local-phase-volume}
+\end{align}
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-stb-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The local URANS--VOF branch shall report whether a result used
+first-order fallback, interface clipping, non-orthogonal correction
+limits, turbulence clipping or timestep rejection. A result that meets
+a residual tolerance only after repeated limiting shall not be treated
+as formally equivalent to an unlimited converged result.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-stb-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The VOF field shall remain bounded:
+
+\begin{align}
+  0
+  \leq
+  \alpha_i
+  \leq
+  1
+  \label{eq:res-num-stb-local-alpha-bounds}
+\end{align}
+
+Mixture properties shall remain positive:
+
+\begin{align}
+  \rho_i
+  &>
+  0
+  \label{eq:res-num-stb-local-density-positive}
+  \\
+  \mu_i
+  &>
+  0
+  \label{eq:res-num-stb-local-viscosity-positive}
+\end{align}
+
+Turbulence variables shall remain admissible:
+
+\begin{align}
+  k_i
+  &\geq
+  0
+  \label{eq:res-num-stb-local-k-positive}
+  \\
+  \omega_i
+  &>
+  0
+  \label{eq:res-num-stb-local-omega-positive}
+\end{align}
+
+The pressure-correction loop shall reduce
+$\widehat{R}_{m,i}$ below the configured tolerance before a timestep is
+accepted.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-stb-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The timestep shall satisfy the local constraints in
+\cref{eq:res-num-tim-local-timestep-minimum}. A timestep may be
+rejected after the solve when any boundedness, residual or load-spike
+acceptance criterion fails.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-stb-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+Local numerical failure modes include:
+
+\begin{itemize}
+  \item loss of VOF boundedness;
+  \item negative density, viscosity, $k$ or $\omega$;
+  \item pressure--velocity decoupling on a collocated mesh;
+  \item failure of the pressure-correction loop to reduce mass
+    residuals;
+  \item excessive non-orthogonal correction or wall-function violation;
+  \item artificial boundary reflection contaminating the impact region;
+  \item nonphysical pressure or force spikes caused by interface
+    smearing, timestep size or mesh quality;
+  \item inconsistent force and moment integrals on the barrier patch.
+\end{itemize}
+
+\subsection{Verification Requirements}
+\label{sec:res-num-stb-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+Verification shall include timestep-refinement and pressure-corrector
+studies for:
+
+\begin{itemize}
+  \item phase-volume conservation;
+  \item free-surface boundedness and sharpness;
+  \item cellwise and global mass residuals;
+  \item pressure and velocity convergence;
+  \item $k$ and $\omega$ boundedness;
+  \item force and moment sensitivity to timestep and pressure
+    residual tolerance.
+\end{itemize}
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-stb-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-stb-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-stb-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-stb-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-stb-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-stb-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected local stability policy is accept-or-reject timestep
+control. A timestep is accepted only when VOF boundedness, physical
+property positivity, turbulence-variable admissibility, pressure/mass
+convergence and output-quality checks all pass. Otherwise the timestep
+is repeated with a reduced $\Delta t$ or the simulation is marked
+failed according to the configured recovery limit.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-stb-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open items are the final residual tolerances, maximum pressure
+corrector count, non-orthogonal correction limit, local timestep
+reduction factor, maximum rejected-timestep count and load-spike
+diagnostic threshold.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-stb-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-SPEC` shall call these checks before accepting a local
+timestep. `RES-VER-MET` shall distinguish numerical acceptance from
+physical validation, especially for pressure, force, moment and
+overtopping outputs.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-stb-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

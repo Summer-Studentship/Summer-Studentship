@@ -1,0 +1,108 @@
+name: WBS task
+description: Create a structured work-breakdown issue for Levels 2 to 5.
+title: "[WBS] "
+labels:
+  - wbs
+body:
+  - type: input
+    id: wbs-id
+    attributes:
+      label: WBS ID
+      description: Enter the canonical work-breakdown identifier.
+      placeholder: SW-BDP-BLD-04-01
+    validations:
+      required: true
+  - type: dropdown
+    id: wbs-level
+    attributes:
+      label: WBS level
+      description: Select the level represented by this issue.
+      options:
+        - Level 2 - Domain or capability
+        - Level 3 - Sub-deliverable
+        - Level 4 - Work package
+        - Level 5 - Executable task
+    validations:
+      required: true
+  - type: input
+    id: workstream
+    attributes:
+      label: Workstream
+      placeholder: Software Platform
+    validations:
+      required: true
+  - type: input
+    id: domain
+    attributes:
+      label: Domain
+      placeholder: Build, Dependencies and Packaging
+    validations:
+      required: true
+  - type: input
+    id: parent-wbs-id
+    attributes:
+      label: Parent WBS ID
+      placeholder: SW-BDP-BLD-04
+    validations:
+      required: false
+  - type: input
+    id: parent-issue
+    attributes:
+      label: Parent issue
+      description: Add the issue number or URL after the parent issue exists.
+      placeholder: "#123"
+    validations:
+      required: false
+  - type: textarea
+    id: purpose
+    attributes:
+      label: Purpose
+      description: Explain why this work item exists.
+    validations:
+      required: true
+  - type: textarea
+    id: required-inputs
+    attributes:
+      label: Required inputs
+      description: List the documents, decisions, files, or dependencies needed before work starts.
+    validations:
+      required: true
+  - type: textarea
+    id: required-output
+    attributes:
+      label: Required output
+      description: State the concrete deliverable expected from this work item.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance-criteria
+    attributes:
+      label: Acceptance criteria
+      description: List the objective checks that must pass before the issue closes.
+      placeholder: "- [ ] ..."
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List upstream work items, owner decisions, or external prerequisites.
+      placeholder: "- None"
+    validations:
+      required: true
+  - type: textarea
+    id: required-evidence
+    attributes:
+      label: Required evidence
+      description: List commands, screenshots, links, or review notes required for closure.
+      placeholder: "- Command output from ..."
+    validations:
+      required: true
+  - type: textarea
+    id: implementation-checklist
+    attributes:
+      label: Implementation checklist
+      description: Break the work into reviewable checklist items.
+      placeholder: "- [ ] ..."
+    validations:
+      required: true

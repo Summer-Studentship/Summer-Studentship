@@ -1,0 +1,219 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-ARR
+% Deliverable: Barrier Arrangement, Placement and Spatial Configuration
+% Status: In progress
+% Evidence status: Corridor-linked placement rules established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-DAT-SCN, RES-GEO-TAX, RES-GEO-PAR
+% Downstream interfaces: RES-GEO-REP, RES-MOD-IBC, RES-NUM-MSH, Software geometry manifest
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-ARR --- Barrier Arrangement, Placement and Spatial Configuration}
+\label{sec:res-geo-arr}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-arr-purpose}
+
+This Deliverable defines how active barrier classes are placed inside
+the local corridor coordinate system. Arrangement is constrained by
+the evidence-based Kamaishi and Sendai corridor polygons, not by an
+arbitrary drawing canvas. The deliverable excludes global coastline
+redesign and generative placement optimisation.
+
+\subsection{Research Questions}
+\label{sec:res-geo-arr-research-questions}
+
+\begin{enumerate}
+  \item How is a barrier positioned relative to the corridor
+    centreline $x'$ and width direction $y'$?
+  \item How are continuous walls distinguished from finite obstacles
+    and arrays?
+  \item Which placement choices are physical scenario decisions, and
+    which are numerical buffer or mesh-quality decisions?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-arr-definitions}
+
+$x'$ is the local propagation-direction coordinate supplied by
+RES-DAT-SCN, $y'$ is the transverse corridor coordinate, and $z'$ is
+vertical elevation in the solver datum. The angle $\psi_j$ is the
+plan-view orientation of barrier $j$ measured relative to the
+$x'$ axis; $\psi_j=\pi/2$ denotes a barrier aligned across the
+corridor.
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-arr-literature-evidence}
+
+\textcite{mori2012nationwide} supports retaining different placement
+contexts for Sanriku/Kamaishi and Sendai because the same event
+produced contrasting run-up and inundation behaviour. Source role:
+supports corridor-specific placement rather than one generic test
+site. \textcite{watanabe2022validation} supports preserving exact
+probe and structure locations for validation-facing local simulations.
+Limitation: neither source supplies final barrier coordinates; those
+remain RES-DAT-SCN/RES-DAT-CAS data products.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-arr-governing-relations}
+
+The plan-view local placement vector is:
+
+\begin{align}
+  \mathbf{r}'_j
+  &=
+  \left[
+    x'_j,\,
+    y'_j
+  \right]^{\mathsf{T}}
+  \label{eq:res-geo-arr-placement-vector}
+\end{align}
+
+The local basis for each barrier is:
+
+\begin{align}
+  \mathbf{e}_{n,j}
+  &=
+  \left[
+    \cos\psi_j,\,
+    \sin\psi_j
+  \right]^{\mathsf{T}}
+  \label{eq:res-geo-arr-barrier-normal}
+  \\
+  \mathbf{e}_{t,j}
+  &=
+  \left[
+    -\sin\psi_j,\,
+    \cos\psi_j
+  \right]^{\mathsf{T}}
+  \label{eq:res-geo-arr-barrier-tangent}
+\end{align}
+
+Decision role: these definitions make barrier placement reproducible
+from the corridor transform. Supporting evidence: RES-DAT-SCN owns
+the corridor construction; \textcite{watanabe2022validation} supports
+validation-facing control of structure and probe locations.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-arr-geometry-family-representation}
+
+Continuous walls are represented as elongated patches whose tangent
+direction is $\mathbf{e}_{t,j}$. Obstacle and array cases are
+represented as one or more finite elements with recorded centre
+points, spacing and row index.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-arr-design-variables-parameter-bounds}
+
+Arrangement variables include $x'_j$, $y'_j$, $\psi_j$, number of rows,
+along-row spacing, cross-row spacing, stagger offset and gap/opening
+fraction. These variables are comparison controls, not yet an
+optimisation search space.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-arr-geometric-descriptors}
+
+Placement descriptors shall include clearance to artificial inlet,
+outlet and side boundaries; clearance to steep terrain changes; and
+distance from run-up, overtopping and wake measurement sections.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-arr-placement-arrangement-rules}
+
+Baseline placement rules are:
+
+\begin{enumerate}
+  \item place wall-type cases approximately transverse to $x'$ unless
+    a real coastline, harbour or defence alignment provides a citable
+    alternative;
+  \item place array-type cases with all elements inside the accepted
+    terrain/corridor polygon and away from sponge zones;
+  \item keep comparison sections fixed when comparing barrier classes;
+  \item do not narrow the corridor to fit a barrier unless the
+    narrowing represents a physical bay or coastline constraint.
+\end{enumerate}
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-arr-feasibility-constraints}
+
+A placement is infeasible if it intersects missing terrain data,
+requires a nonphysical wall at the side boundary, violates local mesh
+quality constraints or places the barrier inside a numerical
+relaxation region.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-arr-two-three-dimensional-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-arr-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-arr-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-arr-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-arr-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-arr-conclusions}
+
+For the Studentship campaign, arrangement is part of the data/model
+interface. It links source-to-coast trajectory, terrain extraction,
+barrier geometry and validation probes; it is not a separate design
+art exercise.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-arr-selected-approach}
+
+The selected approach is corridor-relative placement using
+$(x',y',z')$ coordinates and fixed comparison sections. Free placement
+optimisation is deferred.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-arr-unresolved-decisions}
+
+Open decisions are final Kamaishi and Sendai target coordinates, final
+comparison sections, sponge widths, and any real-defence alignment
+source for the Kamaishi breakwater.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-arr-requirements}
+
+Software shall generate barrier placement from corridor coordinates,
+clip it against accepted terrain/corridor polygons, and emit placement
+diagnostics for mesh quality and validation probe locations.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-arr-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

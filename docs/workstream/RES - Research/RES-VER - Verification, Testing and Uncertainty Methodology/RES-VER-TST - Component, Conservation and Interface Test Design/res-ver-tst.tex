@@ -1,0 +1,503 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-TST
+% Deliverable: Component, Conservation and Interface Test Design
+% Status: Not started
+% Evidence status: Not assessed
+% Review status: Not reviewed
+% Last updated:
+% Dependencies:
+% Downstream interfaces:
+% -------------------------------------------------------------------------
+
+\section{RES-VER-TST --- Component, Conservation and Interface Test Design}
+\label{sec:res-ver-tst}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-tst-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-ver-tst-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-tst-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-tst-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Qin et al. (2018)}
+\label{sec:res-ver-tst-evidence-qin-2018}
+
+\textcite{qin2018comparison} demonstrated that a local
+three-dimensional model should be assessed against depth-dependent
+velocity and direct structural-force measurements rather than only
+against free-surface elevation.
+
+\subsubsection{Watanabe et al. (2022)}
+\label{sec:res-ver-tst-evidence-watanabe-2022}
+
+\textcite{watanabe2022validation} compared multiple numerical
+predictions against withheld laboratory measurements. The blind
+comparison showed that three-dimensional models could reproduce
+nonhydrostatic and short-wave behaviour but also produced substantial
+variability in velocity and force. Smaller cells did not systematically
+reduce this variability.
+
+\subsection{Local Tsunami-Impact Test Sequence}
+\label{sec:res-ver-tst-local-impact-sequence}
+
+The selected parent equations shall be validated as part of a complete
+modelling workflow. Agreement in water level shall not be treated as
+evidence of accurate pressure, force, or structural loading.
+
+The local model shall be assessed progressively using:
+
+\begin{enumerate}
+  \item incident-wave generation without a structure;
+  \item free propagation and transformation within the local domain;
+  \item impact on an isolated impermeable structure;
+  \item pressure and force on a simple canonical geometry;
+  \item overtopping and run-up on a barrier;
+  \item separation, wake, and downstream-flow validation;
+  \item interaction with multiple or finite-width structures;
+  \item one-way structural load transfer;
+  \item two-way FSI where activated.
+\end{enumerate}
+
+Each stage shall isolate a limited set of physical and numerical
+mechanisms before additional complexity is introduced.
+
+\subsection{One-Way and Simultaneously Coupled Model Comparison}
+\label{sec:res-ver-tst-coupling-mode-comparison}
+
+\subsubsection{Test Objective}
+\label{sec:res-ver-tst-coupling-mode-objective}
+
+The test shall determine whether neglecting feedback from the local
+three-dimensional barrier domain produces a material change in the
+quantities used to assess candidate barrier performance. The comparison
+shall distinguish:
+
+\begin{enumerate}
+  \item the one-way replay model, in which a saved two-dimensional
+    state drives the local three-dimensional model without reverse
+    feedback;
+  \item the simultaneously coupled model, in which the retained
+    two-dimensional buffer and local three-dimensional model
+    exchange information during the impact calculation.
+\end{enumerate}
+
+\subsubsection{Test Configuration}
+\label{sec:res-ver-tst-coupling-mode-configuration}
+
+Both branches shall begin from the same immutable pre-impact checkpoint
+and shall use identical:
+
+\begin{itemize}
+  \item environmental scenario;
+  \item barrier geometry;
+  \item material and boundary assumptions;
+  \item interface location;
+  \item two-dimensional and three-dimensional meshes;
+  \item physical simulation interval;
+  \item output locations;
+  \item numerical tolerances;
+  \item quantity definitions.
+\end{itemize}
+
+The comparison shall be repeated for at least:
+
+\begin{itemize}
+  \item the reference barrier;
+  \item a weakly reflecting candidate;
+  \item a strongly reflecting or obstructive candidate;
+  \item more than one interface location.
+\end{itemize}
+
+\subsubsection{Concurrent Execution}
+\label{sec:res-ver-tst-coupling-mode-concurrency}
+
+The two branches may be launched concurrently to reduce elapsed
+comparison time. Each branch shall receive a separate copy of the saved
+checkpoint and separate mutable simulation state. A synchronisation
+barrier shall prevent the comparison and acceptance logic from
+executing until both simulations have completed successfully. A failed
+branch shall invalidate the comparison rather than permitting the
+surviving result to be accepted in isolation. The assigned cores,
+threads, accelerators, and memory shall be recorded. Concurrent
+execution shall not oversubscribe the available hardware or change the
+numerical configuration relative to separately executed reference runs.
+
+\subsubsection{Measured Quantities}
+\label{sec:res-ver-tst-coupling-mode-quantities}
+
+The comparison shall include:
+
+\begin{itemize}
+  \item free-surface elevation upstream and downstream of the barrier;
+  \item reflected-wave amplitude and energy;
+  \item transmitted wave energy;
+  \item normal mass flux across the interface;
+  \item momentum flux across the interface;
+  \item peak barrier force;
+  \item barrier-force impulse;
+  \item peak pressure;
+  \item overtopping volume;
+  \item downstream maximum depth and velocity;
+  \item regional run-up or inundation where affected;
+  \item wall-clock time, processor time, and memory consumption.
+\end{itemize}
+
+\subsubsection{Error Metrics}
+\label{sec:res-ver-tst-coupling-mode-error-metrics}
+
+For a scalar quantity of interest $q$, the relative difference shall be
+evaluated using:
+
+\begin{align}
+  \delta_q
+  &=
+  \frac{
+    \left| q_{\mathrm{coupled}} - q_{\mathrm{one\mbox{-}way}} \right|
+  }{
+    \max \left( \left|q_{\mathrm{coupled}}\right|, q_{\mathrm{scale}} \right)
+  }
+  \label{eq:res-ver-tst-coupling-relative-difference}
+\end{align}
+
+where $q_{\mathrm{scale}}$ is a non-zero reference scale used to avoid
+unstable normalisation for quantities close to zero. For a
+time-dependent quantity $q(t)$, the normalised difference may be
+evaluated using:
+
+\begin{align}
+  \delta_{q,2}
+  &=
+  \frac{
+    \left\| q_{\mathrm{coupled}} - q_{\mathrm{one\mbox{-}way}} \right\|_{L^2}
+  }{
+    \max \left( \left\| q_{\mathrm{coupled}} \right\|_{L^2}, q_{\mathrm{scale}} \right)
+  }
+  \label{eq:res-ver-tst-coupling-time-series-difference}
+\end{align}
+
+Peak-value, phase, impulse, and spatial-location errors shall be
+reported separately rather than being concealed within one aggregate
+norm.
+
+\subsubsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-tst-coupling-mode-acceptance}
+
+The one-way replay model may be accepted for broad candidate screening
+when:
+
+\begin{itemize}
+  \item all safety-critical and optimisation quantities remain within
+    their prescribed fidelity tolerances;
+  \item interface mass and momentum imbalances remain acceptable;
+  \item reflected-wave differences do not materially alter the upstream
+    or downstream response;
+  \item the conclusion remains stable under movement of the interface;
+  \item the ranking of candidate geometries is unchanged.
+\end{itemize}
+
+The simultaneously coupled model shall be required when any
+safety-critical quantity exceeds its tolerance, when candidate rankings
+change, or when barrier-generated feedback materially modifies the
+regional response. The acceptance tolerances shall be defined after the
+characteristic magnitudes, numerical errors, and decision sensitivity of
+each quantity have been established. They shall not be selected solely
+to favour the cheaper model.
+
+\subsubsection{Execution Handoff}
+\label{sec:res-ver-tst-coupling-mode-handoff}
+
+The Software workstream shall automate:
+
+\begin{enumerate}
+  \item restoration of the common checkpoint;
+  \item creation of isolated branch states;
+  \item concurrent or sequential execution;
+  \item branch-completion synchronisation;
+  \item failure detection;
+  \item metric extraction;
+  \item comparison against the configured tolerances;
+  \item generation of a reproducible test report.
+\end{enumerate}
+
+The Optimisation workstream shall use the approved fidelity policy to
+select the solver mode for candidate screening and final confirmation.
+
+\subsection{Interface-Location Sensitivity Test}
+\label{sec:res-ver-tst-interface-location}
+
+\subsubsection{Test Objective}
+\label{sec:res-ver-tst-interface-location-objective}
+
+The test shall determine whether the selected
+two-dimensional--three-dimensional interfaces lie within regions where
+the assumptions of their receiving models are valid.
+
+Separate studies shall be performed for:
+
+\begin{enumerate}
+  \item the upstream two-dimensional-to-three-dimensional lifting
+    interface;
+  \item the downstream three-dimensional-to-two-dimensional
+    restriction interface;
+  \item the bidirectional interface used by the simultaneously coupled
+    configuration.
+\end{enumerate}
+
+\subsubsection{Test Configuration}
+\label{sec:res-ver-tst-interface-location-configuration}
+
+At least three candidate interface positions shall be examined:
+
+\begin{enumerate}
+  \item a position close to the local barrier-interaction region;
+  \item a position near the expected transition in model validity;
+  \item a position farther into the region where the receiving model
+    is expected to be valid.
+\end{enumerate}
+
+The candidate locations shall be selected with reference to:
+
+\begin{itemize}
+  \item bathymetric and topographic gradients;
+  \item geometric contractions and expansions;
+  \item predicted breaking and overtopping regions;
+  \item vertical velocity and shear;
+  \item free-surface fragmentation;
+  \item recirculation and wake length;
+  \item reflected-wave propagation;
+  \item wetting--drying behaviour;
+  \item proximity to artificial boundaries.
+\end{itemize}
+
+All other physical and numerical inputs shall remain unchanged between
+the interface-location cases.
+
+\subsubsection{Measured Quantities}
+\label{sec:res-ver-tst-interface-location-quantities}
+
+The test shall compare:
+
+\begin{itemize}
+  \item free-surface time histories;
+  \item depth-integrated discharge;
+  \item incident, reflected, and transmitted wave amplitudes;
+  \item incident, reflected, and transmitted energy;
+  \item peak barrier force;
+  \item barrier-force impulse;
+  \item peak pressure and pressure impulse;
+  \item overtopping volume;
+  \item downstream depth and velocity;
+  \item run-up and inundation extent;
+  \item interface mass imbalance;
+  \item interface momentum imbalance;
+  \item amplitude and phase spectra.
+\end{itemize}
+
+\subsubsection{Error Metrics}
+\label{sec:res-ver-tst-interface-location-error}
+
+For a quantity of interest $q$ evaluated using neighbouring interface
+positions $\Gamma_i$ and $\Gamma_{i+1}$, the relative location
+sensitivity shall be defined as:
+
+\begin{align}
+  \delta_{\Gamma,q}^{(i)}
+  &=
+  \frac{
+    \left|
+    q_{\Gamma_{i+1}}
+    -
+    q_{\Gamma_i}
+    \right|
+  }{
+    \max
+    \left(
+      \left|q_{\Gamma_{i+1}}\right|,
+      q_{\mathrm{scale}}
+    \right)
+  }
+  \label{eq:res-ver-tst-interface-location-sensitivity}
+\end{align}
+
+where $q_{\mathrm{scale}}$ is a non-zero characteristic scale.
+
+For a transferred waveform $\eta(t)$, the amplitude spectrum shall be
+evaluated using:
+
+\begin{align}
+  \widehat{\eta}(f)
+  &=
+  \mathcal{F}
+  \left\{
+    \eta(t)
+  \right\}
+  \label{eq:res-ver-tst-interface-spectrum}
+\end{align}
+
+Spectral amplitude and phase differences shall be reported alongside
+time-domain norms.
+
+\subsubsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-tst-interface-location-acceptance}
+
+An interface position may be accepted when:
+
+\begin{itemize}
+  \item moving the interface farther into the receiving model's valid
+    region produces no material change in the engineering
+    quantities of interest;
+  \item mass and momentum transfer errors remain within their
+    prescribed tolerances;
+  \item the transferred waveform retains the required amplitude,
+    phase, and frequency content;
+  \item candidate-design rankings remain unchanged;
+  \item no material artificial-boundary contamination is detected;
+  \item the receiving model reproduces the donor behaviour over an
+    overlapping comparison region.
+\end{itemize}
+
+The cheapest acceptable interface position shall be selected. A
+location shall not be chosen solely to minimise the size of the
+three-dimensional domain.
+
+\subsubsection{Execution Handoff}
+\label{sec:res-ver-tst-interface-location-handoff}
+
+The Software workstream shall permit interface locations to be changed
+without modifying either governing solver. Mesh generation, mapping,
+checkpoint extraction, and test execution shall be parameterised by the
+interface definition.
+
+The verification software shall execute all candidate interface
+locations, wait until every required branch has completed, and generate
+a comparative report containing field, flux, spectral, and engineering
+metrics.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-tst-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-tst-test-objective}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-tst-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-tst-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-tst-measured-quantities}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Error Metrics}
+\label{sec:res-ver-tst-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-tst-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-tst-execution-handoff}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-tst-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-tst-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-tst-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-tst-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-tst-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-tst-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-tst-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-tst-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-tst-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

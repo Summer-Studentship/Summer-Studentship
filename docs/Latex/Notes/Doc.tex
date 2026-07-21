@@ -1,0 +1,374 @@
+\documentclass[11pt]{article}
+
+% This template is designed for XeLaTeX.
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  margin=25.4mm
+}
+
+\makeatletter
+\def\input@path{{../Style/}}
+\makeatother
+
+\usepackage{coursework-report-core}
+
+\showlayouttrue
+\setlength{\parindent}{20pt}
+\setlength{\parskip}{0.5em}
+
+% Optional bibliography file for BibLaTeX/Biber.
+\addbibresource{references.bib}
+
+% Set the default level used by \smartsubsection.
+% Valid values: section, subsection, subsubsection, paragraph, subparagraph
+\setsmartsubsectionlevel{subsection}
+% Optional depth offsets:
+% \smartsubsection{Subsection}
+% \smartsubsection[1]{Subsubsection}
+% \smartsubsection[2]{Paragraph}
+
+% Override these if you want a different numbering style for deeper headings.
+% Example:
+% \renewcommand{\paragraphnumberformat}{\thesubsection.\arabic{paragraph}}
+% \renewcommand{\subparagraphnumberformat}{\theparagraph.\arabic{subparagraph}}
+
+
+
+
+\begin{document}
+
+\pagenumbering{Roman}
+\tableofcontents
+%\printnomenclature
+\newpage
+\pagenumbering{arabic}
+
+\begin{algorithm}[h!]
+  \caption{Face-Based Finite-Volume Solver Loop for a General Shallow-Water Mesh}
+  \label{alg:fv_solver_loop}
+  \begin{algorithmic}[1]
+      \Require Cell states $\mathbf{U}_P^n = [h_P^n, q_{x,P}^n, q_{y,P}^n]^T$, mesh geometry, bathymetry $b_P$, timestep $\Delta t$
+      \Ensure Updated cell states $\mathbf{U}_P^{n+1}$ and diagnostic outputs
+
+      \State Initialise residuals for all cells:
+      \[
+          \mathbf{R}_P \gets \mathbf{0}
+          \label{eq:init_residual}
+      \]
+
+      \For{each cell $P$}
+          \State Recover primitive variables:
+          \[
+              u_P =
+              \frac{q_{x,P}}{h_P},
+              \qquad
+              v_P =
+              \frac{q_{y,P}}{h_P},
+              \qquad
+              \eta_P =
+              h_P + b_P
+              \label{eq:primitive_recovery_algorithm}
+          \]
+          \State Apply wet/dry state logic using $h_{\min}$
+      \EndFor
+
+      \For{each face $f$}
+          \State Identify owner cell $P_f$ and neighbour/ghost state $N_f$
+          \State Reconstruct left and right states at the face:
+          \[
+              \mathbf{U}_{L,f},
+              \qquad
+              \mathbf{U}_{R,f}
+              \label{eq:face_reconstructed_states}
+          \]
+          \State Apply hydrostatic reconstruction to obtain:
+          \[
+              \mathbf{U}_{L,f}^{*},
+              \qquad
+              \mathbf{U}_{R,f}^{*}
+              \label{eq:hydrostatic_reconstructed_states_algorithm}
+          \]
+          \State Compute the numerical normal flux:
+          \[
+              \widehat{\mathbf{F}}_{n,f}
+              =
+              \mathcal{F}
+              \left(
+                  \mathbf{U}_{L,f}^{*},
+                  \mathbf{U}_{R,f}^{*},
+                  \mathbf{n}_f
+              \right)
+              \label{eq:numerical_normal_flux_algorithm}
+          \]
+          \State Apply positivity or draining-time flux limiting where required
+
+          \State Accumulate the owner-cell residual:
+          \[
+              \mathbf{R}_{P_f}
+              \gets
+              \mathbf{R}_{P_f}
+              -
+              A_f\widehat{\mathbf{F}}_{n,f}
+              \label{eq:owner_residual_update_algorithm}
+          \]
+
+          \If{$f$ is an internal face}
+              \State Accumulate the neighbour-cell residual:
+              \[
+                  \mathbf{R}_{N_f}
+                  \gets
+                  \mathbf{R}_{N_f}
+                  +
+                  A_f\widehat{\mathbf{F}}_{n,f}
+                  \label{eq:neighbour_residual_update_algorithm}
+              \]
+          \EndIf
+      \EndFor
+
+      \For{each cell $P$}
+          \State Assemble the finite-volume right-hand side:
+          \[
+              \mathcal{L}(\mathbf{U}_P)
+              =
+              \frac{\mathbf{R}_P}{|\Omega_P|}
+              +
+              \mathbf{S}_P
+              \label{eq:fv_rhs_algorithm}
+          \]
+          \State Advance the state using the selected time integrator:
+          \[
+              \mathbf{U}_P^{n+1}
+              =
+              \mathcal{T}
+              \left(
+                  \mathbf{U}_P^n,
+                  \mathcal{L}(\mathbf{U}_P),
+                  \Delta t
+              \right)
+              \label{eq:time_update_operator_algorithm}
+          \]
+          \State Apply post-update wet/dry and positivity corrections
+          \State Update cell diagnostics and output quantities
+      \EndFor
+
+  \end{algorithmic}
+\end{algorithm}
+
+\begin{equation}
+  \label{eq:cell_data_container}
+  \mathcal{C}_P
+  =
+  \begin{cases}
+      \mathcal{G}_P
+      =
+      \left\{
+          I_P,
+          \mathbf{x}_P,
+          |\Omega_P|,
+          \partial\Omega_P,
+          \mathcal{N}(P),
+          \tau_P,
+          \chi_P
+      \right\},
+      & \text{cell geometry}
+      \\[0.75em]
+      \mathcal{U}_P
+      =
+      \left\{
+          h_P,
+          q_{x,P},
+          q_{y,P}
+      \right\},
+      & \text{conserved shallow-water state}
+      \\[0.75em]
+      \mathcal{B}_P
+      =
+      \left\{
+          b_P,
+          \eta_P,
+          \nabla b_P,
+          b_{\min,P},
+          b_{\max,P}
+      \right\},
+      & \text{bathymetry and free-surface data}
+      \\[0.75em]
+      \mathcal{M}_P
+      =
+      \left\{
+          n_P,
+          f_P,
+          \nu_{H,P},
+          h_{\min,P},
+          \kappa_P
+      \right\},
+      & \text{local source-model parameters}
+      \\[0.75em]
+      \mathcal{R}_P
+      =
+      \left\{
+          R_{h,P},
+          R_{q_x,P},
+          R_{q_y,P},
+          \dot{h}_P,
+          \dot{q}_{x,P},
+          \dot{q}_{y,P}
+      \right\},
+      & \text{residual and right-hand-side data}
+      \\[0.75em]
+      \mathcal{D}_P
+      =
+      \left\{
+          h_{\max,P},
+          \eta_{\max,P},
+          |\mathbf{u}|_{\max,P},
+          t_{\mathrm{arrival},P},
+          t_{\mathrm{wet},P},
+          \mathrm{CFL}_P
+      \right\},
+      & \text{diagnostic and visualisation data}
+  \end{cases}
+\end{equation}
+
+\begin{equation}
+  \label{eq:face_data_container}
+  \mathcal{F}_f
+  =
+  \begin{cases}
+      \mathcal{I}_f
+      =
+      \left\{
+          I_f,
+          P_f,
+          N_f
+      \right\},
+      & \text{face indexing and connectivity}
+      \\[0.75em]
+      \mathcal{G}_f
+      =
+      \left\{
+          \mathbf{x}_f,
+          A_f,
+          \mathbf{n}_f,
+          \mathbf{t}_f
+      \right\},
+      & \text{face geometry}
+      \\[0.75em]
+      \mathcal{S}_f
+      =
+      \left\{
+          \mathbf{U}_{L,f},
+          \mathbf{U}_{R,f},
+          \mathbf{U}_{L,f}^{*},
+          \mathbf{U}_{R,f}^{*}
+      \right\},
+      & \text{left, right, and reconstructed states}
+      \\[0.75em]
+      \mathcal{Q}_f
+      =
+      \left\{
+          u_{n,L},
+          u_{n,R},
+          c_L,
+          c_R,
+          S_L,
+          S_R
+      \right\},
+      & \text{wave-speed and normal-flow data}
+      \\[0.75em]
+      \mathcal{H}_f
+      =
+      \left\{
+          b_{L,f},
+          b_{R,f},
+          b_f^{*},
+          h_{L,f}^{*},
+          h_{R,f}^{*}
+      \right\},
+      & \text{hydrostatic reconstruction data}
+      \\[0.75em]
+      \mathcal{R}_f
+      =
+      \left\{
+          \widehat{\mathbf{F}}_{n,f},
+          A_f\widehat{\mathbf{F}}_{n,f},
+          \theta_f
+      \right\},
+      & \text{normal flux and limited flux contribution}
+      \\[0.75em]
+      \mathcal{B}_f
+      =
+      \left\{
+          \beta_f,
+          \gamma_f,
+          \sigma_f
+      \right\},
+      & \text{boundary, aperture, and mask data}
+  \end{cases}
+\end{equation}
+
+Here, $I_P$ and $I_f$ denote cell and face indices, respectively; $\mathbf{x}_P$ and $\mathbf{x}_f$ are the cell and face centroids; $|\Omega_P|$ is the cell area; $A_f$ is the face length in two dimensions; $\mathbf{n}_f$ is the outward unit normal from owner cell $P_f$ to neighbour cell $N_f$; and $\mathbf{t}_f$ is the corresponding tangential vector. The variable $\tau_P$ denotes the cell topology, such as triangular, quadrilateral, polygonal, or cut-cell, while $\chi_P$ stores the cell-region classification, such as ocean, land, coastline, harbour, or defence region. The set $\mathcal{N}(P)$ stores the neighbouring cells connected to $P$ through its faces.
+
+The conserved state is stored as $\mathcal{U}_P = \{h_P,q_{x,P},q_{y,P}\}$, where $h_P$ is the water depth and $q_{x,P}=h_Pu_P$, $q_{y,P}=h_Pv_P$ are the depth-integrated momenta. The bathymetric block $\mathcal{B}_P$ stores the bed elevation $b_P$, free-surface elevation $\eta_P=h_P+b_P$, bed-gradient data, and local bed extrema used by wetting, drying, and hydrostatic reconstruction. The source-model block $\mathcal{M}_P$ stores Manning roughness $n_P$, Coriolis parameter $f_P$, horizontal eddy viscosity $\nu_{H,P}$, wet/dry threshold $h_{\min,P}$, and a roughness or material class $\kappa_P$.
+
+The residual block $\mathcal{R}_P$ stores the accumulated finite-volume flux imbalance and the resulting right-hand-side components used by the time integrator. The diagnostic block $\mathcal{D}_P$ stores quantities required for scientific interpretation and numerical-health monitoring, including maximum depth, maximum surface elevation, maximum speed, arrival time, wetting duration, and local CFL number.
+% Example smart references:
+% \smartref{fig:example}
+% \smartref{fig:example_a,fig:example_b}
+% \smartref{fig:example, tab:example}
+
+% Example smart subsection:
+% \smartsubsection{Configurable subsection heading}
+% \smartsubsection[1]{One level deeper}
+
+% Example algorithm:
+% \begin{algorithm}
+%   \caption{Example algorithm}
+%   \label{alg:example}
+%   \begin{algorithmic}[1]
+%     \RequireWrap{Input data}
+%     \EnsureWrap{Processed output}
+%     \StateWrap{Long algorithm lines wrap cleanly to the next line.}
+%   \end{algorithmic}
+% \end{algorithm}
+
+% Example listings:
+% \begin{lstlisting}[style=MATLAB, caption={Example MATLAB listing}, label={lst:matlab_example}]
+% x = linspace(0, 2*pi, 1000);
+% y = sin(x);
+% plot(x, y)
+% \end{lstlisting}
+%
+% \begin{lstlisting}[style=Python, caption={Example Python listing}, label={lst:python_example}]
+% import numpy as np
+% print(np.linspace(0.0, 1.0, 5))
+% \end{lstlisting}
+%
+% \begin{lstlisting}[style=C++, caption={Example C++ listing}, label={lst:cpp_example}]
+% #include <iostream>
+% int main() {
+%     std::cout << "Hello world\n";
+%     return 0;
+% }
+% \end{lstlisting}
+
+% Example landscape table pages:
+% \begin{landscapetablepages}
+% \begin{longtable}{ll}
+% \caption{Wide landscape longtable example.}\\
+% \toprule
+% A & B \\
+% \midrule
+% \endfirsthead
+% \toprule
+% A & B \\
+% \midrule
+% \endhead
+% Value 1 & Value 2 \\
+% \bottomrule
+% \end{longtable}
+% \end{landscapetablepages}
+
+%\printbibliography
+
+\end{document}

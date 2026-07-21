@@ -1,0 +1,356 @@
+%               .-.
+%              (o o)      SCIENCE OWL
+%              | O \      (guardian of rigor)
+%               \   \
+%                `~~~'
+%          .-------------------.
+%          |  NO FABRICATION   |
+%          |  + CLEAR ASSUMES  |
+%          |  + CLEAN LATEX    |
+%          '-------------------'
+%     __        __        __        __
+%  __/  \__  __/  \__  __/  \__  __/  \__
+% /  RULES  \/  FLOW  \/  MATH  \/  CODE  \
+% \__    __/\__    __/\__    __/\__    __/
+%    \__/      \__/      \__/      \__/
+
+%         \  |  /        \  |  /
+%          \ | /          \ | /
+%       ---- * ----    ---- * ----
+%          / | \          / | \
+%         /  |  \        /  |  \
+
+%              ...                            
+%             ;::::;                           
+%           ;::::; :;                          
+%         ;:::::'   :;                         
+%        ;:::::;     ;.                        
+%       ,:::::'       ;           OOO\         
+%       ::::::;       ;          OOOOO\        
+%       ;:::::;       ;         OOOOOOOO       
+%      ,;::::::;     ;'         / OOOOOOO      
+%    ;:::::::::`. ,,,;.        /  / DOOOOOO    
+%  .';:::::::::::::::::;,     /  /     DOOOO   
+% ,::::::;::::::;;;;::::;,   /  /        DOOO  
+%;`::::::`'::::::;;;::::: ,#/  /          DOOO 
+%:`:::::::`;::::::;;::: ;::#  /            DOOO
+%::`:::::::`;:::::::: ;::::# /              DOO
+%`:`:::::::`;:::::: ;::::::#/               DOO
+% :::`:::::::`;; ;:::::::::##                OO
+% ::::`:::::::`;::::::::;:::#                OO
+% `:::::`::::::::::::;'`:;::#                O 
+%  `:::::`::::::::;' /  / `:#                  
+%   ::::::`:::::;'  /  /   `#              
+%
+%
+%
+%                           _,,,.._       ,_
+%                        .gMMMMMMMMMp,_    `\
+%                     .dMMP'       ``^YMb..dP
+%                    dMMP'
+%                    MMM:
+%                    YMMb.
+%                     YMMMb.
+%                      `YMM/|Mb.  ,__
+%                   _,,-~`--..-~-'_,/`--,,,____
+%               `\,_,/',_.-~_..-~/' ,/---~~~"""`\
+%          _,_,,,\q\q/'    \,,-~'_,/`````-,7.
+%         `@v@`\\,,,,__   \,,-~~"__/` ",,/MMMMb.
+%          `--''_..-~~\   \,-~~""  `\_,/ `^YMMMMMb..
+%           ,|``-~~--./_,,_  _,,-~~'/_      `YMMMMMMMb.
+%         ,/  `\,_,,/`\    `\,___,,,/M/'      `YMMMMMMMb
+%                     ;  _,,/__...|MMM/         YMMMMMMMb
+%                      .' /'      dMMM\         !MMMMMMMMb
+%                   ,-'.-'""~~~--/M|M' \        !MMMMMMMMM
+%                 ,/ .|...._____/MMM\   b       gMMMMMMMMM
+%              ,'/'\/          dMMP/'   M.     ,MMMMMMMMMP
+%             / `\;/~~~~----...MP'     ,MMb..,dMMMMMMMMM'
+%            / ,_  |          _/      dMMMMMMMMMMMMMMMMB
+%            \  |\,\,,,,___ _/    _,dMMMMMMMMMMMP".emmmb,
+%             `.\  gY.     /      7MMMMMMMMMMP"..emmMMMMM
+%                .dMMMb,-..|       `.~~"""```|dMMMMP'MMP'
+%               .MMMMP^"""/ .7 ,  _  \,---~""`^YMMP'MM;
+%             _dMMMP'   ,' / | |\ \\  }          PM^M^b
+%          _,' _,  \_.._`./  } ; \ \``'      __,'_` _  `._
+%      ,-~/'./'| 7`,,__,}`   ``   ``        // _/`| 7``-._`}
+%     |_,}__{  {,/'   ``                    `\{_  {,/'   ``
+%     ``  ```   ``                            ``   ``
+%
+%
+%
+%
+\documentclass[11pt]{article}
+
+% This template is designed for XeLaTeX.
+\usepackage{geometry}
+\geometry{
+  a4paper,
+  margin=25.4mm
+}
+
+\makeatletter
+\def\input@path{{../Style/}}
+\makeatother
+
+\usepackage{coursework-report-core}
+\usepackage{wrapfig}
+
+% Layout debugging is provided by coursework-report-core.sty.
+% Use \showlayouttrue to display page-layout frames and \showlayoutfalse for
+% submission-ready output. The package option [showlayout] is also supported.
+\showlayouttrue
+
+\setlength{\parindent}{20pt}
+\setlength{\parskip}{0.5em}
+
+% Optional bibliography file for BibLaTeX/Biber.
+\addbibresource{References/.bib}
+\graphicspath{{Figures/}}
+% Set the default level used by \smartsubsection.
+% Valid values: section, subsection, subsubsection, paragraph, subparagraph
+\setsmartsubsectionlevel{subsection}
+% Optional depth offsets:
+% \smartsubsection{Subsection}
+% \smartsubsection[1]{Subsubsection}
+% \smartsubsection[2]{Paragraph}
+
+% Override these if you want a different numbering style for deeper headings.
+% Example:
+% \renewcommand{\paragraphnumberformat}{\thesubsection.\arabic{paragraph}}
+% \renewcommand{\subparagraphnumberformat}{\theparagraph.\arabic{subparagraph}}
+
+\fancyhead[RO]{Studentship Project - Complex Tsunami Computational Fluid Dynamics}
+
+\begin{document}
+
+\pagenumbering{Roman}
+\tableofcontents
+%\printnomenclature
+\newpage
+\pagenumbering{arabic}
+
+\section*{\centering Generating Tsunami Energy-Dissipating Barriers Using Machine Learning}
+
+\section{Core Concept}
+
+The purpose of this studentship is to extend the \texttt{MECH0020} project by introducing greater complexity namely by using both the Shallow Water Equations (SWE) and the Navier-Stokes Equations (NSE) to develop a   
+
+\section{Motivation}
+
+  The 11 March 2011 T\={o}hoku tsunami will serve as the primary benchmark case study, on two accounts the first being high-quality observational data are available for validation \cite{NCEITohokuEvent,Goto2012} and second is the Sanriku/Tohoku coastline is one of the most historically tsunami-vulnerable regions in Japan, having experienced major destructive events such as the 1896 and 1933 Sanriku tsunamis, while the 2011 event itself produced extreme run-up along the same coast \cite{Fujii2011,Satake2014,Goto2012}.
+
+\section{Action Plan}
+
+  
+
+\section{Validation Methods}
+
+\section{Mathematical Model Structure}
+
+\section{Numerical Methods}
+
+\section{Sustainability & Optimisation}
+
+T
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+% ==============================================================================
+% REUSABLE COURSEWORK SNIPPETS
+% ==============================================================================
+
+% Section-tier mapping:
+% \SECTION_TIER_1{Title} -> \section{Title}
+% \SECTION_TIER_2{Title} -> \subsection{Title}
+% \SECTION_TIER_3{Title} -> \subsubsection{Title}
+% \SECTION_TIER_4{Title} -> \paragraph{Title}
+% \SECTION_TIER_5{Title} -> \subparagraph{Title}
+
+% +----------------------------------------------------------------------------+
+% | SECTION PURPOSE                                                            |
+% +----------------------------------------------------------------------------+
+% | Describe the scope, purpose, and expected content of this section.          |
+% +----------------------------------------------------------------------------+
+%
+% ==============================================================================
+%                                SECTION TIER 1
+% ==============================================================================
+% \SECTION_TIER_1{Section Title}
+% \label{sec:section-label}
+%
+% Section content.
+%
+% ==============================================================================
+%                            END OF SECTION TIER 1
+% ==============================================================================
+
+% Smart references:
+% \smartref{sec:section-label}
+% \smartref{fig:example}
+% \smartref{fig:example-a,fig:example-b}
+% \smartref{fig:example,tab:example}
+
+% Configurable legacy subsection helper:
+% \smartsubsection{Heading at the configured base level}
+% \smartsubsection[1]{Heading one level deeper}
+
+% Numbered equation:
+% \begin{align}
+%   y &= mx + c
+%   \label{eq:linear-relation}
+% \end{align}
+
+% Figure:
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=0.8\linewidth]{figures/example}
+%   \caption{Example figure caption}
+%   \label{fig:example}
+% \end{figure}
+
+% Subfigures:
+% \begin{figure}[htbp]
+%   \centering
+%   \begin{subfigure}[t]{0.48\linewidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/example-a}
+%     \caption{First subfigure}
+%     \label{fig:example-a}
+%   \end{subfigure}
+%   \hfill
+%   \begin{subfigure}[t]{0.48\linewidth}
+%     \centering
+%     \includegraphics[width=\linewidth]{figures/example-b}
+%     \caption{Second subfigure}
+%     \label{fig:example-b}
+%   \end{subfigure}
+%   \caption{Combined figure caption}
+%   \label{fig:example-combined}
+% \end{figure}
+
+% Table:
+% \begin{table}[htbp]
+%   \caption{Example table caption}
+%   \label{tab:example}
+%   \begin{tabular}{lll}
+%     \toprule
+%     Quantity & Symbol & Unit \\
+%     \midrule
+%     Velocity & $v$ & \si{\metre\per\second} \\
+%     \bottomrule
+%   \end{tabular}
+% \end{table}
+
+% Nomenclature entry:
+% \nomenclature{$v$}{Velocity, \si{\metre\per\second}}
+
+% Algorithm:
+% \begin{algorithm}
+%   \caption{Example algorithm}
+%   \label{alg:example}
+%   \begin{algorithmic}[1]
+%     \RequireWrap{Input data}
+%     \EnsureWrap{Processed output}
+%     \StateWrap{Long algorithm lines wrap cleanly to the next line.}
+%   \end{algorithmic}
+% \end{algorithm}
+
+% MATLAB listing:
+% \begin{lstlisting}[
+%   style=MATLAB,
+%   caption={Example MATLAB listing},
+%   label={lst:matlab-example}
+% ]
+% x = linspace(0, 2*pi, 1000);
+% y = sin(x);
+% plot(x, y)
+% \end{lstlisting}
+
+% Python listing:
+% \begin{lstlisting}[
+%   style=Python,
+%   caption={Example Python listing},
+%   label={lst:python-example}
+% ]
+% import numpy as np
+% print(np.linspace(0.0, 1.0, 5))
+% \end{lstlisting}
+
+% C++ listing:
+% \begin{lstlisting}[
+%   style=C++,
+%   caption={Example C++ listing},
+%   label={lst:cpp-example}
+% ]
+% #include <iostream>
+%
+% int main()
+% {
+%     std::cout << "Hello world\\n";
+%     return 0;
+% }
+% \end{lstlisting}
+
+% Landscape longtable:
+% \begin{landscapetablepages}
+%   \begin{longtable}{ll}
+%     \caption{Wide landscape longtable example}
+%     \label{tab:landscape-example} \\
+%     \toprule
+%     A & B \\
+%     \midrule
+%     \endfirsthead
+%     \toprule
+%     A & B \\
+%     \midrule
+%     \endhead
+%     Value 1 & Value 2 \\
+%     \bottomrule
+%   \end{longtable}
+% \end{landscapetablepages}
+
+% Inline helpers:
+% \vect{u}
+% \dd
+% \code{variable_name}
+% \data{results/output.csv}
+
+% Bibliography output:
+% \printbibliography
+
+\end{document}

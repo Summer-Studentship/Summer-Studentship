@@ -1,0 +1,51 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-geo.bib}
+
+\title{RES-GEO --- Barrier Geometry and Spatial Representation}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-geo-domain-purpose}
+
+RES-GEO defines the geometry taxonomy, descriptors and software
+representation needed for fixed-rigid barrier-class comparison in the
+Kamaishi and Sendai local tsunami corridors. The active classes are
+wall-type barriers and obstacle, dissipating or array-type barriers.
+
+The current Research scope is not unrestricted geometry generation.
+Existing or reconstructed defences may be included where source data
+are sufficient, but the baseline comparison is between evidence-backed
+barrier classes with explicit dimensions, placement rules and numerical
+representation. ML-driven, surrogate-driven and generative geometry
+work remains deferred until the hydrodynamic data pipeline and
+validation hierarchy are accepted.
+
+\section{Domain Deliverables}
+\label{sec:res-geo-domain-deliverables}
+
+\input{"RES-GEO-TAX - Barrier Geometry Taxonomy and Candidate Families/res-geo-tax.tex"}
+\input{"RES-GEO-PAR - Parametric Geometry and Design-Variable Definition/res-geo-par.tex"}
+\input{"RES-GEO-MET - Geometric and Hydraulic Descriptor Framework/res-geo-met.tex"}
+\input{"RES-GEO-ARR - Barrier Arrangement, Placement and Spatial Configuration/res-geo-arr.tex"}
+\input{"RES-GEO-REP - Two- and Three-Dimensional Model Representation/res-geo-rep.tex"}
+\input{"RES-GEO-CST - Geometric Feasibility and Design Constraints/res-geo-cst.tex"}
+\input{"RES-GEO-SPEC - Integrated Geometry-Generation Specification/res-geo-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

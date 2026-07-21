@@ -1,0 +1,163 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-LRG
+% Deliverable: Large-Domain Representation and Model Reduction
+% Status: Draft complete for regional large-domain model role
+% Evidence status: Regional model representation established; domain lock pending
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies: RES-PHY-PRO, RES-DAT-GEO, RES-MOD-EQS, RES-NUM-SPEC
+% Downstream interfaces: RES-NUM-MSH, RES-MOD-MUL, Software implementation
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-LRG --- Large-Domain Representation and Model Reduction}
+\label{sec:res-mod-lrg}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-lrg-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-mod-lrg-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-lrg-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-lrg-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-lrg-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-lrg-system-boundary}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-lrg-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-lrg-continuous-governing-model}
+
+The selected large-domain regional representation is the horizontal
+two-dimensional depth-averaged NLSWE model defined in
+`RES-MOD-EQS` and consolidated in `RES-MOD-SPEC`. It represents
+Tōhoku-scale generation, propagation, nearshore transformation and
+inundation without applying local three-dimensional CFD resolution
+across the whole domain.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-lrg-source-terms-closures}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-lrg-initial-boundary-interface-conditions}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-lrg-model-coupling-requirements}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-lrg-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-lrg-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-lrg-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-lrg-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-lrg-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-lrg-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-lrg-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+Use the regional 2D NLSWE finite-volume solver as the large-domain
+model. Preserve local three-dimensional modelling only where
+structure-scale pressure, overtopping, local air--water interface
+topology or FSI requires vertically resolved flow.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-lrg-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open large-domain decisions are the QGIS/geospatial domain extent,
+artificial-boundary placement, sponge-layer placement, local 3D
+extraction region and final mesh-refinement levels.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-lrg-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-lrg-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

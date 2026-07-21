@@ -1,0 +1,276 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-PHY-BAR
+% Deliverable: Barrier–Flow Interaction and Energy Dissipation
+% Status: In progress
+% Evidence status: Local barrier-flow output roles established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-PHY-SCL, RES-PHY-LOD, RES-MOD-EQS
+% Downstream interfaces: RES-NUM-SPEC, RES-OPT-OBJ, RES-ML-REP, RES-VER-MET
+% -------------------------------------------------------------------------
+
+\section{RES-PHY-BAR --- Barrier–Flow Interaction and Energy Dissipation}
+\label{sec:res-phy-bar}
+
+\subsection{Purpose and Scope}
+\label{sec:res-phy-bar-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable links local barrier-flow mechanisms to the physical
+outputs extracted from the local three-dimensional URANS--VOF model.
+It defines what is meant by comparative hydrodynamic barrier
+performance before structural failure or final certification are
+considered. The active geometry scope is fixed-rigid comparison of
+wall-type and obstacle/dissipating/array-type barriers.
+
+\subsection{Research Questions}
+\label{sec:res-phy-bar-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-phy-bar-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-phy-bar-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{kozelkov2022turbulence} supports the claim that turbulence
+can materially affect run-up, overtopping and barrier loading in
+Navier--Stokes tsunami simulations. \textcite{deljesus2012porous}
+supports deferring unresolved porous-barrier physics to a separate
+activation-gated model. Source roles: `3D-SST`, `3D-RANSVOF` and
+`3D-DEFERRED`. Project conclusion: the baseline comparison shall use
+resolved hydrodynamic outputs for impermeable or explicitly resolved
+barrier geometries, while unresolved porous dissipation is not claimed
+unless a porous model is activated.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-phy-bar-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+Overtopping volume during a loading interval is:
+
+\begin{align}
+  V_{\mathrm{ot}}
+  &=
+  \int_{t_0}^{t_1}
+  \int_{\Gamma_{\mathrm{crest}}}
+  \max
+  \left(
+    \mathbf{u}\cdot\mathbf{n}_{\mathrm{crest}},\,
+    0
+  \right)
+  \alpha
+  \,\dd\Gamma
+  \,\dd t
+  \label{eq:res-phy-bar-overtopping-volume}
+\end{align}
+
+A transmission measure may be defined from incident and transmitted
+energy-like wave measures:
+
+\begin{align}
+  K_{\mathrm{T}}
+  &=
+  \frac{
+    E_{\mathrm{trans}}
+  }{
+    E_{\mathrm{inc}}
+    +
+    \epsilon_E
+  }
+  \label{eq:res-phy-bar-transmission-measure}
+\end{align}
+
+Reflection and apparent dissipation measures shall be reported with
+the same incident-energy normalisation:
+
+\begin{align}
+  K_{\mathrm{R}}
+  &=
+  \frac{
+    E_{\mathrm{refl}}
+  }{
+    E_{\mathrm{inc}}
+    +
+    \epsilon_E
+  }
+  \label{eq:res-phy-bar-reflection-measure}
+  \\
+  D_E
+  &=
+  1
+  -
+  K_{\mathrm{T}}
+  -
+  K_{\mathrm{R}}
+  -
+  \frac{
+    E_{\mathrm{ot}}
+  }{
+    E_{\mathrm{inc}}
+    +
+    \epsilon_E
+  }
+  \label{eq:res-phy-bar-apparent-dissipation-measure}
+\end{align}
+
+Decision role: these equations define comparison diagnostics for
+energy redirection and loss, not a closed mechanical energy proof.
+Supporting evidence: \textcite{deljesus2012porous} for barrier
+transmission/reflection distinctions and \textcite{kozelkov2022turbulence}
+for turbulence-sensitive run-up and overtopping. Limitation: final
+energy definitions must be compatible with available validation
+measurements and numerical outputs.
+
+\subsection{Physical Mechanisms}
+\label{sec:res-phy-bar-physical-mechanisms}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The barrier-flow mechanisms of interest are incident-wave run-up,
+reflection, overtopping, flow separation, wake formation, local
+recirculation, transmitted wave reduction, pressure loading and
+turbulent dissipation. For the baseline impermeable model, energy
+dissipation is inferred from resolved hydrodynamic changes and
+turbulence modelling rather than unresolved porous resistance.
+
+Wall-type barriers primarily test reflection, run-up, overtopping,
+crest overflow and loading. Obstacle, dissipating and array barriers
+primarily test blockage, gap jets, separation, wake interaction,
+transmission reduction and downstream momentum redistribution. Source
+role: this distinction connects RES-GEO classes to measurable flow
+mechanisms. Supporting citations: \textcite{deljesus2012porous} and
+\textcite{watanabe2022validation}. Downstream handoff: RES-GEO-MET and
+RES-VER-MET shall preserve class-specific energy and loading metrics.
+
+\subsection{Characteristic Spatial and Temporal Scales}
+\label{sec:res-phy-bar-characteristic-spatial-temporal-scales}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Relevant Observables}
+\label{sec:res-phy-bar-relevant-observables}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+Relevant observables are maximum run-up, overtopping volume or
+discharge, transmitted wave height or energy measure, reflected-wave
+measure, downstream maximum depth and velocity, peak pressure, force,
+impulse, moment and wake/recirculation indicators.
+
+\subsection{Controlling Dimensionless Parameters}
+\label{sec:res-phy-bar-controlling-dimensionless-parameters}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Physical Regimes and Transition Conditions}
+\label{sec:res-phy-bar-physical-regimes-transition-conditions}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Implications for Model Validity}
+\label{sec:res-phy-bar-model-validity-implications}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-phy-bar-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-phy-bar-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-phy-bar-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-phy-bar-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-phy-bar-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-phy-bar-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected barrier-performance approach is comparative and
+hydrodynamic: candidate defences are compared using run-up,
+overtopping, transmission, reflected energy, pressure, force, impulse,
+moment and downstream-flow metrics extracted from accepted local 3D
+simulations. The word accepted here refers to timestep/run acceptance
+and later verification status; this Deliverable does not claim that
+validation has been executed.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-phy-bar-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open decisions are the final energy diagnostic, normalisation of
+transmission/reflection measures, accepted overtopping threshold,
+porous-extension activation gate and weighting of hydrodynamic metrics
+for optimisation.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-phy-bar-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-SPEC` shall extract these metrics after timestep acceptance.
+`RES-OPT-OBJ` shall decide how hydrodynamic outputs become objective
+functions. `RES-ML-REP` shall define which metrics become surrogate
+outputs, and `RES-VER-MET` shall define validation and acceptance
+criteria.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-phy-bar-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

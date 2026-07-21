@@ -1,0 +1,41 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-mod.bib}
+
+\title{RES-MOD --- Mathematical Model and Coupling}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-mod-domain-purpose}
+
+% TODO: State the Domain purpose, boundaries, exclusions and interfaces.
+
+\section{Domain Deliverables}
+\label{sec:res-mod-domain-deliverables}
+
+\input{"RES-MOD-SYS - System Boundary and Mathematical Model Architecture/res-mod-sys.tex"}
+\input{"RES-MOD-EQS - Governing Equations and State Variables/res-mod-eqs.tex"}
+\input{"RES-MOD-SRC - Physical Source Terms and Constitutive Closures/res-mod-src.tex"}
+\input{"RES-MOD-IBC - Initial, Boundary and Interface Condition Models/res-mod-ibc.tex"}
+\input{"RES-MOD-LRG - Large-Domain Representation and Model Reduction/res-mod-lrg.tex"}
+\input{"RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/res-mod-mul.tex"}
+\input{"RES-MOD-ASM - Assumptions, Applicability and Model Limitations/res-mod-asm.tex"}
+\input{"RES-MOD-SPEC - Integrated Mathematical Model Specification/res-mod-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

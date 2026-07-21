@@ -1,0 +1,524 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-MUL
+% Deliverable: Multidimensional and Multifidelity Coupling Strategy
+% Status: In progress
+% Evidence status: Regional-to-local replay and simultaneous-coupling requirements established
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-SYS, RES-MOD-EQS, RES-MOD-IBC, RES-NUM-IBC
+% Downstream interfaces: RES-NUM-SPEC, RES-VER-TST, Software coupling implementation
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-MUL --- Multidimensional and Multifidelity Coupling Strategy}
+\label{sec:res-mod-mul}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-mul-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable defines how the regional two-dimensional NLSWE model
+and the local three-dimensional URANS--VOF model are connected as
+continuous model components. It records coupling roles, validity
+conditions and handoffs, while leaving discrete interpolation,
+projection, residuals and software scheduling to `RES-NUM` and
+Software.
+
+\subsection{Research Questions}
+\label{sec:res-mod-mul-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+The coupling decision asks:
+
+\begin{enumerate}
+  \item When is one-way regional-to-local replay sufficient for
+    candidate screening?
+  \item When must the local three-dimensional model exchange feedback
+    with a retained regional buffer?
+  \item Which state variables must be lifted and restricted between
+    depth-averaged and three-dimensional descriptions?
+  \item Which validation tests decide that the cheaper coupling mode is
+    acceptable?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-mul-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-mul-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Romano et al. (2025)}
+\label{sec:res-mod-mul-evidence-romano-2025}
+
+\textcite{romano2025coupling} developed a sequential coupling strategy
+for a landslide-generated tsunami in complex fjord geometry. A
+three-dimensional model was retained through the near-field region in
+which source generation, strong nonlinearity, confinement, inundation,
+and topobathymetric transformation remained important. Its output was
+then transferred to a computationally cheaper two-dimensional model for
+subsequent propagation.
+
+The paper is retained for its treatment of model selection, interface
+placement, and information transfer rather than for its landslide-source
+formulation. The present project uses an earthquake-derived initial
+condition and a nonlinear shallow-water regional model, but the same
+modelling principle applies: the transition between models shall occur
+only after the physics omitted by the receiving model have become
+sufficiently weak.
+
+Romano et al.\ also varied the coupling-boundary position. Their results
+demonstrated that geometric distance from the source was not, by itself,
+a sufficient placement criterion. A reduced model could only reproduce
+the subsequent propagation satisfactorily after the wave had completed
+the strongly nonlinear and geometrically controlled transformations that
+required the three-dimensional representation.
+
+\subsubsection{Takase et al. (2016)}
+\label{sec:res-mod-mul-evidence-takase-2016}
+
+\textcite{takase2016hybrid} coupled a two-dimensional shallow-water model to a local three-dimensional free-surface Navier--Stokes model using independently generated unstructured meshes. Multiple-point constraints and transmission relations were used to maintain compatibility of velocity and pressure across non-conforming interfaces.
+
+The paper is retained as evidence that the two-dimensional and three-dimensional regions may remain independently discretised while exchanging the physical variables required for a consistent hybrid solution. Its finite-element constraint formulation is not adopted directly, as the regional solver developed in this project will use a finite-volume discretisation.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-mul-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-mul-system-boundary}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+The complete hydrodynamic system shall be decomposed into:
+\begin{enumerate}
+  \item a regional two-dimensional domain in which the depth-averaged shallow-water assumptions remain defensible;
+  \item a local three-dimensional domain in which vertical motion, free-surface deformation, overtopping, separation, impact, and detailed barrier geometry must be resolved;
+  \item an interface layer responsible for lifting, restricting, synchronising, and conserving information between the two model representations.
+\end{enumerate}
+The transition shall occur before local three-dimensional processes invalidate the depth-averaged representation. The interface location shall remain configurable rather than being treated as a permanently fixed coordinate.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-mul-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+The regional state may be represented by:
+\begin{align}
+  \vect{U}_{\mathrm{2D}} &= \left[ h,\, h\overline{u},\, h\overline{v} \right]^{\mathsf{T}}
+  \label{eq:res-mod-mul-two-dimensional-state}
+\end{align}
+where $h$ is total water depth and $\overline{u}$ and $\overline{v}$ are depth-averaged horizontal velocities.
+
+The local state may be represented by:
+\begin{align}
+  \vect{U}_{\mathrm{3D}} &= \left[ \vect{u},\, p,\, \alpha \right]^{\mathsf{T}}
+  \label{eq:res-mod-mul-three-dimensional-state}
+\end{align}
+where $\vect{u}$ is the three-dimensional velocity field, $p$ is pressure, and $\alpha$ denotes the selected free-surface or phase representation.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-mul-continuous-governing-model}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-mul-source-terms-closures}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-mul-initial-boundary-interface-conditions}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-mul-model-coupling-requirements}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+A lifting operator shall convert the depth-averaged regional state into a three-dimensional interface state:
+\begin{align}
+  \mathcal{L}_{2\rightarrow3} \left( \vec{U}_{\mathrm{2D}} \right) &= \vec{U}_{\mathrm{3D},\Gamma}
+  \label{eq:res-mod-mul-lifting-operator}
+\end{align}
+A restriction operator shall convert the three-dimensional interface state or interface fluxes back into a depth-integrated regional state:
+\begin{align}
+  \mathcal{R}_{3\rightarrow2} \left( \vec{U}_{\mathrm{3D},\Gamma} \right) &= \vec{U}_{\mathrm{2D},\Gamma}
+  \label{eq:res-mod-mul-restriction-operator}
+\end{align}
+The operators shall preserve, within the specified numerical tolerances:
+\begin{itemize}
+  \item free-surface compatibility;
+  \item normal mass flux;
+  \item normal and tangential momentum transfer;
+  \item hydrostatic pressure consistency where the shallow-water assumptions remain applicable;
+  \item spatial mapping between non-conforming meshes;
+  \item temporal consistency between different solver time steps;
+  \item propagation of outgoing and reflected disturbances.
+\end{itemize}
+The lifting operator shall initialise the local three-dimensional state from the regional solution. It shall not be interpreted as recovering a unique three-dimensional field from depth-averaged information. The local solver shall develop the resolved vertical and vortical structure after initialisation.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-mul-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+The one-way replay mode shall be considered sufficient only when:
+\begin{itemize}
+  \item the interface lies outside the region of material three-dimensional flow;
+  \item the barrier does not materially alter the incident state at the selected interface;
+  \item outgoing reflected waves are not artificially trapped or suppressed;
+  \item transferred mass and momentum remain within the specified imbalance tolerances;
+  \item quantities of interest remain insensitive to reasonable upstream movement of the interface;
+  \item comparison with the simultaneously coupled model remains within the defined fidelity tolerances.
+\end{itemize}
+Where these conditions are not satisfied, the simultaneously coupled mode shall be used.
+
+An interface shall be placed only where the state can be represented
+adequately by the governing assumptions of the receiving model. Its
+location shall therefore account for:
+
+\begin{itemize}
+  \item wave nonlinearity;
+  \item vertical acceleration and velocity structure;
+  \item hydrostatic-pressure validity;
+  \item wave breaking and free-surface fragmentation;
+  \item geometric confinement;
+  \item abrupt bathymetric contraction or expansion;
+  \item local resonance or reflection;
+  \item barrier-induced wake and recirculation;
+  \item inundation and moving-shoreline behaviour;
+  \item the frequency content retained by the receiving model.
+\end{itemize}
+
+The upstream two-dimensional-to-three-dimensional interface shall be
+positioned before processes requiring the three-dimensional model become
+dominant. The downstream three-dimensional-to-two-dimensional interface
+shall be positioned after those processes have decayed sufficiently.
+
+The interface shall not be accepted solely from qualitative inspection.
+Its suitability shall be demonstrated by moving the interface and
+showing convergence of the quantities of interest.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-mul-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+Four operational modes shall be supported conceptually.
+
+\subsubsection{Standalone Two-Dimensional Mode}
+\label{sec:res-mod-mul-mode-two-dimensional}
+The regional model shall simulate earthquake-generated tsunami formation, offshore propagation, bathymetric transformation, shoaling, and regional inundation while its assumptions remain valid.
+
+\subsubsection{Standalone Three-Dimensional Mode}
+\label{sec:res-mod-mul-mode-three-dimensional}
+The local model shall support prescribed analytical, experimental, or numerically reconstructed inflow conditions for component verification and controlled barrier studies.
+
+\subsubsection{One-Way Replay Mode}
+\label{sec:res-mod-mul-mode-one-way}
+A saved regional checkpoint or stored interface history shall supply the incident state to the local three-dimensional model. The three-dimensional solution shall not modify the regional solution in this mode. For each environmental scenario, the full regional simulation may be advanced once to a selected pre-impact time $t_s$. The saved checkpoint shall contain the regional restart state, interface variables, solver time, and all numerical metadata required for deterministic reconstruction.
+
+\subsubsection{Simultaneously Coupled Mode}
+\label{sec:res-mod-mul-mode-simultaneous}
+The retained regional subdomain and local three-dimensional domain shall advance over the same physical time interval while exchanging information at defined coupling points. This mode shall permit barrier-generated reflection and other local disturbances to influence the retained regional solution. The coupled model may remain partitioned, with the two solvers executed as independent modules. Monolithic assembly of both equation systems is not required provided that the partitioned exchange converges and satisfies the prescribed conservation and compatibility conditions.
+
+The model architecture shall permit different spatial arrangements of
+the two-dimensional and three-dimensional domains.
+
+A conventional upstream transition may be represented as:
+
+\begin{align}
+  \Omega_{\mathrm{2D}}^{\mathrm{up}}
+  \xrightarrow{\mathcal{L}_{2\rightarrow3}}
+  \Omega_{\mathrm{3D}}
+  \label{eq:res-mod-mul-upstream-transition}
+\end{align}
+
+where the regional two-dimensional state is lifted into a local
+three-dimensional state before the flow enters the region of strong
+vertical motion or barrier interaction.
+
+A downstream transition may be represented as:
+
+\begin{align}
+  \Omega_{\mathrm{3D}}
+  \xrightarrow{\mathcal{R}_{3\rightarrow2}}
+  \Omega_{\mathrm{2D}}^{\mathrm{down}}
+  \label{eq:res-mod-mul-downstream-transition}
+\end{align}
+
+where the local three-dimensional result is restricted to a
+depth-integrated state after the barrier-induced wake, vertical shear,
+free-surface fragmentation, and other three-dimensional processes have
+decayed sufficiently.
+
+The upstream and downstream interfaces need not occupy the same
+location. They may use different transfer operators and validity
+criteria, reflecting the different physical states entering and leaving
+the local three-dimensional domain.
+
+\subsection{Multidimensional and Multifidelity Coupling Strategy}
+\label{sec:res-mod-mul-coupling-strategy}
+
+The baseline workflow shall separate the expensive source-to-coast propagation from the repeatedly executed barrier-interaction stage:
+\begin{enumerate}
+  \item generate the tsunami using an earthquake-derived initial condition;
+  \item advance the regional two-dimensional model towards the selected coastal region;
+  \item save a complete pre-impact checkpoint at time $t_s$;
+  \item restore the checkpoint for each candidate barrier geometry;
+  \item initialise the local three-dimensional model through $\mathcal{L}_{2\rightarrow3}$;
+  \item execute either the one-way replay mode or the simultaneously coupled mode;
+  \item calculate the hydrodynamic quantities of interest;
+  \item compare, rank, or modify the candidate geometry.
+\end{enumerate}
+The saved state shall include a retained two-dimensional buffer upstream of the local three-dimensional domain when reflected-wave feedback is to be represented. The upstream edge of this buffer shall receive the incident-wave forcing while permitting outgoing reflected disturbances to leave without material numerical contamination.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-mul-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+The one-way replay model is computationally cheaper and permits the same regional incident state to be reused across many candidate geometries. It neglects feedback from the local three-dimensional domain into the regional solution. The simultaneously coupled model represents this feedback but requires continued execution of the retained two-dimensional domain, bidirectional interface transfer, temporal synchronisation, and additional convergence controls. Neither mode shall be selected universally. Their difference shall be quantified using identical initial checkpoints, geometries, interface locations, meshes, physical parameters, and output definitions.
+
+Romano et al.\ used a three-dimensional granular-landslide and
+free-surface model in the near field and a linear mild-slope model for
+far-field propagation. Those selections were appropriate to their
+source mechanism, complex fjord geometry, and far-field modelling
+objective. They are not transferred directly into the present
+earthquake-tsunami framework.
+
+The following elements are adopted:
+
+\begin{itemize}
+  \item assign each spatial region the least expensive model that
+    retains the locally important physics;
+  \item place the interface according to model validity rather than
+    distance alone;
+  \item assess several candidate interface locations;
+  \item retain the high-fidelity model through geometric bottlenecks,
+    strong confinement, nonlinear transformation, and other
+    processes outside the reduced model's applicability;
+  \item permit a saved high-fidelity history to initialise a cheaper
+    downstream model;
+  \item preserve the temporal and spectral content of the transferred
+    wave;
+  \item separate the physical coupling strategy from the particular
+    source-generation model.
+\end{itemize}
+
+The following elements are not adopted directly:
+
+\begin{itemize}
+  \item the granular-landslide source, as the primary benchmark is
+    generated through earthquake-induced seabed deformation;
+  \item the linear mild-slope equation, as the regional model must
+    support nonlinear propagation, wetting--drying, and
+    inundation;
+  \item a free-surface-only transfer, as a nonlinear shallow-water
+    receiver requires water depth and depth-integrated discharge;
+  \item frequency-domain propagation as the primary execution method,
+    as the planned coupling architecture is time-domain and
+    restartable;
+  \item a fixed shoreline, as coastal inundation forms part of the
+    benchmark problem.
+\end{itemize}
+
+These choices are omitted as case-specific implementations rather than
+treated as invalid methods. Their role in the paper clarifies why the
+coupling variables and reduced model must be selected according to the
+receiving model's governing equations and intended outputs.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-mul-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-mul-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-mul-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The project shall adopt a modular and restartable two-dimensional-- three-dimensional architecture rather than one fixed hybrid configuration. The physical solvers, checkpoint system, lifting operator, restriction operator, and coupling controller shall remain separable components.
+
+The one-way replay and simultaneously coupled models shall both be retained. The one-way model shall provide an efficient candidate-screening path, while the coupled model shall provide the reference treatment when barrier-generated reflections or other upstream effects are material.
+
+The selection between the two modes shall be evidence-based. A direct comparison shall determine whether the additional coupling fidelity causes a substantial change in the engineering quantities used to evaluate a barrier.
+
+Romano et al.\ support a modular interpretation of the coupled model in
+which the governing formulation may change more than once across the
+domain. The project shall therefore not be restricted to a single
+two-dimensional-to-three-dimensional transition.
+
+The target architecture shall support:
+
+\begin{align}
+  \Omega_{\mathrm{2D}}^{\mathrm{up}}
+  \xrightarrow{\mathcal{L}_{2\rightarrow3}}
+  \Omega_{\mathrm{3D}}
+  \xrightarrow{\mathcal{R}_{3\rightarrow2}}
+  \Omega_{\mathrm{2D}}^{\mathrm{down}}
+  \label{eq:res-mod-mul-complete-spatial-chain}
+\end{align}
+
+where either two-dimensional region may be omitted when unnecessary.
+The central three-dimensional region shall extend far enough upstream
+and downstream to contain all processes that cannot be represented
+reliably by the regional depth-averaged equations.
+
+The same operators shall support the saved one-way replay model and the
+simultaneously coupled model. Differences between those execution modes
+shall be determined through direct comparison rather than presumed from
+the coupling direction alone.
+
+The Tōhoku hindcast literature provides further evidence that the
+complete event should be represented as a chain of purpose-specific
+models rather than by one uniformly complex formulation.
+
+The model chain may include:
+
+\begin{align}
+  \mathcal{M}_{\mathrm{source}}
+  \rightarrow
+  \mathcal{M}_{\mathrm{regional}}
+  \rightarrow
+  \mathcal{M}_{\mathrm{nearshore}}
+  \rightarrow
+  \mathcal{M}_{\mathrm{local\mbox{-}3D}}
+  \label{eq:res-mod-mul-purpose-specific-chain}
+\end{align}
+
+Each transition shall be justified by:
+
+\begin{itemize}
+  \item a change in the dominant physical processes;
+  \item a change in the validity of the governing assumptions;
+  \item a requirement for increased spatial or dimensional
+    resolution;
+  \item a demonstrated reduction in computational cost relative to
+    applying the highest-fidelity model everywhere.
+\end{itemize}
+
+A limitation of one model shall not be interpreted automatically as a
+limitation of the complete architecture. Where appropriate, the model
+shall be terminated before its assumptions fail and its state shall be
+transferred into a formulation capable of representing the subsequent
+physics.
+
+The reviewed regional hindcasts support this modular principle but do
+not replace the dedicated two-dimensional--three-dimensional coupling
+evidence assigned elsewhere in this Deliverable.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-mul-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected baseline execution mode is one-way replay:
+
+\begin{quote}
+  regional 2D NLSWE checkpoint and interface history
+  $\rightarrow$
+  local 3D URANS--VOF tsunami--barrier interaction simulation
+\end{quote}
+
+Source role: `3D-COUPLING`. Supporting sources:
+\textcite{takase2016hybrid} and \textcite{romano2025coupling}.
+Project-specific conclusion: one regional event reconstruction can
+drive repeated local barrier simulations for efficient candidate
+screening. Limitation: the one-way branch is not accepted when
+barrier-generated reflection, blocking, resonance or downstream
+feedback materially changes quantities of interest.
+
+The higher-fidelity mode is simultaneous coupling with a retained
+two-dimensional buffer and a local three-dimensional domain. This mode
+shall be activated when direct comparison shows that one-way replay
+changes safety-critical outputs or candidate ranking beyond the
+accepted tolerance. The mathematical coupling architecture is
+event-independent; a selected event changes source, bathymetry,
+topography and boundary histories rather than the coupling formulation.
+
+For the active Tōhoku baseline, the replay histories are extracted
+from the Kamaishi and Sendai corridors defined in `RES-DAT-SCN` and
+consolidated in `RES-DAT-CAS`. Corridor construction is therefore a
+data/model interface: it selects the inlet section, buffer region,
+terrain subset and observation bundle used by the coupling test. It is
+not a separate physics model and shall not be adjusted by hand to
+improve a local 3D result.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-mul-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open coupling decisions are the exact lifting and restriction
+operators, temporal interpolation method, interface-location study,
+feedback residuals, convergence criteria and acceptance tolerances for
+selecting between replay and simultaneous coupling.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-mul-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The Software workstream shall implement:
+\begin{itemize}
+  \item deterministic saving and restoration of complete regional checkpoints;
+  \item independently executable two-dimensional and three-dimensional solver modules;
+  \item lifting and restriction operators;
+  \item configurable interface locations;
+  \item manifest-linked corridor and replay-boundary identifiers;
+  \item one-way and bidirectional coupling modes;
+  \item configurable coupling intervals and temporal interpolation;
+  \item conservation and compatibility diagnostics;
+  \item concurrent execution of comparison branches;
+  \item a synchronisation point that prevents comparison from proceeding until both branches have completed.
+\end{itemize}
+The one-way and coupled comparison branches shall operate on separate copies of an immutable checkpoint and shall not share mutable solver state. Compute resources shall be partitioned explicitly to avoid thread or process oversubscription. The Verification workstream shall define the fidelity metrics, acceptance tolerances, interface-location study, and conservation tests used to approve either execution mode.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-mul-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

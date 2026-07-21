@@ -1,0 +1,175 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-SRC
+% Deliverable: Numerical Treatment of Source Terms and Well-Balancing
+% Status: Draft complete
+% Evidence status: Regional research specification complete
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies: RES-MOD-SRC, RES-NUM-FRM, RES-NUM-FLX
+% Downstream interfaces: RES-NUM-WET, RES-VER-TST, Software source-term implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-SRC --- Numerical Treatment of Source Terms and Well-Balancing}
+\label{sec:res-num-src}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-src-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-num-src-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-src-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-src-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-src-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-src-discrete-formulation}
+
+The regional bed source is discretised with hydrostatic reconstruction.
+At each face, the common hydrostatic bed and reconstructed depths are
+defined by
+\cref{eq:res-num-spec-regional-hydrostatic-face-bed,eq:res-num-spec-regional-hydrostatic-left-depth,eq:res-num-spec-regional-hydrostatic-right-depth}.
+The second-order bed-gradient source uses
+\cref{eq:res-num-spec-regional-second-order-bed-source}.
+
+Manning friction is advanced by the split semi-implicit update owned by
+`RES-NUM-TIM`. Sponge damping is represented by
+\cref{eq:res-num-spec-regional-sponge-source,eq:res-num-spec-regional-sponge-ramp,eq:res-num-spec-regional-sponge-max}.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-src-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-src-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-src-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-src-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-src-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-src-verification-requirements}
+
+The source treatment shall be verified against lake-at-rest states over
+non-flat bathymetry, wet/dry shoreline motion, Manning-only decay, a
+moving-bottom generation case, and sponge-layer reflection diagnostics.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-src-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-src-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-src-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-src-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-src-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-src-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional source-term approach is:
+
+\begin{itemize}
+  \item hydrostatic reconstruction for bed-slope balance;
+  \item matching second-order bed-gradient source in cells;
+  \item dynamic bed updates at Runge--Kutta stage times;
+  \item Strang-split Manning friction;
+  \item polynomial sponge ramp with baseline $p=2$,
+    $A_{\mathrm{target}}=0.01$ and $L_{\mathrm{sp}}=50$--$100~\mathrm{km}$.
+\end{itemize}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-src-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Final roughness fields, sponge placement, source-time functions and
+lake-at-rest tolerances remain open until data selection and
+verification are executed.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-src-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-src-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

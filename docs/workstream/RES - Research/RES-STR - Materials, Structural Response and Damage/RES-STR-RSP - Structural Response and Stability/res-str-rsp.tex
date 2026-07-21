@@ -1,0 +1,212 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-STR-RSP
+% Deliverable: Structural Response and Stability
+% Status: Not started
+% Evidence status: Not assessed
+% Review status: Not reviewed
+% Last updated:
+% Dependencies:
+% Downstream interfaces:
+% -------------------------------------------------------------------------
+
+\section{RES-STR-RSP --- Structural Response and Stability}
+\label{sec:res-str-rsp}
+
+\subsection{Purpose and Scope}
+\label{sec:res-str-rsp-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-str-rsp-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-str-rsp-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-str-rsp-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-str-rsp-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Three-Dimensional Structural Equation of Motion}
+\label{subsec:res_str_rsp_three_dimensional_eom}
+
+For the active hydrodynamic baseline, the barrier is represented in
+the fluid model as a fixed rigid solid. The deformable three-dimensional
+solid description below is retained as a future structural-response
+extension after hydrodynamic load histories have been validated.
+
+Following spatial discretisation, the structural equation of motion is
+
+\begin{align}
+\bm{M}_{s}\ddot{\bm{q}}
++
+\bm{C}_{s}\dot{\bm{q}}
++
+\bm{f}_{\mathrm{int}}\!\left(\bm{q},\bm{z}\right)
+&=
+\bm{f}_{\mathrm{hyd}}(t)
++
+\bm{f}_{\mathrm{body}}(t)
+\label{eq:res_str_rsp_structural_eom}
+\end{align}
+
+where \(\bm{q}\) contains the structural displacement degrees of freedom, \(\bm{z}\) contains material-history variables, \(\bm{M}_{s}\) is the mass matrix, \(\bm{C}_{s}\) is the damping matrix and \(\bm{f}_{\mathrm{int}}\) is the nonlinear internal-force vector.
+
+The fixed-base boundary condition is
+
+\begin{align}
+\bm{d}
+&=
+\bm{0}
+\qquad
+\text{on }\Gamma_{\mathrm{base}}
+\label{eq:res_str_rsp_fixed_base_boundary}
+\end{align}
+
+A nonlinear and irregular tsunami load does not itself require nonlinear material behaviour. Structural nonlinearity arises from finite deformation, nonlinear constitutive response, contact, damage or failure. These mechanisms are deferred until a separate structural activation gate is passed.
+
+\subsection{Updated-Lagrangian Reference Description}
+\label{subsec:res_str_rsp_updated_lagrangian}
+
+The Lagrangian formulation governs how the deforming solid is referenced during one tsunami simulation. In an Updated-Lagrangian formulation, the latest converged configuration becomes the reference for the following increment
+
+\begin{align}
+\bm{x}_{n+1}
+&=
+\bm{x}_{n}
++
+\Delta\bm{d}_{n+1}
+\label{eq:res_str_rsp_updated_lagrangian_position}
+\end{align}
+
+This differs from the barrier-class comparison loop. Each future
+structural case would begin with its own undeformed design geometry,
+while the Updated-Lagrangian formulation governs deformation within
+that structural simulation.
+
+If structural response is activated, candidate geometries may undergo
+substantial rotation, yielding and permanent shape change. The
+Updated-Lagrangian description is therefore retained as the preferred
+finite-deformation reference formulation. It is compatible with
+three-dimensional transient solid dynamics and incremental
+constitutive updates \autocite{nemer2021}
+
+\textbf{Deferred selected approach.} Use an Updated-Lagrangian
+three-dimensional finite-deformation solid model only after the
+fixed-rigid hydrodynamic load extraction and validation gate is passed.
+
+\subsection{Material or Structural System}
+\label{sec:res-str-rsp-material-structural-system}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Load Cases}
+\label{sec:res-str-rsp-load-cases}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Constitutive Behaviour}
+\label{sec:res-str-rsp-constitutive-behaviour}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Response and Stability Measures}
+\label{sec:res-str-rsp-response-stability-measures}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Damage and Failure Modes}
+\label{sec:res-str-rsp-damage-failure-modes}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Fluid--Structure Coupling Requirements}
+\label{sec:res-str-rsp-fluid-structure-coupling-requirements}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-str-rsp-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-str-rsp-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-str-rsp-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-str-rsp-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-str-rsp-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-str-rsp-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-str-rsp-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-str-rsp-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-str-rsp-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

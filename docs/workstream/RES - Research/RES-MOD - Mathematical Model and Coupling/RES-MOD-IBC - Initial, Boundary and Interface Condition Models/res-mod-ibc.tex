@@ -1,0 +1,417 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-IBC
+% Deliverable: Initial, Boundary and Interface Condition Models
+% Status: Draft complete
+% Evidence status: Research specification complete for regional NLSWE and local 3D boundary roles
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-EQS, RES-DAT-GEO, RES-DAT-SRC, RES-MOD-MUL
+% Downstream interfaces: RES-NUM-IBC, RES-NUM-WET, RES-VER-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-IBC --- Initial, Boundary and Interface Condition Models}
+\label{sec:res-mod-ibc}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-ibc-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-mod-ibc-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-ibc-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-ibc-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{higuera2013realistic} is retained as evidence that
+Navier--Stokes numerical wave tanks require compatible wave generation,
+active absorption and relaxation/open-boundary treatments. Source
+role: `3D-WAVEBC`. Project conclusion: the local inlet, outlet and
+lateral ocean cuts shall be treated as wave-boundary components rather
+than generic zero-gradient faces. Limitation: exact relaxation-zone
+lengths and damping profiles remain numerical and validation choices.
+
+\textcite{takase2016hybrid} and \textcite{romano2025coupling} support
+independent regional and local domains connected through interface
+state transfer. Source role: `3D-COUPLING`. Project conclusion: local
+inlet histories shall be reconstructable from regional water depth,
+surface elevation and discharge histories. Limitation: the initial
+depth-uniform hydrostatic lift is not a unique reconstruction of the
+three-dimensional state.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-ibc-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-ibc-system-boundary}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-ibc-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-ibc-continuous-governing-model}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-ibc-source-terms-closures}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-ibc-initial-boundary-interface-conditions}
+
+The regional two-dimensional model uses a horizontal depth-averaged
+state. Initial conditions therefore consist of the cellwise water depth,
+depth-integrated discharges, static bed, and any time-dependent
+earthquake bed increments. Cross-sectional views are diagnostic outputs
+derived from the horizontal solution and shall not be used as separate
+one-dimensional solved domains.
+
+Artificial ocean boundaries are represented by boundary states
+$\mathbf{U}_{\mathrm{B}}$ supplied to the numerical flux. The baseline
+mathematical boundary roles are:
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.26\textwidth}
+      p{0.30\textwidth}
+      p{0.34\textwidth}
+    }
+    \hline
+    Boundary or interface
+    &
+    Regional treatment
+    &
+    Status
+    \\
+    \hline
+    Offshore artificial boundary
+    &
+    Characteristic or radiation open boundary
+    &
+    Established at specification level; validation pending
+    \\
+    Lateral artificial ocean cuts
+    &
+    Radiation or open boundary, with sponge damping where required
+    &
+    Established at specification level; domain-specific tuning pending
+    \\
+    Physical coastline
+    &
+    Topography plus wetting--drying, not an external wall boundary
+    &
+    Established at specification level
+    \\
+    True wall or resolved structure
+    &
+    Reflective boundary state
+    &
+    Established for walls; final defence representation remains
+    RES-GEO/RES-MOD-MUL work
+    \\
+    Regional-to-local interface
+    &
+    Conservative transfer of $h$, $\eta$, $q_x$, $q_y$ and derived
+    boundary histories
+    &
+    Coupling algorithm deferred
+    \\
+    \hline
+  \end{tabular}
+  \caption{Regional boundary and interface condition roles}
+  \label{tab:res-mod-ibc-regional-boundary-roles}
+\end{table}
+
+\subsubsection{Local Three-Dimensional Boundary Roles}
+\label{sec:res-mod-ibc-local-boundary-roles}
+
+The local boundary partition is defined in
+\cref{eq:res-mod-sys-local-boundary-partition}. The continuous local
+boundary roles are:
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.20\textwidth}
+      p{0.31\textwidth}
+      p{0.38\textwidth}
+    }
+    \hline
+    Boundary
+    &
+    Continuous role
+    &
+    Project status
+    \\
+    \hline
+    $\Gamma_{\mathrm{in}}$
+    &
+    Regional-to-local incident-wave forcing
+    &
+    Selected for one-way replay; also used by simultaneous coupling
+    \\
+    $\Gamma_{\mathrm{out}}$
+    &
+    Downstream open or radiation boundary with absorption where needed
+    &
+    Selected as a boundary role; exact formula and relaxation length
+    remain numerical choices
+    \\
+    $\Gamma_{\mathrm{side}}$
+    &
+    Lateral open-ocean cuts
+    &
+    Selected as open/radiation boundaries, not physical walls
+    \\
+    $\Gamma_{\mathrm{top}}$
+    &
+    Open atmosphere
+    &
+    Selected as an open pressure/reference-air boundary
+    \\
+    $\Gamma_{\mathrm{T}}$
+    &
+    Fixed terrain and bathymetry
+    &
+    Selected as a no-slip wall with wall-model details owned by
+    `RES-NUM-IBC`
+    \\
+    $\Gamma_{\mathrm{B}}$
+    &
+    Fixed rigid barrier surface
+    &
+    Selected for baseline hydrodynamics; structural motion deferred
+    to activated FSI
+    \\
+    \hline
+  \end{tabular}
+  \caption{Continuous local three-dimensional boundary-condition roles}
+  \label{tab:res-mod-ibc-local-boundary-roles}
+\end{table}
+
+For one-way replay the regional model supplies
+$h_{\mathrm{R}}$, $\eta_{\mathrm{R}}$, $q_{x,\mathrm{R}}$ and
+$q_{y,\mathrm{R}}$ on the interface. The depth-averaged velocities are:
+
+\begin{align}
+  u_{\mathrm{R}}
+  &=
+  \frac{
+    q_{x,\mathrm{R}}
+  }{
+    h_{\mathrm{R}}
+  }
+  \label{eq:res-mod-ibc-regional-to-local-u}
+  \\
+  v_{\mathrm{R}}
+  &=
+  \frac{
+    q_{y,\mathrm{R}}
+  }{
+    h_{\mathrm{R}}
+  }
+  \label{eq:res-mod-ibc-regional-to-local-v}
+\end{align}
+
+The baseline local inlet reconstruction is:
+
+\begin{align}
+  \alpha_{\mathrm{in}}
+  &=
+  \mathcal{H}
+  \left(
+    \eta_{\mathrm{R}}-z
+  \right)
+  \label{eq:res-mod-ibc-local-inlet-alpha}
+  \\
+  \mathbf{u}_{\mathrm{in}}
+  &=
+  \left[
+    u_{\mathrm{R}},\,
+    v_{\mathrm{R}},\,
+    0
+  \right]^{\mathsf{T}}
+  \label{eq:res-mod-ibc-local-inlet-velocity}
+  \\
+  p_{\mathrm{in}}
+  &=
+  \rho_{\mathrm{w}} g
+  \max
+  \left(
+    \eta_{\mathrm{R}}-z,\,
+    0
+  \right)
+  \label{eq:res-mod-ibc-local-inlet-pressure}
+\end{align}
+
+where $\mathcal{H}$ is a phase-indicator reconstruction. This is a
+depth-uniform, hydrostatic lift and is valid only where the interface
+is upstream of strong local vertical acceleration, breaking and
+barrier-induced separation.
+
+On the fixed terrain and barrier surfaces the baseline velocity
+condition is:
+
+\begin{align}
+  \mathbf{u}_{\mathrm{f}}
+  &=
+  \mathbf{0}
+  \qquad
+  \mathrm{on}
+  \quad
+  \Gamma_{\mathrm{T}}
+  \cup
+  \Gamma_{\mathrm{B}}
+  \label{eq:res-mod-ibc-local-no-slip}
+\end{align}
+
+The no-slip condition defines the continuous wall role. The high-
+Reynolds-number wall-function approximation used by the discrete model
+belongs to `RES-NUM-IBC` and shall not be mistaken for a change in the
+continuous boundary condition.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-ibc-model-coupling-requirements}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+The local boundary histories shall remain event-independent in
+formulation. A Tohoku case, or any later event, changes the supplied
+time series and terrain data, not the mathematical boundary roles in
+\cref{tab:res-mod-ibc-local-boundary-roles}.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-ibc-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-ibc-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-ibc-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-ibc-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-ibc-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-ibc-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-ibc-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional condition model is a face-state boundary
+formulation. Boundary conditions act during every residual evaluation,
+not as a post-step correction. This preserves consistency with the
+finite-volume conservation update and lets open, reflective, sponge and
+interface boundaries share one mathematical mechanism.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-ibc-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The regional boundary-condition roles are established, but the following
+remain open:
+
+\begin{itemize}
+  \item final QGIS/geospatial domain lock and artificial-boundary
+    placement;
+  \item sponge-layer width and damping scale after domain selection;
+  \item final regional-to-local transfer operators;
+  \item final representation of documented defences as topography,
+    wall faces, holes, porous interfaces, or local 3D extraction
+    regions.
+  \item local inlet relaxation treatment and pressure compatibility
+    under strong reflection;
+  \item local wall-function and roughness parameters for terrain and
+    barrier surfaces;
+  \item local outlet and side-boundary absorption settings.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-ibc-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-IBC` shall express each boundary role as a discrete boundary
+state or transfer operator. `RES-DAT-GEO` shall provide the final
+domain, coastline, datum and coordinate transforms before boundary
+locations are locked.
+
+`RES-VER-FRM` and `RES-VER-MET` shall test whether boundary reflections
+or inlet reconstruction errors alter run-up, overtopping, pressure,
+force, moment or candidate ranking.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-ibc-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

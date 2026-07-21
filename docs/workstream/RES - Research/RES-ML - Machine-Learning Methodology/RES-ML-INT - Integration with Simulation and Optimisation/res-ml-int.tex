@@ -1,0 +1,175 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-ML-INT
+% Deliverable: Integration with Simulation and Optimisation
+% Status: In progress
+% Evidence status: Integration deferred by current hydrodynamic scope
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-ML-SUR, RES-VER-SPEC, RES-OPT-SPEC
+% Downstream interfaces: Software implementation planning, RES-ML-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-ML-INT --- Integration with Simulation and Optimisation}
+\label{sec:res-ml-int}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ml-int-purpose}
+
+This Deliverable records a deferred integration path. During the
+active project phase, Software integration is limited to data
+handling, structured outputs and validation reports for the regional
+and local hydrodynamic models. Surrogate, optimisation and FSI
+integration remain future work.
+
+\subsection{Research Questions}
+\label{sec:res-ml-int-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ml-int-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ml-int-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ml-int-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Machine-Learning Role}
+\label{sec:res-ml-int-machine-learning-role}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Non-ML Baseline}
+\label{sec:res-ml-int-non-ml-baseline}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Input and Output Representation}
+\label{sec:res-ml-int-input-output-representation}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Dataset Requirements}
+\label{sec:res-ml-int-dataset-requirements}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Model or Architecture Candidates}
+\label{sec:res-ml-int-model-architecture-candidates}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Training and Validation Method}
+\label{sec:res-ml-int-training-validation-method}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Evaluation Metrics}
+\label{sec:res-ml-int-evaluation-metrics}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Generalisation and Uncertainty}
+\label{sec:res-ml-int-generalisation-uncertainty}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Simulation and Optimisation Integration}
+\label{sec:res-ml-int-simulation-optimisation-integration}
+
+The deferred integration sequence is:
+\begin{enumerate}
+  \item consume validated Tohoku corridor and barrier-class outputs;
+  \item specify a future candidate configuration or intervention;
+  \item verify that the query lies inside the future surrogate domain;
+  \item predict response and uncertainty;
+  \item screen or rank reinforcement options;
+  \item require direct hydrodynamic, structural or FSI simulation when
+    uncertain or out of domain;
+  \item add accepted verified simulations to the controlled dataset.
+\end{enumerate}
+
+\subsection{Candidate Approaches}
+\label{sec:res-ml-int-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ml-int-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ml-int-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ml-int-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ml-int-conclusions}
+
+Integration remains a governed future screening workflow. For the
+current phase, accepted physical evidence flows from validated
+simulation into structured outputs only; surrogate predictions do not
+route decisions.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ml-int-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ml-int-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ml-int-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ml-int-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

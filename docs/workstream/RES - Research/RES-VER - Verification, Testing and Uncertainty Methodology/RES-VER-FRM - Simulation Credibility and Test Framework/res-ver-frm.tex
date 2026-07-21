@@ -1,0 +1,205 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-FRM
+% Deliverable: Simulation Credibility and Test Framework
+% Status: In progress
+% Evidence status: Local 3D validation hierarchy established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-MOD-SPEC, RES-NUM-SPEC, RES-PHY-LOD
+% Downstream interfaces: RES-VER-BMK, RES-VER-MET, Software validation reports
+% -------------------------------------------------------------------------
+
+\section{RES-VER-FRM --- Simulation Credibility and Test Framework}
+\label{sec:res-ver-frm}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-frm-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable defines the validation hierarchy for the local
+three-dimensional URANS--VOF tsunami--barrier model. It separates
+solver capability, event-conditioned hydrodynamics and local
+impact/loading credibility.
+
+\subsection{Research Questions}
+\label{sec:res-ver-frm-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-frm-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-frm-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{qin2018comparison} is retained as evidence that local model
+validation must include velocity and force, not only free-surface
+height. \textcite{watanabe2022validation} is retained as evidence that
+blind tsunami-impact simulations can vary materially in force and
+velocity predictions even when the general hydrodynamic setup is
+shared. Source role: `3D-VALIDATION`. Project conclusion: local
+validation shall be staged and multi-output. Limitation: passing one
+stage does not automatically validate the next stage.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-frm-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-frm-test-objective}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+The local validation objective is:
+
+\begin{quote}
+  V1 solver capability
+  $\rightarrow$
+  V2 event-conditioned hydrodynamic realism
+  $\rightarrow$
+  V3 local impact and loading credibility
+\end{quote}
+
+V1 checks that the numerical method can solve canonical free-surface
+and impact problems. V2 checks that the selected event and local
+forcing reproduce relevant hydrodynamic observations. V3 checks that
+pressure, force, impulse, moment, overtopping and transmitted/reflected
+wave outputs are credible for barrier-performance assessment.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-frm-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-frm-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-frm-measured-quantities}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+The framework shall measure free-surface elevation, arrival time,
+velocity, run-up, overtopping, phase volume, pressure, shear, resultant
+force, force impulse, moment, transmission/reflection measures and
+computational diagnostics.
+
+\subsection{Error Metrics}
+\label{sec:res-ver-frm-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-frm-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+Acceptance shall be stage-specific. A model that passes V1 remains
+unvalidated for the selected event until V2 passes. A model that passes
+V2 remains unvalidated for barrier loading until V3 passes. URANS
+$k$--$\omega$ SST shall be accepted for screening only where it
+preserves the safety-critical quantities and candidate ranking within
+the tolerances defined in `RES-VER-MET`.
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-frm-execution-handoff}
+
+Research deliverables specify the credibility hierarchy and required
+metrics only. Software validation reports shall state whether a result
+is V1, V2 or V3 evidence, which dataset and geometry identifiers were
+used, and which acceptance criteria passed. No validation shall be
+claimed from the existence of this specification alone.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-frm-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-frm-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-frm-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-frm-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-frm-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-frm-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected credibility framework is the three-stage V1--V2--V3
+hierarchy. It prevents water-level agreement, solver stability or
+successful regional propagation from being treated as sufficient
+validation of local pressure and loading.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-frm-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-frm-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-VER-BMK` shall define benchmark classes for V1. `RES-VER-MET`
+shall define output-specific metrics and tolerances for V2 and V3.
+Software validation reports shall identify which stage each result
+supports.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-frm-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,235 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-SPEC
+% Deliverable: Integrated Simulation Test Specification
+% Status: In progress
+% Evidence status: V1--V2--V3 hierarchy established; execution pending
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-MOD-SPEC, RES-NUM-SPEC, RES-DAT-CAS, RES-GEO-SPEC
+% Downstream interfaces: Software test implementation, validation campaign
+% -------------------------------------------------------------------------
+
+\section{RES-VER-SPEC --- Integrated Simulation Test Specification}
+\label{sec:res-ver-spec}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-spec-purpose}
+
+This Deliverable integrates the verification and validation plan for
+the regional 2D NLSWE model, the local 3D URANS--VOF fixed-barrier
+model and the regional-to-local replay interface. It defines required
+tests and emitted metrics only; it does not claim that validation has
+been executed.
+
+\subsection{Research Questions}
+\label{sec:res-ver-spec-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-spec-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-spec-literature-evidence}
+
+\textcite{grilli2013tohoku} and \textcite{wei2013japan} support a
+Tohoku hindcast stage in which source, propagation and coastal
+hydrodynamic observations are compared before local impact claims are
+made. \textcite{qin2018comparison} and \textcite{watanabe2022validation}
+support local validation using velocity, pressure and force outputs
+rather than free-surface elevation alone. Project conclusion: the
+test specification shall be staged as V1 solver capability, V2 Tohoku
+hydrodynamics and V3 local impact/loading.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-spec-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-spec-test-objective}
+
+The integrated test objective is to verify that:
+
+\begin{enumerate}
+  \item V1 solver-capability tests pass for regional propagation,
+    local free-surface flow, wall/obstacle impact and conservation;
+  \item V2 Tohoku hydrodynamic tests compare source-to-coast
+    propagation, arrival time, waveform, run-up and inundation against
+    accepted observations for the Kamaishi and Sendai corridors;
+  \item V3 impact/loading tests compare local pressure, force, moment,
+    impulse, overtopping and energy outputs for fixed rigid barrier
+    classes.
+\end{enumerate}
+
+The locked 2D NLSWE finite-volume specification must preserve
+conservation, positivity, well-balanced still water, moving-bed source
+behaviour, wet/dry shoreline motion, boundary non-reflection and
+Tohoku-scale propagation before it can drive accepted replay histories.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-spec-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-spec-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-spec-measured-quantities}
+
+Regional measured quantities shall include:
+
+\begin{itemize}
+  \item water depth $h$ and free-surface elevation $\eta$;
+  \item depth-integrated discharges $q_x$ and $q_y$;
+  \item arrival time, peak elevation, phase and dominant period;
+  \item run-up elevation, inundation distance and wet/dry extent;
+  \item mass balance and momentum-balance diagnostics;
+  \item boundary-reflection indicators and sponge-layer attenuation;
+  \item mesh-convergence and CFL-sensitivity measures.
+\end{itemize}
+
+Local and interface measured quantities shall include:
+
+\begin{itemize}
+  \item $\alpha$ boundedness, phase volume and mass conservation;
+  \item local CFL, pressure-correction residual and rejected timestep
+    count;
+  \item replay-boundary water level, velocity, discharge and pressure
+    state;
+  \item local pressure and shear histories on barrier patches;
+  \item resultant force and moment histories;
+  \item force impulse, pressure impulse and centre of pressure;
+  \item run-up, overtopping and transmitted/reflected energy metrics.
+\end{itemize}
+
+\subsection{Error Metrics}
+\label{sec:res-ver-spec-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-spec-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-spec-execution-handoff}
+
+The following V1--V2--V3 verification and validation sequence is
+required before validation is declared complete:
+
+\begin{enumerate}
+  \item V1 regional lake at rest over non-flat bathymetry;
+  \item V1 one- and two-dimensional dam-break or bore propagation;
+  \item V1 wet/dry run-up with positivity and mass-balance audit;
+  \item V1 local VOF boundedness, pressure-correction residual and
+    wall/obstacle impact benchmarks;
+  \item V1 moving-bottom tsunami-generation test;
+  \item V1 open/radiation boundary and sponge-reflection test;
+  \item V1 mesh refinement and CFL sensitivity on regional and local
+    domains;
+  \item V2 Tohoku waveform/current/run-up or inundation comparison using
+    data not already consumed by source calibration.
+  \item V2 Kamaishi and Sendai replay-boundary consistency checks.
+  \item V3 local fixed-barrier run-up, overtopping, pressure, force,
+    moment, impulse and energy-metric tests.
+\end{enumerate}
+
+Execution evidence belongs to the verification and Software workstreams
+and shall not be inferred merely from completion of the research
+specification.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-spec-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-spec-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-spec-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-spec-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-spec-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The regional mathematical and numerical model is ready for verification
+planning, and the local fixed-rigid barrier model now has a staged
+acceptance path. Neither is yet a validated solver or validated Tohoku
+case-study simulation.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-spec-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-spec-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open verification decisions include final benchmark tolerances, final
+case-study observation sets, calibration/validation split, final mesh
+refinement levels, and acceptance thresholds for boundary reflection and
+wet/dry mass-balance corrections. Local open decisions include final
+$\alpha$ boundedness tolerance, CFL limit, pressure-residual
+tolerance, force/moment consistency tolerance and energy-diagnostic
+normalisation.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-spec-requirements}
+
+Software shall emit the RES-VER-MET metrics for every run and tag each
+report as V1, V2 or V3. RES-DAT-CAS supplies observation bundles and
+calibration/validation split metadata; RES-GEO-SPEC supplies geometry
+identifiers; RES-NUM-SPEC supplies CFL, residual, boundedness and
+mass-conservation diagnostics. This handoff supports test
+implementation but does not itself execute validation.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-spec-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

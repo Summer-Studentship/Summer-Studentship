@@ -1,0 +1,66 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-dat.bib}
+
+\title{RES-DAT --- Environmental Data and Case-Study Definition}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-dat-domain-purpose}
+
+RES-DAT defines the environmental data and case-study evidence needed to
+reconstruct one selected historical tsunami event, validate that event against
+authoritative observations, and support documented defence-specific impact
+cases. The initial project retains one primary historical event and controlled
+physical variations around that event. It does not add unrelated tsunami events
+or build a broad multi-event ML dataset during the initial scope.
+
+The active studentship case is the 2011 Tōhoku event with two
+regional-to-local corridor trajectories: epicentre to the Kamaishi
+region and epicentre to the Sendai coastal plain. The active use of the
+data is impact modelling, Tōhoku/local comparison and barrier-class
+comparison. ML datasets, surrogate optimisation and generative geometry
+remain future work until the event reconstruction, local hydrodynamic
+load extraction and validation hierarchy are stable.
+
+The Domain shall also catalogue defence geometry and local exposure
+evidence where available, but damage, material deformation, scour and
+FSI remain stretch extensions after hydrodynamic load extraction is
+stable. Source role: project-scope baseline and data-interface
+decision. Supporting sources: event metadata from
+\textcite{usgs2011tohokuEvent}, onshore observations from
+\textcite{mori2012nationwide}, offshore observations from
+\textcite{noaa2005dart} and \textcite{noaa2011japanDart}, and terrain
+source candidates in \textcite{jodcJegg500}, \textcite{gebco2026grid},
+\textcite{noaa2022etopo} and \textcite{gsiDemDownload}. Limitation:
+the cited source records support data selection and handoff
+requirements; they do not demonstrate that the project has executed
+validation.
+
+\section{Domain Deliverables}
+\label{sec:res-dat-domain-deliverables}
+
+\input{"RES-DAT-GEO - Bathymetry, Topography and Coastal Geometry/res-dat-geo.tex"}
+\input{"RES-DAT-SRC - Earthquake and Tsunami Source Data/res-dat-src.tex"}
+\input{"RES-DAT-OBS - Observational and Validation Data/res-dat-obs.tex"}
+\input{"RES-DAT-SCN - Scenario and Severity Definition/res-dat-scn.tex"}
+\input{"RES-DAT-UNC - Data Quality, Uncertainty and Provenance/res-dat-unc.tex"}
+\input{"RES-DAT-CAS - Integrated Tsunami Case-Study Specifications/res-dat-cas.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

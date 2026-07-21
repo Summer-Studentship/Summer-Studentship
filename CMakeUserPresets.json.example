@@ -1,0 +1,43 @@
+{
+  "version": 6,
+  "configurePresets": [
+    {
+      "name": "local-vcpkg-root",
+      "hidden": true,
+      "description": "Copy this file to CMakeUserPresets.json and replace VCPKG_ROOT with this machine's vcpkg checkout.",
+      "environment": {
+        "VCPKG_ROOT": "/absolute/path/to/vcpkg"
+      }
+    },
+    {
+      "name": "linux-vcpkg-headless-local",
+      "displayName": "Linux headless core build with local vcpkg",
+      "inherits": [
+        "linux-vcpkg-headless",
+        "local-vcpkg-root"
+      ]
+    },
+    {
+      "name": "linux-gui-debug-local",
+      "displayName": "Linux Qt Widgets GUI debug build with local vcpkg",
+      "description": "Uses vcpkg for non-Qt manifest dependencies only; Qt is resolved from the system Qt 6 CMake package.",
+      "inherits": [
+        "linux-gui-debug",
+        "local-vcpkg-root"
+      ]
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "linux-vcpkg-headless-local-build",
+      "configurePreset": "linux-vcpkg-headless-local"
+    },
+    {
+      "name": "linux-gui-debug-local-build",
+      "configurePreset": "linux-gui-debug-local",
+      "targets": [
+        "TsunamiGUI"
+      ]
+    }
+  ]
+}

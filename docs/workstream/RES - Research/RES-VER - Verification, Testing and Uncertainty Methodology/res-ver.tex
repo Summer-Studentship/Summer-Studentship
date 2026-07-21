@@ -1,0 +1,40 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-ver.bib}
+
+\title{RES-VER --- Verification, Testing and Uncertainty Methodology}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-ver-domain-purpose}
+
+% TODO: State the Domain purpose, boundaries, exclusions and interfaces.
+
+\section{Domain Deliverables}
+\label{sec:res-ver-domain-deliverables}
+
+\input{"RES-VER-FRM - Simulation Credibility and Test Framework/res-ver-frm.tex"}
+\input{"RES-VER-BMK - Analytical and Canonical Benchmark Suite/res-ver-bmk.tex"}
+\input{"RES-VER-TST - Component, Conservation and Interface Test Design/res-ver-tst.tex"}
+\input{"RES-VER-CNV - Convergence and Numerical-Error Test Methodology/res-ver-cnv.tex"}
+\input{"RES-VER-MET - Test Metrics, Tolerances and Acceptance Criteria/res-ver-met.tex"}
+\input{"RES-VER-UQ - Sensitivity and Uncertainty Assessment Methodology/res-ver-uq.tex"}
+\input{"RES-VER-SPEC - Integrated Simulation Test Specification/res-ver-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

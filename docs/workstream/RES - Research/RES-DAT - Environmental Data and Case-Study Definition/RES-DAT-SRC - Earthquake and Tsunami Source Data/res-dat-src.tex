@@ -1,0 +1,287 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-DAT-SRC
+% Deliverable: Earthquake and Tsunami Source Data
+% Status: In progress
+% Evidence status: Regional model source-data requirements established; final dataset pending
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-PHY-SRC, RES-MOD-SRC, RES-MOD-SPEC
+% Downstream interfaces: RES-NUM-SRC, RES-VER-SPEC, Software source ingestion
+% -------------------------------------------------------------------------
+
+\section{RES-DAT-SRC --- Earthquake and Tsunami Source Data}
+\label{sec:res-dat-src}
+
+\subsection{Purpose and Scope}
+\label{sec:res-dat-src-purpose}
+
+This Deliverable defines the earthquake event metadata, finite-fault
+source candidates and bed-deformation data required to reconstruct the
+2011 Tōhoku tsunami in the regional 2D NLSWE model. It covers source
+data selection and projection into model-ready bed increments. It does
+not choose a structural damage model, a local barrier geometry or a
+solver implementation.
+
+\subsection{Research Questions}
+\label{sec:res-dat-src-research-questions}
+
+The source-data decision asks:
+
+\begin{enumerate}
+  \item Which event metadata define the authoritative epicentre,
+    origin time, magnitude and depth for corridor construction?
+  \item Which finite-fault or tsunami-source reconstructions are
+    candidates for regional bed forcing?
+  \item Which observations were used to infer a source and therefore
+    cannot later be claimed as independent validation evidence?
+  \item Which data fields must Software receive to generate
+    $\Delta b_m(x,y)$ and rupture-time functions reproducibly?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-dat-src-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-dat-src-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{usgs2011tohokuEvent} is retained as the event-metadata
+source for the 2011 Great Tōhoku earthquake: origin time
+2011-03-11 05:46:24 UTC, epicentral coordinates near
+$38.297^{\circ}\mathrm{N}$, $142.373^{\circ}\mathrm{E}$, depth
+$29.0~\mathrm{km}$ and moment magnitude $M_{\mathrm{w}}=9.1$. Source
+role: supports event identity, epicentre coordinate and corridor
+origin. Project conclusion: these metadata define
+$P_{\mathrm{e}}=(\lambda_{\mathrm{e}},\phi_{\mathrm{e}})$ until a
+GIS-approved event-source point is selected. Limitation: event
+metadata alone do not define the spatial seabed displacement field.
+
+\textcite{usgsFiniteFaults} and \textcite{hayes2011rapid} are retained
+for the USGS finite-fault source-data family and rapid Tōhoku source
+characterisation. Source role: supports candidate finite-fault model
+fields: subfault geometry, slip, rake, rupture time and rise time.
+Project conclusion: the USGS finite-fault family is a baseline source
+candidate for regional moving-bed forcing. Limitation: the finite-fault
+model must still be converted into hydrodynamic bed increments and
+tested against observation sets not used in the inversion.
+
+\textcite{fujii2011tsunamisource} and \textcite{wei2013japan} remain
+retained source-reconstruction references. Source role: support and
+limit the tsunami-source calibration choices used in Tōhoku hindcasts.
+Project conclusion: these sources are comparison and provenance
+anchors when deciding whether the USGS finite-fault source or an
+alternative tsunami-inversion source better supports the selected
+Kamaishi and Sendai corridors. Limitation: any observation record used
+to tune a source shall be marked $\mathcal{D}_{\mathrm{cal}}$ in
+`RES-DAT-OBS`.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-dat-src-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Required Data Variables and Units}
+\label{sec:res-dat-src-required-data-variables-units}
+
+The dynamic moving-bed regional source requires, for each source
+component or subfault $m$:
+
+\begin{itemize}
+  \item geometry, location, depth, length and width;
+  \item strike, dip and rake;
+  \item slip or displacement amplitude;
+  \item rupture timing and rise-time function $R_m(t)$;
+  \item projected bed increment $\Delta b_m(x,y)$;
+  \item provenance and uncertainty metadata.
+\end{itemize}
+
+\subsection{Candidate Data Sources}
+\label{sec:res-dat-src-candidate-data-sources}
+
+The current source candidates are:
+
+\begin{itemize}
+  \item USGS event metadata for origin time, magnitude, depth and
+    epicentre \parencite{usgs2011tohokuEvent};
+  \item USGS finite-fault products and rapid finite-fault source
+    characterisation \parencite{usgsFiniteFaults,hayes2011rapid};
+  \item Fujii--Satake source reconstruction
+    \parencite{fujii2011tsunamisource};
+  \item DART-constrained and nested-model source workflows described
+    by \textcite{wei2013japan}.
+\end{itemize}
+
+The source-data table in `RES-DAT-CAS` records each candidate's role,
+downstream deliverable and limitation.
+
+\subsection{Spatial and Temporal Coverage}
+\label{sec:res-dat-src-spatial-temporal-coverage}
+
+Spatial coverage shall include the full rupture footprint and enough
+surrounding seafloor for interpolation of dynamic bed increments onto
+the regional mesh. Temporal coverage shall include the origin time,
+subfault rupture onset and rise-time function for every source
+component retained in the moving-bed source.
+
+\subsection{Coordinate and Datum Requirements}
+\label{sec:res-dat-src-coordinate-datum-requirements}
+
+Raw source coordinates shall be retained in longitude/latitude and
+source-native depth convention. The solver-facing product shall be
+projected into the same horizontal metric frame as `RES-DAT-GEO` and
+shall use positive-upward bed increments compatible with
+\cref{eq:res-dat-src-stage-bed-update}. Any conversion from fault slip
+to seabed displacement shall record the elastic model, coordinate
+frame, vertical sign convention and interpolation method.
+
+\subsection{Data Processing and Transformation}
+\label{sec:res-dat-src-data-processing-transformation}
+
+The hydrodynamic source data shall be delivered as bed increments
+compatible with:
+
+\begin{align}
+  b_i(t_s)
+  &=
+  b_{0,i}
+  +
+  \sum_m
+  \Delta b_{m,i}
+  R_m(t_s)
+  \label{eq:res-dat-src-stage-bed-update}
+\end{align}
+
+where $t_s$ is the relevant Runge--Kutta stage time. Static source
+initialisation may be retained as a verification or fallback case, but
+the regional model specification treats dynamic moving bathymetry as the
+selected mathematical source representation.
+
+\subsection{Uncertainty, Provenance and Licensing}
+\label{sec:res-dat-src-uncertainty-provenance-licensing}
+
+The source manifest shall identify whether each observation used to
+create or tune a source is calibration, validation or diagnostic
+evidence. Finite-fault uncertainty shall be retained at least as source
+version, inversion method, data types used, subfault discretisation,
+rupture timing assumptions and published update date where available.
+Licence and access notes shall be recorded before any finite-fault data
+are stored in a project dataset bundle.
+
+\subsection{Data Acceptance Criteria}
+\label{sec:res-dat-src-data-acceptance-criteria}
+
+A source dataset is accepted for regional replay only when it supplies
+or can defensibly derive:
+
+\begin{itemize}
+  \item event origin metadata and source version;
+  \item subfault geometry, strike, dip, rake, slip and depth;
+  \item rupture timing or a documented static-source fallback;
+  \item projected bed increments $\Delta b_{m,i}$ on the regional
+    mesh;
+  \item calibration/validation-use classification for all observation
+    records used in the source construction;
+  \item provenance, licence and transformation metadata.
+\end{itemize}
+
+\subsection{Candidate Approaches}
+\label{sec:res-dat-src-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-dat-src-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-dat-src-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-dat-src-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-dat-src-conclusions}
+
+The Tōhoku source decision is source-data finalisation, not solver
+implementation. The USGS event metadata define the current corridor
+origin and event identity. USGS finite-fault, Hayes rapid source,
+Fujii--Satake and DART-constrained source workflows remain source
+candidates until their projected bed increments are compared against
+the selected offshore, nearshore and terrestrial observation split.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-dat-src-selected-approach}
+
+Use a source-candidate manifest with USGS event metadata as the event
+identity baseline and USGS finite-fault/Fujii/DART-constrained
+reconstructions as candidate bed-forcing products. The selected
+hydrodynamic source shall be the candidate that best supports the
+Kamaishi and Sendai corridor validation split without reusing
+calibration records as independent validation.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-dat-src-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The source-data variables required by the mathematical model are
+established. The exact final fault-source dataset, any comparison
+against independent source reconstructions, final rupture-time
+functions and the accepted source-to-bed projection remain open
+data-selection tasks.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-dat-src-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The selected source dataset shall be marked as calibration,
+validation-support or diagnostic evidence so `RES-VER` can distinguish
+source-fit records from independent validation records.
+
+Software shall start a source-data ingestion path in parallel with the
+remaining research: source manifest, fault-model parser, coordinate
+projection, bed-increment rasterisation, structured source-output
+schema and reproducible moving-bed replay fields for the regional
+solver.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-dat-src-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

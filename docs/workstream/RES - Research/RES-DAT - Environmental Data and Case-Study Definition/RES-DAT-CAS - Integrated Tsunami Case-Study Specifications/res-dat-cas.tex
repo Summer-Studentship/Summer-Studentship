@@ -1,0 +1,547 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-DAT-CAS
+% Deliverable: Integrated Tsunami Case-Study Specifications
+% Status: In progress
+% Evidence status: Integrated Tohoku data-source and corridor specification established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-DAT-GEO, RES-DAT-SRC, RES-DAT-OBS, RES-DAT-SCN, RES-DAT-UNC, RES-GEO-SPEC
+% Downstream interfaces: RES-VER-SPEC, Software data handling, local 3D replay boundary
+% -------------------------------------------------------------------------
+
+\section{RES-DAT-CAS --- Integrated Tsunami Case-Study Specifications}
+\label{sec:res-dat-cas}
+
+\subsection{Purpose and Scope}
+\label{sec:res-dat-cas-purpose}
+
+This Deliverable replaces the previous mandatory primary-plus-secondary-event
+specification with one authoritative event-reconstruction case, one validated
+event baseline, bounded impact-testing variants, and documented
+defence-specific local cases.
+
+The active integrated case is the 2011 Tōhoku event with two
+regional-to-local corridors: Kamaishi and Sendai coastal plain. The
+case supports impact modelling, local comparison and barrier-class
+comparison. ML, surrogate optimisation and generative geometry are
+deferred until the hydrodynamic data pipeline and validation hierarchy
+are accepted.
+
+\subsection{Research Questions}
+\label{sec:res-dat-cas-research-questions}
+
+The integrated case-study decision asks:
+
+\begin{enumerate}
+  \item Which data sources define the event, terrain, observations,
+    corridors and optional sensitivities?
+  \item Which source is selected, fallback, comparison-only,
+    optional or missing?
+  \item Which downstream deliverable and software asset consumes each
+    source?
+  \item Which limitations prevent a source from being used as
+    validation or solver input?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-dat-cas-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-dat-cas-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+The integrated case combines official data products and peer-reviewed
+Tohoku evidence. Event identity is anchored to the USGS event record
+\parencite{usgs2011tohokuEvent}. Candidate finite-fault and tsunami
+source products are retained from USGS finite-fault documentation,
+Hayes rapid source characterisation, Fujii--Satake and DART-constrained
+hindcast evidence
+\parencite{usgsFiniteFaults,hayes2011rapid,fujii2011tsunamisource,wei2013japan}.
+Terrain sources are drawn from J-EGG500, GSI DEM, GEBCO\_2026 and ETOPO
+2022 \parencite{jodcJegg500,gsiDemDownload,gebco2026grid,noaa2022etopo}.
+Observation sources include NOAA/NCEI DART, the NCEI/WDS historical
+tsunami database, Mori/JTS and published observation syntheses
+\parencite{noaa2005dart,noaa2011japanDart,noaaNceiHistoricalTsunami,mori2012nationwide,fine2013japan}.
+ERA5 and JRA-55 are retained only as optional wind/reanalysis
+sensitivity sources, not baseline hydrodynamic forcing
+\parencite{copernicusEra5,jmaJra55}.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-dat-cas-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Required Data Variables and Units}
+\label{sec:res-dat-cas-required-data-variables-units}
+
+The integrated case-study manifest shall include:
+
+\begin{itemize}
+  \item event metadata, finite-fault source version and derived bed
+    increments;
+  \item terrain source tiles and derived mesh-projected bed fields;
+  \item observation bundles classified as calibration, validation or
+    diagnostic;
+  \item corridor polygons for $T_{\mathrm{K}}$ and $T_{\mathrm{S}}$;
+  \item local barrier-class definitions and terrain/geometry patches;
+  \item replay-boundary histories for local 3D inlet forcing;
+  \item provenance records \(\mathcal{P}_d\) for every source and
+    derived product.
+\end{itemize}
+
+\subsection{Candidate Data Sources}
+\label{sec:res-dat-cas-candidate-data-sources}
+
+\begin{landscape}
+\scriptsize
+\setlength{\tabcolsep}{3pt}
+\begin{longtable}{
+    p{0.09\linewidth}
+    p{0.08\linewidth}
+    p{0.07\linewidth}
+    p{0.10\linewidth}
+    p{0.17\linewidth}
+    p{0.10\linewidth}
+    p{0.14\linewidth}
+    p{0.10\linewidth}
+  }
+  \caption{RES-DAT integrated data-source decision table for the Tōhoku corridor case}
+  \label{tab:res-dat-cas-data-source-decision-table}
+  \\
+  \hline
+  Dataset/source name
+  &
+  Provider
+  &
+  Citation key
+  &
+  URL
+  &
+  Coverage, resolution, CRS and vertical datum
+  &
+  Licence/usage note
+  &
+  Project role and downstream deliverable
+  &
+  Preprocessing required and limitation
+  \\
+  \hline
+  \endfirsthead
+  \hline
+  Dataset/source name
+  &
+  Provider
+  &
+  Citation key
+  &
+  URL
+  &
+  Coverage, resolution, CRS and vertical datum
+  &
+  Licence/usage note
+  &
+  Project role and downstream deliverable
+  &
+  Preprocessing required and limitation
+  \\
+  \hline
+  \endhead
+  J-EGG500
+  &
+  Japan Oceanographic Data Center
+  &
+  \texttt{jodcJegg500}
+  &
+  \url{https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html}
+  &
+  Spatial: Japan surrounding seas. Temporal: static compiled bathymetry with heterogeneous survey dates. Resolution: 500 m grid. CRS/datum: confirm from delivered metadata before ingest; bathymetric sign convention requires conversion to positive-upward $b$.
+  &
+  Usage/licence to be confirmed from JODC terms before redistribution.
+  &
+  Preferred Japan offshore bathymetry candidate for `RES-DAT-GEO`, `RES-DAT-CAS`, regional mesh and corridor terrain.
+  &
+  Reproject, convert depth sign/datum, clip corridors, interpolate to meshes. Limitation: smoothing and mixed data quality may suppress harbour-scale relief.
+  \\
+  GEBCO\_2026 Grid
+  &
+  GEBCO Bathymetric Compilation Group
+  &
+  \texttt{gebco2026grid}
+  &
+  \url{https://www.gebco.net/data-products/gridded-bathymetry-data}
+  &
+  Spatial: global ocean/land terrain. Temporal: 2026 release. Resolution: 15 arc-second grid. CRS: geographic grid. Vertical datum: treated as mean sea level, with shallow-water datum caveat.
+  &
+  Public-domain use with required attribution/disclaimer.
+  &
+  Selected outer-domain and first fallback topobathymetry for `RES-DAT-GEO`, regional domain and source-to-coast propagation.
+  &
+  Clip outer domain, compare with J-EGG500/GSI boundaries, resample to mesh. Limitation: not sufficient for local defence geometry or high-resolution inundation features.
+  \\
+  NOAA ETOPO 2022
+  &
+  NOAA/NCEI
+  &
+  \texttt{noaa2022etopo}
+  &
+  \url{https://www.ncei.noaa.gov/products/etopo-global-relief-model}
+  &
+  Spatial: global relief. Temporal: 2022 release. Resolution: 15, 30 and 60 arc-second products. CRS/datum: confirm product metadata; elevation/bathymetry grid for global relief.
+  &
+  NOAA citation and DOI required; redistribution terms to be checked with source package.
+  &
+  Secondary global fallback and audit source for `RES-DAT-GEO` and outer-domain sensitivity.
+  &
+  Clip/resample and compare against GEBCO. Limitation: fallback only for local corridors and not baseline local terrain.
+  \\
+  GSI DEM
+  &
+  Geospatial Information Authority of Japan
+  &
+  \texttt{gsiDemDownload}
+  &
+  \url{https://service.gsi.go.jp/kiban/app/help/}
+  &
+  Spatial: Japan onshore. Temporal: source-age varies by DEM class. Resolution: 1 m, 5 m and 10 m mesh products. CRS/datum: confirm in JPGIS/GML metadata before ingest.
+  &
+  GSI usage terms and attribution required; redistribution status to be confirmed.
+  &
+  Preferred onshore topography for `RES-DAT-GEO`, run-up/inundation comparison and local terrain patches.
+  &
+  Convert JPGIS/GML, reproject, vertical-datum reconcile, clip corridors. Limitation: mixed DEM classes and coverage gaps require provenance flags.
+  \\
+  USGS Tōhoku event record
+  &
+  U.S. Geological Survey
+  &
+  \texttt{usgs2011tohokuEvent}
+  &
+  \url{https://earthquake.usgs.gov/earthquakes/eventpage/official20110311054624120_30/executive}
+  &
+  Spatial: epicentre near $38.297^{\circ}\mathrm{N}$, $142.373^{\circ}\mathrm{E}$. Temporal: 2011-03-11 05:46:24 UTC. Resolution: event metadata. CRS/datum: geographic coordinates, depth metadata.
+  &
+  USGS public information; cite source record.
+  &
+  Event identity and corridor origin for `RES-DAT-SRC` and `RES-DAT-SCN`.
+  &
+  Store immutable event metadata and convert to projected corridor origin. Limitation: does not define seabed displacement.
+  \\
+  USGS finite-fault family and Hayes rapid source
+  &
+  U.S. Geological Survey
+  &
+  \texttt{usgsFiniteFaults}; \texttt{hayes2011rapid}
+  &
+  \url{https://earthquake.usgs.gov/data/finitefault/}
+  &
+  Spatial: rupture/subfault footprint. Temporal: event rupture history. Resolution: subfault dependent. CRS/datum: source-model metadata required.
+  &
+  Cite USGS record and article; data-package usage terms to be checked.
+  &
+  Candidate source baseline for `RES-DAT-SRC` and moving-bed forcing.
+  &
+  Parse subfaults, project geometry, compute $\Delta b_m$, rasterise to regional mesh. Limitation: calibration observations must not be reused as independent validation.
+  \\
+  Fujii--Satake Tōhoku source
+  &
+  Fujii et al.
+  &
+  \texttt{fujii2011tsunamisource}
+  &
+  DOI in bibliography
+  &
+  Spatial: 2011 Tōhoku source region. Temporal: event source reconstruction. Resolution: source-model dependent. CRS/datum: paper/model metadata required.
+  &
+  Journal citation required.
+  &
+  Comparison source and provenance anchor for `RES-DAT-SRC` and observation de-tiding dependence.
+  &
+  Reconstruct source-to-bed projection if selected. Limitation: survey corrections in Mori et al. partly depend on FS40v46-style modelling.
+  \\
+  NOAA/NCEI DART ocean bottom pressure
+  &
+  NOAA/NCEI
+  &
+  \texttt{noaa2005dart}; \texttt{noaa2011japanDart}
+  &
+  \url{https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/dart-ocean-bottom-pressure}
+  &
+  Spatial: DART station points, Pacific/global network. Temporal: event time series and archive records. Resolution: includes 15-second bottom-pressure records where available. CRS/datum: station metadata and pressure-to-water-level conversion required.
+  &
+  Cite NOAA/NCEI; data access unrestricted through archive tools unless station-specific terms state otherwise.
+  &
+  Offshore arrival, phase, amplitude and source-calibration audit for `RES-DAT-OBS` and `RES-VER-SPEC`.
+  &
+  Download station records, de-tide/filter, classify calibration/validation. Limitation: DART records used for source inference are calibration, not independent validation.
+  \\
+  NCEI/WDS Global Historical Tsunami Database
+  &
+  NOAA/NCEI/WDS
+  &
+  \texttt{noaaNceiHistoricalTsunami}
+  &
+  \url{https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/global-historical-data}
+  &
+  Spatial: global tsunami source and run-up records. Temporal: historical-to-present database. Resolution: event/run-up record level. CRS/datum: per-record metadata; datum may be ambiguous.
+  &
+  DOI citation required; access unrestricted according to metadata.
+  &
+  Observation discovery, arrival-time and max-water-height screening for `RES-DAT-OBS`.
+  &
+  Query Tōhoku records, cross-check against field survey. Limitation: heterogeneous historical provenance; not sole validation source.
+  \\
+  Mori/JTS field survey
+  &
+  Mori, Takahashi and 2011 Tohoku Earthquake Tsunami Joint Survey Group
+  &
+  \texttt{mori2012nationwide}
+  &
+  DOI in bibliography
+  &
+  Spatial: approximately 2,000 km of Japanese coastline. Temporal: post-event 2011 survey. Resolution: surveyed point/extent records. CRS/datum: survey metadata and tide corrections required.
+  &
+  Journal citation required; raw-data access/licence to be confirmed.
+  &
+  Principal run-up, inundation-height and inundation-distance evidence for `RES-DAT-OBS`, Sendai and Sanriku/Kamaishi corridor validation.
+  &
+  Filter by corridor, datum-normalise, classify quality. Limitation: primarily maximum water-level and extent data, not velocity or pressure histories.
+  \\
+  Fine et al. observation/modelling synthesis
+  &
+  Fine et al.
+  &
+  \texttt{fine2013japan}
+  &
+  DOI in bibliography
+  &
+  Spatial: Japan 2011 tsunami observation/model context. Temporal: 2011 event. Resolution: paper-level synthesis. CRS/datum: underlying records must be obtained separately.
+  &
+  Journal citation required.
+  &
+  Supports observation hierarchy and regional propagation interpretation for `RES-DAT-OBS`.
+  &
+  Use as evidence, not raw data. Limitation: cannot replace station/survey archives.
+  \\
+  ERA5 and JRA-55
+  &
+  Copernicus Climate Change Service; Japan Meteorological Agency
+  &
+  \texttt{copernicusEra5}; \texttt{jmaJra55}
+  &
+  \url{https://climate.copernicus.eu/climate-reanalysis}; \url{https://www.data.jma.go.jp/jra/html/JRA-55/index_en.html}
+  &
+  Spatial: global atmospheric reanalysis. Temporal: multi-decadal products. Resolution: product dependent. CRS/datum: atmospheric grids.
+  &
+  Product-specific acknowledgement and terms required.
+  &
+  Optional wind/reanalysis sensitivity only; not baseline hydrodynamic forcing.
+  &
+  No baseline preprocessing. Limitation: not used unless a sensitivity question is opened and justified.
+  \\
+  Kamaishi bay-mouth breakwater defence records
+  &
+  TODO--provider
+  &
+  TODO--missing-source
+  &
+  TODO
+  &
+  Spatial: Kamaishi Bay and defence footprint. Temporal: pre-2011, 2011 damage/response and reconstruction states. Resolution/CRS/datum: unresolved.
+  &
+  Licence unresolved.
+  &
+  Required for real defence recreation and wall-type reference geometry in `RES-GEO` and local `RES-MOD`/`RES-VER`.
+  &
+  Locate authoritative drawings, surveys, damage reports or peer-reviewed defence papers. Limitation: no citation is created until source metadata are confirmed.
+  \\
+  \hline
+\end{longtable}
+\end{landscape}
+
+\subsection{Spatial and Temporal Coverage}
+\label{sec:res-dat-cas-spatial-temporal-coverage}
+
+The integrated case covers the 2011 Tōhoku source-to-coast event and
+two active regional-to-local corridor bundles:
+
+\begin{enumerate}
+  \item $T_{\mathrm{K}}$: epicentre to Kamaishi region, with
+    Sanriku/ria, bay and defence-interaction emphasis;
+  \item $T_{\mathrm{S}}$: epicentre to Sendai coastal plain, with
+    coastal-plain inundation emphasis.
+\end{enumerate}
+
+The local 3D replay interval shall include all waves that materially
+affect run-up, overtopping, transmitted/reflected energy and load
+metrics, not only the first crest.
+
+\subsection{Coordinate and Datum Requirements}
+\label{sec:res-dat-cas-coordinate-datum-requirements}
+
+All source coordinates are acquired as longitude/latitude and then
+transformed into the selected projected metric CRS for regional and
+local modelling. Vertical data shall be reconciled into the
+positive-upward bed convention used by `RES-MOD` and `RES-NUM`.
+Observation heights shall preserve their source datum and tide
+correction before any comparison to simulated $\eta$, run-up or
+inundation variables.
+
+\subsection{Data Processing and Transformation}
+\label{sec:res-dat-cas-data-processing-transformation}
+
+The integrated data workflow is:
+
+\begin{enumerate}
+  \item register source assets in the dataset manifest;
+  \item choose final $P_{\mathrm{e}}$, Kamaishi target and Sendai
+    target coordinates;
+  \item recompute $\theta_{\mathrm{K}}$ and $\theta_{\mathrm{S}}$;
+  \item generate corridor polygons and buffer/sponge polygons;
+  \item clip and reconcile terrain, source and observation datasets;
+  \item interpolate terrain and bed increments to regional mesh
+    fields;
+  \item extract regional interface histories for local 3D replay;
+  \item write structured HDF5 or equivalent outputs with provenance.
+\end{enumerate}
+
+\subsection{Uncertainty, Provenance and Licensing}
+\label{sec:res-dat-cas-uncertainty-provenance-licensing}
+
+The integrated case shall not be accepted unless every source in
+\cref{tab:res-dat-cas-data-source-decision-table} has a provenance
+record, licence/usage note and downstream role. Missing-source records
+are allowed only as explicit blockers or TODOs; they shall not be
+converted into fabricated citation keys.
+
+\subsection{Data Acceptance Criteria}
+\label{sec:res-dat-cas-data-acceptance-criteria}
+
+An impact case is accepted only after event reconstruction validation and
+defence-model credibility are established. The case record shall identify the
+event baseline, local exposure, defence geometry version, material and
+foundation assumptions, numerical model fidelity, convergence state, physical
+validity state and uncertainty state.
+
+For the current hydrodynamic baseline, an integrated case is accepted
+for software implementation planning when it contains the dataset
+manifest, coordinate transform, corridor polygons, clipped terrain,
+source candidate records, observation bundles and local replay-boundary
+format. This acceptance does not mean validation has been executed.
+
+\subsection{Candidate Approaches}
+\label{sec:res-dat-cas-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-dat-cas-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-dat-cas-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-dat-cas-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-dat-cas-conclusions}
+
+The initial case-study specification is event-conditioned and
+defence-specific. Secondary events and cross-event holdouts are deferred until
+the single-event workflow is complete and reviewed.
+
+The current integrated case is not a generic literature review. Each
+source is retained because it supports, limits or defers a project
+decision: terrain construction, source forcing, observation validation,
+corridor definition, optional sensitivity or missing defence geometry.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-dat-cas-selected-approach}
+
+Use a manifest-driven Tōhoku case-study specification:
+
+\begin{quote}
+  USGS event identity and source candidates
+  $+$
+  J-EGG500/GSI/GEBCO/ETOPO terrain hierarchy
+  $+$
+  NOAA/NCEI and Mori/JTS observations
+  $+$
+  Kamaishi and Sendai corridor polygons
+  $+$
+  structured local replay-boundary outputs
+\end{quote}
+
+ERA5 and JRA-55 are explicitly optional sensitivity sources rather
+than baseline forcing. Kamaishi defence records remain a missing-source
+blocker for real defence recreation.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-dat-cas-unresolved-decisions}
+
+Open decisions are final GIS target coordinates, final terrain product
+licence acceptance, final finite-fault/source selection, final
+calibration/validation split, tide-gauge station selection, Kamaishi
+defence-source acquisition, final corridor dimensions and final replay
+boundary schema.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-dat-cas-requirements}
+
+Data handling now begins in parallel with remaining research. Software
+shall start with a modular MVP containing:
+
+\begin{itemize}
+  \item finite-volume data model and mesh/field containers;
+  \item manifest-driven raster/vector I/O;
+  \item coordinate-transform and corridor-polygon generation;
+  \item bathymetry/topography interpolation and clipping;
+  \item regional 2D scaffold and boundary framework;
+  \item HDF5 or equivalent structured output schema;
+  \item replay-boundary format for local 3D inlet forcing;
+  \item local 3D scaffold that consumes replay histories without
+    implementing the solver in this Research deliverable.
+\end{itemize}
+
+`RES-VER-SPEC` shall consume the same manifest when deciding which
+records are calibration, validation or diagnostic evidence.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-dat-cas-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

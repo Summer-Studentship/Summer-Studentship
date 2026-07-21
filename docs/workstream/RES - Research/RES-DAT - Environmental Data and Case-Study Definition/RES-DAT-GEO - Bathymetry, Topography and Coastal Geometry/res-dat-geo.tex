@@ -1,0 +1,365 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-DAT-GEO
+% Deliverable: Bathymetry, Topography and Coastal Geometry
+% Status: In progress
+% Evidence status: Regional model data requirements established; dataset selection pending
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-MOD-SPEC, RES-NUM-SPEC, RES-PHY-NRS
+% Downstream interfaces: QGIS/geospatial domain lock, RES-VER-SPEC, Software data ingestion
+% -------------------------------------------------------------------------
+
+\section{RES-DAT-GEO --- Bathymetry, Topography and Coastal Geometry}
+\label{sec:res-dat-geo}
+
+\subsection{Purpose and Scope}
+\label{sec:res-dat-geo-purpose}
+
+This Deliverable defines the bathymetry, topography and coastal-geometry
+data required to build the regional 2D NLSWE domain, the two
+regional-to-local corridor extracts and the local 3D URANS--VOF
+terrain surfaces. It covers dataset selection, fallback hierarchy,
+coordinate reference systems, vertical datums, preprocessing and
+handoff requirements. It does not define arbitrary corridor sketches:
+the corridor footprint is a data/model interface constructed from the
+event source, target coast, observation footprint, defence geometry and
+numerical-boundary requirements.
+
+\subsection{Research Questions}
+\label{sec:res-dat-geo-research-questions}
+
+The data decision asks:
+
+\begin{enumerate}
+  \item Which topobathymetric source is authoritative inside the Japan
+    nearshore and local corridors?
+  \item Which global products are acceptable for the outer regional
+    domain or fallback coverage?
+  \item How are horizontal CRS, vertical datum, sign convention,
+    resolution and licence metadata preserved through clipping and
+    interpolation?
+  \item Which preprocessing uncertainty must be handed to `RES-VER`
+    and Software before validation claims are made?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-dat-geo-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-dat-geo-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{jodcJegg500} documents J-EGG500 as a 500 m gridded
+bathymetric dataset around Japan compiled from depth measurements from
+Japanese marine survey institutions. Source role: supports the primary
+Japan-region bathymetry candidate. Project-specific conclusion:
+J-EGG500 is the preferred first candidate for offshore bathymetry in
+the Kamaishi and Sendai corridors if licence, datum and import metadata
+are acceptable. Limitation: the source page notes heterogeneous data
+quality and smoothing, so local relief and harbour/breakwater details
+shall not be assumed resolved.
+
+\textcite{gebco2026grid} provides the current global 15 arc-second
+terrain grid for ocean and land and a Type Identifier grid. Source
+role: supports outer-domain and fallback topobathymetry. Project-
+specific conclusion: GEBCO is selected as the first global fallback and
+outer-domain source, not as the preferred source for local defence
+geometry. Limitation: GEBCO's vertical datum is treated as mean sea
+level while shallow-water source datums can vary, so nearshore datum
+reconciliation remains mandatory.
+
+\textcite{noaa2022etopo} provides NOAA ETOPO 2022 as a 15 arc-second
+global relief model designed for applications including tsunami
+forecasting and modelling. Source role: supports secondary global
+fallback and cross-check. Project-specific conclusion: ETOPO shall be
+used to fill or audit outer-domain coverage if J-EGG500/GEBCO coverage
+or provenance is insufficient. Limitation: it is not selected for
+local barrier-scale topography.
+
+\textcite{gsiDemDownload} documents GSI digital elevation models with
+1 m, 5 m and 10 m mesh products. Source role: supports Japan onshore
+topography. Project-specific conclusion: GSI DEM is the preferred
+onshore topographic source for corridor clipping and inundation/run-up
+comparison where available. Limitation: mixed DEM classes have
+different survey methods and accuracy; class boundaries shall be
+retained in the provenance manifest.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-dat-geo-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Required Data Variables and Units}
+\label{sec:res-dat-geo-required-data-variables-units}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Candidate Data Sources}
+\label{sec:res-dat-geo-candidate-data-sources}
+
+The selected/fallback hierarchy for the Tōhoku case is:
+
+\begin{enumerate}
+  \item \textbf{Japan offshore bathymetry:} J-EGG500
+    \parencite{jodcJegg500}, subject to licence, datum and coverage
+    checks for the selected corridors.
+  \item \textbf{Japan onshore topography:} GSI DEM
+    \parencite{gsiDemDownload}, selecting the finest available mesh
+    class that is legally usable and spatially continuous over each
+    corridor.
+  \item \textbf{Outer regional and fallback topobathymetry:}
+    GEBCO\_2026 \parencite{gebco2026grid}.
+  \item \textbf{Secondary global fallback or cross-check:}
+    NOAA ETOPO 2022 \parencite{noaa2022etopo}.
+\end{enumerate}
+
+The selected approach is a stitched and provenance-preserving terrain
+model rather than one unqualified raster. Each cell or clipped raster
+tile shall retain the source product, source resolution, interpolation
+method, horizontal CRS, vertical datum and sign convention.
+
+\subsection{Spatial and Temporal Coverage}
+\label{sec:res-dat-geo-spatial-temporal-coverage}
+
+Coverage shall include:
+
+\begin{itemize}
+  \item the outer Tōhoku regional propagation domain, including
+    artificial-boundary and sponge regions;
+  \item the epicentre-to-Kamaishi corridor and enough lateral margin to
+    contain the severe-impact observations, bay/coastline geometry and
+    relaxation zones;
+  \item the epicentre-to-Sendai coastal-plain corridor and enough
+    inland coverage to include observed inundation limits;
+  \item local 3D terrain patches around wall-type and
+    obstacle/dissipating barrier classes.
+\end{itemize}
+
+Topobathymetric products are treated as static during one hydrodynamic
+run. The earthquake source updates the bed through `RES-DAT-SRC`; it
+does not change the static terrain-data selection.
+
+\subsection{Coordinate and Datum Requirements}
+\label{sec:res-dat-geo-coordinate-datum-requirements}
+
+The regional model uses a horizontal projected coordinate frame
+$(x,y)$ and a positive-upward bed elevation $b$. Source datasets shall
+record horizontal CRS, vertical datum, units, coastline convention and
+any tidal or geoid correction used before interpolation to the
+finite-volume mesh.
+
+Base acquisition coordinates shall remain longitude/latitude
+$(\lambda,\phi)$ until the corridor target points are finalised in GIS.
+The solver-facing terrain shall be delivered in a projected metric CRS
+chosen for the final regional and local domains. Any dataset whose
+horizontal CRS or vertical datum cannot be confirmed shall be marked
+``usable only for visual screening'' until metadata are resolved.
+
+\subsection{Data Processing and Transformation}
+\label{sec:res-dat-geo-data-processing-transformation}
+
+The required transformation pipeline is:
+
+\begin{align}
+  (\lambda,\phi,z)
+  &\rightarrow
+  (E,N,b_0)
+  \rightarrow
+  (x,y,b_0)
+  \rightarrow
+  b_0^{\mathrm{mesh}}
+  \rightarrow
+  b_{0,i}
+  \rightarrow
+  b_i(t)
+  \label{eq:res-dat-geo-regional-bed-data-pipeline}
+\end{align}
+
+For positive-upward elevation data:
+
+\begin{align}
+  b_0
+  &=
+  z
+  -
+  z_{\mathrm{ref}}
+  \label{eq:res-dat-geo-positive-upward-bed}
+\end{align}
+
+For raw depth $d$ positive downward:
+
+\begin{align}
+  b_0
+  &=
+  -d
+  -
+  z_{\mathrm{ref}}
+  \label{eq:res-dat-geo-positive-downward-depth-conversion}
+\end{align}
+
+The cell-average static bed is:
+
+\begin{align}
+  b_{0,i}
+  &=
+  \frac{1}{A_i}
+  \int_{K_i}
+  b_0^{\mathrm{mesh}}(x,y)
+  \,\dd A
+  \label{eq:res-dat-geo-cell-average-static-bed}
+\end{align}
+
+QGIS/geospatial work owns dataset selection, domain placement,
+coordinate transformation and source-data preparation. It is a
+dependency of the regional model, not part of the mathematical model
+itself.
+
+\subsection{Uncertainty, Provenance and Licensing}
+\label{sec:res-dat-geo-uncertainty-provenance-licensing}
+
+The terrain manifest shall store, for every source tile or derived
+terrain surface:
+
+\begin{itemize}
+  \item source product, provider, citation key and access URL;
+  \item licence or usage note;
+  \item horizontal CRS, vertical datum and sign convention;
+  \item native resolution and interpolation or smoothing operations;
+  \item clipping polygon, corridor identifier and mesh-projection
+    method;
+  \item uncertainty flags for datum conversion, coastline alignment,
+    resampling, smoothing and source-age heterogeneity.
+\end{itemize}
+
+Project conclusion: a terrain raster without this metadata is not an
+accepted validation input. Limitation: the metadata requirements do not
+quantify the full bathymetric error; they make the uncertainty
+auditable by `RES-VER`.
+
+\subsection{Data Acceptance Criteria}
+\label{sec:res-dat-geo-data-acceptance-criteria}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-dat-geo-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-dat-geo-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-dat-geo-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-dat-geo-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-dat-geo-conclusions}
+
+The Tōhoku case-study terrain workflow shall use Japan-specific sources
+where available and global products only where they are physically and
+numerically appropriate. J-EGG500 and GSI DEM are selected as the
+first candidates for Japan offshore and onshore data respectively.
+GEBCO\_2026 is selected for outer-domain/fallback coverage, with ETOPO
+2022 retained as a secondary fallback and consistency check. The local
+barrier mesh shall not infer defence geometry from 15 arc-second global
+products.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-dat-geo-selected-approach}
+
+Use a provenance-preserving terrain hierarchy:
+
+\begin{quote}
+  J-EGG500 offshore bathymetry $+$
+  GSI onshore DEM where available, merged with GEBCO\_2026 for
+  outer-domain and fallback coverage, and ETOPO 2022 as a secondary
+  fallback/cross-check
+\end{quote}
+
+Source role: supports terrain-data finalisation for the regional model,
+the two corridor extracts and local 3D terrain. Supporting citations:
+\textcite{jodcJegg500}, \textcite{gsiDemDownload},
+\textcite{gebco2026grid} and \textcite{noaa2022etopo}. Downstream
+handoff: Software shall ingest these sources through a dataset
+manifest, perform coordinate transformation, clip corridor rasters,
+interpolate to mesh/field containers and write structured outputs with
+source provenance.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-dat-geo-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The mathematical data requirements are established. The actual QGIS
+domain lock, final bathymetry/topography dataset, datum reconciliation,
+coastline treatment, smoothing policy and mesh-projection workflow
+remain open.
+
+Open source-specific decisions are the final J-EGG500 and GSI licence
+acceptance, any required Japanese geodetic/vertical datum conversion,
+GEBCO/ETOPO blending boundary, and whether higher-resolution
+site-specific harbour or defence surveys can be obtained for Kamaishi.
+TODO--missing-source: no dedicated local Kamaishi bay-mouth breakwater
+geometry or survey source has yet been confirmed in the WBS
+bibliography.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-dat-geo-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The data workstream shall provide mesh-projected static bed values,
+source-bed increments where applicable, domain boundaries, sponge-layer
+candidate regions and provenance metadata before validation or
+implementation can be declared complete.
+
+Software-facing requirements now begin in parallel with remaining
+research: dataset manifest, coordinate-transform workflow,
+corridor-polygon generation, raster/vector clipping,
+bathymetry/topography interpolation, HDF5 or equivalent structured
+terrain output, and replay-boundary metadata for the local 3D inlet.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-dat-geo-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

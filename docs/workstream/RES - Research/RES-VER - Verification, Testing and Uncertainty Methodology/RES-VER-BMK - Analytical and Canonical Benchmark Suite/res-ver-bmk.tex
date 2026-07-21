@@ -1,0 +1,258 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-BMK
+% Deliverable: Analytical and Canonical Benchmark Suite
+% Status: In progress
+% Evidence status: Regional and local benchmark classes established
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-VER-FRM, RES-NUM-SPEC
+% Downstream interfaces: RES-VER-MET, Software benchmark execution
+% -------------------------------------------------------------------------
+
+\section{RES-VER-BMK --- Analytical and Canonical Benchmark Suite}
+\label{sec:res-ver-bmk}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-bmk-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-ver-bmk-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-bmk-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-bmk-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Grilli et al. (2013)}
+\label{sec:res-ver-bmk-evidence-grilli-2013}
+
+\textcite{grilli2013tohoku} constructed a complete Tōhoku hindcast
+linking a transient earthquake source, non-hydrostatic tsunami
+generation, dispersive regional propagation, and nested coastal
+inundation. The model was compared with near- and far-field
+deep-ocean records, offshore GPS-wave gauges, run-up measurements, and
+inundation observations.
+
+The paper is retained as evidence for a stage-specific benchmark in
+which source generation, offshore propagation, coastal transformation,
+and inundation are assessed separately.
+
+\subsubsection{Wei et al. (2013)}
+\label{sec:res-ver-bmk-evidence-wei-2013}
+
+\textcite{wei2013japan} used a source constrained by two deep-ocean
+tsunami records to drive eleven nested inundation models along the
+Japanese coastline. The resulting simulations were compared with
+independent offshore GPS records, nearshore gauges, surveyed heights,
+and mapped inundation areas.
+
+The paper is retained as evidence that one regional source and
+propagation solution can supply several local models, and that
+observations used to infer the source must be distinguished from those
+used to assess its predictive performance.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-bmk-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-bmk-test-objective}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+The benchmark suite shall verify solver capability before event
+validation and loading validation are attempted. Local 3D benchmarks
+shall isolate free-surface transport, pressure correction, wave
+generation, wall loading and overtopping before the full
+event-conditioned barrier model is used.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-bmk-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+The Tōhoku benchmark shall be divided into the following validation
+stages:
+
+\begin{enumerate}
+  \item earthquake-source and seabed-deformation assessment;
+  \item initial tsunami-generation assessment;
+  \item near-source offshore propagation;
+  \item regional propagation towards the selected coastline;
+  \item nearshore transformation;
+  \item run-up and inundation;
+  \item local barrier interaction.
+\end{enumerate}
+
+Failure at one stage shall not be concealed by acceptable agreement at
+a later stage. For example, an incorrect source shall not be accepted
+solely on the basis of matching one inundation contour after roughness
+or bathymetry has been adjusted.
+
+The local V1 solver-capability benchmark classes are:
+
+\begin{enumerate}
+  \item still water with gravity and a flat free surface;
+  \item VOF advection of a prescribed interface;
+  \item dam-break or bore propagation;
+  \item regular or solitary wave generation and absorption in a
+    numerical wave tank;
+  \item solitary-wave run-up on a slope;
+  \item wave impact on a vertical wall or simple fixed obstacle;
+  \item overtopping of a simple impermeable barrier;
+  \item flow around a fixed object with pressure and force extraction;
+  \item mesh and timestep refinement for the local quantities of
+    interest.
+\end{enumerate}
+
+\textcite{watanabe2022validation} and \textcite{qin2018comparison}
+support the separation between hydrodynamic validation and impact/load
+validation. Source role: `3D-VALIDATION`. Project conclusion:
+pressure, velocity and force benchmarks are required before local
+barrier-performance claims are accepted.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-bmk-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Simulation Duration}
+\label{sec:res-ver-bmk-simulation}
+
+The benchmark interval shall include all waves that materially affect
+the selected coastal and structural quantities.
+
+The local forcing history shall not be reduced automatically to:
+
+\begin{itemize}
+  \item the first arriving crest;
+  \item the maximum isolated amplitude;
+  \item one idealised solitary wave;
+  \item a short interval surrounding initial impact.
+\end{itemize}
+
+Later waves may propagate over residual inundation water, interact with
+coastal reflections, and produce the maximum inundation, overtopping,
+or cumulative load after the first arrival.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-bmk-measured-quantities}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+Local benchmark outputs shall include phase-volume conservation,
+free-surface elevation, wave-front arrival, depth-dependent velocity,
+run-up, overtopping volume, pressure histories, pressure distribution,
+resultant force, impulse, moment and reflected/transmitted wave
+measures.
+
+\subsection{Error Metrics}
+\label{sec:res-ver-bmk-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-bmk-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-bmk-execution-handoff}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-bmk-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-bmk-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-bmk-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-bmk-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-bmk-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-bmk-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected benchmark approach is progressive. A full
+event-conditioned local barrier simulation shall not be the first test
+of the 3D solver; simpler canonical cases shall verify each numerical
+and physical mechanism before combined validation.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-bmk-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-bmk-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+Software benchmark reports shall identify the benchmark class,
+geometry, mesh, timestep limits, boundary conditions, turbulence mode,
+measured quantities and pass/fail criteria. `RES-VER-MET` shall define
+the numerical values of the acceptance metrics.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-bmk-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,319 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{baragamage2024fullycoupled}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=4d4b6177f454c4d5c446ad4fa651efcf}{%
+           family={Baragamage},
+           familyi={B\bibinitperiod},
+           given={Dilshan\bibnamedelimb S.\bibnamedelimi P.\bibnamedelimi Amarasinghe},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim P\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=03317370a6052113c8f2c8a06e8aedc2}{%
+           family={Wu},
+           familyi={W\bibinitperiod},
+           given={Weiming},
+           giveni={W\bibinitperiod}}}%
+      }
+      \strng{namehash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{fullhash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{fullhashraw}{2f5a11deb837e99e92886c39577abe47}
+      \strng{bibnamehash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{authorbibnamehash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{authornamehash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{authorfullhash}{2f5a11deb837e99e92886c39577abe47}
+      \strng{authorfullhashraw}{2f5a11deb837e99e92886c39577abe47}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Water}
+      \field{number}{1}
+      \field{title}{A Three-Dimensional Fully-Coupled Fluid-Structure Model for Tsunami Loading on Coastal Bridges}
+      \field{volume}{16}
+      \field{year}{2024}
+      \field{pages}{189}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/w16010189
+      \endverb
+    \endentry
+    \entry{istrati2019trappedair}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=a4a6d8705bfc43e788c6d5d39b3f6a04}{%
+           family={Istrati},
+           familyi={I\bibinitperiod},
+           given={Denis},
+           giveni={D\bibinitperiod}}}%
+        {{hash=89a2d73c34b646b12a765d6c04a67f12}{%
+           family={Buckle},
+           familyi={B\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod}}}%
+      }
+      \strng{namehash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{fullhash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{fullhashraw}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{bibnamehash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{authorbibnamehash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{authornamehash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{authorfullhash}{6aa2a0811d40023bbcbd588b201f7715}
+      \strng{authorfullhashraw}{6aa2a0811d40023bbcbd588b201f7715}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Geosciences}
+      \field{number}{4}
+      \field{title}{Role of Trapped Air on the Tsunami-Induced Transient Loads and Response of Coastal Bridges}
+      \field{volume}{9}
+      \field{year}{2019}
+      \field{pages}{191}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/geosciences9040191
+      \endverb
+    \endentry
+    \entry{nemer2021}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=2c9d20c5e017d8f6e8aee0dc166bd74e}{%
+           family={Nemer},
+           familyi={N\bibinitperiod},
+           given={R.},
+           giveni={R\bibinitperiod}}}%
+        {{hash=6c9cb038f84812626f649bb306264df8}{%
+           family={Larcher},
+           familyi={L\bibinitperiod},
+           given={A.},
+           giveni={A\bibinitperiod}}}%
+        {{hash=33056d916b51b468b485ad0f14e8325e}{%
+           family={Coupez},
+           familyi={C\bibinitperiod},
+           given={T.},
+           giveni={T\bibinitperiod}}}%
+        {{hash=cb2785a63dddff829168e8f1366ba05b}{%
+           family={Hachem},
+           familyi={H\bibinitperiod},
+           given={E.},
+           giveni={E\bibinitperiod}}}%
+      }
+      \strng{namehash}{f46d174a960d555983a35a07f2edb2f5}
+      \strng{fullhash}{a00445f1b7230284288999c10c600cc3}
+      \strng{fullhashraw}{a00445f1b7230284288999c10c600cc3}
+      \strng{bibnamehash}{a00445f1b7230284288999c10c600cc3}
+      \strng{authorbibnamehash}{a00445f1b7230284288999c10c600cc3}
+      \strng{authornamehash}{f46d174a960d555983a35a07f2edb2f5}
+      \strng{authorfullhash}{a00445f1b7230284288999c10c600cc3}
+      \strng{authorfullhashraw}{a00445f1b7230284288999c10c600cc3}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computer Methods in Applied Mechanics and Engineering}
+      \field{title}{Stabilized Finite Element Method for Incompressible Solid Dynamics Using an Updated Lagrangian Formulation}
+      \field{volume}{384}
+      \field{year}{2021}
+      \field{pages}{113923}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.1016/j.cma.2021.113923
+      \endverb
+    \endentry
+    \entry{girfoglio2021}{misc}{}{}
+      \name{author}{3}{}{%
+        {{hash=520367a5d985493400708f17d30231c1}{%
+           family={Girfoglio},
+           familyi={G\bibinitperiod},
+           given={Michele},
+           giveni={M\bibinitperiod}}}%
+        {{hash=14ab74fb6d4646f7417c83814978176a}{%
+           family={Quaini},
+           familyi={Q\bibinitperiod},
+           given={Annalisa},
+           giveni={A\bibinitperiod}}}%
+        {{hash=2b969effc2e931cc3f6118c144824d3f}{%
+           family={Rozza},
+           familyi={R\bibinitperiod},
+           given={Gianluigi},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{e803c21236455647ac976467a576f81d}
+      \strng{fullhash}{e803c21236455647ac976467a576f81d}
+      \strng{fullhashraw}{e803c21236455647ac976467a576f81d}
+      \strng{bibnamehash}{e803c21236455647ac976467a576f81d}
+      \strng{authorbibnamehash}{e803c21236455647ac976467a576f81d}
+      \strng{authornamehash}{e803c21236455647ac976467a576f81d}
+      \strng{authorfullhash}{e803c21236455647ac976467a576f81d}
+      \strng{authorfullhashraw}{e803c21236455647ac976467a576f81d}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{physics.flu-dyn}
+      \field{eprinttype}{arXiv}
+      \field{title}{Fluid-Structure Interaction Simulations with a LES Filtering Approach in solids4Foam}
+      \field{year}{2021}
+      \verb{doi}
+      \verb 10.48550/arXiv.2102.08011
+      \endverb
+      \verb{eprint}
+      \verb 2102.08011
+      \endverb
+    \endentry
+    \entry{pasquariello2016}{article}{}{}
+      \name{author}{8}{}{%
+        {{hash=42b76de05d0965c4643fac21d951369f}{%
+           family={Pasquariello},
+           familyi={P\bibinitperiod},
+           given={Vito},
+           giveni={V\bibinitperiod}}}%
+        {{hash=864a590900f728a6dbd0ccdc6c735d0d}{%
+           family={Hammerl},
+           familyi={H\bibinitperiod},
+           given={Georg},
+           giveni={G\bibinitperiod}}}%
+        {{hash=882a5018ae6ce092822f6ad504591bf3}{%
+           family={Örley},
+           familyi={Ö\bibinitperiod},
+           given={Felix},
+           giveni={F\bibinitperiod}}}%
+        {{hash=dd49e0c1a5ff9fe985225621e227bfa7}{%
+           family={Hickel},
+           familyi={H\bibinitperiod},
+           given={Stefan},
+           giveni={S\bibinitperiod}}}%
+        {{hash=c5099fd70b63eeb269511407016d46e0}{%
+           family={Danowski},
+           familyi={D\bibinitperiod},
+           given={Caroline},
+           giveni={C\bibinitperiod}}}%
+        {{hash=65682d34647c824487b310840331b69b}{%
+           family={Popp},
+           familyi={P\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=1bbeb4bc0efac54a4789b699d1e7482f}{%
+           family={Wall},
+           familyi={W\bibinitperiod},
+           given={Wolfgang\bibnamedelima A.},
+           giveni={W\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=54d047106356f745398344726a0428ec}{%
+           family={Adams},
+           familyi={A\bibinitperiod},
+           given={Nikolaus\bibnamedelima A.},
+           giveni={N\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+      }
+      \strng{namehash}{6845708beec20840405841fb6cd2635b}
+      \strng{fullhash}{0cd34793930f1c792cbc007fa144fc6d}
+      \strng{fullhashraw}{0cd34793930f1c792cbc007fa144fc6d}
+      \strng{bibnamehash}{0cd34793930f1c792cbc007fa144fc6d}
+      \strng{authorbibnamehash}{0cd34793930f1c792cbc007fa144fc6d}
+      \strng{authornamehash}{6845708beec20840405841fb6cd2635b}
+      \strng{authorfullhash}{0cd34793930f1c792cbc007fa144fc6d}
+      \strng{authorfullhashraw}{0cd34793930f1c792cbc007fa144fc6d}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Physics}
+      \field{title}{A Cut-Cell Finite Volume--Finite Element Coupling Approach for Fluid-Structure Interaction in Compressible Flow}
+      \field{volume}{307}
+      \field{year}{2016}
+      \field{pages}{670\bibrangedash 695}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1016/j.jcp.2015.12.013
+      \endverb
+    \endentry
+    \entry{chung1993}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=9e0e1cb9b07d95370de0056e32d5fd79}{%
+           family={Chung},
+           familyi={C\bibinitperiod},
+           given={J.},
+           giveni={J\bibinitperiod}}}%
+        {{hash=e24c1f20a342038e2dd40b4333a69fa0}{%
+           family={Hulbert},
+           familyi={H\bibinitperiod},
+           given={G.\bibnamedelimi M.},
+           giveni={G\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+      }
+      \strng{namehash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{fullhash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{fullhashraw}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{bibnamehash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{authorbibnamehash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{authornamehash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{authorfullhash}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \strng{authorfullhashraw}{0b84c06d91749e71fab0c2fe8ecba3dc}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Applied Mechanics}
+      \field{number}{2}
+      \field{title}{A Time Integration Algorithm for Structural Dynamics with Improved Numerical Dissipation: The Generalized-Alpha Method}
+      \field{volume}{60}
+      \field{year}{1993}
+      \field{pages}{371\bibrangedash 375}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1115/1.2900803
+      \endverb
+    \endentry
+    \entry{liu2018}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=cfe6710fdfb4db7424a5dbf3c470886d}{%
+           family={Liu},
+           familyi={L\bibinitperiod},
+           given={Ju},
+           giveni={J\bibinitperiod}}}%
+        {{hash=bc255845502b0d3a9fcb6b763118f61f}{%
+           family={Marsden},
+           familyi={M\bibinitperiod},
+           given={Alison\bibnamedelima L.},
+           giveni={A\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{fullhash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{fullhashraw}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{bibnamehash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{authorbibnamehash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{authornamehash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{authorfullhash}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \strng{authorfullhashraw}{5e75c14d3b5fc769093e1a4ddf5ac729}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computer Methods in Applied Mechanics and Engineering}
+      \field{title}{A Unified Continuum and Variational Multiscale Formulation for Fluids, Solids, and Fluid-Structure Interaction}
+      \field{volume}{337}
+      \field{year}{2018}
+      \field{pages}{549\bibrangedash 597}
+      \range{pages}{49}
+      \verb{doi}
+      \verb 10.1016/j.cma.2018.03.045
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

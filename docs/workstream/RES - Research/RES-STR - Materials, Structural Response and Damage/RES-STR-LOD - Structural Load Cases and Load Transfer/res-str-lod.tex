@@ -1,0 +1,217 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-STR-LOD
+% Deliverable: Structural Load Cases and Load Transfer
+% Status: In progress
+% Evidence status: Hydrodynamic load-transfer requirements established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-PHY-LOD, RES-GEO-REP, RES-NUM-SPEC
+% Downstream interfaces: RES-STR-FSI, RES-STR-SIM, RES-VER-MET, Software output schema
+% -------------------------------------------------------------------------
+
+\section{RES-STR-LOD --- Structural Load Cases and Load Transfer}
+\label{sec:res-str-lod}
+
+\subsection{Purpose and Scope}
+\label{sec:res-str-lod-purpose}
+
+This Deliverable defines the hydrodynamic load histories that must be
+preserved for later structural response, damage or FSI analyses. It
+does not activate material damage, deformable barriers, scour or
+two-way fluid--structure coupling in the baseline tsunami-barrier
+comparison.
+
+\subsection{Research Questions}
+\label{sec:res-str-lod-research-questions}
+
+\begin{enumerate}
+  \item Which pressure, shear, force, impulse and moment outputs are
+    required from the local fluid solver?
+  \item How are distributed fluid tractions reduced or mapped without
+    losing resultant force and moment?
+  \item Which structural quantities are stretch consumers rather than
+    active baseline outputs?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-str-lod-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-str-lod-literature-evidence}
+
+\textcite{baragamage2024fullycoupled} demonstrates the sequence from
+three-dimensional tsunami fluid loading to structural motion and
+feedback. Source role: supports preserving distributed load histories
+for later FSI-capable analysis. Limitation: its reduced bridge
+structure does not justify activating full deformable barrier analysis
+in the current baseline.
+
+\textcite{istrati2019trappedair} shows that pressure distribution can
+alter component demand and moment even where total force is known.
+Source role: supports retaining spatial pressure/traction fields, not
+only resultant force. Project conclusion: the local hydrodynamic model
+shall export complete load histories before any structural extension is
+attempted.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-str-lod-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Material or Structural System}
+\label{sec:res-str-lod-material-structural-system}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Load Cases}
+\label{sec:res-str-lod-load-cases}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Hydrodynamic Traction Transfer}
+\label{subsec:res_str_lod_hydrodynamic_traction_transfer}
+
+The local three-dimensional fluid model supplies a transient traction field on the wetted structural surface. The traction exerted by the fluid on the solid is
+
+\begin{align}
+\bm{t}_{f\rightarrow s}
+&=
+\bm{\sigma}_{f}\bm{n}_{s}
+\label{eq:res_str_lod_fluid_traction}
+\end{align}
+
+where \(\bm{n}_{s}\) is the outward unit normal of the current structural surface and the fluid Cauchy stress is
+
+\begin{align}
+\bm{\sigma}_{f}
+&=
+-p\bm{I}+\bm{\tau}_{f}
+\label{eq:res_str_lod_fluid_cauchy_stress}
+\end{align}
+
+For a finite-element structural discretisation, the distributed interface traction is converted into the structural load vector through
+
+\begin{align}
+\bm{f}_{\mathrm{hyd}}(t)
+&=
+\int_{\Gamma_{fs}(t)}
+\bm{N}_{s}^{\mathsf{T}}
+\bm{t}_{f\rightarrow s}(t)
+\,\mathrm{d}\Gamma
+\label{eq:res_str_lod_hydrodynamic_load_vector}
+\end{align}
+
+The integration is performed over the current wetted interface \(\Gamma_{fs}(t)\). The transferred field must preserve the resultant force and moment and should preserve interface work when the fluid and structural surface discretisations do not match.
+
+The tsunami FSI model of Baragamage and Wu demonstrates the sequence from three-dimensional fluid loading to structural motion and subsequent feedback to the fluid solver, although its structural representation is reduced rather than a full three-dimensional deformable continuum \autocite{baragamage2024fullycoupled}
+
+\textbf{Selected approach.} Hydrodynamic loading is represented as a
+distributed pressure and viscous traction field on the fixed barrier
+surface during the active baseline. Reduction to a single resultant
+force is not sufficient for later structural or damage studies.
+Decision role: \cref{eq:res_str_lod_fluid_traction}--\cref{eq:res_str_lod_hydrodynamic_load_vector}
+define the load-transfer contract. Limitation: the equations are a
+handoff requirement and do not claim that a structural solver or FSI
+run has been executed.
+
+\subsection{Constitutive Behaviour}
+\label{sec:res-str-lod-constitutive-behaviour}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Response and Stability Measures}
+\label{sec:res-str-lod-response-stability-measures}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Damage and Failure Modes}
+\label{sec:res-str-lod-damage-failure-modes}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Fluid--Structure Coupling Requirements}
+\label{sec:res-str-lod-fluid-structure-coupling-requirements}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-str-lod-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-str-lod-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-str-lod-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-str-lod-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-str-lod-conclusions}
+
+The Studentship shall first stabilise hydrodynamic load extraction:
+pressure, shear, force, moment and impulse histories on fixed barrier
+patches. Material deformation and damage remain later consumers of
+these histories.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-str-lod-selected-approach}
+
+The selected near-term approach is one-way hydrodynamic load export
+from the local URANS--VOF model to structured output. One-way
+CFD-to-FEA and two-way FSI are retained as stretch paths, not baseline
+deliverables.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-str-lod-unresolved-decisions}
+
+Open decisions are load-mapping tolerances, time-history sampling
+rate, structural mesh target, sign convention for moments and the
+activation criteria for one-way structural analysis.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-str-lod-requirements}
+
+Software shall emit \texttt{patch\_id}-resolved pressure, shear,
+resultant force, impulse, overturning moment, torsional moment,
+centre-of-pressure and integration-window metadata. RES-VER-MET shall
+define tolerances for force/moment consistency before RES-STR-SIM or
+RES-STR-FSI consumes the loads.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-str-lod-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

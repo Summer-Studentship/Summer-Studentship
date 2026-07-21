@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Affiniti+ Gmail Signature Builder</title>
+<style>
+  :root { --bg:#f5f5f5; --panel:#ffffff; --border:#d7d7d7; --text:#1f1f1f; --muted:#666; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:Arial, Helvetica, sans-serif; background:var(--bg); color:var(--text); }
+  header { padding:18px 22px; background:#202124; color:white; }
+  header h1 { margin:0 0 4px 0; font-size:20px; }
+  header p { margin:0; color:#d7d7d7; font-size:13px; line-height:1.4; }
+  main { display:grid; grid-template-columns:minmax(300px, 430px) 1fr; gap:16px; padding:16px; }
+  section { background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:14px; }
+  h2 { margin:0 0 12px 0; font-size:16px; }
+  h3 { margin:18px 0 8px 0; font-size:13px; color:#333; text-transform:uppercase; letter-spacing:.04em; }
+  label { display:block; margin:10px 0 4px 0; font-size:12px; color:#333; font-weight:bold; }
+  input[type="text"], input[type="url"], input[type="email"], input[type="tel"], input[type="number"], textarea {
+    width:100%; padding:8px; border:1px solid #c9c9c9; border-radius:6px; font-family:Arial, Helvetica, sans-serif; font-size:13px;
+  }
+  textarea { min-height:130px; resize:vertical; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size:12px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:8px 10px; }
+  .actions { display:flex; flex-wrap:wrap; gap:8px; margin:12px 0; }
+  button { border:1px solid #1a73e8; background:#1a73e8; color:white; border-radius:7px; padding:8px 10px; cursor:pointer; font-weight:bold; font-size:13px; }
+  button.secondary { background:white; color:#1a73e8; }
+  button.warning { background:white; color:#a14200; border-color:#a14200; }
+  .note { font-size:12px; color:var(--muted); line-height:1.45; }
+  .previewBox { background:white; border:1px dashed #aaa; border-radius:8px; padding:18px; overflow:auto; }
+  .status { min-height:18px; color:#0b8043; font-size:12px; margin-top:8px; }
+  .socialRow { border:1px solid #e2e2e2; border-radius:8px; padding:8px; margin-bottom:8px; }
+  .socialHeader { display:flex; align-items:center; gap:8px; justify-content:space-between; }
+  .socialHeader label { margin:0; }
+  .small { font-size:11px; color:#666; }
+  @media (max-width: 900px) { main { grid-template-columns:1fr; } }
+</style>
+<script type="application/json" id="signature-metadata-default">
+{
+  "schema": "affiniti-plus-gmail-signature-template@1.0",
+  "format": "standalone-html-builder",
+  "created_from": "uploaded Gmail/WiseStamp HTML export",
+  "notes": [
+    "Use the rendered preview for Gmail paste-in; do not paste the raw editor HTML into Gmail.",
+    "Gmail supports table-based inline HTML more reliably than external CSS, flexbox, scripts, or embedded metadata.",
+    "The builder stores all editable fields and layout controls in JSON and localStorage. Export JSON before major revisions."
+  ],
+  "fields": {
+    "name": "[INSERT NAME]",
+    "role": "[INSERT ROLE]",
+    "email": "[INSERT EMAIL]",
+    "phone": "07801366837",
+    "websiteText": "www.affinitiplus.com",
+    "websiteUrl": "https://www.affinitiplus.com/",
+    "address": "Gunnery House, 9-11 Gunnery Terrace, SE18 6SW",
+    "mapUrl": "https://maps.google.com/?q=Gunnery%20House,%209-11%20Gunnery%20Terrace,%20SE18%206SW",
+    "slogan": "We Listen, We Hear, We Help",
+    "organisation": "Affiniti+"
+  },
+  "assets": {
+    "logoUrl": "https://gifo.srv.wisestamp.com/img/aHR0cHM6Ly9kMzZ1cmh1cDd6YmQ3cS5jbG91ZGZyb250Lm5ldC9hLzkyMDdhZDM2LTczNTAtNGVlYS1hYjgyLTFlODBmMzU5NTE3My5qcGVn/circle.png",
+    "emailIconUrl": "https://gifo.srv.wisestamp.com/i/ws1el/F4F6F8/2D2E30/32/12/0/bg.png",
+    "websiteIconUrl": "https://gifo.srv.wisestamp.com/i/ws1gl/F4F6F8/2D2E30/32/12/0/bg.png",
+    "phoneIconUrl": "https://gifo.srv.wisestamp.com/i/ws1pl/F4F6F8/2D2E30/32/12/0/bg.png",
+    "addressIconUrl": "https://gifo.srv.wisestamp.com/i/ws1ldl/F4F6F8/2D2E30/32/12/0/bg.png"
+  },
+  "social": [
+    {
+      "label": "LinkedIn",
+      "url": "https://www.linkedin.com/company/affinitiplus-ltd/?viewAsMember=true",
+      "iconUrl": "https://gifo.srv.wisestamp.com/i/linkedin/0077b5/ffffff/52/18/8/bg.png",
+      "enabled": true
+    },
+    {
+      "label": "Substack",
+      "url": "https://affinitiplus.substack.com/",
+      "iconUrl": "https://gifo.srv.wisestamp.com/s/custom/https%3A%2F%2Fd36urhup7zbd7q.cloudfront.net%2Fa%2F91f14700-1b36-4300-8a66-2ff25b4e5f20__100x100__.png/52/8.png",
+      "enabled": true
+    },
+    {
+      "label": "YouTube",
+      "url": "https://www.youtube.com/@AffinitiPlus",
+      "iconUrl": "https://gifo.srv.wisestamp.com/i/youtube/cd201f/ffffff/52/18/8/bg.png",
+      "enabled": true
+    },
+    {
+      "label": "Instagram",
+      "url": "https://www.instagram.com/affinitiplus/",
+      "iconUrl": "https://gifo.srv.wisestamp.com/i/inst/E4405F/ffffff/52/18/8/bg.png",
+      "enabled": true
+    },
+    {
+      "label": "Facebook",
+      "url": "https://www.facebook.com/profile.php?id=61578356260488",
+      "iconUrl": "https://gifo.srv.wisestamp.com/i/fb/3b5998/ffffff/52/18/8/bg.png",
+      "enabled": true
+    }
+  ],
+  "layout": {
+    "signatureWidth": 506,
+    "leftColumnWidth": 108,
+    "logoWidth": 90,
+    "dividerHeight": 170,
+    "dividerGap": 10,
+    "rightPaddingLeft": 6,
+    "nameFontSize": 20,
+    "roleFontSize": 16,
+    "bodyFontSize": 14,
+    "contactIconSize": 20,
+    "socialIconSize": 31,
+    "contactRowSpacing": 12,
+    "socialGap": 7,
+    "topRule": true,
+    "topRuleWidth": 506,
+    "topRuleMarginBottom": 8,
+    "nameColor": "#737373",
+    "roleColor": "#737373",
+    "bodyColor": "#222222",
+    "sloganColor": "#804002",
+    "dividerColor": "#a6a6a6",
+    "ruleColor": "#000000"
+  }
+}
+</script>
+</head>
+<body>
+<header>
+  <h1>Affiniti+ Gmail Signature Builder</h1>
+  <p>Standalone editable template. Adjust fields and sizing, then copy the rendered preview into Gmail’s signature editor.</p>
+</header>
+<main>
+  <section>
+    <h2>Editable fields</h2>
+    <div class="grid2">
+      <div><label>Name</label><input id="field-name" type="text"></div>
+      <div><label>Role</label><input id="field-role" type="text"></div>
+      <div><label>Email</label><input id="field-email" type="email"></div>
+      <div><label>Phone</label><input id="field-phone" type="tel"></div>
+      <div><label>Website text</label><input id="field-websiteText" type="text"></div>
+      <div><label>Website URL</label><input id="field-websiteUrl" type="url"></div>
+    </div>
+    <label>Address</label><input id="field-address" type="text">
+    <label>Map URL</label><input id="field-mapUrl" type="url">
+    <label>Slogan</label><input id="field-slogan" type="text">
+
+    <h3>Layout controls</h3>
+    <div class="grid2" id="layoutControls"></div>
+
+    <h3>Asset URLs</h3>
+    <label>Logo URL</label><input id="asset-logoUrl" type="url">
+    <div class="grid2">
+      <div><label>Email icon URL</label><input id="asset-emailIconUrl" type="url"></div>
+      <div><label>Website icon URL</label><input id="asset-websiteIconUrl" type="url"></div>
+      <div><label>Phone icon URL</label><input id="asset-phoneIconUrl" type="url"></div>
+      <div><label>Address icon URL</label><input id="asset-addressIconUrl" type="url"></div>
+    </div>
+
+    <h3>Social links</h3>
+    <div id="socialControls"></div>
+
+    <h3>Metadata JSON</h3>
+    <p class="note">This is the portable source of truth for the signature. Export it before major changes. Gmail itself may strip metadata, so keep this builder file or JSON as the editable master.</p>
+    <textarea id="metadataBox" spellcheck="false"></textarea>
+    <div class="actions">
+      <button id="applyJson" class="secondary">Apply JSON</button>
+      <button id="exportJson" class="secondary">Download JSON</button>
+      <button id="resetDefaults" class="warning">Reset defaults</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rendered Gmail signature</h2>
+    <p class="note">For Gmail: copy this rendered preview, then paste into Settings → See all settings → General → Signature. Use the HTML box only for debugging or storing the generated snippet.</p>
+    <div class="actions">
+      <button id="copyRendered">Copy rendered signature</button>
+      <button id="copyHtml" class="secondary">Copy generated HTML</button>
+      <button id="downloadHtml" class="secondary">Download signature HTML</button>
+    </div>
+    <div class="previewBox"><div id="signaturePreview"></div></div>
+    <div class="status" id="status"></div>
+
+    <h3>Generated Gmail-compatible HTML</h3>
+    <textarea id="htmlBox" spellcheck="false"></textarea>
+  </section>
+</main>
+<script>
+(function () {
+  const STORAGE_KEY = 'affinitiPlusSignatureMetadata.v1';
+  const defaults = JSON.parse(document.getElementById('signature-metadata-default').textContent);
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null') || structuredClone(defaults);
+
+  const layoutFields = [
+    ['signatureWidth','Signature width'], ['leftColumnWidth','Left column width'], ['logoWidth','Logo width'],
+    ['dividerHeight','Divider height'], ['dividerGap','Divider gap'], ['rightPaddingLeft','Right padding left'],
+    ['nameFontSize','Name font size'], ['roleFontSize','Role font size'], ['bodyFontSize','Body font size'],
+    ['contactIconSize','Contact icon size'], ['socialIconSize','Social icon size'], ['contactRowSpacing','Contact row spacing'],
+    ['socialGap','Social gap'], ['topRuleWidth','Top rule width'], ['topRuleMarginBottom','Top rule bottom gap']
+  ];
+  const colorFields = [
+    ['nameColor','Name colour'], ['roleColor','Role colour'], ['bodyColor','Body colour'], ['sloganColor','Slogan colour'], ['dividerColor','Divider colour'], ['ruleColor','Rule colour']
+  ];
+
+  function esc(x) {
+    return String(x ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function url(x) { return esc(x); }
+  function safeTel(x) { return String(x ?? '').replace(/[^0-9+]/g, ''); }
+
+  function generateSignature(d) {
+    const f = d.fields, a = d.assets, l = d.layout, social = d.social || [];
+    const width = Number(l.signatureWidth), left = Number(l.leftColumnWidth), logo = Number(l.logoWidth);
+    const divh = Number(l.dividerHeight), gap = Number(l.dividerGap), rpad = Number(l.rightPaddingLeft);
+    const nameSize = Number(l.nameFontSize), roleSize = Number(l.roleFontSize), bodySize = Number(l.bodyFontSize);
+    const iconSize = Number(l.contactIconSize), socialSize = Number(l.socialIconSize), rowSpace = Number(l.contactRowSpacing), socialGap = Number(l.socialGap);
+    let topRule = '';
+    if (l.topRule !== false) {
+      topRule = `<tr><td colspan="3" style="padding:0 0 ${Number(l.topRuleMarginBottom)}px 0; font-size:0; line-height:0;">
+<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse; width:${Number(l.topRuleWidth)}px; max-width:100%;"><tr><td style="border-top:1px solid ${esc(l.ruleColor)}; height:1px; font-size:0; line-height:0;">&nbsp;</td></tr></table>
+</td></tr>`;
+    }
+    const rows = [
+      [a.emailIconUrl, f.email, String(f.email || '').includes('@') ? 'mailto:' + f.email : ''],
+      [a.websiteIconUrl, f.websiteText, f.websiteUrl],
+      [a.phoneIconUrl, f.phone, 'tel:' + safeTel(f.phone)],
+      [a.addressIconUrl, f.address, f.mapUrl]
+    ];
+    const contacts = rows.map((r, i) => {
+      const [icon, text, href] = r;
+      const pad = i < rows.length - 1 ? rowSpace : 0;
+      const content = href ? `<a href="${url(href)}" target="_blank" style="color:${esc(l.bodyColor)}; text-decoration:none;"><span style="color:${esc(l.bodyColor)};">${esc(text)}</span></a>` : esc(text);
+      return `<tr><td style="padding:0 0 ${pad}px 0; vertical-align:middle; font-family:Arial, Helvetica, sans-serif; font-size:${bodySize}px; line-height:${bodySize+2}px; color:${esc(l.bodyColor)}; white-space:nowrap;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-family:Arial, Helvetica, sans-serif; font-size:${bodySize}px; line-height:${bodySize+2}px; color:${esc(l.bodyColor)};"><tr><td style="padding:0; vertical-align:middle;"><img src="${url(icon)}" alt="" width="${iconSize}" height="${iconSize}" style="display:block; border:0; width:${iconSize}px; height:${iconSize}px;"></td><td width="6" style="width:6px; font-size:0; line-height:0;">&nbsp;</td><td style="padding:0; vertical-align:middle; color:${esc(l.bodyColor)}; white-space:nowrap;">${content}</td></tr></table></td></tr>`;
+    }).join('');
+    const socialCells = social.filter(s => s.enabled !== false).map((s, i) => `${i ? `<td width="${socialGap}" style="width:${socialGap}px; font-size:0; line-height:0;">&nbsp;</td>` : ''}<td style="padding:0; vertical-align:middle;"><a href="${url(s.url)}" target="_blank" style="text-decoration:none; color:inherit;"><img src="${url(s.iconUrl)}" alt="${esc(s.label || 'Social')}" width="${socialSize}" height="${socialSize}" style="display:block; border:0; width:${socialSize}px; height:${socialSize}px;"></a></td>`).join('');
+    const socials = socialCells ? `<tr><td style="padding:18px 0 0 0;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr>${socialCells}</tr></table></td></tr>` : '';
+    return `<table role="presentation" cellpadding="0" cellspacing="0" dir="ltr" style="border-collapse:collapse; width:${width}px; max-width:100%; font-family:Arial, Helvetica, sans-serif; color:${esc(l.bodyColor)};"><tbody>${topRule}<tr><td valign="top" align="center" style="padding:0 ${gap}px 0 0; vertical-align:top; width:${left}px; text-align:center;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse; width:${left}px;"><tr><td align="center" style="padding:0; text-align:center;"><a href="${url(f.websiteUrl)}" target="_blank" style="text-decoration:none; color:inherit;"><img src="${url(a.logoUrl)}" alt="Company logo" width="${logo}" style="display:block; border:0; width:${logo}px; height:auto; margin:0 auto;"></a></td></tr><tr><td align="center" style="padding:6px 0 0 0; text-align:center; font-family:Arial, Helvetica, sans-serif; font-size:14px; line-height:14px; color:${esc(l.sloganColor)};">${esc(f.slogan)}</td></tr></table></td><td valign="top" style="padding:0 ${gap}px; vertical-align:top; font-size:0; line-height:0;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;"><tr><td style="border-left:1px solid ${esc(l.dividerColor)}; height:${divh}px; width:1px; font-size:0; line-height:0;">&nbsp;</td></tr></table></td><td valign="top" style="padding:0 0 0 ${rpad}px; vertical-align:top;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-family:Arial, Helvetica, sans-serif; color:${esc(l.bodyColor)};"><tr><td style="padding:0 0 3px 0; font-family:Arial, Helvetica, sans-serif; font-size:${nameSize}px; line-height:${nameSize+2}px; font-weight:bold; color:${esc(l.nameColor)}; white-space:nowrap;">${esc(f.name)}</td></tr><tr><td style="padding:0 0 10px 0; font-family:Arial, Helvetica, sans-serif; font-size:${roleSize}px; line-height:${roleSize+2}px; font-weight:bold; color:${esc(l.roleColor)}; white-space:nowrap;">${esc(f.role)}</td></tr><tr><td style="padding:0;"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse; font-family:Arial, Helvetica, sans-serif; font-size:${bodySize}px; line-height:${bodySize+2}px; color:${esc(l.bodyColor)};">${contacts}</table></td></tr>${socials}</table></td></tr></tbody></table>`;
+  }
+
+  function $(id) { return document.getElementById(id); }
+  function status(msg) { $('status').textContent = msg; setTimeout(() => { if ($('status').textContent === msg) $('status').textContent = ''; }, 3500); }
+
+  function buildControls() {
+    const layout = $('layoutControls');
+    layout.innerHTML = '';
+    layoutFields.forEach(([key,label]) => {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<label>${label}</label><input id="layout-${key}" type="number" min="0" step="1">`;
+      layout.appendChild(wrap);
+    });
+    colorFields.forEach(([key,label]) => {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<label>${label}</label><input id="layout-${key}" type="text" placeholder="#000000">`;
+      layout.appendChild(wrap);
+    });
+    const topWrap = document.createElement('div');
+    topWrap.innerHTML = `<label>Show top rule</label><input id="layout-topRule" type="checkbox">`;
+    layout.appendChild(topWrap);
+
+    const socialBox = $('socialControls');
+    socialBox.innerHTML = '';
+    state.social.forEach((s, idx) => {
+      const row = document.createElement('div'); row.className = 'socialRow';
+      row.innerHTML = `<div class="socialHeader"><label>${esc(s.label)} link</label><span class="small"><input id="social-${idx}-enabled" type="checkbox"> enabled</span></div>
+      <label>Label</label><input id="social-${idx}-label" type="text">
+      <label>URL</label><input id="social-${idx}-url" type="url">
+      <label>Icon URL</label><input id="social-${idx}-iconUrl" type="url">`;
+      socialBox.appendChild(row);
+    });
+  }
+
+  function populate() {
+    Object.entries(state.fields).forEach(([k,v]) => { const el = $('field-' + k); if (el) el.value = v ?? ''; });
+    Object.entries(state.assets).forEach(([k,v]) => { const el = $('asset-' + k); if (el) el.value = v ?? ''; });
+    layoutFields.concat(colorFields).forEach(([k]) => { const el = $('layout-' + k); if (el) el.value = state.layout[k] ?? ''; });
+    $('layout-topRule').checked = state.layout.topRule !== false;
+    state.social.forEach((s, idx) => {
+      ['label','url','iconUrl'].forEach(k => { const el = $('social-' + idx + '-' + k); if (el) el.value = s[k] ?? ''; });
+      const en = $('social-' + idx + '-enabled'); if (en) en.checked = s.enabled !== false;
+    });
+    render();
+  }
+
+  function readForm() {
+    Object.keys(state.fields).forEach(k => { const el = $('field-' + k); if (el) state.fields[k] = el.value; });
+    Object.keys(state.assets).forEach(k => { const el = $('asset-' + k); if (el) state.assets[k] = el.value; });
+    layoutFields.forEach(([k]) => { const el = $('layout-' + k); if (el) state.layout[k] = Number(el.value || 0); });
+    colorFields.forEach(([k]) => { const el = $('layout-' + k); if (el) state.layout[k] = el.value || '#000000'; });
+    state.layout.topRule = $('layout-topRule').checked;
+    state.social.forEach((s, idx) => {
+      ['label','url','iconUrl'].forEach(k => { const el = $('social-' + idx + '-' + k); if (el) s[k] = el.value; });
+      const en = $('social-' + idx + '-enabled'); if (en) s.enabled = en.checked;
+    });
+  }
+
+  function render() {
+    const html = generateSignature(state);
+    $('signaturePreview').innerHTML = html;
+    $('htmlBox').value = html;
+    $('metadataBox').value = JSON.stringify(state, null, 2);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function onChange() { readForm(); render(); }
+
+  function download(name, type, content) {
+    const blob = new Blob([content], {type});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = name; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 500);
+  }
+
+  async function copyRendered() {
+    const html = $('htmlBox').value;
+    try {
+      if (navigator.clipboard && window.ClipboardItem) {
+        await navigator.clipboard.write([new ClipboardItem({'text/html': new Blob([html], {type:'text/html'}), 'text/plain': new Blob([$('signaturePreview').innerText], {type:'text/plain'})})]);
+        status('Rendered HTML copied. Paste into Gmail signature editor.');
+        return;
+      }
+    } catch (e) {}
+    const range = document.createRange();
+    range.selectNodeContents($('signaturePreview'));
+    const sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(range);
+    document.execCommand('copy'); sel.removeAllRanges();
+    status('Preview selected and copied. Paste into Gmail signature editor.');
+  }
+
+  function bind() {
+    document.querySelectorAll('input, textarea').forEach(el => {
+      if (el.id !== 'metadataBox' && el.id !== 'htmlBox') el.addEventListener('input', onChange);
+      if (el.type === 'checkbox') el.addEventListener('change', onChange);
+    });
+    $('copyRendered').addEventListener('click', copyRendered);
+    $('copyHtml').addEventListener('click', async () => { await navigator.clipboard.writeText($('htmlBox').value); status('Generated HTML copied.'); });
+    $('downloadHtml').addEventListener('click', () => download('affiniti_gmail_signature_clean.html', 'text/html', $('htmlBox').value));
+    $('exportJson').addEventListener('click', () => download('affiniti_signature_metadata.json', 'application/json', $('metadataBox').value));
+    $('applyJson').addEventListener('click', () => {
+      try { state = JSON.parse($('metadataBox').value); buildControls(); populate(); bind(); status('Metadata JSON applied.'); }
+      catch (e) { status('Invalid JSON: ' + e.message); }
+    });
+    $('resetDefaults').addEventListener('click', () => { state = structuredClone(defaults); localStorage.removeItem(STORAGE_KEY); buildControls(); populate(); bind(); status('Defaults restored.'); });
+  }
+
+  buildControls();
+  populate();
+  bind();
+})();
+</script>
+</body>
+</html>

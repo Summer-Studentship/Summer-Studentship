@@ -1,0 +1,78 @@
+# Build products
+build/
+out/
+vcpkg_installed/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.ninja
+*.exe
+*.dll
+*.lib
+*.a
+*.o
+*.obj
+
+# Local CMake/editor state
+CMakeUserPresets.json
+.cache/
+.vs/
+.idea/
+.vscode/*
+!.vscode/extensions.json
+.vscode/.cmake/
+.vscode/.cache/
+*.user
+*.autosave
+
+# External source restored by scripts/bootstrap_external.*
+external/mathplot/
+
+# Qt generated files
+*_autogen/
+*.qrc.depends
+
+# Documentation output
+docs/html/
+docs/latex/
+docs/xml/
+**/.latex-aux/
+*.aux
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.nlo
+*.run.xml
+*.synctex.gz
+*.toc
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+
+# Local environment and secret files
+.env
+.env.*
+
+# MATLAB autosaves and generated binaries
+*.asv
+*.mex*
+
+# Large/generated data. Keep small curated examples under data/examples.
+*.h5
+*.hdf5
+*.mat
+!data/examples/**/*.h5
+!data/examples/**/*.hdf5
+!data/examples/**/*.mat
+!data/**/.gitkeep
+!data/README.md
+
+desktop.ini
+.fake

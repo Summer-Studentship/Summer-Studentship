@@ -1,0 +1,188 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-REP
+% Deliverable: Two- and Three-Dimensional Model Representation
+% Status: In progress
+% Evidence status: Fixed-rigid local representation established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-GEO-PAR, RES-GEO-MET, RES-NUM-SPEC
+% Downstream interfaces: RES-MOD-IBC, RES-NUM-MSH, RES-STR-LOD, RES-VER-SPEC, Software mesh/field containers
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-REP --- Two- and Three-Dimensional Model Representation}
+\label{sec:res-geo-rep}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-rep-purpose}
+
+This Deliverable defines how each active fixed-rigid barrier geometry
+is represented for the regional model, local 3D fluid model,
+hydrodynamic-load handoff and later deferred structural analysis. ML
+feature generation is not active; any feature representation is a
+future consumer of the same manifest.
+
+\subsection{Research Questions}
+\label{sec:res-geo-rep-research-questions}
+
+\begin{enumerate}
+  \item What is the minimum regional footprint required for regional
+    propagation and replay extraction?
+  \item What local 3D surface representation is required for
+    no-slip/no-penetration wall patches and load extraction?
+  \item Which representation fields must be preserved for later
+    structural or ML use without activating those workstreams now?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-rep-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-rep-literature-evidence}
+
+\textcite{watanabe2022validation} supports explicit local geometry,
+probe and loading-output control in tsunami-impact validation.
+\textcite{deljesus2012porous} supports distinguishing resolved solid
+geometry from unresolved porous closure. Project conclusion: the
+local representation shall be a resolved fixed solid surface unless a
+separate porous model is later accepted.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-rep-governing-relations}
+
+The fixed barrier patch in the local fluid domain is:
+
+\begin{align}
+  \Gamma_{\mathrm{B}}
+  &=
+  \partial\Omega_{\mathrm{f}}
+  \cap
+  \partial\Omega_{\mathrm{B}}
+  \label{eq:res-geo-rep-fixed-barrier-patch}
+\end{align}
+
+where $\Omega_{\mathrm{f}}$ is the local fluid-control domain and
+$\Omega_{\mathrm{B}}$ is the solid barrier volume. Decision role:
+\cref{eq:res-geo-rep-fixed-barrier-patch} defines the geometric
+surface on which no-slip/no-penetration conditions and hydrodynamic
+load integration are applied. Supporting evidence:
+\textcite{watanabe2022validation}. Limitation: it does not describe
+deformable FSI interfaces.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-rep-geometry-family-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-rep-design-variables-parameter-bounds}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-rep-geometric-descriptors}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-rep-placement-arrangement-rules}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-rep-feasibility-constraints}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-rep-two-three-dimensional-representation}
+
+Representation levels shall include:
+
+\begin{itemize}
+  \item a regional-scale footprint or roughness/obstruction marker,
+    used only if the regional model needs a defence representation;
+  \item a local three-dimensional fixed solid surface for the
+    URANS--VOF barrier interaction model;
+  \item a patch and face identifier set for pressure, shear, force,
+    impulse and moment extraction;
+  \item a deferred structural surface mapping for one-way CFD-to-FEA
+    load transfer after hydrodynamic extraction is stable;
+  \item optional future ML descriptors generated from the same
+    manifest, not an independent geometry source.
+\end{itemize}
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-rep-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-rep-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-rep-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-rep-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-rep-conclusions}
+
+The local solver needs an explicit fixed surface representation before
+any barrier comparison is meaningful. The same surface identifiers
+must survive into post-processing so forces and moments can be traced
+back to geometry cases.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-rep-selected-approach}
+
+The selected local representation is a fixed rigid solid volume
+converted to terrain/barrier wall patches and stable patch identifiers.
+Moving boundaries, topology change and deformable surfaces are
+deferred to RES-STR-FSI.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-rep-unresolved-decisions}
+
+Open decisions are the exact geometry file format, wall roughness
+metadata, CAD/CSG versus raster-derived surface generation, and
+Kamaishi real-defence source geometry.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-rep-requirements}
+
+Software shall support fixed geometry ingestion, patch labelling,
+face/patch metric extraction and structured export to HDF5 or an
+equivalent schema. RES-STR-LOD shall consume the same patch identifiers
+for later hydrodynamic load transfer.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-rep-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

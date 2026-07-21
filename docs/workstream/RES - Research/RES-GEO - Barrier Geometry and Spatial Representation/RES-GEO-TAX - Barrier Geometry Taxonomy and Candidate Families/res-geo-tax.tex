@@ -1,0 +1,253 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-TAX
+% Deliverable: Barrier Geometry Taxonomy and Candidate Families
+% Status: In progress
+% Evidence status: Barrier-class scope established; real-defence source gap open
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-DAT-SCN, RES-DAT-CAS, RES-PHY-BAR
+% Downstream interfaces: RES-GEO-PAR, RES-GEO-MET, RES-GEO-REP, Software geometry manifest
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-TAX --- Barrier Geometry Taxonomy and Candidate Families}
+\label{sec:res-geo-tax}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-tax-purpose}
+
+This Deliverable classifies the active fixed-rigid barrier families
+used for the Tohoku corridor comparison. It admits two baseline
+families:
+
+\begin{enumerate}
+  \item wall-type barriers, including continuous or segmented seawalls,
+    ridges, breakwaters and raised impermeable lines;
+  \item obstacle, dissipating or array-type barriers, including finite
+    blocks, columns, staggered rows, permeable-looking resolved
+    openings and other structures whose effect is controlled by
+    blockage, spacing and wake interaction.
+\end{enumerate}
+
+Selection is based on geometric recoverability, hydrodynamic relevance
+and numerical representability. The deliverable excludes unrestricted
+geometry generation and does not treat damage, scour or deformable
+barrier response as active baseline geometry.
+
+\subsection{Research Questions}
+\label{sec:res-geo-tax-research-questions}
+
+\begin{enumerate}
+  \item Which barrier families are active in the Kamaishi and Sendai
+    comparison cases?
+  \item Which minimum descriptors distinguish wall-type and
+    obstacle/array-type barriers for the local URANS--VOF model?
+  \item Which real-defence geometries have enough provenance to be
+    reconstructed rather than treated as TODO candidates?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-tax-definitions}
+
+\begin{description}
+  \item[Wall-type barrier] A laterally extended defence whose principal
+    hydrodynamic effect is reflection, run-up, overtopping and
+    blocking along a near-continuous crest.
+  \item[Obstacle or dissipating barrier] A finite-width body or row of
+    bodies whose principal hydrodynamic effect is local blockage,
+    separation, wake production, transmission and turbulent energy
+    loss.
+  \item[Array] A repeated set of resolved obstacle elements with
+    spacing, staggering and row count recorded explicitly.
+  \item[Fixed rigid barrier] A solid geometry that supplies no-slip and
+    no-penetration wall patches to the local fluid solver and does not
+    deform during the baseline hydrodynamic calculation.
+\end{description}
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-tax-literature-evidence}
+
+\textcite{deljesus2012porous} supports the taxonomy split between
+impermeable vertical barriers and barriers whose porosity or openings
+require explicit modelling assumptions. Source role: supports the
+wall-type versus dissipating/opening class distinction and limits any
+claim about unresolved porous resistance. Project conclusion:
+porosity-like behaviour is active only when openings are resolved by
+geometry or a later porous closure is formally activated.
+
+\textcite{watanabe2022validation} supports using controlled idealised
+coastal structures for local hydrodynamic validation. Source role:
+supports simple fixed obstacle and wall geometries as validation-facing
+families rather than arbitrary generated forms. Limitation: the paper
+does not define the final Kamaishi or Sendai defence geometry.
+
+\textcite{mori2012nationwide} supports retaining Sanriku/Kamaishi and
+Sendai coastal-plain settings as contrasting Tohoku impact regimes.
+Source role: motivates site-facing geometry classes, not detailed
+barrier dimensions. TODO/missing-source: identify a citable primary
+source for the Kamaishi bay-mouth breakwater geometry, 2011 damage
+state and any reconstruction dimensions before recreating it as a
+project barrier.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-tax-governing-relations}
+
+For software-facing comparison, each geometry record shall include a
+class label and a minimum descriptor vector:
+
+\begin{align}
+  \mathcal{G}_j
+  &=
+  \left\{
+    c_j,\,
+    \mathbf{x}_j,\,
+    \psi_j,\,
+    H_j,\,
+    B_j,\,
+    L_j,\,
+    C_j,\,
+    S_j,\,
+    N_j,\,
+    \chi_j
+  \right\}
+  \label{eq:res-geo-tax-minimum-geometry-record}
+\end{align}
+
+where $c_j$ is the barrier class, $\mathbf{x}_j$ is the placement
+reference point in the local corridor coordinate system, $\psi_j$ is
+the plan-view orientation, $H_j$ is height, $B_j$ is width or
+thickness, $L_j$ is along-barrier length, $C_j$ is crest elevation,
+$S_j$ is spacing for arrays, $N_j$ is element or row count and
+$\chi_j$ records resolved openings, roughness and provenance flags.
+Decision role: \cref{eq:res-geo-tax-minimum-geometry-record} is a data
+contract, not a design-generation equation. Supporting evidence:
+\textcite{deljesus2012porous} and \textcite{watanabe2022validation}.
+Limitation: final admissible parameter bounds remain site- and
+mesh-dependent.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-tax-geometry-family-representation}
+
+The active family set is:
+
+\begin{itemize}
+  \item \texttt{wall}: continuous or segmented impermeable line
+    defence, with optional resolved openings;
+  \item \texttt{obstacle}: isolated block, pier, mound or short
+    barrier element;
+  \item \texttt{array}: repeated obstacle elements whose spacing,
+    staggering and row count are explicit;
+  \item \texttt{dissipating}: resolved obstacle or array geometry
+    intended to increase separation, wake loss, reflection or
+    overtopping reduction.
+\end{itemize}
+
+Unresolved porous-media barriers, compliant structures, scour-adaptive
+foundations and damage-evolving barriers are deferred extensions.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-tax-design-variables-parameter-bounds}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-tax-geometric-descriptors}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-tax-placement-arrangement-rules}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-tax-feasibility-constraints}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-tax-two-three-dimensional-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-tax-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-tax-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-tax-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-tax-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-tax-conclusions}
+
+The project taxonomy is now class-comparison led. A geometry may enter
+the active campaign when it has a traceable descriptor record, a fixed
+rigid local representation and a clear hydrodynamic purpose. Real
+defence recreation is allowed only after source geometry is identified;
+otherwise the case remains a TODO rather than an invented citation.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-tax-selected-approach}
+
+The selected approach is a small active taxonomy: wall-type barriers
+and obstacle/dissipating/array barriers. The rejected active approach
+is unrestricted generated geometry, because the present work must first
+stabilise data handling, local hydrodynamic load extraction and the
+V1--V2--V3 validation hierarchy.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-tax-unresolved-decisions}
+
+\begin{itemize}
+  \item TODO: obtain a primary or peer-reviewed source for Kamaishi
+    bay-mouth breakwater dimensions and 2011 condition.
+  \item Select final descriptor bounds after RES-DAT-GEO terrain
+    extraction and RES-NUM-MSH mesh constraints are available.
+  \item Decide whether any dissipating class requires a porous closure
+    rather than resolved openings.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-tax-requirements}
+
+Software shall support a geometry manifest containing the descriptor
+record in \cref{eq:res-geo-tax-minimum-geometry-record}, class labels,
+local corridor coordinates, source/provenance fields and flags for
+resolved openings versus deferred porous physics. `RES-MOD-IBC` and
+`RES-NUM-MSH` shall consume this record as fixed terrain/barrier wall
+patches; `RES-VER-MET` shall use the same identifiers for load and
+energy metrics.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-tax-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

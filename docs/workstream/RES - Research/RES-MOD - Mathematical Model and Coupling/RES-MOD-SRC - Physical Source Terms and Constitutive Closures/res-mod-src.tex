@@ -1,0 +1,581 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-SRC
+% Deliverable: Physical Source Terms and Constitutive Closures
+% Status: Draft complete
+% Evidence status: Research specification complete for regional NLSWE sources and local URANS baseline closure
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-EQS, RES-PHY-SRC, RES-DAT-GEO, RES-DAT-SRC
+% Downstream interfaces: RES-NUM-SRC, RES-NUM-TIM, RES-VER-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-SRC --- Physical Source Terms and Constitutive Closures}
+\label{sec:res-mod-src}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-src-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-mod-src-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-src-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-src-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Kozelkov et al. (2022)}
+\label{sec:res-mod-src-evidence-kozelkov-2022}
+
+\textcite{kozelkov2022turbulence} compared a two-phase
+Navier--Stokes calculation without a turbulence closure against a
+Reynolds-averaged calculation using the $k$--$\omega$ SST model.
+Differences were small during smooth propagation but became material
+during breaking, run-up, overtopping, collapse, and barrier loading.
+The reported changes in total barrier force reached engineering
+significance in the more energetic cases.
+
+\subsubsection{Watanabe et al. (2022)}
+\label{sec:res-mod-src-evidence-watanabe-2022}
+
+\textcite{watanabe2022validation} compared blind submissions using
+laminar, Reynolds-averaged, and large-eddy formulations. Dynamic
+sub-grid kinetic-energy LES submissions generally produced more
+consistent force predictions than fixed-coefficient Smagorinsky
+submissions, while the submitted $k$--$\varepsilon$ calculations were
+more stable and consistent than the submitted $k$--$\omega$
+calculations for that experiment.
+
+\subsubsection{Menter (1994)}
+\label{sec:res-mod-src-evidence-menter-1994}
+
+\textcite{menter1994twoequation} introduced the $k$--$\omega$ SST
+eddy-viscosity closure by blending near-wall $k$--$\omega$ behaviour
+with outer-flow $k$--$\varepsilon$ behaviour and limiting turbulent
+shear stress. Source role: `3D-SST`. Project conclusion: SST is a
+defensible operational URANS baseline for high-Reynolds-number local
+tsunami run-up and impact studies. Limitation: this source is a
+general turbulence-model source; project validation must still test the
+closure against free-surface, pressure, overtopping and load outputs.
+
+\subsection{Turbulence Treatment for the Local Three-Dimensional Model}
+\label{sec:res-mod-src-local-turbulence}
+
+The selected parent Navier--Stokes equations require a treatment of
+unresolved turbulent transport in the local impact region.
+
+The local regime is treated as high-Reynolds-number turbulent
+free-surface impact flow. A molecular-viscosity-only calculation may be
+used diagnostically but is not accepted as the operational model for
+candidate screening.
+
+These results do not establish one universally optimal closure. The
+submitted models differed in their meshes, solvers, interface
+treatments, wall conditions, and numerical schemes. The findings
+instead establish that:
+
+\begin{enumerate}
+  \item turbulence closure is required in the local breaking and
+    impact domain;
+  \item the closure must be assessed within a controlled common
+    numerical framework;
+  \item free-surface agreement alone is insufficient for selecting
+    the closure;
+  \item closure selection must include pressure, force, impulse,
+    overtopping, and downstream-flow measures.
+\end{enumerate}
+
+\subsubsection{Turbulence-Model Hierarchy}
+\label{sec:res-mod-src-local-turbulence-hierarchy}
+
+The turbulence formulations are assigned the following project roles:
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabular}{
+      p{0.22\textwidth}
+      p{0.27\textwidth}
+      p{0.40\textwidth}
+    }
+    \hline
+    Formulation
+    &
+    Project role
+    &
+    Current decision
+    \\
+    \hline
+    Unsteady RANS
+    &
+    Operational local-impact model
+    &
+    Selected as the initial candidate-evaluation formulation with
+    $k$--$\omega$ SST as the baseline closure
+    \\
+    Dynamic sub-grid kinetic-energy LES
+    &
+    High-fidelity comparison model
+    &
+    Retained for validation cases and shortlisted geometries
+    \\
+    Hybrid RANS--LES
+    &
+    Possible intermediate-fidelity model
+    &
+    Retained for later research; insufficient evidence for current
+    selection
+    \\
+    Fixed-coefficient Smagorinsky LES
+    &
+    Alternative LES closure
+    &
+    Retained as a comparator but not provisionally preferred
+    \\
+    Molecular-viscosity-only Navier--Stokes
+    &
+    Diagnostic case
+    &
+    Not accepted as the operational high-Reynolds-number impact
+    model
+    \\
+    \hline
+  \end{tabular}
+  \caption{Project roles assigned to the candidate turbulence
+  formulations}
+  \label{tab:res-mod-src-local-turbulence-hierarchy}
+\end{table}
+
+The operational and high-fidelity formulations shall use the same
+parent fluid equations, material properties, geometry, incident state,
+and output definitions wherever practical.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-src-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsubsection{Unsteady Reynolds-Averaged Formulation}
+\label{sec:res-mod-src-local-urans}
+
+The instantaneous fluid velocity is decomposed as:
+
+\begin{align}
+  u_i
+  &=
+  \overline{u}_i
+  +
+  u_i^{\prime}
+  \label{eq:res-mod-src-urans-velocity-decomposition}
+\end{align}
+
+Averaging introduces the Reynolds stress:
+
+\begin{align}
+  \tau_{ij}^{\mathrm{R}}
+  &=
+  -\rho_{\mathrm{f}}
+  \overline{
+    u_i^{\prime}u_j^{\prime}
+  }
+  \label{eq:res-mod-src-urans-reynolds-stress}
+\end{align}
+
+For a linear eddy-viscosity closure:
+
+\begin{align}
+  \tau_{ij}^{\mathrm{R}}
+  &=
+  2\mu_{\mathrm{t}}
+  \overline{S}_{ij}
+  -
+  \frac{2}{3}
+  \rho_{\mathrm{f}}k\delta_{ij}
+  \label{eq:res-mod-src-urans-boussinesq-closure}
+  \\
+  \overline{S}_{ij}
+  &=
+  \frac{1}{2}
+  \left(
+    \frac{\partial\overline{u}_i}{\partial x_j}
+    +
+    \frac{\partial\overline{u}_j}{\partial x_i}
+  \right)
+  \label{eq:res-mod-src-urans-strain-rate}
+\end{align}
+
+The operational URANS closure is the $k$--$\omega$ SST model. Its
+generic transport form is recorded as:
+
+\begin{align}
+  \frac{\partial\left(\rho_{\mathrm{f}} k\right)}{\partial t}
+  +
+  \nabla\cdot
+  \left(
+    \rho_{\mathrm{f}}\mathbf{u}_{\mathrm{f}} k
+  \right)
+  &=
+  \nabla\cdot
+  \left[
+    \left(
+      \mu_{\mathrm{f}}
+      +
+      \sigma_k\mu_{\mathrm{t}}
+    \right)
+    \nabla k
+  \right]
+  +
+  P_k
+  -
+  \beta^{*}\rho_{\mathrm{f}}k\omega
+  \label{eq:res-mod-src-sst-k-equation}
+  \\
+  \frac{\partial\left(\rho_{\mathrm{f}}\omega\right)}{\partial t}
+  +
+  \nabla\cdot
+  \left(
+    \rho_{\mathrm{f}}\mathbf{u}_{\mathrm{f}}\omega
+  \right)
+  &=
+  \nabla\cdot
+  \left[
+    \left(
+      \mu_{\mathrm{f}}
+      +
+      \sigma_{\omega}\mu_{\mathrm{t}}
+    \right)
+    \nabla\omega
+  \right]
+  +
+  \gamma
+  \frac{\omega}{k}
+  P_k
+  -
+  \beta\rho_{\mathrm{f}}\omega^2
+  +
+  D_{\omega}
+  \label{eq:res-mod-src-sst-omega-equation}
+\end{align}
+
+The eddy viscosity is limited in SST form by:
+
+\begin{align}
+  \mu_{\mathrm{t}}
+  &=
+  \rho_{\mathrm{f}}
+  \frac{
+    a_1 k
+  }{
+    \max
+    \left(
+      a_1\omega,\,
+      S F_2
+    \right)
+  }
+  \label{eq:res-mod-src-sst-eddy-viscosity}
+\end{align}
+
+where $P_k$ is the turbulence-production term, $S$ is a strain-rate
+measure, $F_2$ is the SST blending function and $D_{\omega}$ contains
+the cross-diffusion contribution. The coefficient set and blending
+functions shall follow the selected SST reference rather than being
+retuned during the research specification.
+
+Decision trace: source role `3D-SST`; supporting sources
+\textcite{menter1994twoequation}, \textcite{kozelkov2022turbulence}
+and \textcite{watanabe2022validation}. Project-specific conclusion:
+URANS $k$--$\omega$ SST is the baseline turbulence closure for repeated
+local candidate assessment. Limitation: the closure is not accepted
+for final engineering certification until the validation hierarchy in
+`RES-VER` confirms pressure, force, impulse and overtopping behaviour.
+Downstream handoff: `RES-NUM-SPEC` shall define when $k$ and $\omega$
+are solved in the time-step sequence and `RES-VER-MET` shall define
+the URANS--LES comparison metrics.
+
+\subsubsection{Large-Eddy Formulation}
+\label{sec:res-mod-src-local-les}
+
+Large-eddy simulation filters the velocity field into resolved and
+sub-grid components:
+
+\begin{align}
+  u_i
+  &=
+  \widetilde{u}_i
+  +
+  u_i^{\mathrm{sgs}}
+  \label{eq:res-mod-src-les-velocity-decomposition}
+\end{align}
+
+Filtering introduces the sub-grid stress:
+
+\begin{align}
+  \tau_{ij}^{\mathrm{sgs}}
+  &=
+  \rho_{\mathrm{f}}
+  \left(
+    \widetilde{u_i u_j}
+    -
+    \widetilde{u}_i\widetilde{u}_j
+  \right)
+  \label{eq:res-mod-src-les-subgrid-stress}
+\end{align}
+
+The deviatoric sub-grid stress may be represented as:
+
+\begin{align}
+  \tau_{ij}^{\mathrm{sgs}}
+  -
+  \frac{1}{3}
+  \tau_{kk}^{\mathrm{sgs}}
+  \delta_{ij}
+  &=
+  -2\mu_{\mathrm{sgs}}
+  \widetilde{S}_{ij}
+  \label{eq:res-mod-src-les-eddy-viscosity-closure}
+\end{align}
+
+A dynamic sub-grid kinetic-energy model is retained as the provisional
+high-fidelity candidate. Its exact transport equation and coefficient
+evaluation shall be selected during the dedicated turbulence-closure
+study.
+
+\subsubsection{Turbulence-Closure Selection Gate}
+\label{sec:res-mod-src-local-closure-gate}
+
+The operational closure shall be accepted only after comparison against
+the high-fidelity formulation for representative impact cases.
+
+The comparison shall include:
+
+\begin{itemize}
+  \item incident and transmitted free-surface histories;
+  \item pressure distributions;
+  \item resultant forces and moments;
+  \item force impulse;
+  \item overtopping volume;
+  \item reflected and transmitted energy;
+  \item downstream recirculation and wake structure;
+  \item resolved and modelled turbulent kinetic energy;
+  \item sensitivity of the barrier-performance ranking.
+\end{itemize}
+
+The operational URANS model may be retained where it preserves the
+design ranking and the required engineering quantities within the
+acceptance tolerances defined under `RES-VER-MET`.
+
+If the barrier ranking changes materially between URANS and LES, the
+lower-fidelity model shall not be used as the sole optimisation
+evaluator until the source of the discrepancy has been resolved.
+
+\subsection{System Boundary}
+\label{sec:res-mod-src-system-boundary}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-src-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-src-continuous-governing-model}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-src-source-terms-closures}
+
+The regional two-dimensional NLSWE source catalogue is established at
+research-specification level. The baseline retained terms are bed slope,
+Manning bottom friction, dynamic earthquake bathymetry, and optional
+sponge damping near artificial open boundaries. Coriolis and lateral
+eddy viscosity are not part of the baseline regional model; they remain
+optional sensitivity terms if the selected domain scale or validation
+evidence requires them.
+
+The continuous regional source split is:
+
+\begin{align}
+  \mathbf{S}
+  &=
+  \mathbf{S}_{\mathrm{b}}
+  +
+  \mathbf{S}_{\mathrm{f}}
+  +
+  \mathbf{S}_{\mathrm{sp}}
+  \label{eq:res-mod-src-regional-source-split}
+\end{align}
+
+where $\mathbf{S}_{\mathrm{b}}$ is the bed-slope source,
+$\mathbf{S}_{\mathrm{f}}$ is Manning bottom friction, and
+$\mathbf{S}_{\mathrm{sp}}$ is the sponge-layer relaxation source
+defined in \cref{sec:res-mod-eqs-continuous-governing-model}. The
+earthquake contribution is applied by updating the bed field
+$b(x,y,t)$; no additional depth-equation mass source is added in the
+conserved-depth formulation.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-src-initial-boundary-interface-conditions}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-src-model-coupling-requirements}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-src-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-src-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-src-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-src-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-src-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-src-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+For the regional model, the source-term research gate is closed at
+specification level. Remaining work is numerical verification of the
+well-balanced bed-source treatment, validation of the selected
+earthquake source against observations, and selection of data values for
+roughness, bathymetry, and source timing. These are not changes to the
+regional mathematical model unless the validation evidence rejects the
+specified formulation.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-src-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional source approach is:
+
+\begin{itemize}
+  \item bed-slope forcing with hydrostatic reconstruction and matching
+    bed-source discretisation;
+  \item Manning bottom friction, advanced by a split semi-implicit
+    update in the numerical method;
+  \item dynamic moving-bed earthquake source,
+    $b=b_0+\sum_m\Delta b_m R_m(t)$;
+  \item sponge-layer relaxation at artificial ocean boundaries where
+    required by domain truncation;
+  \item Coriolis and explicit lateral eddy viscosity disabled in the
+    baseline, retained only as sensitivity options.
+\end{itemize}
+
+The selected local closure approach is:
+
+\begin{itemize}
+  \item high-Reynolds-number URANS as the operational local
+    hydrodynamic model;
+  \item $k$--$\omega$ SST as the baseline eddy-viscosity closure;
+  \item LES retained for selected high-fidelity comparison cases;
+  \item molecular-viscosity-only Navier--Stokes retained only as a
+    diagnostic calculation;
+  \item porous, compressible-air, sediment, scour and structural
+    damage source terms deferred until their activation gates are met.
+\end{itemize}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-src-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The mathematical form of the regional source terms and the local URANS
+baseline closure are no longer unresolved. The open items are data,
+verification and lower-level closure-implementation items:
+
+\begin{itemize}
+  \item final Manning coefficient fields;
+  \item final static bathymetry/topography dataset;
+  \item final fault-source dataset and rupture-time functions;
+  \item lake-at-rest and moving-bottom verification evidence;
+  \item decision on whether optional Coriolis sensitivity is required;
+  \item local wall-function constants and roughness treatment for the
+    selected case-study materials;
+  \item final LES sub-grid closure and comparison-case set.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-src-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-SRC` shall implement the source terms consistently with the
+finite-volume face fluxes, preserve still-water balance over non-flat
+bathymetry, and report any loss of positivity at wet/dry fronts.
+`RES-DAT-GEO` and `RES-DAT-SRC` shall provide the static bed,
+coordinate/datum transform, and fault-source data required by the
+source definitions.
+
+`RES-NUM-SPEC` shall discretise
+\cref{eq:res-mod-src-sst-k-equation,eq:res-mod-src-sst-omega-equation}
+after the pressure-corrected velocity and face flux have been accepted
+for the time step. `RES-PHY-SCL` shall justify the high-Reynolds-number
+regime, and `RES-VER-MET` shall prevent free-surface agreement alone
+from being treated as closure validation.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-src-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

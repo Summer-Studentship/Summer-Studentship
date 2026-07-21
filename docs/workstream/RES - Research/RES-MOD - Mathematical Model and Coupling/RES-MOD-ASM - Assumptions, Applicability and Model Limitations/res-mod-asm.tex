@@ -1,0 +1,469 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-ASM
+% Deliverable: Assumptions, Applicability and Model Limitations
+% Status: In progress
+% Evidence status: Local 3D baseline assumptions and deferred physics established
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-EQS, RES-MOD-SRC, RES-MOD-IBC, RES-PHY-SCL
+% Downstream interfaces: RES-NUM-SPEC, RES-VER-MET, RES-STR-FSI
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-ASM --- Assumptions, Applicability and Model Limitations}
+\label{sec:res-mod-asm}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-asm-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable records the assumptions under which the local
+three-dimensional URANS--VOF hydrodynamic model may be used as the
+baseline tsunami--barrier interaction model. It also identifies
+physical regimes that require deferred extensions before claims can be
+made.
+
+\subsection{Research Questions}
+\label{sec:res-mod-asm-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+The local-model applicability questions are:
+
+\begin{enumerate}
+  \item Which physical effects are included in the baseline local
+    hydrodynamic model?
+  \item Which effects are deliberately deferred rather than assumed
+    negligible?
+  \item Which candidate geometries trigger porous, compressible-air,
+    structural-failure, scour or sediment extensions?
+  \item Which claims may be made before those extensions and validation
+    data exist?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-asm-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-asm-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{del Jesus et al. (2012)}
+\label{sec:res-mod-asm-evidence-deljesus-2012}
+
+\textcite{deljesus2012porous} demonstrated that unresolved porous
+barrier material requires volume averaging and additional
+porous-matrix resistance. This formulation is relevant to rubble
+mounds, densely packed armour units, aggregate-filled structures, and
+other media whose pore geometry is smaller than the resolved
+computational scale.
+
+\subsubsection{Istrati and Buckle (2019)}
+\label{sec:res-mod-asm-evidence-istrati-2019}
+
+\textcite{istrati2019trappedair} showed that enclosed or poorly
+ventilated air volumes can alter local pressure, uplift, and
+overturning moment. The study does not imply that compressible flow is
+required for every tsunami-impact calculation. It identifies a
+geometry-dependent failure regime for the incompressible-air
+assumption.
+
+\subsection{Applicability Boundary of the Local Three-Dimensional Model}
+\label{sec:res-mod-asm-local-applicability}
+
+The selected incompressible two-phase Navier--Stokes formulation is the
+baseline local model for rigid, impermeable, and well-ventilated
+barriers. Several alternative or extended formulations were considered
+but are not included in the initial model.
+
+\subsubsection{Considered and Deferred Formulations}
+\label{sec:res-mod-asm-local-considered-formulations}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabular}{
+      p{0.22\textwidth}
+      p{0.30\textwidth}
+      p{0.37\textwidth}
+    }
+    \hline
+    Formulation
+    &
+    Reason for consideration
+    &
+    Project decision
+    \\
+    \hline
+    Compressible two-phase Navier--Stokes
+    &
+    Represents trapped-gas compression, acoustic effects, and
+    compressibility
+    &
+    Deferred while the design space remains open and ventilated;
+    activated only when a trapped-air screening gate fails
+    \\
+    VARANS
+    &
+    Represents unresolved internal porous flow through porosity and
+    matrix-resistance closures
+    &
+    Deferred while the initial barrier is impermeable or contains
+    explicitly resolved openings
+    \\
+    Three-dimensional nonhydrostatic multilayer equations
+    &
+    Provides some vertical resolution at lower dimensional
+    complexity
+    &
+    Not selected owing to limited evidence for local pressure,
+    traction, and general moving-boundary FSI
+    \\
+    Three-dimensional hydrostatic multilayer equations
+    &
+    Provides vertically layered velocity and density fields
+    &
+    Rejected for impulsive local impact as the pressure field
+    remains hydrostatic
+    \\
+    Inviscid Euler or potential-flow equations
+    &
+    Can represent selected nonbreaking wave and body-interaction
+    problems
+    &
+    Rejected for the operational impact model as viscosity,
+    turbulent separation, wake formation, and dissipative
+    mechanisms are central outputs
+    \\
+    Molecular-viscosity-only Navier--Stokes
+    &
+    Retains the parent conservation laws without an explicit
+    unresolved-turbulence closure
+    &
+    Retained only as a diagnostic case; not accepted as the
+    high-Reynolds-number operational model
+    \\
+    SPH or MPS
+    &
+    Handles highly deformed free surfaces through mesh-free
+    numerical formulations
+    &
+    Deferred to numerical-method selection as these are
+    discretisation frameworks rather than alternative conservation
+    laws
+    \\
+    \hline
+  \end{tabular}
+  \caption{Alternative and extended formulations considered for the
+  local three-dimensional model}
+  \label{tab:res-mod-asm-local-considered-formulations}
+\end{table}
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-asm-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-asm-system-boundary}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-asm-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-asm-continuous-governing-model}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-asm-source-terms-closures}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-asm-initial-boundary-interface-conditions}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsubsection{Initial Local-Model Assumptions}
+\label{sec:res-mod-asm-local-initial-assumptions}
+
+The initial local model adopts the following assumptions:
+
+\begin{enumerate}
+  \item water and air are Newtonian fluids;
+  \item both phases are incompressible;
+  \item the phases are immiscible;
+  \item heat transfer, evaporation, condensation, and phase change
+    are negligible;
+  \item the barrier is initially rigid and impermeable;
+  \item candidate geometries are sufficiently ventilated to prevent
+    material trapped-air compression;
+  \item seabed morphology is fixed during one hydrodynamic
+    simulation;
+  \item debris, sediment transport, scour, cavitation, and structural
+    fracture are excluded from the baseline model;
+  \item turbulence effects are represented through an attached URANS,
+    LES, or hybrid closure;
+  \item structural pressure and traction are retained even when the
+    structure is fixed.
+\end{enumerate}
+
+These assumptions constrain the initial design space rather than assert
+that the excluded phenomena are universally negligible.
+
+\subsubsection{Porous-Medium Activation Gate}
+\label{sec:res-mod-asm-local-porous-gate}
+
+A porous-region model shall be considered where:
+
+\begin{align}
+  \ell_{\mathrm{pore}}
+  &\ll
+  \Delta_{\mathrm{local}}
+  \label{eq:res-mod-asm-porous-scale-separation}
+\end{align}
+
+where $\ell_{\mathrm{pore}}$ is a representative pore scale and
+$\Delta_{\mathrm{local}}$ is the local resolved mesh scale.
+
+Where individual slots, channels, perforations, or openings are design
+variables and can be resolved explicitly, the ordinary Navier--Stokes
+equations shall remain active.
+
+Where the internal porous structure cannot be resolved, a local
+resistance term may be attached:
+
+\begin{align}
+  \mathbf{f}_{\mathrm{por}}
+  &=
+  -
+  \left[
+    a\mathbf{u}_{\mathrm{f}}
+    +
+    b
+    \left\lVert
+    \mathbf{u}_{\mathrm{f}}
+    \right\rVert
+    \mathbf{u}_{\mathrm{f}}
+    +
+    c
+    \frac{\partial\mathbf{u}_{\mathrm{f}}}{\partial t}
+  \right]
+  \label{eq:res-mod-asm-porous-resistance}
+\end{align}
+
+The coefficients $a$, $b$, and $c$ shall be calibrated for the
+selected material and shall not be transferred directly from unrelated
+porous structures.
+
+\subsubsection{Compressible-Air Activation Gate}
+\label{sec:res-mod-asm-local-compressible-air-gate}
+
+A candidate geometry shall be flagged for compressible-air assessment
+where:
+
+\begin{enumerate}
+  \item an initially connected air region becomes isolated during
+    impact;
+  \item the trapped volume persists for a material fraction of the
+    loading interval;
+  \item water intrusion causes a material reduction in gas volume;
+  \item the venting timescale is comparable with or greater than the
+    impact timescale;
+  \item cavity pressure contributes materially to the resultant force
+    or overturning moment.
+\end{enumerate}
+
+A preliminary screening estimate may use:
+
+\begin{align}
+  p_{\mathrm{a}}
+  V_{\mathrm{a}}^{\,n}
+  &=
+  p_{\mathrm{a},0}
+  V_{\mathrm{a},0}^{\,n}
+  \label{eq:res-mod-asm-trapped-air-polytropic-screening}
+\end{align}
+
+where $n$ lies between the isothermal and adiabatic limits.
+
+Where the predicted gas-pressure increment is comparable with the local
+hydrodynamic pressure, the geometry shall be ventilated, excluded from
+the baseline design space, or assessed using a compressible-gas
+extension.
+
+\subsubsection{Current Validity Statement}
+\label{sec:res-mod-asm-local-validity-statement}
+
+The selected local equation set is applicable to:
+
+\begin{itemize}
+  \item rigid or weakly deforming barriers;
+  \item impermeable barriers;
+  \item explicitly resolved openings and flow passages;
+  \item open or adequately ventilated geometries;
+  \item water--air free-surface impact without material gas
+    compression;
+  \item fixed-bed hydrodynamic evaluation;
+  \item one-way structural load transfer;
+  \item two-way FSI where the structural model and moving-interface
+    treatment are activated.
+\end{itemize}
+
+The baseline formulation shall not be claimed to reproduce unresolved
+porous flow, trapped-air compression, debris impact, movable sediment,
+scour, cavitation, fracture, or progressive structural failure without
+the corresponding additional physical model.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-asm-model-coupling-requirements}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-asm-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-asm-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-asm-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-asm-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+The local model assumes high-Reynolds-number water--air impact flow
+around a fixed or weakly moving defence geometry. The operational
+closure is URANS $k$--$\omega$ SST; LES is retained for selected
+high-fidelity comparison cases. Source roles: `3D-SST`,
+`3D-RANSVOF`, `3D-DEFERRED`. Supporting sources:
+\textcite{menter1994twoequation}, \textcite{kozelkov2022turbulence},
+\textcite{deljesus2012porous} and \textcite{istrati2019trappedair}.
+Project-specific conclusion: turbulence, free-surface deformation and
+hydrodynamic loading are baseline phenomena, while unresolved porous
+media and trapped-air compressibility are activation-gated extensions.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-asm-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+The baseline model ceases to be sufficient when a quantity of interest
+depends materially on:
+
+\begin{itemize}
+  \item unresolved flow through porous material;
+  \item isolated trapped-air pockets with material compression;
+  \item sediment transport, scour or bed morphology change;
+  \item debris impact or floating-body collision;
+  \item structural fracture, progressive damage or detached debris;
+  \item cavitation or compressible acoustic effects;
+  \item certification-level design factors not covered by the
+    validation evidence.
+\end{itemize}
+
+In those regimes the result may be used only as a hydrodynamic
+screening calculation unless the missing physical model is added and
+validated.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-asm-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The local 3D model is valid as a baseline high-Reynolds-number
+hydrodynamic tsunami-barrier interaction model for run-up, overtopping,
+free-surface deformation, pressure, force, moment, and comparative
+barrier-performance analysis. It is not valid yet for structural
+failure, scour, deformable barriers, detailed aeration, sediment
+transport, or final design certification.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-asm-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected baseline assumption set is:
+
+\begin{quote}
+  incompressible immiscible water--air flow, VOF free surface,
+  high-Reynolds-number URANS $k$--$\omega$ SST turbulence, fixed
+  terrain, fixed rigid impermeable and ventilated barrier geometry, and
+  hydrodynamic load extraction without baseline structural failure,
+  scour, sediment or trapped-air compression
+\end{quote}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-asm-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Unresolved applicability details are the quantitative trapped-air
+screening threshold, rough-wall turbulence parameters, porous-extension
+activation threshold, deformation threshold for activating FSI, and
+case-study-specific validation tolerance for treating the barrier as
+rigid.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-asm-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-GEO` shall flag candidate geometries that violate the baseline
+ventilation, porosity or rigidity assumptions. `RES-VER-MET` shall
+define the validation checks that decide whether the hydrodynamic
+baseline is acceptable for candidate screening. `RES-STR-FSI` shall own
+any structural-feedback or failure extension.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-asm-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

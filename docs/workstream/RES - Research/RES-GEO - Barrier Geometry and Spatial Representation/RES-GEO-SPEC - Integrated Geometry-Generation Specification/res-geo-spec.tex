@@ -1,0 +1,200 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-SPEC
+% Deliverable: Integrated Barrier-Class Geometry Specification
+% Status: In progress
+% Evidence status: Active barrier-class comparison scope established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-GEO-TAX through RES-GEO-CST
+% Downstream interfaces: RES-MOD-IBC, RES-NUM-MSH, RES-PHY-BAR, RES-PHY-LOD, RES-VER-MET, Software geometry manifest
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-SPEC --- Integrated Barrier-Class Geometry Specification}
+\label{sec:res-geo-spec}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-spec-purpose}
+
+This Deliverable consolidates the active fixed-rigid barrier geometry
+specification. It preserves the WBS ID while changing the active output
+away from geometry generation and toward reproducible wall-type and
+obstacle/dissipating/array comparisons in the two Tohoku corridors.
+
+\subsection{Research Questions}
+\label{sec:res-geo-spec-research-questions}
+
+\begin{enumerate}
+  \item Are the active geometry classes, descriptors, placement rules
+    and representations sufficient for local 3D hydrodynamic
+    comparison?
+  \item Which fields must the Software workstream implement in the
+    geometry manifest before data handling can proceed?
+  \item Which geometry ideas are explicitly deferred?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-spec-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-spec-literature-evidence}
+
+\textcite{deljesus2012porous} supports the impermeable/opening-aware
+barrier distinction and limits unresolved porous claims.
+\textcite{watanabe2022validation} supports preserving geometry and
+output identifiers for local impact validation. \textcite{mori2012nationwide}
+supports retaining the two Tohoku corridor settings as contrasting
+hydrodynamic contexts. Project conclusion: geometry specification is a
+data and modelling contract for comparison, not a literature survey or
+automatic design generator.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-spec-governing-relations}
+
+The minimum geometry-case contract is:
+
+\begin{align}
+  \mathcal{C}^{\mathrm{geo}}_j
+  &=
+  \left\{
+    \mathtt{corridor\_id},\,
+    \mathtt{geometry\_id},\,
+    \mathcal{G}_j,\,
+    \boldsymbol{\theta}^{\mathrm{geo}}_j,\,
+    \Gamma_{\mathrm{B},j},\,
+    \mathcal{P}_j
+  \right\}
+  \label{eq:res-geo-spec-case-contract}
+\end{align}
+
+where $\mathcal{G}_j$ is the descriptor record,
+$\boldsymbol{\theta}^{\mathrm{geo}}_j$ is the parameter vector,
+$\Gamma_{\mathrm{B},j}$ is the fixed barrier patch and
+$\mathcal{P}_j$ records provenance, CRS/datum linkage and unresolved
+physics flags. Source role: this equation integrates the decisions in
+RES-GEO-TAX, RES-GEO-PAR and RES-GEO-REP. Limitation: it does not
+define solver implementation or validation results.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-spec-geometry-family-representation}
+
+The active representation is fixed terrain plus fixed rigid barrier
+patches. Wall-type and obstacle/array-type cases share the same
+manifest structure so they can be compared through common
+hydrodynamic metrics.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-spec-design-variables-parameter-bounds}
+
+Only descriptor-level comparison variables are active. Generative
+control points, topology optimisation variables and learned geometry
+latents are deferred.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-spec-geometric-descriptors}
+
+Minimum descriptors are class, position, orientation, crest elevation,
+height, width/thickness, footprint length, spacing, row count, opening
+fraction, roughness flag, blockage ratio and provenance quality.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-spec-placement-arrangement-rules}
+
+Placement shall be corridor-relative and shall preserve fixed
+measurement sections across class comparisons.
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-spec-feasibility-constraints}
+
+Feasibility requires terrain coverage, meshability, stable wall patch
+labels and no unresolved physics dependency for the active baseline.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-spec-two-three-dimensional-representation}
+
+The local three-dimensional representation is a fixed barrier surface
+used for no-slip/no-penetration boundary conditions and for pressure,
+shear, force, impulse and moment extraction.
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-spec-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-spec-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-spec-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-spec-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-spec-conclusions}
+
+The integrated RES-GEO output now supports the immediate project
+scope: Tohoku/local comparison and barrier-class hydrodynamic
+comparison. It does not authorise geometry generation, structural
+damage simulation or ML surrogate training.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-spec-selected-approach}
+
+The active approach is descriptor-first fixed-rigid barrier-class
+comparison. Existing-defence reconstruction may be added where source
+geometry is available. Unrestricted generative geometry, topology
+optimisation, surrogate-led geometry search and deformable/damage
+geometry are deferred until hydrodynamic extraction and validation
+are stable.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-spec-unresolved-decisions}
+
+\begin{itemize}
+  \item TODO: citable Kamaishi bay-mouth breakwater geometry and 2011
+    condition source.
+  \item Final corridor-relative placement sections and geometry bounds.
+  \item Geometry file format and HDF5/structured schema details.
+  \item Roughness/opening/porous-closure activation policy.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-spec-requirements}
+
+Software may begin the geometry-manifest MVP in parallel with
+Research: parse geometry case records, generate corridor-relative
+barrier patches, preserve patch identifiers, run clipping/meshability
+checks and export structured geometry metadata for replay-boundary
+and local 3D scaffolds. This is a data-handling handoff only, not
+solver implementation.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-spec-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

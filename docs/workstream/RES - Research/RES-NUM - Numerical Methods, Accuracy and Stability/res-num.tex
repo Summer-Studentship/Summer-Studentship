@@ -1,0 +1,43 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-num.bib}
+
+\title{RES-NUM --- Numerical Methods, Accuracy and Stability}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-num-domain-purpose}
+
+% TODO: State the Domain purpose, boundaries, exclusions and interfaces.
+
+\section{Domain Deliverables}
+\label{sec:res-num-domain-deliverables}
+
+\input{"RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/res-num-frm.tex"}
+\input{"RES-NUM-MSH - Mesh Topology, Resolution and Geometric Discretisation/res-num-msh.tex"}
+\input{"RES-NUM-FLX - Spatial Reconstruction and Numerical Flux Selection/res-num-flx.tex"}
+\input{"RES-NUM-SRC - Numerical Treatment of Source Terms and Well-Balancing/res-num-src.tex"}
+\input{"RES-NUM-TIM - Time Integration, CFL Control and Stiffness Treatment/res-num-tim.tex"}
+\input{"RES-NUM-WET - Wetting–Drying, Positivity and Discontinuity Treatment/res-num-wet.tex"}
+\input{"RES-NUM-IBC - Discrete Initial, Boundary and Interface Treatments/res-num-ibc.tex"}
+\input{"RES-NUM-STB - Stability, Consistency and Convergence Analysis/res-num-stb.tex"}
+\input{"RES-NUM-ERR - Numerical Error, Adaptivity and Quality Indicators/res-num-err.tex"}
+\input{"RES-NUM-SPEC - Integrated Numerical-Method Specification/res-num-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

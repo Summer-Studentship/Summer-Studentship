@@ -1,0 +1,268 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-PHY-SCL
+% Deliverable: Dimensional Analysis, Scaling and Flow Regimes
+% Status: In progress
+% Evidence status: Local high-Reynolds-number tsunami-impact regime established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-MOD-EQS, RES-MOD-SRC
+% Downstream interfaces: RES-NUM-SPEC, RES-VER-MET
+% -------------------------------------------------------------------------
+
+\section{RES-PHY-SCL --- Dimensional Analysis, Scaling and Flow Regimes}
+\label{sec:res-phy-scl}
+
+\subsection{Purpose and Scope}
+\label{sec:res-phy-scl-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable records the dimensional and regime arguments that
+support the local three-dimensional URANS--VOF tsunami--barrier model.
+It links the high-Reynolds-number turbulence assumption to the physical
+outputs required by the project.
+
+\subsection{Research Questions}
+\label{sec:res-phy-scl-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-phy-scl-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-phy-scl-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{qin2018comparison} is retained as evidence that local tsunami
+impact can require three-dimensional velocity and nonhydrostatic
+pressure resolution. \textcite{kozelkov2022turbulence} is retained as
+evidence that turbulence effects become material during breaking,
+run-up, overtopping and barrier loading. Source roles: `3D-RANSVOF`
+and `3D-SST`. Project conclusion: the local model shall be treated as a
+high-Reynolds-number turbulent flow model rather than a laminar
+diagnostic calculation. Limitation: dimensionless regime arguments do
+not replace validation of pressure, force and overtopping outputs.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-phy-scl-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Physical Mechanisms}
+\label{sec:res-phy-scl-physical-mechanisms}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Characteristic Spatial and Temporal Scales}
+\label{sec:res-phy-scl-characteristic-spatial-temporal-scales}
+
+Characteristic scales shall be recorded separately for the regional
+event, the corridor extract and the local barrier domain:
+
+\begin{itemize}
+  \item regional wavelength, source footprint and propagation time from
+    the Tōhoku source to the target coast;
+  \item corridor width $W$, offshore/pre-impact length
+    $L_{\mathrm{pre}}$, inland length $L_{\mathrm{inland}}$ and
+    sponge/relaxation widths;
+  \item local flow depth $h$, representative velocity $U$, barrier
+    height, barrier width, gap spacing, crest length and wake length.
+\end{itemize}
+
+The corridor dimensions are physical and numerical scale choices. They
+shall be derived from source footprint, severe-impact observations,
+defence geometry, bathymetry/topography coverage and relaxation-zone
+requirements, not from visual convenience.
+
+\subsection{Relevant Observables}
+\label{sec:res-phy-scl-relevant-observables}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Controlling Dimensionless Parameters}
+\label{sec:res-phy-scl-controlling-dimensionless-parameters}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The local flow regime shall be characterised using Reynolds, Froude and
+Weber numbers:
+
+\begin{align}
+  \mathrm{Re}
+  &=
+  \frac{
+    U L
+  }{
+    \nu_{\mathrm{w}}
+  }
+  \label{eq:res-phy-scl-reynolds-number}
+  \\
+  \mathrm{Fr}
+  &=
+  \frac{
+    U
+  }{
+    \sqrt{
+      g h
+    }
+  }
+  \label{eq:res-phy-scl-froude-number}
+  \\
+  \mathrm{We}
+  &=
+  \frac{
+    \rho_{\mathrm{w}} U^2 L
+  }{
+    \sigma
+  }
+  \label{eq:res-phy-scl-weber-number}
+\end{align}
+
+Here $U$ is a representative incident or local velocity scale, $L$ is a
+local barrier or flow-depth scale, $h$ is local water depth,
+$\nu_{\mathrm{w}}$ is water kinematic viscosity and $\sigma$ is
+surface tension.
+
+\subsection{Physical Regimes and Transition Conditions}
+\label{sec:res-phy-scl-physical-regimes-transition-conditions}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The baseline local regime is turbulent, gravity-dominated,
+free-surface flow with large inertial loading. High Reynolds number
+supports use of a turbulence closure. Froude number identifies
+supercritical or near-critical run-up, overtopping and bore-like
+conditions. Large Weber number supports treating surface tension as a
+minor tsunami-scale force except in small entrained droplets or
+aeration details, which are outside the baseline.
+
+The Kamaishi and Sendai corridors represent different physical regimes
+within the same event. Kamaishi is retained for ria/bay and defence-
+interaction scaling; Sendai is retained for coastal-plain inundation
+scaling. Source role: supports active two-corridor comparison.
+Supporting sources: \textcite{mori2012nationwide} for contrasting
+Sanriku and Sendai inundation/run-up behaviour, and
+\textcite{usgs2011tohokuEvent} for the event source point used in
+trajectory construction. Limitation: final corridor bearings and
+dimensions remain GIS/data products owned by `RES-DAT-SCN`.
+
+\subsection{Implications for Model Validity}
+\label{sec:res-phy-scl-model-validity-implications}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The high-Reynolds-number regime supports URANS $k$--$\omega$ SST as the
+operational local model and LES as a higher-fidelity comparator. The
+same regime also prevents free-surface height alone from validating the
+model: velocity, pressure, force, impulse, overtopping and wake
+quantities must be checked separately.
+
+The corridor scale also constrains the validity of one-way replay.
+If reflection, bay resonance, barrier blocking or coastal confinement
+propagates materially back through the local inlet, the simultaneous
+coupling option in `RES-MOD-MUL` shall be tested.
+
+\subsection{Candidate Approaches}
+\label{sec:res-phy-scl-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-phy-scl-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-phy-scl-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-phy-scl-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-phy-scl-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-phy-scl-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regime interpretation is:
+
+\begin{quote}
+  local tsunami--barrier interaction is treated as high-Reynolds-number
+  turbulent, gravity-dominated, three-dimensional free-surface flow
+  requiring URANS turbulence closure for operational screening
+\end{quote}
+
+The selected corridor interpretation is:
+
+\begin{quote}
+  use constant-width baseline corridors for Kamaishi and Sendai until
+  GIS evidence shows that a physical bay, coastline, river or
+  bathymetric constraint requires a non-rectangular footprint
+\end{quote}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-phy-scl-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-phy-scl-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-MOD-SRC` shall retain the turbulence closure. `RES-NUM-SPEC`
+shall solve the turbulence variables after pressure correction.
+`RES-VER-MET` shall require validation metrics beyond free-surface
+agreement.
+
+`RES-DAT-SCN` shall provide the corridor dimensions and final bearings.
+`RES-VER-TST` shall test whether the corridor and interface placement
+contaminate run-up, overtopping, force, moment or energy metrics.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-phy-scl-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.
