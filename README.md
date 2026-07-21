@@ -20,14 +20,15 @@ environment baseline.
 
 ## Start Here
 
-- [Dependency strategy](docs/Markdowns/dependencies.md)
+- [Dependency acquisition](docs/Markdowns/dependencies.md)
 - [Repository layout](docs/Markdowns/repository_layout.md)
 - [Windows MinGW build notes](docs/Markdowns/build_windows_mingw.md)
 - [Linux/Docker build notes](docs/Markdowns/build_linux_docker.md)
 - [Final development workflow](docs/Markdowns/workflow.md)
 
 The current C++ scaffold is CMake-based and uses C++20. Third-party C++ packages
-are declared in `vcpkg.json`; Qt can be provided either by the Qt installer or
-by the optional vcpkg `gui` feature. These files record the pre-WBS prototype
-baseline and will be assessed through the formal Software Work Packages before
-being treated as accepted project infrastructure.
+are declared in `vcpkg.json` and resolved from the exact registry commit in
+`vcpkg-configuration.json`. Qt is acquired only through the Qt
+installer/Maintenance Tool, not vcpkg. Dependency acquisition and licensing are
+accepted G0 baselines; target-based CMake integration, shared presets and the
+clean-clone smoke test remain owned by their later Software Work Packages.

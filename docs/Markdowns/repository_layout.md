@@ -9,7 +9,6 @@ This repository should grow around a small number of stable ownership areas:
 |-- cmake/                   # Project CMake helper modules
 |-- data/                    # Data staging convention; bulk data ignored by Git
 |-- docs/                    # Human docs, Doxygen config, build notes
-|-- external/                # Vendored third-party source/header projects
 |-- matlab/                  # MATLAB analysis and visualisation scripts
 |-- python/                  # ML experiments, training scripts, notebooks
 |-- src/
@@ -17,7 +16,7 @@ This repository should grow around a small number of stable ownership areas:
 |   |-- gui/                 # Current Qt Widgets prototype
 |   |-- io/                  # HDF5/JSON/file format readers and writers
 |   |-- models/              # Physical/numerical models
-|   `-- visualization/       # C++ plotting adapters, mathplot integration
+|   `-- visualization/       # Plotting-neutral output and optional diagnostics adapters
 `-- tests/                   # C++ tests
 ```
 
@@ -49,32 +48,17 @@ For example, the GUI should link to a reusable simulation/data library:
 target_link_libraries(tsunami_gui PRIVATE tsunami_core tsunami_io Qt6::Widgets)
 ```
 
-## External Header Projects
+## Third-party boundaries
 
-If an external dependency has its own `CMakeLists.txt`, do not automatically
-`add_subdirectory()` it unless we really want to build that whole upstream
-project. For header-heavy libraries such as mathplot, create a project-owned
-`INTERFACE` target instead:
+Package-managed libraries are restored from `vcpkg.json`; external applications
+use the routes in `dependencies.md`. Do not vendor or clone third-party source
+into `external/` as an undocumented alternative acquisition path.
 
-```cmake
-add_library(tsunami_mathplot INTERFACE)
-target_include_directories(tsunami_mathplot INTERFACE
-    ${PROJECT_SOURCE_DIR}/external/mathplot
-    ${PROJECT_SOURCE_DIR}/external/mathplot/maths
-)
-target_compile_definitions(tsunami_mathplot INTERFACE
-    MPLOT_FONTS_DIR="${PROJECT_SOURCE_DIR}/external/mathplot/fonts"
-)
-target_link_libraries(tsunami_mathplot INTERFACE
-    OpenGL::GL
-    Freetype::Freetype
-    glfw
-    nlohmann_json::nlohmann_json
-)
-```
-
-This keeps our build predictable while still allowing mathplot to remain
-restored into `external/`.
+When `SWE-ENV-BLD-WP1` creates the target scaffold, optional Matplot++ use must
+sit behind a project-owned diagnostics adapter and be enabled only with the
+`diagnostics` dependency group. Numerical code emits plotting-neutral arrays and
+metadata and must not include plotting APIs. Matplot++ is not a replacement for
+the externally installed ParaView field-visualisation workflow.
 
 ## Data
 
