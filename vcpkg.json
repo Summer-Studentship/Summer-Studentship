@@ -1,0 +1,52 @@
+{
+  "name": "tsunami-barrier-studio",
+  "version-string": "0.1.0",
+  "dependencies": [
+    "eigen3",
+    {
+      "name": "hdf5",
+      "features": [
+        "cpp",
+        "hl",
+        "zlib"
+      ]
+    },
+    "highfive",
+    "nlohmann-json"
+  ],
+  "features": {
+    "visualization": {
+      "description": "OpenGL/mathplot dependencies for native C++ plotting and visualisation targets.",
+      "dependencies": [
+        "armadillo",
+        {
+          "name": "freetype",
+          "default-features": false
+        },
+        "glfw3",
+        "opengl",
+        "rapidxml"
+      ]
+    },
+    "gui": {
+      "description": "Qt dependencies when Qt is provided by vcpkg rather than by the Qt online installer.",
+      "dependencies": [
+        {
+          "name": "qtbase",
+          "default-features": false,
+          "features": [
+            "freetype",
+            "gui",
+            "opengl",
+            "png",
+            "widgets"
+          ]
+        },
+        "qtdeclarative",
+        "qtquick3d",
+        "qtquicktimeline",
+        "qtshadertools"
+      ]
+    }
+  }
+}
