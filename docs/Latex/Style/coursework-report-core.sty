@@ -1,0 +1,502 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{coursework-report-core}[2026/06/17 Reusable coursework report core]
+
+% Package options and layout debugging
+\newif\ifshowlayout
+\showlayoutfalse
+\DeclareOption{showlayout}{\showlayouttrue}
+\DeclareOption{hidelayout}{\showlayoutfalse}
+\ProcessOptions\relax
+
+% Engine and font setup
+\RequirePackage[english]{babel}
+\RequirePackage{fontspec}
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{Times New Roman}
+
+% Core maths and units
+\RequirePackage{amsmath,amssymb}
+\RequirePackage{mathtools}
+\RequirePackage{bigints}
+\RequirePackage{siunitx}
+\numberwithin{equation}{section}
+\sisetup{
+  detect-all,
+  per-mode=symbol
+}
+
+% Nomenclature
+\RequirePackage[intoc]{nomencl}
+\makenomenclature
+\setlength{\nomitemsep}{-\parsep}
+
+% Figures, tables, and landscape pages
+\RequirePackage{graphicx}
+\RequirePackage{float}
+\RequirePackage{subcaption}
+\RequirePackage{longtable}
+\RequirePackage{tabularx}
+\RequirePackage{array}
+\RequirePackage{multirow}
+\RequirePackage{makecell}
+\RequirePackage{booktabs}
+\RequirePackage{pdflscape}
+\RequirePackage{flafter}
+
+% Text and structure
+\RequirePackage{seqsplit}
+\RequirePackage{titlesec}
+\RequirePackage{titling}
+\RequirePackage{microtype}
+\RequirePackage{xstring}
+\RequirePackage{etoolbox}
+\RequirePackage{trimspaces}
+
+% Code and algorithms
+\RequirePackage{listings}
+\RequirePackage{algorithm}
+\RequirePackage{algpseudocode}
+
+% Page furniture
+\RequirePackage{fancyhdr}
+\RequirePackage[noframe]{showframe}
+\setlength{\headheight}{13.6pt}
+\AtBeginDocument{%
+  \ifshowlayout
+    \AddToShipoutPictureFG{\ShowFramePicture}%
+  \fi
+}
+
+% Colours
+\RequirePackage[table]{xcolor}
+\definecolor{BrightBlue}{RGB}{0,102,255}
+\definecolor{ListingBackground}{RGB}{248,248,248}
+\definecolor{ListingKeyword}{RGB}{0,76,153}
+\definecolor{ListingComment}{RGB}{0,112,0}
+\definecolor{ListingString}{RGB}{163,21,21}
+\definecolor{ListingNumber}{RGB}{102,102,102}
+
+% Bibliography
+\RequirePackage{csquotes}
+\RequirePackage[
+  backend=biber,
+  style=vancouver,
+  citestyle=numeric-comp,
+  sorting=none
+]{biblatex}
+\newcommand{\BibliographyFontSize}{\footnotesize}
+\newcommand{\setbibliographyfontsize}[1]{\renewcommand{\BibliographyFontSize}{#1}}
+\AtBeginBibliography{\BibliographyFontSize}
+\let\cite=\supercite
+
+% Compress only runs of four or more consecutive citation numbers.
+% Example:
+% - \cite{a,b,c}   -> 1,2,3
+% - \cite{a,b,c,d} -> 1-4
+\makeatletter
+\global\let\cbx@shortseq\@empty
+
+\newcommand*{\cbx@printlinkedlabel}[3]{%
+  \printtext{\bibhyperref[#1]{%
+    \ifstrempty{#2}
+      {}
+      {\printtext[labelprefix]{#2}}%
+    \printtext[labelnumber]{#3}}}}
+
+\newcommand*{\cbx@addshortseqentry}{%
+  \iffieldundef{labelprefix}
+    {\xappto\cbx@shortseq{%
+       \noexpand\setunit{\noexpand\multicitedelim}%
+       \noexpand\cbx@printlinkedlabel{\thefield{entrykey}}{}{\thefield{labelnumber}}}}
+    {\xappto\cbx@shortseq{%
+       \noexpand\setunit{\noexpand\multicitedelim}%
+       \noexpand\cbx@printlinkedlabel{\thefield{entrykey}}{\thefield{labelprefix}}{\thefield{labelnumber}}}}}
+
+\renewbibmacro*{cite:init}{%
+  \global\boolfalse{cbx:parens}%
+  \global\undef\cbx@lasthash
+  \global\undef\cbx@lastnumber
+  \global\undef\cbx@lastprefix
+  \global\undef\cbx@lastentrysetcount
+  \global\let\cbx@shortseq\@empty
+  \setcounter{cbx@tempcnta}{0}%
+  \setcounter{cbx@tempcntb}{-2}%
+  \setcounter{cbx@tempcntc}{0}%
+  \setcounter{cbx@tempcntd}{-1}}
+
+\renewbibmacro*{cite:comp:comp}{%
+  \cbx@iflabelprefixequalslast
+    {\ifnumequal{\thefield{labelnumber}}{\value{cbx@tempcntb}}
+       {\savefield{entrykey}{\cbx@lastkey}%
+        \savefield{labelnumber}{\cbx@lastnumber}%
+        \cbx@addshortseqentry%
+        \stepcounter{cbx@tempcnta}}
+       {\ifnumequal{\thefield{labelnumber}}{\value{cbx@tempcntb}-1}
+          {%
+          }
+          {\usebibmacro{cite:comp:end}}}}
+    {\usebibmacro{cite:comp:end}}%
+  \setcounter{cbx@tempcntb}{\thefield{labelnumber}}%
+  \savefield{labelprefix}{\cbx@lastprefix}}
+
+\newbibmacro*{cite:print:shortrange}{%
+  \cbx@shortseq}
+
+\renewbibmacro*{cite:dump}{%
+  \usebibmacro{cite:dump:inset}%
+  \ifnumgreater{\value{cbx@tempcnta}}{0}
+    {%
+      \ifnumgreater{\value{cbx@tempcnta}}{2}
+        {%
+          \setunit{\multiciterangedelim}%
+          \usebibmacro{cite:print:last:labelnumber}%
+        }%
+        {%
+          \usebibmacro{cite:print:shortrange}%
+        }%
+      \global\undef\cbx@lastprefix
+    }%
+    {}%
+  \global\let\cbx@shortseq\@empty
+  \setcounter{cbx@tempcnta}{0}%
+}
+\makeatother
+
+% Hyperlinks and references
+\RequirePackage{xurl}
+\RequirePackage{hyperref}
+\RequirePackage{bookmark}
+\RequirePackage{cleveref}
+\hypersetup{
+  breaklinks=true,
+  colorlinks=true,
+  linkcolor=BrightBlue,
+  urlcolor=BrightBlue,
+  citecolor=BrightBlue
+}
+\addto\captionsenglish{\renewcommand{\contentsname}{Table of Contents}}
+\crefname{equation}{Equation}{Equations}
+\Crefname{equation}{Equation}{Equations}
+\crefname{figure}{Figure}{Figures}
+\Crefname{figure}{Figure}{Figures}
+\crefname{table}{Table}{Tables}
+\Crefname{table}{Table}{Tables}
+\crefname{section}{Section}{Sections}
+\Crefname{section}{Section}{Sections}
+\crefname{algorithm}{Algorithm}{Algorithms}
+\Crefname{algorithm}{Algorithm}{Algorithms}
+\crefname{listing}{Listing}{Listings}
+\Crefname{listing}{Listing}{Listings}
+\crefname{lstlisting}{Listing}{Listings}
+\Crefname{lstlisting}{Listing}{Listings}
+
+% Global table defaults
+\renewcommand{\arraystretch}{1.3}
+\setlength{\tabcolsep}{10pt}
+\setlength{\LTleft}{\fill}
+\setlength{\LTright}{\fill}
+\AddToHook{env/table/begin}{\centering}
+\AddToHook{env/table*/begin}{\centering}
+\AddToHook{env/longtable/begin}{%
+  \setlength{\LTleft}{\fill}%
+  \setlength{\LTright}{\fill}%
+}
+
+% Default page style
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
+
+% Deeper section support
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{5}
+\newcommand{\paragraphnumberformat}{\thesubsubsection.\arabic{paragraph}}
+\newcommand{\subparagraphnumberformat}{\theparagraph.\arabic{subparagraph}}
+\renewcommand{\theparagraph}{\paragraphnumberformat}
+\renewcommand{\thesubparagraph}{\subparagraphnumberformat}
+\titleformat{\paragraph}[hang]{\normalfont\normalsize\bfseries}{\theparagraph}{0.75em}{}
+\titlespacing*{\paragraph}{0pt}{1.25ex plus 0.5ex minus 0.2ex}{0.6ex}
+\titleformat{\subparagraph}[hang]{\normalfont\normalsize\itshape}{\thesubparagraph}{0.75em}{}
+\titlespacing*{\subparagraph}{0pt}{1.0ex plus 0.4ex minus 0.2ex}{0.5ex}
+
+% Custom section-tier syntax.
+% The public form is \SECTION_TIER_1{Title} through \SECTION_TIER_5{Title}.
+% TeX reads \SECTION as the control sequence and the literal _TIER_# suffix as
+% delimited arguments, allowing the requested syntax without changing catcodes.
+\newcommand{\courseworksectiontier}[2]{%
+  \ifcase\numexpr#1\relax
+    \PackageError{coursework-report-core}
+      {Unsupported section tier '#1'}
+      {Valid section tiers are 1, 2, 3, 4, and 5.}%
+  \or
+    \section{#2}%
+  \or
+    \subsection{#2}%
+  \or
+    \subsubsection{#2}%
+  \or
+    \paragraph{#2}%
+  \or
+    \subparagraph{#2}%
+  \else
+    \PackageError{coursework-report-core}
+      {Unsupported section tier '#1'}
+      {Valid section tiers are 1, 2, 3, 4, and 5.}%
+  \fi
+}
+\long\def\SECTION_TIER_#1#2{%
+  \courseworksectiontier{#1}{#2}%
+}
+
+\newcount\courseworksmartsubsectionbase
+\courseworksmartsubsectionbase=2\relax
+\makeatletter
+\newcommand{\coursework@smartsubsectionlevel@section}{\courseworksmartsubsectionbase=1\relax}
+\newcommand{\coursework@smartsubsectionlevel@subsection}{\courseworksmartsubsectionbase=2\relax}
+\newcommand{\coursework@smartsubsectionlevel@subsubsection}{\courseworksmartsubsectionbase=3\relax}
+\newcommand{\coursework@smartsubsectionlevel@paragraph}{\courseworksmartsubsectionbase=4\relax}
+\newcommand{\coursework@smartsubsectionlevel@subparagraph}{\courseworksmartsubsectionbase=5\relax}
+\newcommand{\setsmartsubsectionlevel}[1]{%
+  \@ifundefined{coursework@smartsubsectionlevel@#1}
+    {%
+      \PackageError{coursework-report-core}{Unsupported smart subsection level '#1'}%
+      {Valid values are section, subsection, subsubsection, paragraph, and subparagraph.}%
+    }
+    {\csname coursework@smartsubsectionlevel@#1\endcsname}%
+}
+
+\NewDocumentCommand{\smartsubsection}{s O{0} m}{%
+  \begingroup
+  \count@=\courseworksmartsubsectionbase\relax
+  \advance\count@ by #2\relax
+  \ifnum\count@<1\relax
+    \count@=1\relax
+  \fi
+  \ifnum\count@>5\relax
+    \count@=5\relax
+  \fi
+  \ifnum\count@=1\relax
+    \endgroup
+    \IfBooleanTF{#1}{\section*{#3}}{\section{#3}}%
+  \else\ifnum\count@=2\relax
+    \endgroup
+    \IfBooleanTF{#1}{\subsection*{#3}}{\subsection{#3}}%
+  \else\ifnum\count@=3\relax
+    \endgroup
+    \IfBooleanTF{#1}{\subsubsection*{#3}}{\subsubsection{#3}}%
+  \else\ifnum\count@=4\relax
+    \endgroup
+    \IfBooleanTF{#1}{\paragraph*{#3}}{\paragraph{#3}}%
+  \else
+    \endgroup
+    \IfBooleanTF{#1}{\subparagraph*{#3}}{\subparagraph{#3}}%
+  \fi\fi\fi\fi
+}
+\makeatother
+
+% Title helpers
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\subtitle}[1]{%
+  \posttitle{%
+    \par\end{center}
+    \begin{center}\large#1\end{center}
+    \vskip0.5em}%
+}
+
+% Common commands
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\dd}{\mathrm{d}}
+\let\courseworkoriginaltexttt\texttt
+\renewcommand{\texttt}[1]{\courseworkoriginaltexttt{\seqsplit{#1}}}
+\DeclareUrlCommand{\courseworkinlinecode}{\urlstyle{tt}}
+\newcommand{\code}[1]{\courseworkinlinecode{#1}}
+\newcommand{\data}[1]{\courseworkinlinecode{#1}}
+
+% Listings
+\lstdefinestyle{coursework-base}{
+  basicstyle=\ttfamily\small,
+  breaklines=true,
+  breakatwhitespace=false,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  upquote=true,
+  frame=single,
+  framerule=0.4pt,
+  backgroundcolor=\color{ListingBackground},
+  numbers=left,
+  numberstyle=\scriptsize\color{ListingNumber},
+  numbersep=8pt,
+  keywordstyle=\color{ListingKeyword}\bfseries,
+  commentstyle=\color{ListingComment}\itshape,
+  stringstyle=\color{ListingString},
+  tabsize=4
+}
+\lstdefinestyle{MATLAB}{
+  style=coursework-base,
+  language=Matlab
+}
+\lstdefinestyle{Python}{
+  style=coursework-base,
+  language=Python
+}
+\lstdefinestyle{Cpp}{
+  style=coursework-base,
+  language=C++
+}
+\lstdefinestyle{C++}{
+  style=Cpp
+}
+\lstset{style=coursework-base}
+\renewcommand{\lstlistingname}{Listing}
+\renewcommand{\lstlistlistingname}{List of Listings}
+
+% Algorithms
+\makeatletter
+\newcommand{\StateWrap}[1]{%
+  \State \begin{minipage}[t]{\dimexpr\linewidth-\ALG@thistlm\relax}
+    \raggedright #1
+  \end{minipage}%
+}
+\newcommand{\StateWrapNoNumber}[1]{%
+  \Statex \hspace*{\ALG@thistlm}\begin{minipage}[t]{\dimexpr\linewidth-\ALG@thistlm\relax}
+    \raggedright #1
+  \end{minipage}%
+}
+\makeatother
+\newcommand{\AlgWrap}[1]{\StateWrap{#1}}
+\newcommand{\AlgWrapNoNumber}[1]{\StateWrapNoNumber{#1}}
+\newcommand{\RequireWrap}[1]{\StateWrap{\textbf{Require:} #1}}
+\newcommand{\EnsureWrap}[1]{\StateWrap{\textbf{Ensure:} #1}}
+\DeclareCaptionFormat{algorithmruled}{%
+  \hrule height 0.8pt depth 0pt\relax
+  \kern 1pt
+  #1#2#3\par
+  \kern 1pt
+  \hrule height 0.8pt depth 0pt\relax
+}
+\RenewDocumentEnvironment{algorithm}{O{htbp}}{%
+  \par\addvspace{\intextsep}%
+  \noindent
+  \captionsetup{
+    type=algorithm,
+    format=algorithmruled,
+    justification=raggedright,
+    singlelinecheck=false,
+    skip=3pt
+  }%
+}{%
+  \hrule height 0.8pt depth 0pt\relax
+  \par\addvspace{\intextsep}%
+}
+
+% Landscape pages for wide tables and longtables
+\newenvironment{landscapetablepages}
+  {%
+    \clearpage
+    \begin{landscape}
+    \thispagestyle{fancy}
+    \setlength{\LTleft}{\fill}%
+    \setlength{\LTright}{\fill}%
+  }
+  {%
+    \end{landscape}
+    \clearpage
+  }
+
+% Smart references that group same-prefix labels and split mixed prefixes.
+\newbool{smartreffirstitem}
+\newbool{smartrefsametype}
+\newcommand{\smartreftypefromlabel}[1]{%
+  \def\smartreftype{ref}%
+  \IfBeginWith{#1}{fig:}{\def\smartreftype{fig}}{}%
+  \IfBeginWith{#1}{alg:}{\def\smartreftype{alg}}{}%
+  \IfBeginWith{#1}{app:}{\def\smartreftype{app}}{}%
+  \IfBeginWith{#1}{ass:}{\def\smartreftype{ass}}{}%
+  \IfBeginWith{#1}{tab:}{\def\smartreftype{tab}}{}%
+  \IfBeginWith{#1}{eq:}{\def\smartreftype{eq}}{}%
+  \IfBeginWith{#1}{sec:}{\def\smartreftype{sec}}{}%
+  \IfBeginWith{#1}{lst:}{\def\smartreftype{lst}}{}%
+}
+\newcommand{\smartrefsingle}[1]{%
+  \def\smartrefresult{\ref{#1}}%
+  \IfBeginWith{#1}{fig:}{\def\smartrefresult{Figure~\ref{#1}}}{}%
+  \IfBeginWith{#1}{alg:}{\def\smartrefresult{Algorithm~\ref{#1}}}{}%
+  \IfBeginWith{#1}{app:}{\def\smartrefresult{Appendix~\ref{#1}}}{}%
+  \IfBeginWith{#1}{ass:}{\def\smartrefresult{Assumption~\ref{#1}}}{}%
+  \IfBeginWith{#1}{tab:}{\def\smartrefresult{Table~\ref{#1}}}{}%
+  \IfBeginWith{#1}{eq:}{\def\smartrefresult{Equation~\ref{#1}}}{}%
+  \IfBeginWith{#1}{sec:}{\def\smartrefresult{Section~\ref{#1}}}{}%
+  \IfBeginWith{#1}{lst:}{\def\smartrefresult{Listing~\ref{#1}}}{}%
+  \smartrefresult
+}
+\makeatletter
+\newcommand{\smartrefnumberlist}[1]{%
+  \begingroup
+  \def\smartrefsep{}%
+  \renewcommand*{\do}[1]{%
+    \edef\smartreflabel{\trim@spaces{##1}}%
+    \smartrefsep\ref{\smartreflabel}%
+    \gdef\smartrefsep{, }%
+  }%
+  \docsvlist{#1}%
+  \endgroup
+}
+\newcommand{\smartrefmixed}[1]{%
+  \begingroup
+  \def\smartrefsep{}%
+  \renewcommand*{\do}[1]{%
+    \edef\smartreflabel{\trim@spaces{##1}}%
+    \smartrefsep
+    \smartrefsingle{\smartreflabel}%
+    \gdef\smartrefsep{,~}%
+  }%
+  \docsvlist{#1}%
+  \endgroup
+}
+\newcommand{\smartrefplural}[2]{%
+  \def\smartrefpluralresult{References~[\smartrefnumberlist{#2}]}%
+  \ifstrequal{#1}{fig}{\def\smartrefpluralresult{Figures~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{alg}{\def\smartrefpluralresult{Algorithms~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{app}{\def\smartrefpluralresult{Appendices~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{ass}{\def\smartrefpluralresult{Assumptions~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{tab}{\def\smartrefpluralresult{Tables~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{eq}{\def\smartrefpluralresult{Equations~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{sec}{\def\smartrefpluralresult{Sections~[\smartrefnumberlist{#2}]}}{}%
+  \ifstrequal{#1}{lst}{\def\smartrefpluralresult{Listings~[\smartrefnumberlist{#2}]}}{}%
+  \smartrefpluralresult
+}
+\newcommand{\smartrefmixedunlesssame}[2]{%
+  \def\smartrefmultiresult{\smartrefplural{#1}{#2}}%
+  \ifstrequal{#1}{fig}{}{\IfSubStr{#2}{fig:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{alg}{}{\IfSubStr{#2}{alg:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{app}{}{\IfSubStr{#2}{app:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{ass}{}{\IfSubStr{#2}{ass:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{tab}{}{\IfSubStr{#2}{tab:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{eq}{}{\IfSubStr{#2}{eq:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{sec}{}{\IfSubStr{#2}{sec:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \ifstrequal{#1}{lst}{}{\IfSubStr{#2}{lst:}{\def\smartrefmultiresult{\smartrefmixed{#2}}}{}}%
+  \smartrefmultiresult
+}
+\newcommand{\smartrefmulti}[1]{%
+  \StrBefore{#1}{,}[\FirstSmartRefLabelRaw]%
+  \edef\FirstSmartRefLabel{\trim@spaces{\FirstSmartRefLabelRaw}}%
+  \def\smartrefmultiresult{\smartrefmixedunlesssame{ref}{#1}}%
+  \IfBeginWith{\FirstSmartRefLabel}{fig:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{fig}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{alg:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{alg}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{app:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{app}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{ass:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{ass}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{tab:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{tab}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{eq:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{eq}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{sec:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{sec}{#1}}}{}%
+  \IfBeginWith{\FirstSmartRefLabel}{lst:}{\def\smartrefmultiresult{\smartrefmixedunlesssame{lst}{#1}}}{}%
+  \smartrefmultiresult
+}
+\makeatletter
+\newcommand{\smartref}[1]{%
+  \IfSubStr{#1}{,}
+    {\smartrefmulti{#1}}
+    {\smartrefsingle{#1}}%
+}
+\makeatother

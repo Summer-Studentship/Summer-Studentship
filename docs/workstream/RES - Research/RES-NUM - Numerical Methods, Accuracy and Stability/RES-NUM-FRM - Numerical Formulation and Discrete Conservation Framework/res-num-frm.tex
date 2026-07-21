@@ -1,0 +1,603 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-FRM
+% Deliverable: Numerical Formulation and Discrete Conservation Framework
+% Status: Draft complete
+% Evidence status: Regional and local finite-volume research specifications complete at family level
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-EQS, RES-MOD-SRC
+% Downstream interfaces: RES-NUM-SPEC, RES-NUM-IBC, RES-NUM-STB, Software finite-volume implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-FRM --- Numerical Formulation and Discrete Conservation Framework}
+\label{sec:res-num-frm}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-frm-purpose}
+
+This Deliverable records the breadth-first numerical-method decision
+for the regional tsunami solver. It selects the numerical family used
+for the two-dimensional nonlinear shallow-water model and records the
+candidate families that remain useful as references, deferred ideas, or
+screened alternatives.
+
+The original family-level decision selected finite volume for the
+regional model. The 2026-07-07 regional gate extends that decision to a
+research-specification-level numerical model for the regional 2D NLSWE
+solver. The local three-dimensional CFD family is also finite volume,
+but it is documented separately from the regional NLSWE discretisation
+because it solves a collocated, polyhedral, pressure-corrected
+URANS--VOF system.
+
+\subsection{Research Questions}
+\label{sec:res-num-frm-research-questions}
+
+The current phase answers the following questions:
+
+\begin{enumerate}
+  \item Which numerical family is selected for the production regional
+    nonlinear shallow-water solver?
+  \item Which candidate families are retained as references or
+    deferred concepts?
+  \item Which lower-level choices remain unresolved after the
+    family-level decision?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-frm-definitions}
+
+Four decision statuses are used:
+
+\begin{description}
+  \item[selected] Adopted for the current project branch.
+  \item[provisional] Adopted as a working direction pending lower-level
+    comparison or verification.
+  \item[excluded] Removed from the active branch for project-specific
+    reasons.
+  \item[unresolved] Not yet selected, excluded, or formally deferred.
+\end{description}
+
+\subsection{Literature Evidence}
+\label{sec:res-num-frm-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Finite-Difference Method}
+\label{sec:res-num-frm-evidence-fdm}
+
+\paragraph{Methodological basis.}
+\textcite{casulli1992semiimplicit} developed a semi-implicit finite
+difference architecture for shallow-water flow in which the free-surface
+unknowns are reduced to symmetric positive-definite linear systems. The
+paper is retained for selective implicit treatment, conjugate-gradient
+and multigrid compatibility, stable wetting and drying, and the
+distinction between stability-limited and accuracy-limited time steps.
+
+\paragraph{Contextual validation.}
+\textcite{wei2013japan} used MOST to model the 2011 Japan tsunami and
+demonstrated a finite-difference family in a near-field tsunami
+forecast setting. This validates a production tsunami use case for the
+family, not the exact Casulli--Cheng semi-implicit formulation.
+
+\subsubsection{Finite-Volume Method}
+\label{sec:res-num-frm-evidence-fvm}
+
+\paragraph{Methodological basis.}
+\textcite{kurganov2007wellbalanced} presented a second-order
+central-upwind method for the Saint-Venant system that simultaneously
+targets well-balancing and positivity preservation. The method is
+retained as primary evidence for the regional need to preserve lake-at-
+rest balance, non-negative depth, discontinuities, and dry or nearly dry
+states.
+
+\paragraph{Contextual validation.}
+\textcite{dutykh2011volna} documented the VOLNA tsunami code using
+finite volumes on unstructured triangular meshes for tsunami generation,
+propagation, run-up and inundation. The paper is retained as contextual
+evidence that a finite-volume shallow-water solver can support complex
+coastal domains, wetting and drying, and tsunami-scale validation cases.
+
+\paragraph{Local 3D finite-volume and pressure-correction evidence.}
+\textcite{hirt1981vof} established the VOF representation of moving
+free boundaries. \textcite{vukcevic2018sharp} and
+\textcite{roenby2016computational} support sharp and geometric VOF
+treatments on finite-volume meshes. \textcite{issa1986operator}
+supports pressure-correction by operator splitting for incompressible
+flow. Source roles: `3D-VOF` and `3D-FVM`. Project conclusion: the
+local solver shall use conservative finite-volume transport for mass,
+momentum and phase fraction, with pressure correction enforcing
+incompressibility. Limitation: these sources establish the numerical
+family and pressure-correction principle, not the final linear solver,
+preconditioner or mesh-convergence tolerance.
+
+\subsubsection{Lattice/Discrete Boltzmann Method}
+\label{sec:res-num-frm-evidence-dbm}
+
+\paragraph{Methodological basis.}
+\textcite{meng2018discreteboltzmann} derived discrete Boltzmann models
+for shallow-water equations using polynomial equilibria. The paper is
+retained for collision-level conservation, local stream--collision
+structure, GPU-relevant locality, and the conditional ability to improve
+supercritical capability through higher-order expansion and quadrature.
+
+\paragraph{Contextual validation gap.}
+No tsunami-context validation paper for the lattice or discrete
+Boltzmann branch has yet passed the project evidence gate. The reviewed
+paper does not establish genuinely dry wetting and drying, fully
+discrete well-balancing, positivity of depth in the project setting, or
+adequate treatment of irregular coastlines and bathymetry.
+
+\subsubsection{Spectral-Method Screening}
+\label{sec:res-num-frm-evidence-spectral-screening}
+
+No detailed spectral-method literature-evidence subsection is created
+for the current comparison. Spectral and pseudospectral methods are
+screened at the project-fit level owing to non-periodic irregular
+coastal boundaries, wetting and drying, bores and hydraulic
+discontinuities, complex bathymetry, local refinement requirements, and
+the loss of the principal global-spectral advantages once extensive
+boundary treatment, filtering, and domain decomposition are required.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-frm-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-frm-discrete-formulation}
+
+The regional production solver is selected as a cell-centred
+finite-volume method on unstructured triangular or polygonal control
+volumes. This selection concerns the spatial conservation framework, not
+the full lower-level numerical method.
+
+Spatial discretisation and source-term integration are separate
+decisions. The regional nonlinear shallow-water equations already
+include bed slope, bottom friction, Coriolis forcing, earthquake or
+moving-bottom forcing where activated, and wetting--drying
+requirements. The provisional source-term treatment is:
+
+\begin{description}
+  \item[bed slope] coupled well-balanced hydrostatic reconstruction;
+  \item[bottom friction] semi-implicit update;
+  \item[Coriolis] exact or structure-preserving rotational update.
+\end{description}
+
+The detailed derivations and notation for friction and Coriolis remain
+owned by the mathematical-model Deliverables. This numerical
+Deliverable records how those terms are integrated within the selected
+finite-volume branch.
+
+\subsubsection{Local 3D Collocated Polyhedral Finite Volume}
+\label{sec:res-num-frm-local-polyhedral-finite-volume}
+
+The local URANS--VOF solver uses cell-centred collocated fields on
+polyhedral control volumes. For a local cell $K_i$ with volume $V_i$,
+faces $f$, outward area vectors $\mathbf{S}_f$ and neighbouring cells
+$\mathcal{N}(i)$, a transported scalar or vector component $\psi$ is
+stored as:
+
+\begin{align}
+  \psi_i(t)
+  &=
+  \frac{1}{V_i}
+  \int_{K_i}
+  \psi(\mathbf{x},t)
+  \,\dd V
+  \label{eq:res-num-frm-local-cell-average}
+\end{align}
+
+The face-normal volume flux is:
+
+\begin{align}
+  \phi_f
+  &=
+  \mathbf{u}_f
+  \cdot
+  \mathbf{S}_f
+  \label{eq:res-num-frm-local-face-volume-flux}
+\end{align}
+
+The conservative semi-discrete transport form is:
+
+\begin{align}
+  \frac{\dd}{\dd t}
+  \left(
+    V_i\psi_i
+  \right)
+  &=
+  -
+  \sum_{f\in\partial K_i}
+  \phi_f\psi_f
+  +
+  \sum_{f\in\partial K_i}
+  \Gamma_f
+  \nabla\psi_f
+  \cdot
+  \mathbf{S}_f
+  +
+  V_i S_{\psi,i}
+  \label{eq:res-num-frm-local-conservative-transport}
+\end{align}
+
+After temporal and spatial linearisation each transported field is
+assembled into an algebraic cell equation:
+
+\begin{align}
+  a_{P,i}\psi_i
+  +
+  \sum_{j\in\mathcal{N}(i)}
+  a_{N,ij}\psi_j
+  &=
+  b_i
+  \label{eq:res-num-frm-local-algebraic-cell-equation}
+\end{align}
+
+Source terms may be linearised as:
+
+\begin{align}
+  S_{\psi,i}
+  &=
+  S_{C,i}
+  +
+  S_{P,i}\psi_i
+  \label{eq:res-num-frm-local-source-linearisation}
+\end{align}
+
+with coefficient updates:
+
+\begin{align}
+  a_{P,i}^{\mathrm{new}}
+  &=
+  a_{P,i}^{\mathrm{base}}
+  -
+  V_i S_{P,i}
+  \label{eq:res-num-frm-local-source-ap-update}
+  \\
+  b_i^{\mathrm{new}}
+  &=
+  b_i^{\mathrm{base}}
+  +
+  V_i S_{C,i}
+  \label{eq:res-num-frm-local-source-b-update}
+\end{align}
+
+Pressure correction enforces the discrete incompressibility constraint:
+
+\begin{align}
+  \sum_{f\in\partial K_i}
+  \phi_f^{\,n+1}
+  &=
+  0
+  \label{eq:res-num-frm-local-discrete-continuity}
+\end{align}
+
+The provisional pressure-correction form is:
+
+\begin{align}
+  \mathbf{u}^{\,n+1}
+  &=
+  \mathbf{u}^{*}
+  -
+  \mathbf{D}
+  \nabla p'
+  \label{eq:res-num-frm-local-velocity-correction}
+  \\
+  p^{\,n+1}
+  &=
+  p^{*}
+  +
+  p'
+  \label{eq:res-num-frm-local-pressure-correction}
+\end{align}
+
+where $\mathbf{u}^{*}$ is the momentum-predictor velocity,
+$p'$ is the pressure correction and $\mathbf{D}$ is the discrete
+velocity-correction operator implied by the momentum matrix. Rhie--Chow
+or an equivalent pressure-consistent face-flux interpolation shall be
+used on collocated meshes if required to prevent pressure--velocity
+decoupling.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-frm-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-frm-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-frm-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-frm-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-frm-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-frm-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-frm-candidate-approaches}
+
+The candidate regional numerical families considered in this phase are:
+
+\begin{itemize}
+  \item cell-centred finite volume;
+  \item finite difference;
+  \item lattice or discrete Boltzmann;
+  \item spectral or pseudospectral methods.
+\end{itemize}
+
+\subsection{Critical Comparison}
+\label{sec:res-num-frm-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsubsection{Comparative Assessment}
+\label{sec:res-num-frm-comparative-assessment}
+
+The comparison is project-specific rather than a universal ranking of
+numerical analysis families.
+
+\begin{description}
+  \item[Conservation] Finite volume is strongest for direct
+    conservation of water depth and horizontal momentum through face
+    fluxes. Finite difference remains useful but requires careful
+    conservative formulation. Lattice/discrete Boltzmann has strong
+    collision-level conservation, while spectral conservation depends on
+    the formulation and filtering.
+  \item[Well-balancing] The selected finite-volume branch has direct
+    support through hydrostatic reconstruction and well-balanced shallow-
+    water fluxes. Finite-difference and Boltzmann branches retain useful
+    ideas but require further project-specific proof.
+  \item[Positivity] Finite volume provides the clearest route to
+    non-negative water depth in wetting--drying regions. The reviewed
+    Boltzmann paper does not establish the required dry-front
+    robustness.
+  \item[Wetting and drying] VOLNA and the central-upwind evidence
+    support finite volume for inundation. Finite difference remains
+    credible as a reference family through MOST and semi-implicit
+    shallow-water literature.
+  \item[Bore and shock treatment] Finite volume is selected for weak
+    solutions, bores, hydraulic discontinuities, and shoreline Riemann
+    treatments.
+  \item[Coastline and mesh flexibility] Unstructured finite volumes
+    match irregular coastlines, harbour geometry, local mesh grading,
+    and face-based boundary patches.
+  \item[Phase and amplitude accuracy] The exact regional flux,
+    reconstruction, timestep and optional dispersive extension remain
+    unresolved and shall be tested against propagation and inundation
+    benchmarks.
+  \item[Time-step and linear-system structure] Finite difference is
+    retained for selective implicitness, reduced free-surface systems,
+    symmetric positive-definite solves, conjugate-gradient compatibility
+    and multigrid compatibility.
+  \item[Parallel and GPU structure] Finite volume and lattice/discrete
+    Boltzmann both expose local operations. Lattice/discrete Boltzmann
+    remains deferred until the tsunami-validation and wet/dry evidence
+    gaps are closed.
+  \item[Coupling compatibility] Finite volume produces conservative
+    face fluxes suitable for the two-dimensional--three-dimensional
+    interface and shares cell, face, flux and boundary-patch abstractions
+    with the OpenFOAM-inspired local solver architecture.
+\end{description}
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-frm-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-frm-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+The finite-volume selection does not imply that finite difference,
+lattice/discrete Boltzmann, or spectral methods are inferior in general.
+The screening is limited to the current regional tsunami solver branch.
+
+Finite difference is not selected for production regional execution but
+is retained as a numerical reference and as a source of semi-implicit
+architectural ideas. Lattice/discrete Boltzmann is removed from the
+active regional shortlist until tsunami validation, positivity,
+well-balancing, dry wetting and drying, and complex-bathymetry evidence
+are available. Spectral methods are screened out of the active regional
+comparison owing to project-fit constraints rather than mathematical
+invalidity.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-frm-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The regional nonlinear shallow-water solver shall use a cell-centred
+finite-volume method. The primary rationale is physical and numerical:
+direct conservation, weak-solution compatibility, well-balanced
+bathymetry, positivity-preserving wetting and drying, unstructured
+coastline representation, local mesh grading, and conservative
+two-dimensional--three-dimensional interface fluxes.
+
+OpenFOAM compatibility is a secondary architectural benefit. The
+regional solver is not required to be implemented inside OpenFOAM.
+
+The local three-dimensional solver shall also use finite volume, but
+with collocated polyhedral control volumes, VOF phase transport and
+pressure correction for incompressibility. OpenFOAM is retained as the
+principal architectural reference for this local branch.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-frm-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsubsection{Regional Solver Decision}
+\label{sec:res-num-frm-regional-solver-decision}
+
+The selected regional numerical family is:
+
+\begin{quote}
+  cell-centred finite-volume method
+\end{quote}
+
+The selected regional solver composition is:
+
+\begin{itemize}
+  \item unstructured triangular or polygonal control volumes;
+  \item second-order MUSCL reconstruction;
+  \item weighted least-squares gradients;
+  \item Barth--Jespersen limiting;
+  \item well-balanced hydrostatic reconstruction;
+  \item positivity-preserving wet/dry treatment;
+  \item HLLC primary flux with HLL/HLLE fallback near dry or unsafe
+    states;
+  \item SSPRK(3,3) transport;
+  \item Strang-split semi-implicit Manning friction;
+  \item characteristic or radiation open boundaries;
+  \item sponge damping for artificial ocean cuts where required;
+  \item mesh refinement driven by bathymetry, shoreline, source,
+    structures, wet/dry fronts and validation observables.
+\end{itemize}
+
+Dry-depth tolerances, exact wave-speed estimates, final mesh sizes and
+domain-specific sponge dimensions remain verification or implementation
+parameters, not open research-family decisions.
+
+\subsubsection{Retained FDM Concepts}
+\label{sec:res-num-frm-retained-fdm-concepts}
+
+Finite difference is retained for:
+
+\begin{itemize}
+  \item selective implicit treatment;
+  \item reduced free-surface systems;
+  \item symmetric positive-definite linear systems;
+  \item conjugate-gradient and multigrid compatibility;
+  \item stable wet/dry face handling;
+  \item the distinction between stability-limited and accuracy-limited
+    timesteps.
+\end{itemize}
+
+\subsubsection{Excluded and Deferred Alternatives}
+\label{sec:res-num-frm-excluded-deferred-alternatives}
+
+Lattice/discrete Boltzmann is removed from the active regional
+shortlist. It remains a deferred research candidate if tsunami-context
+validation, robust dry wetting and drying, fully discrete
+well-balancing, and irregular-coastline treatment are demonstrated.
+
+Spectral and pseudospectral methods are screened out of the active
+regional solver comparison for this project branch.
+
+\subsubsection{Local 3D Solver Decision}
+\label{sec:res-num-frm-local-solver-decision}
+
+The selected local numerical family is:
+
+\begin{quote}
+  cell-centred collocated polyhedral finite volume with bounded VOF
+  phase transport and pressure correction for incompressible
+  two-phase URANS
+\end{quote}
+
+The selected baseline turbulence closure for this finite-volume branch
+is $k$--$\omega$ SST. LES remains a higher-fidelity comparison mode,
+and particle, finite-element and staggered-grid methods remain
+references or specialist alternatives rather than the production local
+hydrodynamic family.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-frm-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The following regional implementation and validation parameters remain
+open:
+
+\begin{itemize}
+  \item dry-depth tolerance;
+  \item exact HLL/HLLC wave-speed safeguards;
+  \item final mesh refinement levels;
+  \item final CFL value after positivity and wet/dry verification;
+  \item optional dispersive extension and its activation gate;
+  \item domain-specific open-boundary and sponge placement;
+  \item coupling residuals and convergence criteria for later
+    multidimensional coupling.
+  \item exact local VOF advection and compression scheme;
+  \item exact pressure-correction sequence and pressure-consistent
+    face-flux interpolation;
+  \item local wall-function and rough-wall treatment;
+  \item local linear solvers, preconditioners and residual tolerances.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-frm-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The selected regional solver family hands off the following
+requirements:
+
+\begin{itemize}
+  \item `RES-NUM-MSH` shall define unstructured mesh, local grading and
+    adaptive-mesh strategy;
+  \item `RES-NUM-FLX` shall compare HLL, HLLC, central-upwind and
+    related shoreline-aware fluxes;
+  \item `RES-NUM-SRC` shall formalise bed-slope, friction and Coriolis
+    integration;
+  \item `RES-NUM-TIM` shall select the SSP-RK order and any
+    semi-implicit split;
+  \item `RES-NUM-WET` shall select wet/dry thresholds and positivity
+    controls;
+  \item `RES-MOD-MUL` and later Software work shall use conservative
+    face-flux outputs for the two-dimensional--three-dimensional
+    interface.
+  \item `RES-NUM-SPEC` shall define the local URANS--VOF solve order,
+    pressure-correction loop, residual checks and timestep rejection
+    rules.
+\end{itemize}
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-frm-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

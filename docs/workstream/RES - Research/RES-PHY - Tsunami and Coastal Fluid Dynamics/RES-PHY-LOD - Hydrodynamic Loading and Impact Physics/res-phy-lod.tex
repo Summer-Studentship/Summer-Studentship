@@ -1,0 +1,248 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-PHY-LOD
+% Deliverable: Hydrodynamic Loading and Impact Physics
+% Status: In progress
+% Evidence status: Local hydrodynamic loading observables established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-MOD-EQS, RES-MOD-SRC, RES-VER-MET
+% Downstream interfaces: RES-NUM-SPEC, RES-STR-LOD, RES-VER-MET
+% -------------------------------------------------------------------------
+
+\section{RES-PHY-LOD --- Hydrodynamic Loading and Impact Physics}
+\label{sec:res-phy-lod}
+
+\subsection{Purpose and Scope}
+\label{sec:res-phy-lod-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable defines the hydrodynamic loading observables that the
+local three-dimensional URANS--VOF model must resolve for barrier
+assessment and later structural handoff. The active baseline assumes a
+fixed rigid barrier; structural deformation, material damage, scour and
+two-way FSI are stretch extensions after hydrodynamic load extraction
+is stable.
+
+\subsection{Research Questions}
+\label{sec:res-phy-lod-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-phy-lod-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-phy-lod-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{qin2018comparison} is retained as evidence that local
+three-dimensional modelling enables direct structural-force extraction
+from pressure and shear traction. \textcite{watanabe2022validation} is
+retained as evidence that local force, pressure and velocity validation
+must be assessed separately from water-level agreement. Source roles:
+`3D-RANSVOF` and `3D-VALIDATION`. Project conclusion: the local model
+shall output complete pressure and traction histories, not only
+empirical drag coefficients. Limitation: these quantities remain
+hydrodynamic loads until structural response or FSI is activated.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-phy-lod-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+The pressure and viscous contributions to traction on a barrier
+surface are:
+
+\begin{align}
+  \mathbf{t}_{p}
+  &=
+  -p\mathbf{n}
+  \label{eq:res-phy-lod-pressure-traction}
+  \\
+  \mathbf{t}_{\tau}
+  &=
+  \boldsymbol{\tau}
+  \mathbf{n}
+  \label{eq:res-phy-lod-shear-traction}
+  \\
+  \mathbf{t}
+  &=
+  \mathbf{t}_{p}
+  +
+  \mathbf{t}_{\tau}
+  \label{eq:res-phy-lod-total-traction}
+\end{align}
+
+The loading quantities of interest are:
+
+\begin{align}
+  \mathbf{F}(t)
+  &=
+  \int_{\Gamma_{\mathrm{B}}}
+  \mathbf{t}
+  \,\dd\Gamma
+  \label{eq:res-phy-lod-force}
+  \\
+  \mathbf{M}(t)
+  &=
+  \int_{\Gamma_{\mathrm{B}}}
+  \left(
+    \mathbf{x}-\mathbf{x}_0
+  \right)
+  \times
+  \mathbf{t}
+  \,\dd\Gamma
+  \label{eq:res-phy-lod-moment}
+  \\
+  \mathbf{J}
+  &=
+  \int_{t_0}^{t_1}
+  \mathbf{F}(t)
+  \,\dd t
+  \label{eq:res-phy-lod-force-impulse}
+\end{align}
+
+\subsection{Physical Mechanisms}
+\label{sec:res-phy-lod-physical-mechanisms}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The local impact model shall represent hydrostatic loading,
+nonhydrostatic impact pressure, bore impact, reflected and transmitted
+wave loading, overtopping-induced loading, shear traction, wake effects
+and pressure-duration effects. Structural response is not inferred from
+these hydrodynamic quantities unless `RES-STR` activates a structural
+model.
+
+\subsection{Characteristic Spatial and Temporal Scales}
+\label{sec:res-phy-lod-characteristic-spatial-temporal-scales}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Relevant Observables}
+\label{sec:res-phy-lod-relevant-observables}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+Required local loading observables are pressure histories, pressure
+spatial distributions, shear traction, resultant force, force impulse,
+overturning moment, torsional moment, centre-of-pressure migration,
+impact duration and repeat-wave cumulative loading.
+
+Each loading observable shall carry the identifiers
+\texttt{corridor\_id}, \texttt{geometry\_id}, \texttt{patch\_id},
+local coordinate frame, integration interval and accepted-timestep
+status. Source role: \textcite{qin2018comparison} supports direct
+force extraction from local 3D fields; \textcite{watanabe2022validation}
+supports reporting pressure, velocity and force separately. Downstream
+handoff: RES-STR-LOD shall consume these histories as hydrodynamic
+loads, not as proof of material response.
+
+\subsection{Controlling Dimensionless Parameters}
+\label{sec:res-phy-lod-controlling-dimensionless-parameters}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Physical Regimes and Transition Conditions}
+\label{sec:res-phy-lod-physical-regimes-transition-conditions}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Implications for Model Validity}
+\label{sec:res-phy-lod-model-validity-implications}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-phy-lod-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-phy-lod-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-phy-lod-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-phy-lod-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-phy-lod-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-phy-lod-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected loading approach is direct traction integration over the
+resolved barrier surface. Empirical drag-only loading may be retained
+for screening comparisons or sanity checks but shall not replace the
+local pressure and shear extraction used for validation and structural
+handoff.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-phy-lod-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-phy-lod-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-SPEC` shall extract the loading metrics after each accepted
+local timestep. `RES-VER-MET` shall define acceptance criteria for
+pressure, force, impulse and moment. `RES-STR-LOD` shall decide how
+accepted hydrodynamic tractions are transferred into structural load
+cases. Software shall emit pressure, shear, force, moment and impulse
+histories in the structured output schema before any structural damage
+or FSI extension is attempted.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-phy-lod-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,184 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-ML-SUR
+% Deliverable: Surrogate, Multifidelity and Active-Learning Strategy
+% Status: In progress
+% Evidence status: Surrogate and active learning deferred
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-ML-DAT, RES-ML-ALG, RES-ML-TRN, RES-VER-SPEC
+% Downstream interfaces: RES-ML-INT, RES-OPT-DOE, RES-OPT-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-ML-SUR --- Surrogate, Multifidelity and Active-Learning Strategy}
+\label{sec:res-ml-sur}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ml-sur-purpose}
+
+This Deliverable records surrogate, multifidelity and active-learning
+ideas as deferred future work. The active project does not train a
+surrogate or run active sampling; it prepares validated hydrodynamic
+outputs for possible future use.
+
+\subsection{Research Questions}
+\label{sec:res-ml-sur-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ml-sur-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ml-sur-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ml-sur-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Machine-Learning Role}
+\label{sec:res-ml-sur-machine-learning-role}
+
+The deferred future query is:
+\begin{align}
+  &\text{corridor}
+  + \text{validated-event condition}
+  + \text{fixed-rigid barrier class}
+  \notag\\
+  &\qquad \rightarrow
+  \text{predicted response}
+  + \text{predictive uncertainty}
+  \label{eq:res-ml-sur-query}
+\end{align}
+
+Different tsunami conditions initially mean controlled variations within a
+defensible envelope around the validated event, such as local wave-height
+variation, inundation-depth variation, velocity variation, direction variation
+and selected severity scaling. This shall not be described as generalisation to
+unrelated earthquakes, coastlines or tsunami events.
+
+\subsection{Non-ML Baseline}
+\label{sec:res-ml-sur-non-ml-baseline}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Input and Output Representation}
+\label{sec:res-ml-sur-input-output-representation}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Dataset Requirements}
+\label{sec:res-ml-sur-dataset-requirements}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Model or Architecture Candidates}
+\label{sec:res-ml-sur-model-architecture-candidates}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Training and Validation Method}
+\label{sec:res-ml-sur-training-validation-method}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Evaluation Metrics}
+\label{sec:res-ml-sur-evaluation-metrics}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Generalisation and Uncertainty}
+\label{sec:res-ml-sur-generalisation-uncertainty}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Simulation and Optimisation Integration}
+\label{sec:res-ml-sur-simulation-optimisation-integration}
+
+A future active-sampling strategy may prioritise high-uncertainty
+hydrodynamic regions, underrepresented geometry configurations and
+cases where model disagreement is high. Failure-boundary and direct
+FSI confirmation cases remain deferred until structural/FSI extensions
+exist.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ml-sur-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ml-sur-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ml-sur-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ml-sur-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ml-sur-conclusions}
+
+A future surrogate may be an event-conditioned screening tool. Direct
+simulation remains the source of accepted physical response and is
+required whenever uncertainty, domain limits or consequence level
+demand confirmation.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ml-sur-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ml-sur-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ml-sur-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ml-sur-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

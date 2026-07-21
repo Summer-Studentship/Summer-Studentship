@@ -1,0 +1,679 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{casulli1992semiimplicit}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=a937f9bfe199539f5491655caddfb380}{%
+           family={Casulli},
+           familyi={C\bibinitperiod},
+           given={Vincenzo},
+           giveni={V\bibinitperiod}}}%
+        {{hash=0b83c12c88b4b43c390bcbd3acf4ce29}{%
+           family={Cheng},
+           familyi={C\bibinitperiod},
+           given={Ralph\bibnamedelima T.},
+           giveni={R\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+      }
+      \strng{namehash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{fullhash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{fullhashraw}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{bibnamehash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{authorbibnamehash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{authornamehash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{authorfullhash}{9baf6d99fc3218a7343b45a7a0a98143}
+      \strng{authorfullhashraw}{9baf6d99fc3218a7343b45a7a0a98143}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal for Numerical Methods in Fluids}
+      \field{number}{6}
+      \field{title}{Semi-Implicit Finite Difference Methods for Three-Dimensional Shallow Water Flow}
+      \field{volume}{15}
+      \field{year}{1992}
+      \field{pages}{629\bibrangedash 648}
+      \range{pages}{20}
+      \verb{doi}
+      \verb 10.1002/fld.1650150602
+      \endverb
+    \endentry
+    \entry{wei2013japan}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=db5db8a7f4695be6cfb669a8f9db71be}{%
+           family={Wei},
+           familyi={W\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=2e4debd1f95fe83899eb86f9cdb86d75}{%
+           family={Chamberlin},
+           familyi={C\bibinitperiod},
+           given={Christopher\bibnamedelima D.},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=b7162272f16026f19e181d54a53870c4}{%
+           family={Titov},
+           familyi={T\bibinitperiod},
+           given={Vasily\bibnamedelima V.},
+           giveni={V\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=e9c129e7086a5bc22554cba3d5442ffe}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Liujuan},
+           giveni={L\bibinitperiod}}}%
+        {{hash=6d007026a8227d5c3a8dc3a5195e2262}{%
+           family={Bernard},
+           familyi={B\bibinitperiod},
+           given={Eddie\bibnamedelima N.},
+           giveni={E\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \strng{namehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{fullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{fullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{bibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorbibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authornamehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{authorfullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorfullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pure and Applied Geophysics}
+      \field{number}{6--8}
+      \field{title}{Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast}
+      \field{volume}{170}
+      \field{year}{2013}
+      \field{pages}{1309\bibrangedash 1331}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1007/s00024-012-0519-z
+      \endverb
+    \endentry
+    \entry{kurganov2007wellbalanced}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=ad20998e1057bfeb80356100a951b491}{%
+           family={Kurganov},
+           familyi={K\bibinitperiod},
+           given={Alexander},
+           giveni={A\bibinitperiod}}}%
+        {{hash=6e5935aaff9d5efb5b4e761d695c8dac}{%
+           family={Petrova},
+           familyi={P\bibinitperiod},
+           given={Guergana},
+           giveni={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{fullhash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{fullhashraw}{a361374d1874eafd7393697c4c0501a9}
+      \strng{bibnamehash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{authorbibnamehash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{authornamehash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{authorfullhash}{a361374d1874eafd7393697c4c0501a9}
+      \strng{authorfullhashraw}{a361374d1874eafd7393697c4c0501a9}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Communications in Mathematical Sciences}
+      \field{number}{1}
+      \field{title}{A Second-Order Well-Balanced Positivity Preserving Central-Upwind Scheme for the {Saint-Venant} System}
+      \field{volume}{5}
+      \field{year}{2007}
+      \field{pages}{133\bibrangedash 160}
+      \range{pages}{28}
+    \endentry
+    \entry{dutykh2011volna}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=db71b5e21c3de7ca67aba86f2053756e}{%
+           family={Dutykh},
+           familyi={D\bibinitperiod},
+           given={Denys},
+           giveni={D\bibinitperiod}}}%
+        {{hash=4016d397e6a379f962e034dd6c4a940f}{%
+           family={Poncet},
+           familyi={P\bibinitperiod},
+           given={Raphaël},
+           giveni={R\bibinitperiod}}}%
+        {{hash=153c657e819e93e05ea2e41a7e122610}{%
+           family={Dias},
+           familyi={D\bibinitperiod},
+           given={Frédéric},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{fullhash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{fullhashraw}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{bibnamehash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{authorbibnamehash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{authornamehash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{authorfullhash}{1ea65b81055fcfac15dbfd9b26540639}
+      \strng{authorfullhashraw}{1ea65b81055fcfac15dbfd9b26540639}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{European Journal of Mechanics - B/Fluids}
+      \field{number}{6}
+      \field{title}{The {VOLNA} Code for the Numerical Modeling of Tsunami Waves: Generation, Propagation and Inundation}
+      \field{volume}{30}
+      \field{year}{2011}
+      \field{pages}{598\bibrangedash 615}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.1016/j.euromechflu.2011.05.005
+      \endverb
+    \endentry
+    \entry{hirt1981vof}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=9324752ec5101bfbe0cebe13b907dc4c}{%
+           family={Hirt},
+           familyi={H\bibinitperiod},
+           given={C.\bibnamedelimi W.},
+           giveni={C\bibinitperiod\bibinitdelim W\bibinitperiod}}}%
+        {{hash=a6ed12dcad8490b4fc9597e71e89a445}{%
+           family={Nichols},
+           familyi={N\bibinitperiod},
+           given={B.\bibnamedelimi D.},
+           giveni={B\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+      }
+      \strng{namehash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{fullhash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{fullhashraw}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{bibnamehash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{authorbibnamehash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{authornamehash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{authorfullhash}{b7356d929d77a727487fdc6a79c37f48}
+      \strng{authorfullhashraw}{b7356d929d77a727487fdc6a79c37f48}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Physics}
+      \field{number}{1}
+      \field{title}{Volume of Fluid ({VOF}) Method for the Dynamics of Free Boundaries}
+      \field{volume}{39}
+      \field{year}{1981}
+      \field{pages}{201\bibrangedash 225}
+      \range{pages}{25}
+      \verb{doi}
+      \verb 10.1016/0021-9991(81)90145-5
+      \endverb
+    \endentry
+    \entry{vukcevic2018sharp}{article}{}{}
+      \name{author}{4}{}{%
+        {{hash=77aff817e4e66211b716f2affe695990}{%
+           family={Vukčević},
+           familyi={V\bibinitperiod},
+           given={Vuko},
+           giveni={V\bibinitperiod}}}%
+        {{hash=acaf8c8d8316908194f701fd02fe7504}{%
+           family={Roenby},
+           familyi={R\bibinitperiod},
+           given={Johan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=abc7d71d7882e4983ad5ba1032cc9033}{%
+           family={Gatin},
+           familyi={G\bibinitperiod},
+           given={Inno},
+           giveni={I\bibinitperiod}}}%
+        {{hash=d62bc09e89bff10783d2d7091a4a6aa6}{%
+           family={Jasak},
+           familyi={J\bibinitperiod},
+           given={Hrvoje},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{337c79d23f36ba3e89db5fbd6a1c5e45}
+      \strng{fullhash}{168a4f63c0dd253f49f6305df74d52ef}
+      \strng{fullhashraw}{168a4f63c0dd253f49f6305df74d52ef}
+      \strng{bibnamehash}{168a4f63c0dd253f49f6305df74d52ef}
+      \strng{authorbibnamehash}{168a4f63c0dd253f49f6305df74d52ef}
+      \strng{authornamehash}{337c79d23f36ba3e89db5fbd6a1c5e45}
+      \strng{authorfullhash}{168a4f63c0dd253f49f6305df74d52ef}
+      \strng{authorfullhashraw}{168a4f63c0dd253f49f6305df74d52ef}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{physics.flu-dyn}
+      \field{eprinttype}{arXiv}
+      \field{title}{A Sharp Free Surface Finite Volume Method Applied to Gravity Wave Flows}
+      \field{year}{2018}
+      \verb{eprint}
+      \verb 1804.01130
+      \endverb
+    \endentry
+    \entry{roenby2016computational}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=acaf8c8d8316908194f701fd02fe7504}{%
+           family={Roenby},
+           familyi={R\bibinitperiod},
+           given={Johan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=db8fb36939bbf1a4ac1c3c90f9fde673}{%
+           family={Bredmose},
+           familyi={B\bibinitperiod},
+           given={Henrik},
+           giveni={H\bibinitperiod}}}%
+        {{hash=d62bc09e89bff10783d2d7091a4a6aa6}{%
+           family={Jasak},
+           familyi={J\bibinitperiod},
+           given={Hrvoje},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{fullhash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{fullhashraw}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{bibnamehash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{authorbibnamehash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{authornamehash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{authorfullhash}{e1172f13c56226839a1e6b50c038fbfc}
+      \strng{authorfullhashraw}{e1172f13c56226839a1e6b50c038fbfc}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{physics.flu-dyn}
+      \field{eprinttype}{arXiv}
+      \field{title}{A Computational Method for Sharp Interface Advection}
+      \field{year}{2016}
+      \verb{eprint}
+      \verb 1601.05392
+      \endverb
+    \endentry
+    \entry{issa1986operator}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=b61e74de3be25779e4651c155814a883}{%
+           family={Issa},
+           familyi={I\bibinitperiod},
+           given={R.\bibnamedelimi I.},
+           giveni={R\bibinitperiod\bibinitdelim I\bibinitperiod}}}%
+      }
+      \strng{namehash}{b61e74de3be25779e4651c155814a883}
+      \strng{fullhash}{b61e74de3be25779e4651c155814a883}
+      \strng{fullhashraw}{b61e74de3be25779e4651c155814a883}
+      \strng{bibnamehash}{b61e74de3be25779e4651c155814a883}
+      \strng{authorbibnamehash}{b61e74de3be25779e4651c155814a883}
+      \strng{authornamehash}{b61e74de3be25779e4651c155814a883}
+      \strng{authorfullhash}{b61e74de3be25779e4651c155814a883}
+      \strng{authorfullhashraw}{b61e74de3be25779e4651c155814a883}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Computational Physics}
+      \field{number}{1}
+      \field{title}{Solution of the Implicitly Discretised Fluid Flow Equations by Operator-Splitting}
+      \field{volume}{62}
+      \field{year}{1986}
+      \field{pages}{40\bibrangedash 65}
+      \range{pages}{26}
+      \verb{doi}
+      \verb 10.1016/0021-9991(86)90099-9
+      \endverb
+    \endentry
+    \entry{meng2018discreteboltzmann}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=b0294b3117e125122cdb84b6a193edd8}{%
+           family={Meng},
+           familyi={M\bibinitperiod},
+           given={Jianping},
+           giveni={J\bibinitperiod}}}%
+        {{hash=3c85b54e613175b03e9058f7ee2e87a0}{%
+           family={Gu},
+           familyi={G\bibinitperiod},
+           given={Xiao-Jun},
+           giveni={X\bibinithyphendelim J\bibinitperiod}}}%
+        {{hash=9a75bb8817a48177abdc4151e62ab743}{%
+           family={Emerson},
+           familyi={E\bibinitperiod},
+           given={David\bibnamedelima R.},
+           giveni={D\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=a7630dbe1e7a2bfd50090083d1d321dc}{%
+           family={Peng},
+           familyi={P\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=5c51f64da1127b4c810b5f4062347f15}{%
+           family={Zhang},
+           familyi={Z\bibinitperiod},
+           given={Jianmin},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{458c66cdbed8d4768efe4aab908d4af1}
+      \strng{fullhash}{4a5069a8b76772af1007bdb90fbb99cc}
+      \strng{fullhashraw}{4a5069a8b76772af1007bdb90fbb99cc}
+      \strng{bibnamehash}{4a5069a8b76772af1007bdb90fbb99cc}
+      \strng{authorbibnamehash}{4a5069a8b76772af1007bdb90fbb99cc}
+      \strng{authornamehash}{458c66cdbed8d4768efe4aab908d4af1}
+      \strng{authorfullhash}{4a5069a8b76772af1007bdb90fbb99cc}
+      \strng{authorfullhashraw}{4a5069a8b76772af1007bdb90fbb99cc}
+      \field{sortinit}{9}
+      \field{sortinithash}{0a5ebc79d83c96b6579069544c73c7d4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprinttype}{arxiv}
+      \field{journaltitle}{arXiv preprint arXiv:1609.03735}
+      \field{title}{Discrete Boltzmann Model of Shallow Water Equations with Polynomial Equilibria}
+      \field{year}{2018}
+      \verb{eprint}
+      \verb 1609.03735
+      \endverb
+    \endentry
+    \entry{maric2013vofoam}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=2b57ad16ce925c822e86d9e01fcb637c}{%
+           family={Marić},
+           familyi={M\bibinitperiod},
+           given={Tomislav},
+           giveni={T\bibinitperiod}}}%
+        {{hash=ab4897c96af93c263b0decbb16915bf8}{%
+           family={Marschall},
+           familyi={M\bibinitperiod},
+           given={Holger},
+           giveni={H\bibinitperiod}}}%
+        {{hash=3f3de62d1383b738ac4933acc854adde}{%
+           family={Bothe},
+           familyi={B\bibinitperiod},
+           given={Dieter},
+           giveni={D\bibinitperiod}}}%
+      }
+      \strng{namehash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{fullhash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{fullhashraw}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{bibnamehash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{authorbibnamehash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{authornamehash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{authorfullhash}{ddfdc1920bb171a1075ca7184629f0dd}
+      \strng{authorfullhashraw}{ddfdc1920bb171a1075ca7184629f0dd}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{eprintclass}{physics.flu-dyn}
+      \field{eprinttype}{arXiv}
+      \field{title}{{voFoam}: A Geometrical Volume of Fluid Algorithm on Arbitrary Unstructured Meshes with Local Dynamic Adaptive Mesh Refinement Using {OpenFOAM}}
+      \field{year}{2013}
+      \verb{eprint}
+      \verb 1305.3417
+      \endverb
+    \endentry
+    \entry{takase2016hybrid}{article}{}{}
+      \name{author}{7}{}{%
+        {{hash=952276fff3f528de9fe6afc5fcddfd1a}{%
+           family={Takase},
+           familyi={T\bibinitperiod},
+           given={Shinsuke},
+           giveni={S\bibinitperiod}}}%
+        {{hash=89ac1da206051999fa26d9348372acc1}{%
+           family={Moriguchi},
+           familyi={M\bibinitperiod},
+           given={Shuji},
+           giveni={S\bibinitperiod}}}%
+        {{hash=3c3002c9f512f96017b521444ec6ed50}{%
+           family={Terada},
+           familyi={T\bibinitperiod},
+           given={Kenjiro},
+           giveni={K\bibinitperiod}}}%
+        {{hash=37d1ff1627b2cd19eff36821490c4f06}{%
+           family={Kato},
+           familyi={K\bibinitperiod},
+           given={Junji},
+           giveni={J\bibinitperiod}}}%
+        {{hash=6324a77ba54de2fc17d1f6f5f2a13cf0}{%
+           family={Kyoya},
+           familyi={K\bibinitperiod},
+           given={Tetsuya},
+           giveni={T\bibinitperiod}}}%
+        {{hash=835b50bb32509630e348b2210db28559}{%
+           family={Kashiyama},
+           familyi={K\bibinitperiod},
+           given={Kazuo},
+           giveni={K\bibinitperiod}}}%
+        {{hash=3916662dbca18474a1a1c798d3dcae55}{%
+           family={Kotani},
+           familyi={K\bibinitperiod},
+           given={Takashi},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{fa2a86f504861a9cf8996eec78ce64b6}
+      \strng{fullhash}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \strng{fullhashraw}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \strng{bibnamehash}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \strng{authorbibnamehash}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \strng{authornamehash}{fa2a86f504861a9cf8996eec78ce64b6}
+      \strng{authorfullhash}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \strng{authorfullhashraw}{ddec13f54b1ca4dca07f0ad3934c15cb}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Computational Mechanics}
+      \field{number}{3}
+      \field{title}{{2D--3D} Hybrid Stabilized Finite Element Method for Tsunami Runup Simulations}
+      \field{volume}{58}
+      \field{year}{2016}
+      \field{pages}{411\bibrangedash 422}
+      \range{pages}{12}
+      \verb{doi}
+      \verb 10.1007/s00466-016-1300-4
+      \endverb
+    \endentry
+    \entry{romano2025coupling}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=7a7fb22b3c29034c4af65c1377632296}{%
+           family={Romano},
+           familyi={R\bibinitperiod},
+           given={Alessandro},
+           giveni={A\bibinitperiod}}}%
+        {{hash=04b094d4b49ba4e77919cece8df93ffa}{%
+           family={Cecioni},
+           familyi={C\bibinitperiod},
+           given={Claudia},
+           giveni={C\bibinitperiod}}}%
+        {{hash=fd40ad8ce1be69932703a0b8fdb5d7e8}{%
+           family={Bellotti},
+           familyi={B\bibinitperiod},
+           given={Giorgio},
+           giveni={G\bibinitperiod}}}%
+        {{hash=35a5f4af5230d9302e9c258d762dd2d9}{%
+           family={Barajas},
+           familyi={B\bibinitperiod},
+           given={G.},
+           giveni={G\bibinitperiod}}}%
+        {{hash=e79c21a99205803be08f73ddce8f55e3}{%
+           family={Lara},
+           familyi={L\bibinitperiod},
+           given={Javier\bibnamedelima L.},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+      }
+      \strng{namehash}{d47a941483b4d53aa45a055fbc65e3a6}
+      \strng{fullhash}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \strng{fullhashraw}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \strng{bibnamehash}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \strng{authorbibnamehash}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \strng{authornamehash}{d47a941483b4d53aa45a055fbc65e3a6}
+      \strng{authorfullhash}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \strng{authorfullhashraw}{ad437180e8ad45d414ef8e7e648c6bf2}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Journal of Geophysical Research: Oceans}
+      \field{number}{12}
+      \field{title}{A Numerical {3D--2D} Coupling Strategy for Simulating Landslide-Generated Tsunamis in Complex Geometries: The {Taan Fiord}, Alaska, Case Study}
+      \field{volume}{130}
+      \field{year}{2025}
+      \field{pages}{e2025JC023042}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1029/2025JC023042
+      \endverb
+    \endentry
+    \entry{higuera2013realistic}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=8ebfee8bab075254f185100ca78a1ad4}{%
+           family={Higuera},
+           familyi={H\bibinitperiod},
+           given={Pablo},
+           giveni={P\bibinitperiod}}}%
+        {{hash=e79c21a99205803be08f73ddce8f55e3}{%
+           family={Lara},
+           familyi={L\bibinitperiod},
+           given={Javier\bibnamedelima L.},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=620416bd92d829282d0aa2f359c90703}{%
+           family={Losada},
+           familyi={L\bibinitperiod},
+           given={Inigo\bibnamedelima J.},
+           giveni={I\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \strng{namehash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{fullhash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{fullhashraw}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{bibnamehash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{authorbibnamehash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{authornamehash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{authorfullhash}{e5ff150151599919ae7b714d7daeca4e}
+      \strng{authorfullhashraw}{e5ff150151599919ae7b714d7daeca4e}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Coastal Engineering}
+      \field{title}{Realistic Wave Generation and Active Wave Absorption for {Navier--Stokes} Models: Application to {OpenFOAM}}
+      \field{volume}{71}
+      \field{year}{2013}
+      \field{pages}{102\bibrangedash 118}
+      \range{pages}{17}
+      \verb{doi}
+      \verb 10.1016/j.coastaleng.2012.07.002
+      \endverb
+    \endentry
+    \entry{jacobsen2012waves2foam}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=0667f38dc890ad0d893b1945993ccbd4}{%
+           family={Jacobsen},
+           familyi={J\bibinitperiod},
+           given={Niels\bibnamedelima G.},
+           giveni={N\bibinitperiod\bibinitdelim G\bibinitperiod}}}%
+        {{hash=916750d071a7b1271d1c25c5a93bdf84}{%
+           family={Fuhrman},
+           familyi={F\bibinitperiod},
+           given={David\bibnamedelima R.},
+           giveni={D\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=dfd5faedd4ea25c48e6b046beae61ed0}{%
+           family={Fredsoe},
+           familyi={F\bibinitperiod},
+           given={Jorgen},
+           giveni={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{fullhash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{fullhashraw}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{bibnamehash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{authorbibnamehash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{authornamehash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{authorfullhash}{d7d3845ac418d0e2dc1088f302f3e747}
+      \strng{authorfullhashraw}{d7d3845ac418d0e2dc1088f302f3e747}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{International Journal for Numerical Methods in Fluids}
+      \field{number}{9}
+      \field{title}{A Wave Generation Toolbox for the Open-Source {CFD} Library: {OpenFOAM}}
+      \field{volume}{70}
+      \field{year}{2012}
+      \field{pages}{1073\bibrangedash 1088}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1002/fld.2726
+      \endverb
+    \endentry
+    \entry{menter1994twoequation}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=ca8cc69133803e5ae1143779ce96f51d}{%
+           family={Menter},
+           familyi={M\bibinitperiod},
+           given={F.\bibnamedelimi R.},
+           giveni={F\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+      }
+      \strng{namehash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{fullhash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{fullhashraw}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{bibnamehash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{authorbibnamehash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{authornamehash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{authorfullhash}{ca8cc69133803e5ae1143779ce96f51d}
+      \strng{authorfullhashraw}{ca8cc69133803e5ae1143779ce96f51d}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{AIAA Journal}
+      \field{number}{8}
+      \field{title}{Two-Equation Eddy-Viscosity Turbulence Models for Engineering Applications}
+      \field{volume}{32}
+      \field{year}{1994}
+      \field{pages}{1598\bibrangedash 1605}
+      \range{pages}{8}
+      \verb{doi}
+      \verb 10.2514/3.12149
+      \endverb
+    \endentry
+    \entry{huang2015modifiedmps}{article}{}{}
+      \name{author}{2}{}{%
+        {{hash=dc6b5e453107942fba466f6dd9f9bf05}{%
+           family={Huang},
+           familyi={H\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=b36b6e53709a42c7b57bd781394e37fe}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Chongqiang},
+           giveni={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{fullhash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{fullhashraw}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{bibnamehash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{authorbibnamehash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{authornamehash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{authorfullhash}{7ca752b88e4b66eba261eef7d98e17b3}
+      \strng{authorfullhashraw}{7ca752b88e4b66eba261eef7d98e17b3}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Natural Hazards}
+      \field{title}{Numerical Analysis of Tsunami--Structure Interaction Using a Modified {MPS} Method}
+      \field{volume}{75}
+      \field{year}{2015}
+      \field{pages}{2847\bibrangedash 2862}
+      \range{pages}{16}
+      \verb{doi}
+      \verb 10.1007/s11069-014-1464-1
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

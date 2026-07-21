@@ -1,0 +1,176 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-ML-OBJ
+% Deliverable: Loss Functions, Rewards and Physical Constraints
+% Status: In progress
+% Evidence status: Not assessed
+% Review status: Not reviewed
+% Last updated: 2026-06-30
+% Dependencies: RES-ML-DAT, RES-ML-ALG, RES-VER-MET
+% Downstream interfaces: RES-ML-TRN, RES-ML-SUR, RES-ML-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-ML-OBJ --- Loss Functions, Rewards and Physical Constraints}
+\label{sec:res-ml-obj}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ml-obj-purpose}
+
+This Deliverable defines prediction losses, classification labels and
+engineering constraints for the event-conditioned supervised-learning task.
+Reinforcement-learning rewards are removed from the active scope.
+
+\subsection{Research Questions}
+\label{sec:res-ml-obj-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ml-obj-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ml-obj-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ml-obj-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Machine-Learning Role}
+\label{sec:res-ml-obj-machine-learning-role}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Non-ML Baseline}
+\label{sec:res-ml-obj-non-ml-baseline}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Input and Output Representation}
+\label{sec:res-ml-obj-input-output-representation}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Dataset Requirements}
+\label{sec:res-ml-obj-dataset-requirements}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Model or Architecture Candidates}
+\label{sec:res-ml-obj-model-architecture-candidates}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Training and Validation Method}
+\label{sec:res-ml-obj-training-validation-method}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Evaluation Metrics}
+\label{sec:res-ml-obj-evaluation-metrics}
+
+The evaluation methodology shall include regression losses, classification
+losses, multi-output normalisation, regularisation, class imbalance handling,
+physical bounds, invalid prediction handling, and asymmetric consequences of
+classification errors.
+
+The following error asymmetry is mandatory:
+\begin{itemize}
+  \item unsafe defence predicted safe: high-consequence error;
+  \item safe defence predicted unsafe: conservative but inefficient error.
+\end{itemize}
+
+Acceptance criteria and model-selection metrics shall account for this
+asymmetry rather than relying only on aggregate accuracy.
+
+\subsection{Generalisation and Uncertainty}
+\label{sec:res-ml-obj-generalisation-uncertainty}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Simulation and Optimisation Integration}
+\label{sec:res-ml-obj-simulation-optimisation-integration}
+
+Losses and labels shall support reinforcement screening only within the
+validated event-conditioned domain. Queries outside the domain or with invalid
+physical predictions shall be rejected or routed to direct simulation.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ml-obj-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ml-obj-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ml-obj-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ml-obj-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ml-obj-conclusions}
+
+The project uses supervised response and adequacy targets, not
+reinforcement-learning reward optimisation. Safety-relevant false-safe
+predictions dominate the risk model.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ml-obj-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ml-obj-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ml-obj-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ml-obj-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

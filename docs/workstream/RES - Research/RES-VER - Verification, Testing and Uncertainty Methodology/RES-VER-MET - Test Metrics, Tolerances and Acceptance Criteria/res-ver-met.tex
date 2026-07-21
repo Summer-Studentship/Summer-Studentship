@@ -1,0 +1,574 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-MET
+% Deliverable: Test Metrics, Tolerances and Acceptance Criteria
+% Status: In progress
+% Evidence status: Local free-surface, conservation and loading metrics established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-VER-FRM, RES-VER-BMK, RES-NUM-STB, RES-PHY-LOD
+% Downstream interfaces: Software validation reports, RES-ML-DAT, RES-OPT-OBJ
+% -------------------------------------------------------------------------
+
+\section{RES-VER-MET --- Test Metrics, Tolerances and Acceptance Criteria}
+\label{sec:res-ver-met}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-met-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-ver-met-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-met-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-met-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{qin2018comparison} supports validation against
+depth-dependent velocity and direct force extraction. \textcite{watanabe2022validation}
+supports multi-output acceptance because water level, velocity and
+force can exhibit different error behaviour. Source role:
+`3D-VALIDATION`. Project conclusion: no single scalar error metric is
+sufficient for accepting the local URANS--VOF model.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-met-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-met-test-objective}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-met-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-met-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-met-measured-quantities}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsubsection{Local-Impact Validation Observables}
+\label{sec:res-ver-met-local-validation-observables}
+
+The minimum validation set shall include:
+
+\begin{itemize}
+  \item phase-volume and mass-conservation diagnostics;
+  \item $\alpha$ boundedness and interface-compression diagnostics;
+  \item maximum local CFL and rejected-timestep count;
+  \item pressure-correction residual and pressure-corrector count;
+  \item free-surface elevation at multiple upstream and downstream
+    locations;
+  \item wave-front arrival time;
+  \item depth-dependent velocity;
+  \item inundation depth;
+  \item overtopping volume or discharge;
+  \item local pressure histories at several elevations;
+  \item spatial pressure distribution;
+  \item resultant force;
+  \item resultant moment and force/moment history;
+  \item force impulse;
+  \item overturning moment;
+  \item energy, reflection and transmission metrics;
+  \item transmitted and reflected wave measures;
+  \item wake and recirculation characteristics;
+  \item structural displacement and restoring force where FSI is
+    active.
+\end{itemize}
+
+The maximum value and complete time history shall both be assessed.
+A model that reproduces one peak while misrepresenting load duration,
+phase, or impulse shall not be accepted without further diagnosis.
+
+\subsubsection{Benchmark Validation Quantities}
+\label{sec:res-ver-met-benchmark-validation-quantities}
+
+The benchmark shall report separately:
+
+\begin{itemize}
+  \item first-arrival time;
+  \item leading-crest and leading-trough amplitude;
+  \item waveform phase;
+  \item dominant period and spectral content;
+  \item maximum surface elevation;
+  \item depth-integrated discharge or velocity;
+  \item inundation depth;
+  \item inundation extent;
+  \item maximum run-up;
+  \item reflected-wave behaviour;
+  \item complete-wave-train duration.
+\end{itemize}
+
+A time-shifted waveform comparison may be used to assess waveform
+shape, but the unshifted arrival-time error shall be reported first.
+An imposed time shift shall not be treated as a correction to the
+physical simulation.
+
+\subsection{Error Metrics}
+\label{sec:res-ver-met-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsubsection{Free-Surface and Conservation Measures}
+\label{sec:res-ver-met-free-surface-conservation-measures}
+
+For free-surface elevation $\eta$, the normalised free-surface error is:
+
+\begin{align}
+  E_{\eta}
+  &=
+  \frac{
+    \left\lVert
+      \eta_{\mathrm{sim}}
+      -
+      \eta_{\mathrm{obs}}
+    \right\rVert_{2}
+  }{
+    \left\lVert
+      \eta_{\mathrm{obs}}
+    \right\rVert_{2}
+    +
+    \epsilon_{\eta}
+  }
+  \label{eq:res-ver-met-free-surface-error}
+\end{align}
+
+The local mass-conservation acceptance metric is:
+
+\begin{align}
+  E_{\mathrm{mass}}
+  &=
+  \max
+  \left(
+    \max_i
+    \widehat{R}_{m,i},\,
+    \left|
+      E_m
+    \right|
+  \right)
+  \label{eq:res-ver-met-local-mass-acceptance}
+\end{align}
+
+where $\widehat{R}_{m,i}$ and $E_m$ are defined by the normalised
+local mass residual and global mass-imbalance diagnostics in
+`RES-NUM-STB` and `RES-NUM-ERR`.
+
+VOF boundedness shall be reported as:
+
+\begin{align}
+  E_{\alpha,\mathrm{bound}}
+  &=
+  \max_i
+  \left[
+    \max
+    \left(
+      0,\,
+      -\alpha_i,\,
+      \alpha_i - 1
+    \right)
+  \right]
+  \label{eq:res-ver-met-alpha-boundedness}
+\end{align}
+
+The maximum accepted-timestep Courant diagnostic shall be:
+
+\begin{align}
+  \mathrm{CFL}_{\max}
+  &=
+  \max_{f}
+  \left(
+    \frac{
+      \left|
+        \phi_f
+      \right|
+      \Delta t
+    }{
+      V_{c(f)}
+      +
+      \epsilon_V
+    }
+  \right)
+  \label{eq:res-ver-met-cfl-maximum}
+\end{align}
+
+The pressure-correction residual shall be normalised as:
+
+\begin{align}
+  E_p
+  &=
+  \frac{
+    \left\lVert
+      \mathbf{A}_p p'
+      -
+      \mathbf{b}_p
+    \right\rVert_2
+  }{
+    \left\lVert
+      \mathbf{b}_p
+    \right\rVert_2
+    +
+    \epsilon_p
+  }
+  \label{eq:res-ver-met-pressure-residual}
+\end{align}
+
+Decision role: these diagnostics are software-emitted acceptance
+metrics for the RES-NUM-SPEC local solving procedure. Supporting
+evidence: \textcite{watanabe2022validation} and \textcite{qin2018comparison}
+support multi-output local validation; the numerical residual and CFL
+definitions are project acceptance diagnostics tied to the selected
+pressure-correction/VOF procedure. Limitation: final tolerance values
+remain open.
+
+\subsubsection{Local-Impact Error Measures}
+\label{sec:res-ver-met-local-error-measures}
+
+For a measured quantity $q_{\mathrm{obs}}(t)$ and simulated quantity
+$q_{\mathrm{sim}}(t)$, the time-series root-mean-square error is:
+
+\begin{align}
+  \operatorname{RMSE}_{q}
+  &=
+  \sqrt{
+    \frac{1}{N}
+    \sum_{n=1}^{N}
+    \left[
+      q_{\mathrm{sim}}(t_n)
+      -
+      q_{\mathrm{obs}}(t_n)
+    \right]^2
+  }
+  \label{eq:res-ver-met-local-rmse}
+\end{align}
+
+The peak-value ratio is:
+
+\begin{align}
+  R_{q,\max}
+  &=
+  \frac{
+    \max_{t}
+    \left|
+    q_{\mathrm{sim}}(t)
+    \right|
+  }{
+    \max_{t}
+    \left|
+    q_{\mathrm{obs}}(t)
+    \right|
+  }
+  \label{eq:res-ver-met-local-peak-ratio}
+\end{align}
+
+The normalised impulse error is:
+
+\begin{align}
+  E_{\mathrm{J}}
+  &=
+  \frac{
+    \left\lVert
+    \mathbf{J}_{\mathrm{sim}}
+    -
+    \mathbf{J}_{\mathrm{obs}}
+    \right\rVert
+  }{
+    \left\lVert
+    \mathbf{J}_{\mathrm{obs}}
+    \right\rVert
+    +
+    \epsilon_{\mathrm{J}}
+  }
+  \label{eq:res-ver-met-local-impulse-error}
+\end{align}
+
+The normalised moment error is:
+
+\begin{align}
+  E_{\mathrm{M}}
+  &=
+  \frac{
+    \left\lVert
+    \mathbf{M}_{\mathrm{sim}}
+    -
+    \mathbf{M}_{\mathrm{obs}}
+    \right\rVert
+  }{
+    \left\lVert
+    \mathbf{M}_{\mathrm{obs}}
+    \right\rVert
+    +
+    \epsilon_{\mathrm{M}}
+  }
+  \label{eq:res-ver-met-local-moment-error}
+\end{align}
+
+The overtopping-volume error is:
+
+\begin{align}
+  E_{\mathrm{ot}}
+  &=
+  \frac{
+    \left|
+      V_{\mathrm{ot,sim}}
+      -
+      V_{\mathrm{ot,obs}}
+    \right|
+  }{
+    \left|
+      V_{\mathrm{ot,obs}}
+    \right|
+    +
+    \epsilon_{\mathrm{ot}}
+  }
+  \label{eq:res-ver-met-overtopping-error}
+\end{align}
+
+The run-up error is:
+
+\begin{align}
+  E_{\mathrm{ru}}
+  &=
+  \frac{
+    \left|
+      R_{\mathrm{u,sim}}
+      -
+      R_{\mathrm{u,obs}}
+    \right|
+  }{
+    \left|
+      R_{\mathrm{u,obs}}
+    \right|
+    +
+    \epsilon_{\mathrm{ru}}
+  }
+  \label{eq:res-ver-met-runup-error}
+\end{align}
+
+The energy-diagnostic error for any selected energy metric $E_\star$
+is:
+
+\begin{align}
+  E_{\mathrm{energy},\star}
+  &=
+  \frac{
+    \left|
+      E_{\star,\mathrm{sim}}
+      -
+      E_{\star,\mathrm{ref}}
+    \right|
+  }{
+    \left|
+      E_{\star,\mathrm{ref}}
+    \right|
+    +
+    \epsilon_{\star}
+  }
+  \label{eq:res-ver-met-energy-metric-error}
+\end{align}
+
+Source role: this metric provides a common acceptance form for the
+incident, reflected, transmitted and apparent-dissipation measures in
+RES-PHY-BAR. Supporting evidence: \textcite{watanabe2022validation}
+supports separate metric reporting rather than one aggregate score.
+Limitation: the reference energy measure may be experimental,
+high-fidelity numerical or comparative depending on the V1--V2--V3
+stage.
+
+Force and moment extraction shall also pass surface-integration
+consistency checks by comparing integrated patch traction with
+component pressure and shear contributions:
+
+\begin{align}
+  E_{\mathrm{F,int}}
+  &=
+  \frac{
+    \left\lVert
+      \mathbf{F}
+      -
+      \mathbf{F}_{p}
+      -
+      \mathbf{F}_{\tau}
+    \right\rVert
+  }{
+    \left\lVert
+      \mathbf{F}
+    \right\rVert
+    +
+    \epsilon_{\mathrm{F}}
+  }
+  \label{eq:res-ver-met-force-integration-consistency}
+\end{align}
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-met-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsubsection{Local-Model Acceptance Principle}
+\label{sec:res-ver-met-local-acceptance-principle}
+
+The operational URANS model shall be accepted only where it satisfies
+both:
+
+\begin{enumerate}
+  \item experimental validation requirements for the quantities
+    relevant to barrier performance and structural loading;
+  \item controlled agreement with the selected high-fidelity model
+    for representative candidate geometries.
+\end{enumerate}
+
+Neither URANS nor LES shall be accepted solely from its theoretical
+fidelity. The selected formulation must demonstrate that it preserves:
+
+\begin{itemize}
+  \item the relevant physical mechanisms;
+  \item the required engineering outputs;
+  \item the relative performance ranking of candidate barriers;
+  \item conservative and reproducible load transfer to the structural
+    model.
+\end{itemize}
+
+The final acceptance tolerances shall account for experimental
+uncertainty, measurement filtering, repeatability, and the intended use
+of each model-fidelity level.
+
+Acceptance for the baseline local 3D model shall include:
+
+\begin{itemize}
+  \item free-surface elevation and arrival-time error below tolerance;
+  \item VOF boundedness, phase volume and mass-conservation
+    diagnostics below tolerance;
+  \item CFL, pressure residual and rejected-timestep counts below
+    tolerance;
+  \item pressure, force-history, impulse and moment-history errors
+    below tolerance;
+  \item run-up and overtopping errors below tolerance;
+  \item incident, reflected, transmitted and dissipated-energy metrics
+    reported and below the stage-appropriate tolerance where reference
+    data exist;
+  \item no unresolved boundary-reflection contamination;
+  \item stable candidate ranking under mesh, timestep and URANS--LES
+    comparison studies.
+\end{itemize}
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-met-execution-handoff}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-met-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-met-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-met-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-met-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-met-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The local 3D model is valid as a baseline high-Reynolds-number
+hydrodynamic tsunami-barrier interaction model for run-up, overtopping,
+free-surface deformation, pressure, force, moment, and comparative
+barrier-performance analysis. It is not valid yet for structural
+failure, scour, deformable barriers, detailed aeration, sediment
+transport, or final design certification.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-met-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected acceptance approach is output-specific. Free-surface,
+mass-conservation, pressure, force, impulse, moment, run-up and
+overtopping metrics shall be reported separately rather than collapsed
+into one aggregate validation score.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-met-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open items are final numerical tolerance values, observation datasets,
+experimental uncertainty models, acceptable URANS--LES discrepancy,
+ranking-stability threshold and certification-level design criteria.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-met-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+Software validation reports shall provide the metrics in this
+Deliverable for each accepted local run, including mass conservation,
+$\alpha$ boundedness, CFL, pressure residual, force/moment histories,
+run-up, overtopping and energy metrics. `RES-ML-DAT` shall use only
+validated outputs for any future training data, and `RES-OPT-OBJ`
+shall not treat unvalidated hydrodynamic metrics as final design
+objectives.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-met-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

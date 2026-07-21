@@ -1,0 +1,48 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+\usepackage{bm}
+
+\addbibresource{res-str.bib}
+
+\title{RES-STR --- Materials, Structural Response and Damage}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-str-domain-purpose}
+
+RES-STR records how hydrodynamic pressure, shear, force, impulse and
+moment histories from the local fixed-rigid barrier simulations will
+be transferred into later structural analyses. The active Studentship
+baseline is not a deformable-structure, material-damage, scour or
+two-way FSI model. Those topics remain stretch extensions after
+hydrodynamic load extraction, data provenance and the V1--V2--V3
+validation hierarchy are stable.
+
+\section{Domain Deliverables}
+\label{sec:res-str-domain-deliverables}
+
+\input{"RES-STR-MAT - Candidate Materials and Constitutive Properties/res-str-mat.tex"}
+\input{"RES-STR-ENV - Marine Exposure, Degradation and Durability/res-str-env.tex"}
+\input{"RES-STR-LOD - Structural Load Cases and Load Transfer/res-str-lod.tex"}
+\input{"RES-STR-RSP - Structural Response and Stability/res-str-rsp.tex"}
+\input{"RES-STR-DMG - Damage, Failure and Performance-Loss Models/res-str-dmg.tex"}
+\input{"RES-STR-FSI - Fluid–Structure Interaction and Coupling Fidelity/res-str-fsi.tex"}
+\input{"RES-STR-SIM - Structural Simulation and Finite-Element Methodology/res-str-sim.tex"}
+\input{"RES-STR-SPEC - Integrated Structural and Damage Specification/res-str-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

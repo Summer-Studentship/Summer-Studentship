@@ -1,0 +1,579 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{usgs2011tohokuEvent}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=443478d363b15c65a1ee517d1122e79b}{%
+           family={{U.S. Geological Survey}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{fullhash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{fullhashraw}{443478d363b15c65a1ee517d1122e79b}
+      \strng{bibnamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorbibnamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authornamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorfullhash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorfullhashraw}{443478d363b15c65a1ee517d1122e79b}
+      \field{extraname}{1}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{M} 9.1 -- 2011 Great {Tohoku} Earthquake, Japan}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://earthquake.usgs.gov/earthquakes/eventpage/official20110311054624120_30/executive
+      \endverb
+      \verb{url}
+      \verb https://earthquake.usgs.gov/earthquakes/eventpage/official20110311054624120_30/executive
+      \endverb
+    \endentry
+    \entry{mori2012nationwide}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=291dc4a01f258b820ce35add905d0d43}{%
+           family={Mori},
+           familyi={M\bibinitperiod},
+           given={Nobuhito},
+           giveni={N\bibinitperiod}}}%
+        {{hash=1e04fa59a80fef89fa4082e03c81a673}{%
+           family={Takahashi},
+           familyi={T\bibinitperiod},
+           given={Tomoyuki},
+           giveni={T\bibinitperiod}}}%
+        {{hash=d8ad5e22521c41699a57c4cdaa64d7c4}{%
+           family={{The 2011 Tohoku Earthquake Tsunami Joint Survey Group}},
+           familyi={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{fullhash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{fullhashraw}{836aa46ed132e8dc74a63825dd710742}
+      \strng{bibnamehash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{authorbibnamehash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{authornamehash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{authorfullhash}{836aa46ed132e8dc74a63825dd710742}
+      \strng{authorfullhashraw}{836aa46ed132e8dc74a63825dd710742}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Coastal Engineering Journal}
+      \field{number}{1}
+      \field{title}{Nationwide Post Event Survey and Analysis of the 2011 {Tohoku} Earthquake Tsunami}
+      \field{volume}{54}
+      \field{year}{2012}
+      \field{pages}{1250001-1\bibrangedash 1250001-27}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1142/S0578563412500015
+      \endverb
+    \endentry
+    \entry{noaa2005dart}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=a3c099e4dce8cbc85550fb626412d882}{%
+           family={{National Oceanic and Atmospheric Administration}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{fullhash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{fullhashraw}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{bibnamehash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{authorbibnamehash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{authornamehash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{authorfullhash}{a3c099e4dce8cbc85550fb626412d882}
+      \strng{authorfullhashraw}{a3c099e4dce8cbc85550fb626412d882}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Deep-Ocean Assessment and Reporting of Tsunamis ({DART}) Ocean Bottom Pressure Data}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{year}{2005}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/dart-ocean-bottom-pressure
+      \endverb
+      \verb{url}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/dart-ocean-bottom-pressure
+      \endverb
+    \endentry
+    \entry{noaa2011japanDart}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=224ef7e17e2f51a29d715d4d5bdd2e93}{%
+           family={{NOAA National Centers for Environmental Information}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{fullhash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{fullhashraw}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{bibnamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorbibnamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authornamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorfullhash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorfullhashraw}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \field{extraname}{1}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{March 11, 2011 Japan Earthquake: {DART} Data}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/recent-significant-events/japan-march-2011-earthquake-dart-summary
+      \endverb
+      \verb{url}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/recent-significant-events/japan-march-2011-earthquake-dart-summary
+      \endverb
+    \endentry
+    \entry{jodcJegg500}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=726876c036599944bb2449ed9bdb877a}{%
+           family={{Japan Oceanographic Data Center}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{726876c036599944bb2449ed9bdb877a}
+      \strng{fullhash}{726876c036599944bb2449ed9bdb877a}
+      \strng{fullhashraw}{726876c036599944bb2449ed9bdb877a}
+      \strng{bibnamehash}{726876c036599944bb2449ed9bdb877a}
+      \strng{authorbibnamehash}{726876c036599944bb2449ed9bdb877a}
+      \strng{authornamehash}{726876c036599944bb2449ed9bdb877a}
+      \strng{authorfullhash}{726876c036599944bb2449ed9bdb877a}
+      \strng{authorfullhashraw}{726876c036599944bb2449ed9bdb877a}
+      \field{sortinit}{5}
+      \field{sortinithash}{20e9b4b0b173788c5dace24730f47d8c}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{500m Gridded Bathymetry Data ({J-EGG500})}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html
+      \endverb
+      \verb{url}
+      \verb https://www.jodc.go.jp/jodcweb/JDOSS/infoJEGG.html
+      \endverb
+    \endentry
+    \entry{gebco2026grid}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=0fd6104c71f250667f59eba92b542026}{%
+           family={{GEBCO Bathymetric Compilation Group 2026}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{0fd6104c71f250667f59eba92b542026}
+      \strng{fullhash}{0fd6104c71f250667f59eba92b542026}
+      \strng{fullhashraw}{0fd6104c71f250667f59eba92b542026}
+      \strng{bibnamehash}{0fd6104c71f250667f59eba92b542026}
+      \strng{authorbibnamehash}{0fd6104c71f250667f59eba92b542026}
+      \strng{authornamehash}{0fd6104c71f250667f59eba92b542026}
+      \strng{authorfullhash}{0fd6104c71f250667f59eba92b542026}
+      \strng{authorfullhashraw}{0fd6104c71f250667f59eba92b542026}
+      \field{sortinit}{6}
+      \field{sortinithash}{b33bc299efb3c36abec520a4c896a66d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{The {GEBCO\_2026} Grid: A Continuous Terrain Model for Oceans and Land at 15 Arc-Second Intervals}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{year}{2026}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa
+      \endverb
+      \verb{urlraw}
+      \verb https://www.gebco.net/data-products/gridded-bathymetry-data
+      \endverb
+      \verb{url}
+      \verb https://www.gebco.net/data-products/gridded-bathymetry-data
+      \endverb
+    \endentry
+    \entry{noaa2022etopo}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=224ef7e17e2f51a29d715d4d5bdd2e93}{%
+           family={{NOAA National Centers for Environmental Information}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{fullhash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{fullhashraw}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{bibnamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorbibnamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authornamehash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorfullhash}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \strng{authorfullhashraw}{224ef7e17e2f51a29d715d4d5bdd2e93}
+      \field{extraname}{2}
+      \field{sortinit}{7}
+      \field{sortinithash}{108d0be1b1bee9773a1173443802c0a3}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{ETOPO} 2022 15 Arc-Second Global Relief Model}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.25921/fd45-gt74
+      \endverb
+      \verb{urlraw}
+      \verb https://www.ncei.noaa.gov/products/etopo-global-relief-model
+      \endverb
+      \verb{url}
+      \verb https://www.ncei.noaa.gov/products/etopo-global-relief-model
+      \endverb
+    \endentry
+    \entry{gsiDemDownload}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=707f5b85fa575ccf72a7297d2335945b}{%
+           family={{Geospatial Information Authority of Japan}},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{fullhash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{fullhashraw}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{bibnamehash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{authorbibnamehash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{authornamehash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{authorfullhash}{707f5b85fa575ccf72a7297d2335945b}
+      \strng{authorfullhashraw}{707f5b85fa575ccf72a7297d2335945b}
+      \field{sortinit}{8}
+      \field{sortinithash}{a231b008ebf0ecbe0b4d96dcc159445f}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Fundamental Geospatial Data Download Service: Digital Elevation Model}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://service.gsi.go.jp/kiban/app/help/
+      \endverb
+      \verb{url}
+      \verb https://service.gsi.go.jp/kiban/app/help/
+      \endverb
+    \endentry
+    \entry{usgsFiniteFaults}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=443478d363b15c65a1ee517d1122e79b}{%
+           family={{U.S. Geological Survey}},
+           familyi={U\bibinitperiod}}}%
+      }
+      \strng{namehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{fullhash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{fullhashraw}{443478d363b15c65a1ee517d1122e79b}
+      \strng{bibnamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorbibnamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authornamehash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorfullhash}{443478d363b15c65a1ee517d1122e79b}
+      \strng{authorfullhashraw}{443478d363b15c65a1ee517d1122e79b}
+      \field{extraname}{2}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{Finite Faults}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://earthquake.usgs.gov/data/finitefault/
+      \endverb
+      \verb{url}
+      \verb https://earthquake.usgs.gov/data/finitefault/
+      \endverb
+    \endentry
+    \entry{hayes2011rapid}{article}{}{}
+      \name{author}{1}{}{%
+        {{hash=bb91c67f68bd18d6a284efbf0867315b}{%
+           family={Hayes},
+           familyi={H\bibinitperiod},
+           given={Gavin\bibnamedelima P.},
+           giveni={G\bibinitperiod\bibinitdelim P\bibinitperiod}}}%
+      }
+      \strng{namehash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{fullhash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{fullhashraw}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{bibnamehash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{authorbibnamehash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{authornamehash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{authorfullhash}{bb91c67f68bd18d6a284efbf0867315b}
+      \strng{authorfullhashraw}{bb91c67f68bd18d6a284efbf0867315b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Earth, Planets and Space}
+      \field{title}{Rapid Source Characterization of the 2011 {Mw} 9.0 off the Pacific Coast of {Tohoku} Earthquake}
+      \field{year}{2011}
+      \verb{doi}
+      \verb 10.5047/eps.2011.05.012
+      \endverb
+    \endentry
+    \entry{fujii2011tsunamisource}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=5a0247c086a04e463ad7d4ee3c3b31a1}{%
+           family={Fujii},
+           familyi={F\bibinitperiod},
+           given={Yushiro},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=a01d24d291b9c10da1a3e2a53a692277}{%
+           family={Satake},
+           familyi={S\bibinitperiod},
+           given={Kenji},
+           giveni={K\bibinitperiod}}}%
+        {{hash=bb34a776363edaeac01870534a19ccd5}{%
+           family={Sakai},
+           familyi={S\bibinitperiod},
+           given={Shin'ichi},
+           giveni={S\bibinitperiod}}}%
+        {{hash=685f8cc5125abcf030e86d1e3b278cfc}{%
+           family={Shinohara},
+           familyi={S\bibinitperiod},
+           given={Masanao},
+           giveni={M\bibinitperiod}}}%
+        {{hash=30275bb93638adcca85ede8b0bc2e41c}{%
+           family={Kanazawa},
+           familyi={K\bibinitperiod},
+           given={Toshihiko},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{f81e8ea4fb4b9d0b16c6999f646d57eb}
+      \strng{fullhash}{b220adba1bcfa4980dd36fcb715eba75}
+      \strng{fullhashraw}{b220adba1bcfa4980dd36fcb715eba75}
+      \strng{bibnamehash}{b220adba1bcfa4980dd36fcb715eba75}
+      \strng{authorbibnamehash}{b220adba1bcfa4980dd36fcb715eba75}
+      \strng{authornamehash}{f81e8ea4fb4b9d0b16c6999f646d57eb}
+      \strng{authorfullhash}{b220adba1bcfa4980dd36fcb715eba75}
+      \strng{authorfullhashraw}{b220adba1bcfa4980dd36fcb715eba75}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Earth, Planets and Space}
+      \field{title}{Tsunami Source of the 2011 off the Pacific Coast of {Tohoku} Earthquake}
+      \field{volume}{63}
+      \field{year}{2011}
+      \field{pages}{815\bibrangedash 820}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.5047/eps.2011.06.010
+      \endverb
+    \endentry
+    \entry{wei2013japan}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=db5db8a7f4695be6cfb669a8f9db71be}{%
+           family={Wei},
+           familyi={W\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=2e4debd1f95fe83899eb86f9cdb86d75}{%
+           family={Chamberlin},
+           familyi={C\bibinitperiod},
+           given={Christopher\bibnamedelima D.},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=b7162272f16026f19e181d54a53870c4}{%
+           family={Titov},
+           familyi={T\bibinitperiod},
+           given={Vasily\bibnamedelima V.},
+           giveni={V\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=e9c129e7086a5bc22554cba3d5442ffe}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Liujuan},
+           giveni={L\bibinitperiod}}}%
+        {{hash=6d007026a8227d5c3a8dc3a5195e2262}{%
+           family={Bernard},
+           familyi={B\bibinitperiod},
+           given={Eddie\bibnamedelima N.},
+           giveni={E\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \strng{namehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{fullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{fullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{bibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorbibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authornamehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{authorfullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorfullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pure and Applied Geophysics}
+      \field{number}{6--8}
+      \field{title}{Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast}
+      \field{volume}{170}
+      \field{year}{2013}
+      \field{pages}{1309\bibrangedash 1331}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1007/s00024-012-0519-z
+      \endverb
+    \endentry
+    \entry{noaaNceiHistoricalTsunami}{misc}{}{}
+      \name{author}{1}{}{%
+        {{hash=c4cf86f3a722f920a1e2f8577cfc66d5}{%
+           family={{National Geophysical Data Center / World Data Service}},
+           familyi={N\bibinitperiod}}}%
+      }
+      \strng{namehash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{fullhash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{fullhashraw}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{bibnamehash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{authorbibnamehash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{authornamehash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{authorfullhash}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \strng{authorfullhashraw}{c4cf86f3a722f920a1e2f8577cfc66d5}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{NCEI/WDS} Global Historical Tsunami Database}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{doi}
+      \verb 10.7289/V5PN93H7
+      \endverb
+      \verb{urlraw}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/global-historical-data
+      \endverb
+      \verb{url}
+      \verb https://www.ncei.noaa.gov/products/natural-hazards/tsunamis-earthquakes-volcanoes/tsunamis/global-historical-data
+      \endverb
+    \endentry
+    \entry{fine2013japan}{article}{}{}
+      \name{author}{3}{}{%
+        {{hash=221e1172cd1dbf31261308775f7a8c56}{%
+           family={Fine},
+           familyi={F\bibinitperiod},
+           given={Isaac\bibnamedelima V.},
+           giveni={I\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=b7dfa1bc043abc8f8239cb44c16acdc7}{%
+           family={Kulikov},
+           familyi={K\bibinitperiod},
+           given={Evgueni\bibnamedelima A.},
+           giveni={E\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=b3351ab16ae090cc59107762ce7c9503}{%
+           family={Cherniawsky},
+           familyi={C\bibinitperiod},
+           given={Josef\bibnamedelima Y.},
+           giveni={J\bibinitperiod\bibinitdelim Y\bibinitperiod}}}%
+      }
+      \strng{namehash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{fullhash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{fullhashraw}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{bibnamehash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{authorbibnamehash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{authornamehash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{authorfullhash}{7779343835e7b9a34c25298a09d09fcb}
+      \strng{authorfullhashraw}{7779343835e7b9a34c25298a09d09fcb}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pure and Applied Geophysics}
+      \field{number}{6--8}
+      \field{title}{Japan's 2011 Tsunami: Characteristics of Wave Propagation from Observations and Numerical Modelling}
+      \field{volume}{170}
+      \field{year}{2013}
+      \field{pages}{1295\bibrangedash 1307}
+      \range{pages}{13}
+      \verb{doi}
+      \verb 10.1007/s00024-012-0555-8
+      \endverb
+    \endentry
+    \entry{copernicusEra5}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=8ea7c5a32b4df3a9672a582058a63f9e}{%
+           family={{Copernicus Climate Change Service}},
+           familyi={C\bibinitperiod}}}%
+      }
+      \strng{namehash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{fullhash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{fullhashraw}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{bibnamehash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{authorbibnamehash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{authornamehash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{authorfullhash}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \strng{authorfullhashraw}{8ea7c5a32b4df3a9672a582058a63f9e}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{ERA5} Climate Reanalysis}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://climate.copernicus.eu/climate-reanalysis
+      \endverb
+      \verb{url}
+      \verb https://climate.copernicus.eu/climate-reanalysis
+      \endverb
+    \endentry
+    \entry{jmaJra55}{online}{}{}
+      \name{author}{1}{}{%
+        {{hash=263480d13b1ea2bfba0fdcf0bbde4381}{%
+           family={{Japan Meteorological Agency}},
+           familyi={J\bibinitperiod}}}%
+      }
+      \strng{namehash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{fullhash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{fullhashraw}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{bibnamehash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{authorbibnamehash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{authornamehash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{authorfullhash}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \strng{authorfullhashraw}{263480d13b1ea2bfba0fdcf0bbde4381}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{title}{{JRA-55}: The Japanese 55-Year Reanalysis}
+      \field{urlday}{19}
+      \field{urlmonth}{7}
+      \field{urlyear}{2026}
+      \field{urldateera}{ce}
+      \verb{urlraw}
+      \verb https://www.data.jma.go.jp/jra/html/JRA-55/index_en.html
+      \endverb
+      \verb{url}
+      \verb https://www.data.jma.go.jp/jra/html/JRA-55/index_en.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

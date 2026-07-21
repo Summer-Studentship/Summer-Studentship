@@ -1,0 +1,216 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-PHY-NRS
+% Deliverable: Nearshore Transformation, Run-Up and Inundation
+% Status: In progress
+% Evidence status: Not assessed
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies:
+% Downstream interfaces:
+% -------------------------------------------------------------------------
+
+\section{RES-PHY-NRS --- Nearshore Transformation, Run-Up and Inundation}
+\label{sec:res-phy-nrs}
+
+\subsection{Purpose and Scope}
+\label{sec:res-phy-nrs-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-phy-nrs-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-phy-nrs-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-phy-nrs-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Mori et al. (2012)} 
+\label{sec:res-phy-nrs-evidence-mori-2012} 
+
+\textcite{mori2012nationwide} analysed nationwide field measurements of inundation height, run-up height, and inundation distance following the 2011 Tohoku tsunami. The observed response varied strongly between flat coastal plains and the steep ria coast of Sanriku, demonstrating that regional and bay-scale geometry materially altered the transformation from offshore tsunami elevation to onshore inundation and run-up. 
+
+The paper is retained as observational evidence for nearshore transformation and inundation behaviour. It does not provide sufficient dynamic information to determine local velocity, momentum flux, impact pressure, or complete time histories.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-phy-nrs-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+The paper used the following empirical linear relation to describe bay-scale variation in measured inundation height:
+
+\begin{align} 
+    H(x) &= a x + b \label{eq:res-phy-nrs-mori-bay-amplification}
+\end{align} 
+
+where $x$ is distance from the bay mouth, $H(x)$ is the measured inundation height, and $a$ and $b$ are fitted coefficients. The coefficient $a$ was interpreted as an empirical amplification or attenuation indicator. 
+
+This relation shall not be adopted as a governing physical model. It is a descriptive fit whose value depends on the selected observations, bay definition, and fitting procedure.
+
+\subsection{Physical Mechanisms}
+\label{sec:res-phy-nrs-physical-mechanisms}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The survey indicates that nearshore tsunami behaviour was controlled by the interaction between incident wave conditions and local bathymetry, topography, bay orientation, continental-shelf geometry, river channels, coastal structures, diffraction, and macro-scale roughness. 
+
+Steep ria coasts generally converted the incident tsunami into large inundation and run-up elevations over comparatively short inland distances. The flatter Sendai Plain exhibited lower regional elevations but substantially greater inundation distances. Rivers provided preferential pathways for extended inland propagation.
+
+\subsection{Characteristic Spatial and Temporal Scales}
+\label{sec:res-phy-nrs-characteristic-spatial-temporal-scales}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+Maximum run-up of approximately $40.0~\mathrm{m}$ was reported at Ofunato. Run-up exceeding $30~\mathrm{m}$ extended across approximately $180~\mathrm{km}$ of the Sanriku coast, while run-up exceeding $10~\mathrm{m}$ extended across approximately $530~\mathrm{km}$. On the Sendai Plain, inundation extended up to approximately $5~\mathrm{km}$ inland in the regional analysis, with longer propagation along some river channels. More than 1,000 inundation and run-up observations were available within this region.
+
+\subsection{Relevant Observables}
+\label{sec:res-phy-nrs-relevant-observables}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+The principal nearshore observables identified by the survey are:
+\begin{itemize}
+  \item maximum shoreline tsunami elevation;
+  \item maximum local inundation height;
+  \item maximum run-up elevation;
+  \item inundation distance;
+  \item along-coast variation in maximum elevation;
+  \item cross-shore decay or amplification of water level;
+  \item bay-scale amplification or attenuation.
+\end{itemize} These observables describe maximum spatial response. They do not describe the complete dynamic state required to determine hydrodynamic loading.
+
+\subsection{Controlling Dimensionless Parameters}
+\label{sec:res-phy-nrs-controlling-dimensionless-parameters}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Physical Regimes and Transition Conditions}
+\label{sec:res-phy-nrs-physical-regimes-transition-conditions}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+At least two distinct coastal-response regimes shall be represented:
+\begin{enumerate}
+  \item flat coastal-plain inundation, characterised by
+    extensive inland propagation and gradual reduction in water level;
+  \item steep
+    ria-coast run-up, characterised by large elevation, bay-scale amplification or
+    attenuation, and shorter general inland penetration.
+\end{enumerate}
+River-controlled inundation forms an additional local regime in which the
+propagation distance may substantially exceed that of the surrounding land
+surface.
+
+\subsection{Implications for Model Validity}
+\label{sec:res-phy-nrs-model-validity-implications}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+A model validated only against offshore or shoreline elevation cannot be assumed to reproduce inland inundation and run-up correctly. Validation must include spatially resolved onshore observables and must use topographic and bathymetric resolution appropriate to the selected coastal regime. 
+
+The observed variation between neighbouring bays demonstrates that a coarse regional model may reproduce broad propagation while failing to capture local amplification. The local barrier-interaction model must therefore inherit boundary data from the regional model while resolving the selected bay, shoreline, and structure at materially finer resolution.
+
+\subsection{Candidate Approaches}
+\label{sec:res-phy-nrs-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-phy-nrs-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-phy-nrs-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-phy-nrs-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+The survey records maximum elevations and spatial limits rather than time-dependent velocity, discharge, pressure, or momentum. It cannot, without supplementary evidence, validate the quantities required for barrier-impact loading or structural analysis. 
+
+The comparison between Otsuchi and Kamaishi Bays indicates a reduction in measured height near the Kamaishi offshore barrier, but the observation does not isolate the barrier from differences in bathymetry, bay geometry, wave incidence, diffraction, and local structures. The paper shall therefore not be used alone to quantify barrier efficiency.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-phy-nrs-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The nearshore model shall distinguish coastal-plain inundation from ria-bay run-up and shall preserve rivers, bay geometry, and relevant coastal structures where they materially affect the selected benchmark. 
+
+The final case-study location shall not be selected solely from the largest measured run-up. Selection shall consider observational density, availability of dynamic data, bathymetric and topographic resolution, presence of a defensible barrier configuration, and compatibility with the proposed regional-to-local model coupling.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-phy-nrs-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+For the regional model, nearshore transformation and inundation shall be
+represented by the depth-averaged NLSWE with topography-driven
+wetting--drying and positivity controls. This establishes the regional
+physical/numerical requirement; it does not replace local 3D modelling
+where structure-scale pressure, overtopping or FSI is required.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-phy-nrs-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The final coastal regime, case-study site, local bathymetry/topography
+resolution, defence representation and validation observations remain
+open until the geospatial/data workstream is locked.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-phy-nrs-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The environmental-data workstream shall identify a geographically bounded set of inundation-height, run-up-height, and inundation-distance observations with complete coordinate and datum metadata. 
+
+The numerical-method workstream shall provide wetting--drying, positivity preservation, and sufficiently resolved shoreline treatment for the selected coastal regime. The verification workstream shall use separate spatial error measures for water elevation and inundation extent rather than one combined scalar comparison.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-phy-nrs-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

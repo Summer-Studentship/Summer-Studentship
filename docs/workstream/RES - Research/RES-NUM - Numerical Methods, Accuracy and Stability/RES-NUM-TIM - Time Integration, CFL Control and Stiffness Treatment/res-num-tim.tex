@@ -1,0 +1,277 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-TIM
+% Deliverable: Time Integration, CFL Control and Stiffness Treatment
+% Status: Draft complete
+% Evidence status: Regional and local timestep constraints established at research level
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-NUM-FRM, RES-NUM-FLX, RES-NUM-SRC, RES-NUM-WET, RES-NUM-SPEC
+% Downstream interfaces: RES-VER-CNV, Software time-integration implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-TIM --- Time Integration, CFL Control and Stiffness Treatment}
+\label{sec:res-num-tim}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-tim-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-num-tim-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-tim-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-tim-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-tim-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-tim-discrete-formulation}
+
+The regional time update is SSPRK(3,3) for the transport/source
+residual excluding Manning friction, combined with Strang-split
+semi-implicit Manning friction:
+\cref{eq:res-num-spec-regional-strang-ssprk3}. Full IMEX RK is not
+selected for the regional baseline because the retained stiff term is
+cell-local Manning friction.
+
+The local URANS--VOF model uses a segregated transient update. Within
+each accepted time step the VOF transport, mixture-property update,
+momentum predictor, pressure correction, turbulence equations and
+metric extraction are ordered as specified in `RES-NUM-SPEC`.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-tim-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-tim-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-tim-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-tim-mesh-time-step-requirements}
+
+The regional timestep is controlled by the face signal speed and cell
+geometry in
+\cref{eq:res-num-spec-regional-face-signal-speed,eq:res-num-spec-regional-cell-timestep,eq:res-num-spec-regional-global-timestep}.
+The provisional CFL value is $C_{\mathrm{CFL}}=0.5$, subject to
+positivity and wet/dry verification.
+
+The local timestep shall be the minimum of flow-advection, VOF
+interface, gravity-wave and diffusion constraints:
+
+\begin{align}
+  \Delta t_{\mathrm{local}}
+  &=
+  \min_i
+  \left(
+    \Delta t_{\mathrm{CFL},i},\,
+    \Delta t_{\alpha,i},\,
+    \Delta t_{\mathrm{g},i},\,
+    \Delta t_{\nu,i}
+  \right)
+  \label{eq:res-num-tim-local-timestep-minimum}
+\end{align}
+
+The local flow Courant constraint is:
+
+\begin{align}
+  \Delta t_{\mathrm{CFL},i}
+  &=
+  C_{\mathrm{CFL}}
+  \frac{
+    V_i
+  }{
+    \sum_{f\in\partial K_i}
+    \left|
+      \phi_f
+    \right|
+    +
+    \epsilon_{\phi}
+  }
+  \label{eq:res-num-tim-local-flow-cfl}
+\end{align}
+
+The VOF/interface Courant constraint is:
+
+\begin{align}
+  \Delta t_{\alpha,i}
+  &=
+  C_{\alpha}
+  \frac{
+    V_i
+  }{
+    \sum_{f\in\partial K_i}
+    \left|
+      \phi_{\alpha,f}
+    \right|
+    +
+    \epsilon_{\phi}
+  }
+  \label{eq:res-num-tim-local-interface-cfl}
+\end{align}
+
+The local gravity-wave constraint is:
+
+\begin{align}
+  \Delta t_{\mathrm{g},i}
+  &=
+  C_{\mathrm{g}}
+  \frac{
+    \Delta_i
+  }{
+    \sqrt{
+      g h_i
+    }
+    +
+    \epsilon_{\mathrm{g}}
+  }
+  \label{eq:res-num-tim-local-gravity-wave-cfl}
+\end{align}
+
+The diffusion constraint is:
+
+\begin{align}
+  \Delta t_{\nu,i}
+  &=
+  C_{\nu}
+  \frac{
+    \Delta_i^2
+  }{
+    \nu_{\mathrm{eff},i}
+    +
+    \epsilon_{\nu}
+  }
+  \label{eq:res-num-tim-local-diffusion-constraint}
+\end{align}
+
+where $\Delta_i$ is a representative local cell length and
+$\nu_{\mathrm{eff},i}=\mu_{\mathrm{eff},i}/\rho_i$. The constants
+$C_{\mathrm{CFL}}$, $C_{\alpha}$, $C_{\mathrm{g}}$ and $C_{\nu}$ shall
+be verified for the selected VOF scheme, pressure-correction sequence,
+mesh and wall treatment.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-tim-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-tim-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-tim-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-tim-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-tim-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-tim-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-tim-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-tim-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional time-integration approach is SSPRK(3,3) transport
+with Strang-split Manning friction. This preserves an explicit
+shock-capturing transport update while treating the friction damping in
+a stable cell-local substep.
+
+The selected local time-control approach is a segregated transient
+URANS--VOF update with timestep selection governed by
+\cref{eq:res-num-tim-local-timestep-minimum}. The final timestep is an
+accepted-time-step value, not merely a requested value; failed
+boundedness or convergence checks may force timestep rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-tim-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The timestep method is selected. The final CFL constant, local
+subcycling policy, checkpoint interval and failure-recovery strategy are
+implementation/validation decisions.
+
+For the local model, the open timestep decisions are final Courant
+limits, pressure-corrector count, turbulence subcycling if required,
+adaptive timestep-reduction factor and coupling-history sampling
+interval.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-tim-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-tim-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

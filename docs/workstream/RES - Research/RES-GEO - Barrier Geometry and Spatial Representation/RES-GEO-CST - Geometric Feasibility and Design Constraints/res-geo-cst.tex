@@ -1,0 +1,169 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-CST
+% Deliverable: Geometric Feasibility and Design Constraints
+% Status: In progress
+% Evidence status: Fixed-rigid geometry feasibility gates established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-GEO-PAR, RES-DAT-GEO, RES-NUM-MSH
+% Downstream interfaces: RES-GEO-SPEC, RES-NUM-MSH, Software geometry manifest
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-CST --- Geometric Feasibility and Design Constraints}
+\label{sec:res-geo-cst}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-cst-purpose}
+
+This Deliverable narrows admissible geometry cases to fixed-rigid
+barrier-class comparisons that can be represented on the accepted
+terrain, meshed robustly and interpreted through hydrodynamic outputs.
+Material limits, foundation constraints, deformability and damage are
+recorded as stretch structural concerns rather than active geometric
+feasibility criteria.
+
+\subsection{Research Questions}
+\label{sec:res-geo-cst-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-cst-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-cst-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-cst-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-cst-geometry-family-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-cst-design-variables-parameter-bounds}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-cst-geometric-descriptors}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-cst-placement-arrangement-rules}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-cst-feasibility-constraints}
+
+Candidate interventions shall be rejected or marked unresolved if they cannot
+be constructed plausibly, cannot be represented in the selected numerical
+workflow, violate known material or foundation constraints, or lack enough
+provenance to support simulation.
+
+For the active hydrodynamic baseline, a geometry shall also be rejected
+or deferred if it requires unresolved porous resistance, moving
+structural boundaries, scour-induced terrain change or material
+damage to explain its intended performance.
+
+\textbf{Selected approach.} Feasibility is first a data and numerical
+representation gate: the case must fit within the accepted corridor
+polygon, avoid sponge zones, preserve mesh quality near walls and have
+a traceable descriptor record. Supporting evidence:
+\textcite{watanabe2022validation} for validation-facing geometry
+control and \textcite{deljesus2012porous} for separating impermeable
+and porous/dissipating assumptions.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-cst-two-three-dimensional-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-cst-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-cst-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-cst-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-cst-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-cst-conclusions}
+
+The Studentship shall not spend simulation effort on barrier shapes
+whose geometry cannot be reproduced, clipped to the corridor and
+post-processed for hydrodynamic metrics.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-cst-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-cst-unresolved-decisions}
+
+Open decisions are final mesh-quality limits, minimum wall clearance
+from artificial boundaries, and whether any dissipating concept is
+admissible without a porous closure.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-cst-requirements}
+
+Software shall report a geometry-feasibility status before launching
+local runs, including corridor intersection checks, minimum cell-size
+estimates, wall clearance and unresolved-physics flags.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-cst-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,167 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-WET
+% Deliverable: Wetting–Drying, Positivity and Discontinuity Treatment
+% Status: Draft complete
+% Evidence status: Regional research specification complete
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies: RES-PHY-NRS, RES-NUM-FLX, RES-NUM-SRC, RES-NUM-TIM
+% Downstream interfaces: RES-VER-BMK, RES-VER-TST, Software wet/dry implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-WET --- Wetting–Drying, Positivity and Discontinuity Treatment}
+\label{sec:res-num-wet}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-wet-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-num-wet-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-wet-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-wet-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-wet-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-wet-discrete-formulation}
+
+The regional model uses positivity-preserving wetting--drying logic and
+does not use regional VOF. Positivity preservation enforces
+$h_i\ge 0$; wetting--drying additionally controls shoreline motion,
+near-dry velocities, reconstruction, flux fallback, draining and dry
+reset.
+
+The selected dry reset and draining limiter are
+\cref{eq:res-num-spec-regional-dry-reset,eq:res-num-spec-regional-draining-limiter}.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-wet-conservation-properties}
+
+Outgoing donor fluxes shall be scaled consistently so the same limited
+face flux is applied to both adjacent cells with opposite signs. Dry
+resets shall be audited as controlled positivity corrections rather than
+silent conservation-preserving fluxes.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-wet-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-wet-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-wet-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-wet-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-wet-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-wet-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-wet-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-wet-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-wet-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-wet-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-wet-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional wet/dry treatment combines hydrostatic
+reconstruction, HLL/HLLE fallback, first-order near-dry reconstruction,
+a draining limiter, velocity regularisation and post-stage dry reset.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-wet-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Final values of $h_{\mathrm{dry}}$, velocity-regularisation depth,
+near-dry reconstruction threshold and mass-correction audit tolerances
+remain verification parameters.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-wet-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-wet-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

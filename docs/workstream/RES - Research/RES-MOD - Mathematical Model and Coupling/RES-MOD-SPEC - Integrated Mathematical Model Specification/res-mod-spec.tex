@@ -1,0 +1,349 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-SPEC
+% Deliverable: Integrated Mathematical Model Specification
+% Status: Draft complete
+% Evidence status: Regional 2D NLSWE and local 3D URANS--VOF research specifications complete
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-EQS, RES-MOD-SRC, RES-MOD-IBC, RES-MOD-MUL, RES-PHY-SYN, RES-DAT-GEO, RES-DAT-SRC
+% Downstream interfaces: RES-NUM-SPEC, RES-VER-SPEC, Software implementation
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-SPEC --- Integrated Mathematical Model Specification}
+\label{sec:res-mod-spec}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-spec-purpose}
+
+This Deliverable consolidates the continuous mathematical model for the
+regional tsunami solver and the local three-dimensional hydrodynamic
+tsunami--barrier model. The regional 2D NLSWE mathematical model and
+the local 3D URANS--VOF hydrodynamic model are complete at
+research-specification level. Remaining work belongs to
+geospatial/domain selection, validation, implementation, detailed
+coupling operators and activated FSI or structural-failure extensions.
+
+\subsection{Research Questions}
+\label{sec:res-mod-spec-research-questions}
+
+The regional-model gate answers:
+
+\begin{enumerate}
+  \item Which horizontal governing model represents regional tsunami
+    propagation and inundation?
+  \item Which state variables, bed convention, source terms and
+    condition roles define the mathematical model?
+  \item Which decisions are established and which downstream
+    workstreams remain open?
+  \item Which continuous local model is used for pressure, force,
+    moment, overtopping and barrier-performance comparison?
+  \item Which local physics are baseline assumptions and which are
+    deferred extensions?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-spec-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-spec-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-spec-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-spec-system-boundary}
+
+The regional solver is a horizontal, depth-averaged,
+cell-centred finite-volume model for the two-dimensional nonlinear
+shallow-water equations. Its independent solved coordinates are
+$(x,y,t)$. Vertical information is carried through scalar fields
+$b(x,y,t)$, $\eta(x,y,t)$ and $h(x,y,t)=\eta-b$. Cross-sections are
+diagnostic visualisations extracted from the horizontal solution rather
+than separately solved cross-sectional models.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-spec-state-variables-parameters}
+
+The conserved regional state is
+\cref{eq:res-mod-eqs-regional-conserved-state}. The primitive state is
+\cref{eq:res-mod-eqs-regional-primitive-state}. The bed convention is
+positive upward, with $\eta=h+b$ and $h=\eta-b$.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-spec-continuous-governing-model}
+
+The established regional governing model is the nonlinear
+shallow-water balance law in
+\cref{eq:res-mod-eqs-regional-nlswe-balance}, with Cartesian fluxes in
+\cref{eq:res-mod-eqs-regional-x-flux,eq:res-mod-eqs-regional-y-flux}.
+The model supports wetting and drying through the numerical method; it
+does not introduce a regional volume-of-fluid phase variable.
+
+The established local governing model is the three-dimensional
+nonhydrostatic incompressible immiscible two-phase Navier--Stokes
+system with VOF phase transport:
+\cref{eq:res-mod-eqs-local-continuity,eq:res-mod-eqs-local-momentum,eq:res-mod-eqs-local-phase-transport}.
+The local state is
+\cref{eq:res-mod-eqs-local-fluid-state}; the operational turbulence
+closure is URANS $k$--$\omega$ SST.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-spec-source-terms-closures}
+
+The baseline regional source terms are bed slope, Manning friction and
+open-boundary sponge damping. Dynamic earthquake forcing is represented
+as a time-dependent bed field,
+\cref{eq:res-mod-eqs-regional-dynamic-bed}. Since $h$ is the conserved
+depth variable, no separate earthquake mass source is added to the
+depth equation.
+
+Coriolis and explicit lateral eddy viscosity remain disabled in the
+baseline and may be activated only as later sensitivity studies.
+
+The local effective viscosity is defined by
+\cref{eq:res-mod-eqs-local-effective-viscosity}, with $\mu_t$ supplied
+by the selected URANS $k$--$\omega$ SST closure in
+\cref{eq:res-mod-src-sst-k-equation,eq:res-mod-src-sst-omega-equation,eq:res-mod-src-sst-eddy-viscosity}.
+LES is retained only for high-fidelity comparison cases, not as the
+baseline repeated-screening model.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-spec-initial-boundary-interface-conditions}
+
+The regional condition roles are those in
+\cref{tab:res-mod-ibc-regional-boundary-roles}: characteristic or
+radiation open boundaries for artificial ocean boundaries, optional
+sponge damping for artificial cuts, coastline treatment by topography
+and wetting--drying, reflective states for true walls, and conservative
+regional-to-local transfer data for the later interface workstream.
+
+The local condition roles are those in
+\cref{tab:res-mod-ibc-local-boundary-roles}: regional-to-local inlet
+forcing, open or radiation downstream and lateral boundaries, an open
+atmospheric top, fixed no-slip terrain and a fixed no-slip barrier for
+the hydrodynamic baseline.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-spec-model-coupling-requirements}
+
+The regional model supplies $h$, $\eta$, $q_x$, $q_y$, derived
+velocities, boundary histories and checkpoint data to the local
+3D/interface workstream. The local 3D model receives those histories
+through the baseline one-way replay mode defined in `RES-MOD-MUL`.
+Simultaneous coupling remains required when feedback or reflection
+materially changes the quantities of interest.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-spec-sufficient-conditions-validity}
+
+The regional model is valid only where the depth-averaged,
+hydrostatic, long-wave assumptions are acceptable for the selected
+outputs. It is not the model for local three-dimensional impact
+pressure, vertical velocity structure, resolved overtopping jets, local
+air--water interface topology or structural FSI.
+
+The local model is valid as a baseline hydrodynamic model where the
+barrier is fixed or weakly moving, impermeable or explicitly resolved,
+and sufficiently ventilated that trapped-air compression is not
+material. It is not a model for unresolved porous media, scour,
+sediment transport, debris impact, structural failure or final design
+certification without additional physics and validation.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-spec-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-spec-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-spec-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-spec-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-spec-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The regional 2D NLSWE formulation is now established at
+research-specification level. It shall be treated as the initial
+mathematical baseline for implementation and verification planning.
+Future changes to the regional mathematical model are revisions to a
+locked specification, not continuation of the initial model-selection
+research.
+
+The local 3D URANS--VOF formulation is also established at
+research-specification level for hydrodynamic barrier-performance
+assessment. Source roles: `3D-RANSVOF`, `3D-VOF`, `3D-SST`,
+`3D-WAVEBC`, `3D-COUPLING` and `3D-DEFERRED`. Supporting sources are
+assigned in the relevant Deliverables rather than repeated here as a
+generic literature list.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-spec-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The selected regional mathematical approach is:
+
+\begin{quote}
+  horizontal two-dimensional, depth-averaged NLSWE with conserved state
+  $[h,q_x,q_y]^{\mathsf{T}}$, positive-upward bathymetry, bed-slope and
+  Manning sources, dynamic moving bed, open/radiation boundaries,
+  sponge damping where required, and wetting--drying handled by the
+  numerical method
+\end{quote}
+
+Dispersive extensions, regional-to-local interface algorithms and FSI
+remain outside this regional mathematical-model lock.
+
+The selected local mathematical approach is:
+
+\begin{quote}
+  three-dimensional incompressible immiscible two-phase
+  Navier--Stokes equations, VOF water-volume fraction, mixture
+  density and viscosity, URANS $k$--$\omega$ SST effective viscosity,
+  regional-to-local inlet forcing, open/radiation artificial
+  boundaries, fixed no-slip terrain and barrier surfaces, and
+  hydrodynamic extraction of pressure, shear, force, moment, run-up,
+  overtopping, transmission and energy metrics
+\end{quote}
+
+Porosity, trapped-air compressibility, scour, sediment transport,
+deformable barriers, structural failure and final certification remain
+deferred or external to the baseline hydrodynamic model.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-spec-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.36\textwidth}
+      p{0.46\textwidth}
+    }
+    \hline
+    Established
+    &
+    Deferred or separate
+    \\
+    \hline
+    Regional 2D NLSWE formulation; conserved and primitive states; bed
+    convention; source-term catalogue; dynamic moving bed; open,
+    reflective and sponge boundary roles
+    &
+    QGIS/geospatial domain lock; exact bathymetry/topography dataset;
+    exact fault-source dataset; validation execution; C++
+    implementation; local coupling operators; FSI model; optimisation
+    and ML workflow
+    \\
+    \hline
+  \end{tabular}
+  \caption{Regional mathematical-model established/deferred status}
+  \label{tab:res-mod-spec-regional-established-deferred}
+\end{table}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.36\textwidth}
+      p{0.46\textwidth}
+    }
+    \hline
+    Established
+    &
+    Deferred or separate
+    \\
+    \hline
+    Local 3D incompressible two-phase Navier--Stokes model; VOF phase
+    fraction; mixture properties; URANS $k$--$\omega$ SST baseline;
+    local boundary partition; one-way replay role; pressure, shear,
+    force, moment, run-up, overtopping and energy outputs
+    &
+    Exact VOF advection algorithm; pressure-correction sequence;
+    numerical wall functions; mesh refinement; validation execution;
+    simultaneous-coupling activation tolerance; FSI, structural
+    failure, scour, sediment, detailed aeration and certification
+    \\
+    \hline
+  \end{tabular}
+  \caption{Local three-dimensional mathematical-model established/deferred status}
+  \label{tab:res-mod-spec-local-established-deferred}
+\end{table}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-spec-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-NUM-SPEC` shall carry the corresponding discrete finite-volume
+specification. `RES-DAT-GEO` and `RES-DAT-SRC` shall close the domain
+and dataset selections. `RES-VER-SPEC` shall define the lake-at-rest,
+wet/dry, moving-bottom, boundary and Tōhoku validation tests. Software
+work shall not treat this document as evidence that implementation or
+validation is complete.
+
+For the local model, `RES-NUM-SPEC` shall carry the URANS--VOF
+finite-volume solving sequence and convergence checks. `RES-VER-FRM`,
+`RES-VER-BMK` and `RES-VER-MET` shall validate solver capability,
+event-conditioned hydrodynamics and local impact/loading separately.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-spec-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.
+
+Regional and local hydrodynamic model status: draft complete for
+research-specification purposes; review, validation and implementation
+remain pending.

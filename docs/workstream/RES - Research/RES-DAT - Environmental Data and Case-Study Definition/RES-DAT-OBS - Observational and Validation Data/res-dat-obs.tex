@@ -1,0 +1,387 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-DAT-OBS
+% Deliverable: Observational and Validation Data
+% Status: In progress
+% Evidence status: Tohoku observation hierarchy and principal data sources established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: Selected historical event, candidate-defence data feasibility
+% Downstream interfaces: RES-DAT-SCN, RES-DAT-CAS, RES-ML-DAT
+% -------------------------------------------------------------------------
+
+\section{RES-DAT-OBS --- Observational and Validation Data}
+\label{sec:res-dat-obs}
+
+\subsection{Purpose and Scope}
+\label{sec:res-dat-obs-purpose}
+
+This Deliverable now covers both event-validation observations and
+defence-specific evidence for documented structures exposed to the selected
+event. In addition to tsunami water-level and inundation observations, the
+catalogue shall include documented defence damage, survival, failure,
+pre-event geometry, post-event condition, current or reconstructed geometry,
+drawings, photographs, reconstruction records and local exposure evidence.
+
+\subsection{Research Questions}
+\label{sec:res-dat-obs-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-dat-obs-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-dat-obs-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Mori et al. (2012)}
+\label{sec:res-dat-obs-evidence-mori-2012}
+
+\textcite{mori2012nationwide} documented the coordinated post-event survey of the 2011 Tohoku tsunami. The survey involved 299 researchers from 64 universities and institutes, covered approximately $2{,}000~\mathrm{km}$ of the Japanese coastline, and contained 5,214 surveyed locations by the end of December 2011. The principal measured quantities were inundation height, run-up height, and inundation distance.
+
+The paper is retained as the principal nationwide observational reference for validating maximum onshore water levels and inundation extent. It is not sufficient for validating velocity, discharge, momentum flux, impact pressure, or time-dependent structural loading, as the field dataset primarily records maximum water levels and landward limits.
+
+\subsubsection{Wei et al. (2013)}
+\label{sec:res-dat-obs-evidence-wei-2013}
+
+\textcite{wei2013japan} demonstrated an observation hierarchy in which
+deep-ocean tsunami records constrained the source, while offshore GPS
+buoys, nearshore gauges, field-survey heights, and mapped inundation
+provided subsequent assessments of the regional and coastal model.
+
+The paper is retained as evidence for separating source-calibration
+records from independent offshore and terrestrial validation data.
+
+\subsubsection{NOAA/NCEI DART and Tsunami Data}
+\label{sec:res-dat-obs-evidence-noaa-ncei}
+
+\textcite{noaa2005dart} documents NOAA/NCEI as the long-term archive
+for DART ocean bottom pressure data, including netCDF and CSV products.
+\textcite{noaa2011japanDart} provides event-specific DART records for
+the March 11, 2011 Japan earthquake, including raw observations,
+computed tides and residual values. Source role: supports offshore
+time-series validation and source-calibration audit. Project-specific
+conclusion: DART records are mandatory candidates for regional
+propagation and arrival-time assessment, but any DART record used to
+infer a source shall be marked calibration evidence.
+
+\textcite{noaaNceiHistoricalTsunami} documents the NCEI/WDS Global
+Historical Tsunami Database, including source-event and run-up records
+with observed maximum water heights, arrival or travel times and
+inundation information where available. Source role: supports event
+inventory, run-up record discovery and cross-checking against the
+Mori/JTS survey. Project-specific conclusion: the database is a
+screening and provenance source, not a replacement for the
+case-specific field-survey dataset selected for validation.
+
+\subsection{Observation Hierarchy}
+\label{sec:res-dat-obs-observation}
+
+The benchmark observation set shall be organised as:
+
+\begin{enumerate}
+  \item geodetic and seismic measurements for earthquake-source
+    definition;
+  \item deep-ocean bottom-pressure records for source and regional
+    propagation assessment;
+  \item DART residual water-level time series for arrival time,
+    amplitude, phase and source-calibration provenance;
+  \item offshore GPS-wave-gauge records for nearshore transformation;
+  \item coastal, harbour and tide gauges for local waveform,
+    arrival-time and maximum-water-height assessment;
+  \item satellite altimetry for spatial wave-front assessment;
+  \item surveyed inundation depth and run-up;
+  \item mapped inundation extent.
+\end{enumerate}
+
+Each dataset shall record:
+
+\begin{itemize}
+  \item spatial coordinates and reference datum;
+  \item sampling interval;
+  \item filtering and de-tiding procedure;
+  \item measurement uncertainty;
+  \item missing-data intervals;
+  \item whether it was used for calibration, validation, or
+    diagnosis;
+  \item the model stage against which it is compared.
+\end{itemize}
+
+\subsection{Calibration, Validation and Diagnostic Classification}
+\label{sec:res-dat-obs-data-classification}
+
+Every observational record shall be classified as one of:
+
+\begin{align}
+  \mathcal{D}
+  &=
+  \begin{cases}
+    \mathcal{D}_{\mathrm{cal}},
+    &
+    \text{used to infer or tune the source or model parameters}
+    \\
+    \mathcal{D}_{\mathrm{val}},
+    &
+    \text{withheld for independent assessment}
+    \\
+    \mathcal{D}_{\mathrm{diag}},
+    &
+    \text{used for qualitative or diagnostic comparison}
+  \end{cases}
+  \label{eq:res-dat-obs-data-classification}
+\end{align}
+
+Agreement with $\mathcal{D}_{\mathrm{cal}}$ shall be described as a
+reconstruction fit rather than independent validation.
+
+Where one observation record is divided temporally, the inversion
+window and withheld waveform interval shall be identified separately.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-dat-obs-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Required Data Variables and Units}
+\label{sec:res-dat-obs-required-data-variables-units}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+The observation record shall distinguish the following quantities:
+\begin{itemize}
+  \item arrival time or travel time of the first observed wave;
+  \item maximum water height at a gauge, buoy, survey or run-up
+    location;
+  \item tsunami height before or at shoreline arrival, in metres;
+
+  \item inundation height at an onshore location, in metres above the selected
+    sea-level datum;
+  \item run-up height at the maximum landward extent, in metres
+    above the selected sea-level datum;
+  \item inundation distance from the shoreline,
+    in kilometres or metres;
+  \item observation latitude and longitude in decimal
+    degrees;
+  \item measurement method and instrument;
+  \item surveyed trace type;
+
+  \item tidal-correction method;
+  \item survey date and, where available, survey
+    time;
+  \item observation-quality or reliability classification.
+\end{itemize}
+Tsunami height, inundation height, and run-up height shall not be treated as
+interchangeable validation variables.
+
+\subsection{Early and Late-Time Validation}
+\label{sec:res-dat-obs-timevalidation}
+
+The early coherent wave field shall be assessed deterministically using:
+
+\begin{itemize}
+  \item arrival time;
+  \item amplitude;
+  \item waveform phase;
+  \item dominant period;
+  \item wave-front position.
+\end{itemize}
+
+Fixed-point time-series records and spatial wave-front observations
+shall be treated as complementary evidence rather than interchangeable
+validation products.
+
+The later reflected and scattered wave field may additionally require:
+
+\begin{itemize}
+  \item moving-window variance;
+  \item spectral energy;
+  \item waveform envelope;
+  \item cumulative energy flux;
+  \item cumulative force impulse;
+  \item duration above a defined hazard threshold.
+\end{itemize}
+
+Statistical late-time agreement shall supplement rather than replace
+deterministic diagnosis. A persistent phase or amplitude discrepancy
+shall first be examined for errors in the source, bathymetry,
+boundaries, or numerical formulation.
+
+\subsection{Candidate Data Sources}
+\label{sec:res-dat-obs-candidate-data-sources}
+
+Candidate defence-evidence sources include official survey reports, coastal
+engineering records, reconstruction drawings, site photographs, government or
+municipal infrastructure records, post-disaster damage surveys, peer-reviewed
+case studies and georeferenced imagery. Each source shall be classified by
+authority, date, provenance, licence or access constraint, and whether it
+supports geometry, exposure, damage, survival or reconstruction evidence.
+
+Candidate event-observation sources are DART bottom-pressure records
+\parencite{noaa2005dart,noaa2011japanDart}, tide/coastal/harbour-gauge
+records identified through official archives, the NCEI/WDS Global
+Historical Tsunami Database \parencite{noaaNceiHistoricalTsunami}, the
+Mori/JTS field survey \parencite{mori2012nationwide}, and the
+observation sets documented by \textcite{fine2013japan} and
+\textcite{wei2013japan}. Tide-gauge and harbour-gauge records remain a
+TODO--source-confirmation item until the specific station data and
+licence metadata for the two corridors are selected.
+
+\subsection{Spatial and Temporal Coverage}
+\label{sec:res-dat-obs-spatial-temporal-coverage}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+The survey extended approximately $2{,}000~\mathrm{km}$ along the Japanese coastline. Maximum run-up greater than $10~\mathrm{m}$ was reported along approximately $530~\mathrm{km}$ of coast, while run-up greater than $20~\mathrm{m}$ occurred along approximately $200~\mathrm{km}$. More than 1,000 observations were collected on the Sendai Plain, providing comparatively dense coverage for regional inundation assessment. A restricted zone of approximately $30~\mathrm{km}$ around the Fukushima Daiichi Nuclear Power Plant was not surveyed. Observation density also varied substantially between regions and bays.
+
+\subsection{Coordinate and Datum Requirements}
+\label{sec:res-dat-obs-coordinate-datum-requirements}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Data Processing and Transformation}
+\label{sec:res-dat-obs-data-processing-transformation}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+Field measurements were corrected to remove the astronomical tide at the time of maximum tsunami elevation. Near-field corrections used the NAOTIDEJ astronomical tide database after many coastal gauges were destroyed. The time of maximum tsunami elevation was estimated using a nonlinear long-wave simulation based on the FS40v46 finite-fault source model. The resulting near-field observations are therefore not completely independent of the Fujii source reconstruction. This dependence shall be retained in the data-provenance record and considered when defining independent validation tests.
+
+\subsection{Uncertainty, Provenance and Licensing}
+\label{sec:res-dat-obs-uncertainty-provenance-licensing}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+The comparison between the astronomical tide database and surviving gauges produced a mean absolute tidal-elevation difference of approximately $6.0~\mathrm{cm}$. The complete relative tidal correction had a reported mean absolute difference of approximately $17.3~\mathrm{cm}$ and a standard deviation of approximately $25.0~\mathrm{cm}$. These values represent only part of the total observation uncertainty. Additional uncertainty may arise from watermark interpretation, instrument choice, reference-datum conversion, survey timing, measurement density, and local spatial variability. A uniform pointwise uncertainty shall not be assigned without inspecting the metadata of the selected observations.
+
+\subsection{Data Acceptance Criteria}
+\label{sec:res-dat-obs-data-acceptance-criteria}
+
+For G1 data feasibility, at least one defence shall have sufficiently
+reconstructable location, orientation, pre-event geometry, current or
+reconstructed geometry, material assumptions, foundation assumptions, observed
+event exposure, and damage, survival or reconstruction evidence.
+
+Observational data selected for benchmark validation shall be accepted only when:
+\begin{itemize}
+  \item the measured quantity is identified explicitly as tsunami height, inundation height, run-up height, or inundation distance;
+  \item arrival time and maximum water height are retained when the
+    source archive provides them;
+  \item the horizontal coordinates and vertical datum are available;
+  \item the tidal-correction procedure is documented;
+  \item the observation is located within the resolved computational domain;
+  \item the local topography and bathymetry are represented at a resolution consistent with the comparison;
+  \item model output and observation refer to the same physical quantity;
+  \item the observation is not used simultaneously for calibration and independent validation without explicit separation.
+\end{itemize}
+
+\subsection{Candidate Approaches}
+\label{sec:res-dat-obs-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-dat-obs-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-dat-obs-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-dat-obs-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Data Selection Conclusions}
+\label{sec:res-dat-obs-dataconclusion}
+
+No single observation type is sufficient to validate the full model
+chain.
+
+Deep-ocean records constrain source directivity and offshore
+propagation but do not establish accurate inundation. Inundation
+outlines constrain the flooded region but may conceal errors in local
+water level, velocity, and source amplitude. Satellite altimetry
+provides spatial wave-front information but has a lower signal-to-noise
+ratio than bottom-pressure records.
+
+The benchmark shall therefore use complementary temporal, spatial,
+offshore, nearshore, and terrestrial observations.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-dat-obs-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The Mori et al.\ dataset shall be used to validate maximum inundation height, run-up height, and inundation extent within a selected regional case study. The complete nationwide dataset shall not be used as one undifferentiated objective function, as observation density, coastal regime, and data quality vary substantially between locations. The Sendai Plain is retained as a candidate regional inundation benchmark owing to its dense measurement coverage. Sanriku and Kamaishi Bay are retained as candidate local-transformation and barrier-study regions, subject to the acquisition of higher-resolution bathymetric, topographic, and dynamic observational data.
+
+For the two active corridors, observation selection shall produce
+separate offshore, nearshore and terrestrial bundles. The Kamaishi
+bundle shall emphasise Sanriku/ria-coast transformation, bay/defence
+interaction and local barrier evidence. The Sendai coastal-plain bundle
+shall emphasise dense inundation, run-up and inland-extent observations.
+The bundles shall not be combined into one undifferentiated validation
+score.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-dat-obs-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-dat-obs-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-dat-obs-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The numerical-verification workstream shall define separate error metrics for maximum inundation height, run-up height, and inundation distance. The mathematical- and numerical-model workstreams shall produce outputs that correspond directly to these observed quantities. Separate dynamic datasets shall be obtained for validating velocity, discharge, momentum flux, pressure, and impact loading. The present survey dataset shall not be used as sole validation evidence for those quantities.
+
+Software shall preserve observation records in a manifest that records
+source archive, station or survey identifier, coordinates, vertical
+datum, time base, sampling interval, de-tiding/filtering procedure,
+calibration/validation/diagnostic classification, and linked model
+output variable.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-dat-obs-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

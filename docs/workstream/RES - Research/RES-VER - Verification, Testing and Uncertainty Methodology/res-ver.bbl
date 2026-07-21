@@ -1,0 +1,381 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{none/global//global/global/global}
+    \entry{qin2018comparison}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=1e720d247e722799ee1829759ef37f83}{%
+           family={Qin},
+           familyi={Q\bibinitperiod},
+           given={Xinsheng},
+           giveni={X\bibinitperiod}}}%
+        {{hash=b94f5f02d8be8201be05cfec4928a50d}{%
+           family={Motley},
+           familyi={M\bibinitperiod},
+           given={Michael},
+           giveni={M\bibinitperiod}}}%
+        {{hash=45bbbbe30f94acee5d8c86f21af4590f}{%
+           family={LeVeque},
+           familyi={L\bibinitperiod},
+           given={Randall},
+           giveni={R\bibinitperiod}}}%
+        {{hash=b4641da572afa00fe2d3a4877ddb332c}{%
+           family={Gonzalez},
+           familyi={G\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod}}}%
+        {{hash=077c76e85d8266a1120f8ec42e0eb5af}{%
+           family={Mueller},
+           familyi={M\bibinitperiod},
+           given={Kaspar},
+           giveni={K\bibinitperiod}}}%
+      }
+      \strng{namehash}{0f64c9fc1cc768f455f502db09cb2fc7}
+      \strng{fullhash}{df80b1b81fbfcd765f834fdf30d33792}
+      \strng{fullhashraw}{df80b1b81fbfcd765f834fdf30d33792}
+      \strng{bibnamehash}{df80b1b81fbfcd765f834fdf30d33792}
+      \strng{authorbibnamehash}{df80b1b81fbfcd765f834fdf30d33792}
+      \strng{authornamehash}{0f64c9fc1cc768f455f502db09cb2fc7}
+      \strng{authorfullhash}{df80b1b81fbfcd765f834fdf30d33792}
+      \strng{authorfullhashraw}{df80b1b81fbfcd765f834fdf30d33792}
+      \field{sortinit}{1}
+      \field{sortinithash}{4f6aaa89bab872aa0999fec09ff8e98a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Natural Hazards and Earth System Sciences}
+      \field{title}{A Comparison of a Two-Dimensional Depth-Averaged Flow Model and a Three-Dimensional {RANS} Model for Predicting Tsunami Inundation and Fluid Forces}
+      \field{volume}{18}
+      \field{year}{2018}
+      \field{pages}{2489\bibrangedash 2506}
+      \range{pages}{18}
+      \verb{doi}
+      \verb 10.5194/nhess-18-2489-2018
+      \endverb
+    \endentry
+    \entry{watanabe2022validation}{article}{}{}
+      \name{author}{34}{}{%
+        {{hash=d8a26379076ca3203ee21576b694b194}{%
+           family={Watanabe},
+           familyi={W\bibinitperiod},
+           given={Masashi},
+           giveni={M\bibinitperiod}}}%
+        {{hash=47b659e540ca54fc8a23d91b8f803c4e}{%
+           family={Arikawa},
+           familyi={A\bibinitperiod},
+           given={Taro},
+           giveni={T\bibinitperiod}}}%
+        {{hash=0e196215ac080418604511413140f220}{%
+           family={Kihara},
+           familyi={K\bibinitperiod},
+           given={Naoto},
+           giveni={N\bibinitperiod}}}%
+        {{hash=a5dafc814e11f983adbf1c732b864cc4}{%
+           family={Tsurudome},
+           familyi={T\bibinitperiod},
+           given={Chiaki},
+           giveni={C\bibinitperiod}}}%
+        {{hash=632ead1c1dcb9a8a446bebe910ec946e}{%
+           family={Hosaka},
+           familyi={H\bibinitperiod},
+           given={Koichi},
+           giveni={K\bibinitperiod}}}%
+        {{hash=fbe387104cade0001ea038abb6d5d04e}{%
+           family={Kimura},
+           familyi={K\bibinitperiod},
+           given={Tatsuto},
+           giveni={T\bibinitperiod}}}%
+        {{hash=939301e25c22990d3fad64c4f282d468}{%
+           family={Hashimoto},
+           familyi={H\bibinitperiod},
+           given={Takayuki},
+           giveni={T\bibinitperiod}}}%
+        {{hash=8c57495fcc00149054d34d1d1ff36aef}{%
+           family={Ishihara},
+           familyi={I\bibinitperiod},
+           given={Fumitaka},
+           giveni={F\bibinitperiod}}}%
+        {{hash=b3438f8e6a8a7b285318f9a1d0d5789c}{%
+           family={Shikata},
+           familyi={S\bibinitperiod},
+           given={Takemi},
+           giveni={T\bibinitperiod}}}%
+        {{hash=8f968701f5db430a1f2733f33a5b9875}{%
+           family={Morikawa},
+           familyi={M\bibinitperiod},
+           given={Daniel\bibnamedelima Shigueo},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=6c2343ed765c542733031cdf990cce03}{%
+           family={Makino},
+           familyi={M\bibinitperiod},
+           given={Taiga},
+           giveni={T\bibinitperiod}}}%
+        {{hash=c13a67ffae479f51f8e80f27ab1c1d48}{%
+           family={Asai},
+           familyi={A\bibinitperiod},
+           given={Mitsuteru},
+           giveni={M\bibinitperiod}}}%
+        {{hash=e1e72a238150f51bb8e0a548860f5aaa}{%
+           family={Chida},
+           familyi={C\bibinitperiod},
+           given={Yu},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=b3e8166d0c6bc052c60f02c86e6fc0ac}{%
+           family={Ohnishi},
+           familyi={O\bibinitperiod},
+           given={Yoichi},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=970466e1977dfeef764972e6fcd7b87d}{%
+           family={Marras},
+           familyi={M\bibinitperiod},
+           given={Simone},
+           giveni={S\bibinitperiod}}}%
+        {{hash=e0a0f5caea8fd072aa8b77c78a5d83c6}{%
+           family={Mukherjee},
+           familyi={M\bibinitperiod},
+           given={Abhishek},
+           giveni={A\bibinitperiod}}}%
+        {{hash=cf58f509fb277dedf0046b3485be462b}{%
+           family={Cajas},
+           familyi={C\bibinitperiod},
+           given={Juan\bibnamedelima Carlos},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=d587bf9e8ccbe7e6cc8b98f6a02f9a9a}{%
+           family={Houzeaux},
+           familyi={H\bibinitperiod},
+           given={Guillaume},
+           giveni={G\bibinitperiod}}}%
+        {{hash=e368ecc4f7245c3ce3d9d6bfa8088e80}{%
+           family={{B D Paolo}},
+           familyi={B\bibinitperiod}}}%
+        {{hash=e79c21a99205803be08f73ddce8f55e3}{%
+           family={Lara},
+           familyi={L\bibinitperiod},
+           given={Javier\bibnamedelima L.},
+           giveni={J\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=f1992cc4e8d49878cfef2ed57524ebe9}{%
+           family={Barajas},
+           familyi={B\bibinitperiod},
+           given={Gabriel},
+           giveni={G\bibinitperiod}}}%
+        {{hash=e4c93bddc78ab017cc53861efe136be2}{%
+           family={Losada},
+           familyi={L\bibinitperiod},
+           given={Íñigo\bibnamedelima J.},
+           giveni={Í\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=c1a3cab732c928c0e98ce0c089e7f50e}{%
+           family={Hasebe},
+           familyi={H\bibinitperiod},
+           given={Masanobu},
+           giveni={M\bibinitperiod}}}%
+        {{hash=562b9c5ea56126820d04c434cc3b0f48}{%
+           family={Shigihara},
+           familyi={S\bibinitperiod},
+           given={Yoshinori},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=e416dd62c90e49c2e56d505816022897}{%
+           family={Asai},
+           familyi={A\bibinitperiod},
+           given={Tatsuya},
+           giveni={T\bibinitperiod}}}%
+        {{hash=a91a11a1fc58dc9e4f8a29f8b2196e48}{%
+           family={Ikeya},
+           familyi={I\bibinitperiod},
+           given={Tsuyoshi},
+           giveni={T\bibinitperiod}}}%
+        {{hash=40db6c9c2c67268a96aeb909fe663537}{%
+           family={Inoue},
+           familyi={I\bibinitperiod},
+           given={Shusaku},
+           giveni={S\bibinitperiod}}}%
+        {{hash=d5f7bd0d4f6b92cb36cc7fd2a9e58c71}{%
+           family={Matsutomi},
+           familyi={M\bibinitperiod},
+           given={Hideo},
+           giveni={H\bibinitperiod}}}%
+        {{hash=32023389b23dc486a14e8a222276ad96}{%
+           family={Nakano},
+           familyi={N\bibinitperiod},
+           given={Yoshiaki},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=31096f6c4909efb42325c816f65265b0}{%
+           family={Okuda},
+           familyi={O\bibinitperiod},
+           given={Yasuo},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=c8c6bcd9b6c4a82d2fe353bcec92ab38}{%
+           family={Okuno},
+           familyi={O\bibinitperiod},
+           given={Shunya},
+           giveni={S\bibinitperiod}}}%
+        {{hash=7640d64b848d5147726e12637c31fa45}{%
+           family={Ooie},
+           familyi={O\bibinitperiod},
+           given={Takayuki},
+           giveni={T\bibinitperiod}}}%
+        {{hash=a1507fe07aa9f5b264ff270b7941fa45}{%
+           family={Shoji},
+           familyi={S\bibinitperiod},
+           given={Gaku},
+           giveni={G\bibinitperiod}}}%
+        {{hash=8e122286fb8cae5784ef371572f52bcb}{%
+           family={Tateno},
+           familyi={T\bibinitperiod},
+           given={Tomokazu},
+           giveni={T\bibinitperiod}}}%
+      }
+      \strng{namehash}{f424e7c012c00c726aa7958e3542bdf2}
+      \strng{fullhash}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \strng{fullhashraw}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \strng{bibnamehash}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \strng{authorbibnamehash}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \strng{authornamehash}{f424e7c012c00c726aa7958e3542bdf2}
+      \strng{authorfullhash}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \strng{authorfullhashraw}{12fd2fe87deb10bb4cd41b4b689dfb5b}
+      \field{sortinit}{2}
+      \field{sortinithash}{8b555b3791beccb63322c22f3320aa9a}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Coastal Engineering Journal}
+      \field{number}{2}
+      \field{title}{Validation of Tsunami Numerical Simulation Models for an Idealized Coastal Industrial Site}
+      \field{volume}{64}
+      \field{year}{2022}
+      \field{pages}{302\bibrangedash 343}
+      \range{pages}{42}
+      \verb{doi}
+      \verb 10.1080/21664250.2022.2072611
+      \endverb
+    \endentry
+    \entry{grilli2013tohoku}{article}{}{}
+      \name{author}{7}{}{%
+        {{hash=226e78d52f98903e63beb2bc685001da}{%
+           family={Grilli},
+           familyi={G\bibinitperiod},
+           given={Stephan\bibnamedelima T.},
+           giveni={S\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=6e4b22381a193eb9260695cd0cb78ce7}{%
+           family={Harris},
+           familyi={H\bibinitperiod},
+           given={Jason\bibnamedelima C.},
+           giveni={J\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+        {{hash=a1378fefc358eb14a2389eda718dff95}{%
+           family={Tajalli-Bakhsh},
+           familyi={T\bibinithyphendelim B\bibinitperiod},
+           given={T.\bibnamedelimi S.\bibnamedelimi T.},
+           giveni={T\bibinitperiod\bibinitdelim S\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=686c8fad0e0a3649a2cf6d69317309f7}{%
+           family={Masterlark},
+           familyi={M\bibinitperiod},
+           given={Timothy\bibnamedelima L.},
+           giveni={T\bibinitperiod\bibinitdelim L\bibinitperiod}}}%
+        {{hash=5bb5d125e90e8908b000fc597dd44bda}{%
+           family={Kyriakopoulos},
+           familyi={K\bibinitperiod},
+           given={Costas},
+           giveni={C\bibinitperiod}}}%
+        {{hash=10adf4ef218fe462c6e4a1b1761c6506}{%
+           family={Kirby},
+           familyi={K\bibinitperiod},
+           given={James\bibnamedelima T.},
+           giveni={J\bibinitperiod\bibinitdelim T\bibinitperiod}}}%
+        {{hash=716df3f6ef8b17b010e8b1a3be83926b}{%
+           family={Shi},
+           familyi={S\bibinitperiod},
+           given={Fengyan},
+           giveni={F\bibinitperiod}}}%
+      }
+      \strng{namehash}{25d891b262511bd00577cb279429cacb}
+      \strng{fullhash}{8aca74ac4f77fa264e229888f1b18b75}
+      \strng{fullhashraw}{8aca74ac4f77fa264e229888f1b18b75}
+      \strng{bibnamehash}{8aca74ac4f77fa264e229888f1b18b75}
+      \strng{authorbibnamehash}{8aca74ac4f77fa264e229888f1b18b75}
+      \strng{authornamehash}{25d891b262511bd00577cb279429cacb}
+      \strng{authorfullhash}{8aca74ac4f77fa264e229888f1b18b75}
+      \strng{authorfullhashraw}{8aca74ac4f77fa264e229888f1b18b75}
+      \field{sortinit}{3}
+      \field{sortinithash}{ad6fe7482ffbd7b9f99c9e8b5dccd3d7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pure and Applied Geophysics}
+      \field{number}{6--8}
+      \field{title}{Numerical Simulation of the 2011 {Tohoku} Tsunami Based on a New Transient {FEM} Co-Seismic Source: Comparison to Far- and Near-Field Observations}
+      \field{volume}{170}
+      \field{year}{2013}
+      \field{pages}{1333\bibrangedash 1359}
+      \range{pages}{27}
+      \verb{doi}
+      \verb 10.1007/s00024-012-0528-y
+      \endverb
+    \endentry
+    \entry{wei2013japan}{article}{}{}
+      \name{author}{5}{}{%
+        {{hash=db5db8a7f4695be6cfb669a8f9db71be}{%
+           family={Wei},
+           familyi={W\bibinitperiod},
+           given={Yong},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=2e4debd1f95fe83899eb86f9cdb86d75}{%
+           family={Chamberlin},
+           familyi={C\bibinitperiod},
+           given={Christopher\bibnamedelima D.},
+           giveni={C\bibinitperiod\bibinitdelim D\bibinitperiod}}}%
+        {{hash=b7162272f16026f19e181d54a53870c4}{%
+           family={Titov},
+           familyi={T\bibinitperiod},
+           given={Vasily\bibnamedelima V.},
+           giveni={V\bibinitperiod\bibinitdelim V\bibinitperiod}}}%
+        {{hash=e9c129e7086a5bc22554cba3d5442ffe}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Liujuan},
+           giveni={L\bibinitperiod}}}%
+        {{hash=6d007026a8227d5c3a8dc3a5195e2262}{%
+           family={Bernard},
+           familyi={B\bibinitperiod},
+           given={Eddie\bibnamedelima N.},
+           giveni={E\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \strng{namehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{fullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{fullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{bibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorbibnamehash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authornamehash}{0eed2cdf0e7bec7933fc3336fd096ab0}
+      \strng{authorfullhash}{1ae786457f4e3500915d7f700aa2c200}
+      \strng{authorfullhashraw}{1ae786457f4e3500915d7f700aa2c200}
+      \field{sortinit}{4}
+      \field{sortinithash}{9381316451d1b9788675a07e972a12a7}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Pure and Applied Geophysics}
+      \field{number}{6--8}
+      \field{title}{Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast}
+      \field{volume}{170}
+      \field{year}{2013}
+      \field{pages}{1309\bibrangedash 1331}
+      \range{pages}{23}
+      \verb{doi}
+      \verb 10.1007/s00024-012-0519-z
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

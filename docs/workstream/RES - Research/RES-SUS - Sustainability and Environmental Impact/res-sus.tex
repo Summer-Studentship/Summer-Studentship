@@ -1,0 +1,35 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-sus.bib}
+
+\title{RES-SUS --- Sustainability and Environmental Impact}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-sus-domain-purpose}
+
+% TODO: State the Domain purpose, boundaries, exclusions and interfaces.
+
+\section{Domain Deliverables}
+\label{sec:res-sus-domain-deliverables}
+
+\input{"RES-SUS-MAT - Material Use and Environmental Burden/res-sus-mat.tex"}
+\input{"RES-SUS-CMP - Computational Sustainability and Resource Efficiency/res-sus-cmp.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

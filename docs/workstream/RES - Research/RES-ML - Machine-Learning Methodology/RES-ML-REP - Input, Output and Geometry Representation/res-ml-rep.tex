@@ -1,0 +1,176 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-ML-REP
+% Deliverable: Input, Output and Geometry Representation
+% Status: In progress
+% Evidence status: ML representation deferred; geometry manifest remains active
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-GEO-PAR, RES-GEO-MET, RES-GEO-REP, RES-DAT-SCN
+% Downstream interfaces: RES-ML-DAT, RES-ML-ALG, RES-ML-SUR
+% -------------------------------------------------------------------------
+
+\section{RES-ML-REP --- Input, Output and Geometry Representation}
+\label{sec:res-ml-rep}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ml-rep-purpose}
+
+This Deliverable records future ML representation requirements. The
+active representation work is the RES-GEO/RES-DAT manifest for fixed-
+rigid barrier-class hydrodynamic comparison. Raw voxel, mesh, graph,
+full-field learning and learned geometry representations are deferred.
+
+\subsection{Research Questions}
+\label{sec:res-ml-rep-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ml-rep-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ml-rep-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ml-rep-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Machine-Learning Role}
+\label{sec:res-ml-rep-machine-learning-role}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Non-ML Baseline}
+\label{sec:res-ml-rep-non-ml-baseline}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Input and Output Representation}
+\label{sec:res-ml-rep-input-output-representation}
+
+Future input descriptors may include corridor identity, barrier class,
+height, width and thickness, orientation, face angle, resolved openings,
+incident water depth, incident velocity, wave direction, duration or
+time-history descriptors. Material, foundation and reinforcement
+descriptors are excluded until structural or optimisation extensions
+are activated.
+
+Future outputs may include peak force, peak overturning moment,
+overtopping, run-up and energy-transfer or dissipation metrics.
+Displacement, stress, strain, permanent deformation, adequacy class,
+damage class and structural margin are deferred.
+
+\subsection{Dataset Requirements}
+\label{sec:res-ml-rep-dataset-requirements}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Model or Architecture Candidates}
+\label{sec:res-ml-rep-model-architecture-candidates}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Training and Validation Method}
+\label{sec:res-ml-rep-training-validation-method}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Evaluation Metrics}
+\label{sec:res-ml-rep-evaluation-metrics}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Generalisation and Uncertainty}
+\label{sec:res-ml-rep-generalisation-uncertainty}
+
+Every representation shall carry feature provenance and known uncertainty so
+that missing geometry, uncertain material properties and inferred foundation
+conditions are not silently treated as measured quantities.
+
+\subsection{Simulation and Optimisation Integration}
+\label{sec:res-ml-rep-simulation-optimisation-integration}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ml-rep-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ml-rep-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ml-rep-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ml-rep-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ml-rep-conclusions}
+
+The current representation family is a physics-informed manifest for
+fixed-rigid hydrodynamic comparison. It may later become a tabular ML
+descriptor set, but it is not currently a surrogate input, generative
+geometry encoding or unrestricted design-space representation.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ml-rep-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ml-rep-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ml-rep-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ml-rep-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

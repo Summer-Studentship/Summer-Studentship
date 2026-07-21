@@ -1,0 +1,40 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-phy.bib}
+
+\title{RES-PHY --- Tsunami and Coastal Fluid Dynamics}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-phy-domain-purpose}
+
+% TODO: State the Domain purpose, boundaries, exclusions and interfaces.
+
+\section{Domain Deliverables}
+\label{sec:res-phy-domain-deliverables}
+
+\input{"RES-PHY-SRC - Tsunami Generation and Source Physics/res-phy-src.tex"}
+\input{"RES-PHY-PRO - Offshore Propagation and Wave Transformation/res-phy-pro.tex"}
+\input{"RES-PHY-NRS - Nearshore Transformation, Run-Up and Inundation/res-phy-nrs.tex"}
+\input{"RES-PHY-BAR - Barrier–Flow Interaction and Energy Dissipation/res-phy-bar.tex"}
+\input{"RES-PHY-LOD - Hydrodynamic Loading and Impact Physics/res-phy-lod.tex"}
+\input{"RES-PHY-SCL - Dimensional Analysis, Scaling and Flow Regimes/res-phy-scl.tex"}
+\input{"RES-PHY-SYN - Integrated Physical-Phenomena Model/res-phy-syn.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

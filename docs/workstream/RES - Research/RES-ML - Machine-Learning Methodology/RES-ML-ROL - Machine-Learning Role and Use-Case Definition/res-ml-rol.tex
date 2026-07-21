@@ -1,0 +1,198 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-ML-ROL
+% Deliverable: Machine-Learning Role and Use-Case Definition
+% Status: In progress
+% Evidence status: ML deferred by current hydrodynamic scope
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-DAT-CAS, RES-GEO-SPEC, RES-VER-SPEC
+% Downstream interfaces: Future RES-ML-DAT, RES-ML-SUR, RES-ML-SPEC
+% -------------------------------------------------------------------------
+
+\section{RES-ML-ROL --- Machine-Learning Role and Use-Case Definition}
+\label{sec:res-ml-rol}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ml-rol-purpose}
+
+This Deliverable records ML as a deferred future role under the
+current Tohoku hydrodynamic scope. The active project shall first
+produce validated fixed-rigid barrier hydrodynamic outputs for the
+Kamaishi and Sendai corridors.
+
+Deferred possible use cases are:
+\begin{itemize}
+  \item a forward response surrogate;
+  \item a future damage or adequacy classifier after structural
+    extensions exist;
+  \item barrier-class or intervention screening and ranking;
+  \item active-learning support for selecting additional direct simulations;
+  \item reduced-order representation of correlated response outputs.
+\end{itemize}
+
+Deferred use cases are:
+\begin{itemize}
+  \item generative geometry;
+  \item unrestricted inverse design;
+  \item reinforcement learning;
+  \item cross-event transfer learning.
+\end{itemize}
+
+\subsection{Research Questions}
+\label{sec:res-ml-rol-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ml-rol-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ml-rol-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ml-rol-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Machine-Learning Role}
+\label{sec:res-ml-rol-machine-learning-role}
+
+Each retained use case shall record:
+\begin{itemize}
+  \item input features;
+  \item prediction or decision target;
+  \item required dataset and simulation provenance;
+  \item non-ML baseline;
+  \item expected advantage over the baseline;
+  \item consequence of an incorrect prediction;
+  \item uncertainty requirement;
+  \item direct-simulation fallback.
+\end{itemize}
+
+The consequence analysis shall distinguish high-consequence unsafe predictions
+from conservative but inefficient safe-to-unsafe predictions.
+
+\subsection{Non-ML Baseline}
+\label{sec:res-ml-rol-non-ml-baseline}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Input and Output Representation}
+\label{sec:res-ml-rol-input-output-representation}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Dataset Requirements}
+\label{sec:res-ml-rol-dataset-requirements}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Model or Architecture Candidates}
+\label{sec:res-ml-rol-model-architecture-candidates}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Training and Validation Method}
+\label{sec:res-ml-rol-training-validation-method}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Evaluation Metrics}
+\label{sec:res-ml-rol-evaluation-metrics}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Generalisation and Uncertainty}
+\label{sec:res-ml-rol-generalisation-uncertainty}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Simulation and Optimisation Integration}
+\label{sec:res-ml-rol-simulation-optimisation-integration}
+
+% TODO: Complete this RES-ML Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ml-rol-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ml-rol-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ml-rol-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ml-rol-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ml-rol-conclusions}
+
+The active project has no ML training role. A future surrogate may
+screen candidate options and identify cases for further simulation,
+but it shall not autonomously declare a defence safe or replace
+validated hydrodynamic and structural evidence.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ml-rol-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ml-rol-unresolved-decisions}
+
+Unresolved questions are the validated output dataset, accepted
+hydrodynamic labels, future structural/damage labels, and the
+threshold at which surrogate uncertainty would trigger direct
+simulation.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ml-rol-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ml-rol-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

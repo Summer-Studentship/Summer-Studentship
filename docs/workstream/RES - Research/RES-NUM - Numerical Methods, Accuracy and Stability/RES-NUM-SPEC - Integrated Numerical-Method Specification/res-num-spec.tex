@@ -1,0 +1,1275 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-SPEC
+% Deliverable: Integrated Numerical-Method Specification
+% Status: Draft complete
+% Evidence status: Regional and local URANS--VOF research specifications complete
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-NUM-FRM, RES-NUM-MSH, RES-NUM-IBC, RES-NUM-TIM, RES-NUM-STB, RES-NUM-ERR
+% Downstream interfaces: RES-VER-FRM, RES-VER-BMK, RES-VER-MET, Software local CFD implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-SPEC --- Integrated Numerical-Method Specification}
+\label{sec:res-num-spec}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-spec-purpose}
+
+This Deliverable records the integrated numerical decision status across
+the regional hydrodynamic solver, local three-dimensional CFD solver,
+structural solver, two-dimensional--three-dimensional coupling solver,
+and FSI coupling solver.
+
+It does not mark the whole numerical framework as complete. The
+regional nonlinear shallow-water finite-volume branch is now complete
+at research-specification level. The local three-dimensional
+URANS--VOF hydrodynamic branch is now specified at solving-procedure
+level. Structural dynamics, regional-to-local transfer details, FSI
+coupling, implementation and validation remain separate workstreams.
+
+\subsection{Research Questions}
+\label{sec:res-num-spec-research-questions}
+
+The current phase records:
+
+\begin{enumerate}
+  \item which solver-family decisions are complete;
+  \item which lower-level regional and local choices remain provisional
+    or unresolved;
+  \item which structural and coupling solver choices remain open;
+  \item which software architecture references are selected without
+    constraining every solver to one implementation.
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-spec-definitions}
+
+The decision statuses are:
+
+\begin{description}
+  \item[selected] The project adopts the item for the current branch.
+  \item[provisional] The item is the current working direction but still
+    requires lower-level comparison or verification.
+  \item[excluded] The item is removed from the active branch.
+  \item[unresolved] The item remains open and requires later evidence.
+\end{description}
+
+\subsection{Breadth-First Numerical Research Strategy}
+\label{sec:res-num-spec-breadth-first-strategy}
+
+The project adopts a breadth-first numerical research strategy:
+
+\begin{quote}
+  define the governing models
+  $\rightarrow$
+  select a numerical solver family for each model
+  $\rightarrow$
+  select numerical coupling methods
+  $\rightarrow$
+  return to shared framework components
+  $\rightarrow$
+  increase detail within each selected branch
+\end{quote}
+
+The current solver-family order is:
+
+\begin{enumerate}
+  \item regional NLSWE solver;
+  \item local three-dimensional two-phase fluid solver;
+  \item structural dynamics solver;
+  \item two-dimensional--three-dimensional coupling solver;
+  \item fluid--structure coupling solver.
+\end{enumerate}
+
+After these family-level decisions are established, the research shall
+return to shared numerical components: initial conditions, boundary
+conditions, source-term discretisation, mesh and refinement, numerical
+fluxes, reconstruction, time integration, linear and nonlinear solvers,
+coupling residuals, convergence criteria, verification, and validation.
+
+The finite-volume selection in `RES-NUM-FRM` completes the regional
+solver-family decision. The local three-dimensional selection in
+\cref{sec:num-local-three-dimensional-fluid-solver-selection} completes
+the local fluid-solver family decision while leaving lower-level local
+algorithms provisional or unresolved.
+
+\subsection{Numerical Decision Status}
+\label{sec:res-num-spec-numerical-decision-status}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.18\textwidth}
+      p{0.14\textwidth}
+      p{0.48\textwidth}
+    }
+    \hline
+    Item
+    &
+    Status
+    &
+    Decision statement
+    \\
+    \hline
+    Regional governing model
+    &
+    selected
+    &
+    Two-dimensional nonlinear shallow-water equations with variable
+    bathymetry, source forcing, wetting and drying, and optional later
+    dispersive extension
+    \\
+    Regional numerical family
+    &
+    selected
+    &
+    Cell-centred finite-volume method, as recorded in
+    \cref{sec:res-num-frm-regional-solver-decision}
+    \\
+    Regional solver composition
+    &
+    selected
+    &
+    Polygonal finite-volume update with triangular and quadrilateral
+    practical meshes, MUSCL reconstruction, weighted least-squares
+    gradients, Barth--Jespersen limiter, hydrostatic reconstruction,
+    HLLC primary flux with HLL/HLLE fallback, wet/dry positivity
+    controls, SSPRK(3,3) transport, Strang-split Manning friction,
+    CFL timestep, open/radiation boundaries and optional sponge damping
+    \\
+    Finite difference for production regional solver
+    &
+    excluded
+    &
+    Not selected for production, retained as a numerical reference and
+    source of semi-implicit architectural ideas
+    \\
+    Lattice/discrete Boltzmann for regional solver
+    &
+    excluded
+    &
+    Removed from the active shortlist pending tsunami validation,
+    dry-front, positivity, well-balancing and complex-bathymetry evidence
+    \\
+    Spectral and pseudospectral methods
+    &
+    excluded
+    &
+    Screened out for this project branch owing to irregular coastal
+    boundaries, wetting and drying, bores, discontinuities, bathymetry
+    and local refinement needs
+    \\
+    OpenFOAM local CFD reference
+    &
+    selected
+    &
+    Principal open-source software and architectural reference for the
+    local three-dimensional CFD model
+    \\
+    Local three-dimensional numerical family
+    &
+    selected
+    &
+    Eulerian cell-centred polyhedral finite-volume method with
+    volume-of-fluid interface capture, pressure-correction or projection
+    incompressibility treatment, URANS $k$--$\omega$ SST operational
+    closure, and LES retained as a higher-fidelity comparison mode
+    \\
+    Local three-dimensional solve procedure
+    &
+    selected
+    &
+    Segregated URANS--VOF update with regional inlet forcing, timestep
+    selection, bounded VOF transport, mixture-property update,
+    momentum predictor, pressure correction, turbulence solve,
+    wall-function update, metric extraction and accept/reject control
+    \\
+    Structural solver
+    &
+    unresolved
+    &
+    Element family, constitutive discretisation and structural time
+    integration remain to be selected
+    \\
+    Two-dimensional--three-dimensional numerical coupling
+    &
+    unresolved
+    &
+    Transfer operators, coupling residuals and convergence criteria
+    remain to be selected
+    \\
+    FSI numerical coupling
+    &
+    unresolved
+    &
+    One-way load transfer is retained and two-way coupling remains
+    conditional on structural feedback; the numerical algorithm is not
+    yet selected
+    \\
+    \hline
+  \end{tabular}
+  \caption{Current numerical decision status for the breadth-first
+  research phase}
+  \label{tab:res-num-spec-numerical-decision-status}
+\end{table}
+
+\subsection{Literature Evidence}
+\label{sec:res-num-spec-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-spec-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-spec-discrete-formulation}
+
+The integrated numerical framework shall permit solver families to
+differ across governing systems. The regional solver may use a
+standalone finite-volume implementation, while the local
+three-dimensional CFD solver may use OpenFOAM as software and
+architecture reference.
+
+The regional implementation shall not be forced inside OpenFOAM. Shared
+abstractions shall be transferred where they improve consistency across
+solvers.
+
+\subsubsection{Regional 2D NLSWE Finite-Volume Specification}
+\label{sec:res-num-spec-regional-2d-nlswe-specification}
+
+The regional 2D NLSWE numerical model is established at
+research-specification level. The solved state is the horizontal
+two-dimensional conserved vector:
+
+\begin{align}
+  \mathbf{U}_i(t)
+  &=
+  \frac{1}{A_i}
+  \int_{K_i}
+  \mathbf{U}(\mathbf{x},t)
+  \,\dd A
+  \label{eq:res-num-spec-regional-cell-average}
+\end{align}
+
+For cell $K_i$ with area $A_i$, boundary faces $f$, face lengths
+$L_f$, outward normals $\mathbf{n}_f$, and source contribution
+$\mathbf{S}_i$, the finite-volume update is:
+
+\begin{align}
+  \frac{\dd\mathbf{U}_i}{\dd t}
+  &=
+  -
+  \frac{1}{A_i}
+  \sum_{f\in\partial K_i}
+  L_f
+  \widehat{\mathbf{F}}_{if}
+  +
+  \mathbf{S}_i
+  \label{eq:res-num-spec-regional-fv-update}
+\end{align}
+
+For a polygon with $N_i$ faces this is written:
+
+\begin{align}
+  \frac{\dd\mathbf{U}_i}{\dd t}
+  &=
+  -
+  \frac{1}{A_i}
+  \sum_{k=1}^{N_i}
+  L_{i,k}
+  \widehat{\mathbf{F}}_{i,k}
+  +
+  \mathbf{S}_i
+  \label{eq:res-num-spec-regional-polygon-update}
+\end{align}
+
+Cell shape changes only the geometry entering the update:
+
+\begin{align}
+  A_i,\quad
+  N_i,\quad
+  L_{i,k},\quad
+  \mathbf{n}_{i,k},\quad
+  \mathbf{x}_{f_{i,k}},\quad
+  \mathcal{N}(i)
+  \label{eq:res-num-spec-regional-cell-geometry-set}
+\end{align}
+
+Primary practical regional meshes use unstructured triangles. Quads are
+retained for tests and simple offshore corridors. General straight-edged
+polygons remain admissible where mesh quality and validation evidence
+support them.
+
+\paragraph{Geometry.}
+\label{sec:res-num-spec-regional-geometry}
+
+For counter-clockwise vertices
+$\mathbf{x}_{i,1},\ldots,\mathbf{x}_{i,N_i}$, with
+$\mathbf{x}_{i,N_i+1}=\mathbf{x}_{i,1}$:
+
+\begin{align}
+  L_{i,k}
+  &=
+  \left\|
+    \mathbf{x}_{i,k+1}
+    -
+    \mathbf{x}_{i,k}
+  \right\|
+  \label{eq:res-num-spec-regional-face-length}
+  \\
+  \mathbf{x}_{f_{i,k}}
+  &=
+  \frac{
+    \mathbf{x}_{i,k}
+    +
+    \mathbf{x}_{i,k+1}
+  }{2}
+  \label{eq:res-num-spec-regional-face-centroid}
+  \\
+  \mathbf{t}_{i,k}
+  &=
+  \frac{
+    \mathbf{x}_{i,k+1}
+    -
+    \mathbf{x}_{i,k}
+  }{L_{i,k}}
+  \label{eq:res-num-spec-regional-face-tangent}
+  \\
+  \mathbf{n}_{i,k}
+  &=
+  \left[
+    t_y,\,
+    -t_x
+  \right]^{\mathsf{T}}
+  \label{eq:res-num-spec-regional-face-normal}
+\end{align}
+
+For a triangular cell:
+
+\begin{align}
+  A_i
+  &=
+  \frac{1}{2}
+  \left|
+    \left(
+      \mathbf{x}_2-\mathbf{x}_1
+    \right)
+    \times
+    \left(
+      \mathbf{x}_3-\mathbf{x}_1
+    \right)
+  \right|
+  \label{eq:res-num-spec-regional-triangle-area}
+  \\
+  \mathbf{x}_i
+  &=
+  \frac{
+    \mathbf{x}_1
+    +
+    \mathbf{x}_2
+    +
+    \mathbf{x}_3
+  }{3}
+  \label{eq:res-num-spec-regional-triangle-centroid}
+\end{align}
+
+For a counter-clockwise quadrilateral:
+
+\begin{align}
+  J_k
+  &=
+  x_k y_{k+1}
+  -
+  x_{k+1} y_k
+  \label{eq:res-num-spec-regional-quadrilateral-jacobian-term}
+  \\
+  A_i
+  &=
+  \frac{1}{2}
+  \sum_{k=1}^{4}
+  J_k
+  \label{eq:res-num-spec-regional-quadrilateral-area}
+  \\
+  x_i
+  &=
+  \frac{1}{6A_i}
+  \sum_{k=1}^{4}
+  \left(
+    x_k+x_{k+1}
+  \right)
+  J_k
+  \label{eq:res-num-spec-regional-quadrilateral-centroid-x}
+  \\
+  y_i
+  &=
+  \frac{1}{6A_i}
+  \sum_{k=1}^{4}
+  \left(
+    y_k+y_{k+1}
+  \right)
+  J_k
+  \label{eq:res-num-spec-regional-quadrilateral-centroid-y}
+\end{align}
+
+\paragraph{Reconstruction and Flux.}
+\label{sec:res-num-spec-regional-reconstruction-flux}
+
+The reconstructed variables are:
+
+\begin{align}
+  \mathbf{W}
+  &=
+  \left[
+    \eta,\,
+    u,\,
+    v,\,
+    b
+  \right]^{\mathsf{T}}
+  \label{eq:res-num-spec-regional-reconstruction-state}
+\end{align}
+
+For scalar $\phi$, the face value is reconstructed as:
+
+\begin{align}
+  \phi_{i,f}
+  &=
+  \phi_i
+  +
+  \alpha_i^{\phi}
+  \nabla\phi_i
+  \cdot
+  \left(
+    \mathbf{x}_f-\mathbf{x}_i
+  \right)
+  \label{eq:res-num-spec-regional-muscl-reconstruction}
+\end{align}
+
+Weighted least-squares gradients are selected:
+
+\begin{align}
+  \mathbf{d}_{ij}
+  &=
+  \mathbf{x}_j
+  -
+  \mathbf{x}_i
+  \label{eq:res-num-spec-regional-neighbour-displacement}
+  \\
+  \mathbf{M}_i
+  &=
+  \sum_{j\in\mathcal{N}(i)}
+  w_{ij}
+  \mathbf{d}_{ij}
+  \mathbf{d}_{ij}^{\mathsf{T}}
+  \label{eq:res-num-spec-regional-ls-matrix}
+  \\
+  \mathbf{r}_i
+  &=
+  \sum_{j\in\mathcal{N}(i)}
+  w_{ij}
+  \mathbf{d}_{ij}
+  \left(
+    \phi_j-\phi_i
+  \right)
+  \label{eq:res-num-spec-regional-ls-rhs}
+  \\
+  \nabla\phi_i
+  &=
+  \mathbf{M}_i^{-1}
+  \mathbf{r}_i
+  \label{eq:res-num-spec-regional-ls-gradient}
+\end{align}
+
+The baseline limiter is Barth--Jespersen. Reconstruction is reverted to
+first order near wet/dry fronts where required for positivity.
+
+HLLC is the primary face flux for wet, valid states. HLL or HLLE is the
+fallback near dry, degenerate or unsafe states. Each face flux is solved
+in normal/tangential coordinates:
+
+\begin{align}
+  u_n
+  &=
+  u n_x
+  +
+  v n_y
+  \label{eq:res-num-spec-regional-normal-velocity}
+  \\
+  u_t
+  &=
+  -u n_y
+  +
+  v n_x
+  \label{eq:res-num-spec-regional-tangential-velocity}
+  \\
+  \widetilde{\mathbf{U}}_K
+  &=
+  \left[
+    h_K,\,
+    h_K u_{n,K},\,
+    h_K u_{t,K}
+  \right]^{\mathsf{T}},
+  \qquad
+  K\in\{L,R\}
+  \label{eq:res-num-spec-regional-rotated-state}
+\end{align}
+
+\paragraph{Hydrostatic Reconstruction and Sources.}
+\label{sec:res-num-spec-regional-hydrostatic-source}
+
+Hydrostatic reconstruction uses:
+
+\begin{align}
+  b_f^{\mathrm{H}}
+  &=
+  \max
+  \left(
+    b_L,\,
+    b_R
+  \right)
+  \label{eq:res-num-spec-regional-hydrostatic-face-bed}
+  \\
+  h_L^{\mathrm{H}}
+  &=
+  \max
+  \left(
+    0,\,
+    \eta_L-b_f^{\mathrm{H}}
+  \right)
+  \label{eq:res-num-spec-regional-hydrostatic-left-depth}
+  \\
+  h_R^{\mathrm{H}}
+  &=
+  \max
+  \left(
+    0,\,
+    \eta_R-b_f^{\mathrm{H}}
+  \right)
+  \label{eq:res-num-spec-regional-hydrostatic-right-depth}
+\end{align}
+
+The second-order bed source is:
+
+\begin{align}
+  \mathbf{S}_{\mathrm{b},i}^{(2)}
+  &=
+  \left[
+    0,\,
+    -g h_i (b_x)_i,\,
+    -g h_i (b_y)_i
+  \right]^{\mathsf{T}}
+  \label{eq:res-num-spec-regional-second-order-bed-source}
+\end{align}
+
+The sponge source uses:
+
+\begin{align}
+  \mathbf{S}_{\mathrm{sp},i}
+  &=
+  -\sigma_i
+  \left[
+    h_i-h_{\mathrm{ref},i},\,
+    q_{x,i},\,
+    q_{y,i}
+  \right]^{\mathsf{T}}
+  \label{eq:res-num-spec-regional-sponge-source}
+  \\
+  h_{\mathrm{ref},i}
+  &=
+  \max
+  \left(
+    \eta_{\mathrm{ref}}
+    -
+    b_i,\,
+    0
+  \right)
+  \label{eq:res-num-spec-regional-sponge-reference-depth}
+  \\
+  \sigma_i
+  &=
+  \sigma_{\max}
+  \left(
+    \frac{d_i}{L_{\mathrm{sp}}}
+  \right)^p
+  \label{eq:res-num-spec-regional-sponge-ramp}
+  \\
+  \sigma_{\max}
+  &=
+  \frac{(p+1)c_{\mathrm{ref}}}{L_{\mathrm{sp}}}
+  \ln
+  \left(
+    \frac{1}{A_{\mathrm{target}}}
+  \right)
+  \label{eq:res-num-spec-regional-sponge-max}
+\end{align}
+
+The baseline sponge values are $p=2$, $A_{\mathrm{target}}=0.01$, and
+$L_{\mathrm{sp}}=50$--$100~\mathrm{km}$ before adjustment to the final
+domain scale.
+
+\paragraph{Wetting, Drying and Time Integration.}
+\label{sec:res-num-spec-regional-wet-dry-time}
+
+The regional solver uses positivity-preserving wet/dry treatment, not a
+regional VOF method. Dry cells are reset by:
+
+\begin{align}
+  h_i
+  <
+  h_{\mathrm{dry}}
+  \quad
+  &\Rightarrow
+  \quad
+  h_i=0,\quad
+  q_{x,i}=q_{y,i}=0
+  \label{eq:res-num-spec-regional-dry-reset}
+\end{align}
+
+The draining limiter is:
+
+\begin{align}
+  \lambda_i
+  &=
+  \min
+  \left(
+    1,\,
+    \frac{
+      A_i
+      \max
+      \left(
+        h_i-h_{\mathrm{dry}},\,
+        0
+      \right)
+    }{
+      \Delta t
+      \sum_f
+      L_f
+      \max
+      \left(
+        F_{h,if},\,
+        0
+      \right)
+      +
+      \varepsilon
+    }
+  \right)
+  \label{eq:res-num-spec-regional-draining-limiter}
+\end{align}
+
+The transport/friction time update is:
+
+\begin{align}
+  \mathbf{U}^{n+1}
+  &=
+  \mathcal{M}_{\Delta t/2}
+  \circ
+  \mathcal{T}_{\Delta t}^{\mathrm{SSPRK3}}
+  \circ
+  \mathcal{M}_{\Delta t/2}
+  \left(
+    \mathbf{U}^{n}
+  \right)
+  \label{eq:res-num-spec-regional-strang-ssprk3}
+\end{align}
+
+The CFL timestep is:
+
+\begin{align}
+  a_f
+  &=
+  \max_K
+  \left(
+    \left|
+      u_{n,K}
+    \right|
+    +
+    \sqrt{g h_K}
+  \right)
+  \label{eq:res-num-spec-regional-face-signal-speed}
+  \\
+  \Delta t_i
+  &=
+  C_{\mathrm{CFL}}
+  \frac{A_i}{
+    \sum_{f\in\partial K_i}
+    L_f a_f
+  }
+  \label{eq:res-num-spec-regional-cell-timestep}
+  \\
+  \Delta t
+  &=
+  \min_i
+  \Delta t_i
+  \label{eq:res-num-spec-regional-global-timestep}
+\end{align}
+
+\paragraph{Established and Deferred Scope.}
+\label{sec:res-num-spec-regional-established-deferred}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \begin{tabular}{
+      p{0.42\textwidth}
+      p{0.42\textwidth}
+    }
+    \hline
+    Established for the regional model
+    &
+    Deferred or separate
+    \\
+    \hline
+    Regional 2D NLSWE finite-volume formulation; polygonal geometry;
+    triangle/quadrilateral practical meshes; reconstruction and limiter;
+    hydrostatic reconstruction; HLLC/HLL flux strategy; wetting/drying;
+    dynamic bed treatment; SSPRK(3,3) transport with split Manning;
+    CFL timestep; open/radiation and sponge treatment; mesh-refinement
+    principles
+    &
+    QGIS/geospatial domain lock; exact bathymetry/topography dataset;
+    exact fault-source dataset; validation runs; local 3D/interface/FSI
+    model; production software implementation; optimisation and ML
+    workflow
+    \\
+    \hline
+  \end{tabular}
+  \caption{Regional numerical-model established/deferred status}
+  \label{tab:res-num-spec-regional-established-deferred}
+\end{table}
+
+\subsection{Conservation Properties}
+\label{sec:res-num-spec-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-spec-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-spec-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-spec-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-spec-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-spec-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-spec-candidate-approaches}
+
+The active breadth-first branches are:
+
+\begin{itemize}
+  \item regional NLSWE finite-volume solver;
+  \item local three-dimensional two-phase CFD solver;
+  \item structural dynamics solver;
+  \item two-dimensional--three-dimensional coupling solver;
+  \item fluid--structure coupling solver.
+\end{itemize}
+
+\subsection{Critical Comparison}
+\label{sec:res-num-spec-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-spec-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-spec-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-spec-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The project has selected the regional finite-volume family, completed
+the regional 2D NLSWE numerical model at research-specification level,
+and selected the local three-dimensional two-phase finite-volume solver
+family. It has not completed structural, dimensional-coupling or FSI
+numerical-method selection. The numerical architecture shall remain
+modular while implementation and validation work proceeds.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-spec-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsubsection{Selection of the Local Three-Dimensional Fluid Solver}
+\label{sec:num-local-three-dimensional-fluid-solver-selection}
+
+The selected numerical framework for the local three-dimensional fluid
+model is an Eulerian, cell-centred, polyhedral finite-volume method
+combined with a volume-of-fluid interface-capturing method and a
+pressure-correction procedure. This framework will discretise the
+incompressible, immiscible, two-phase Navier--Stokes equations. The same
+fluid-solver architecture will support either unsteady
+Reynolds-averaged Navier--Stokes or large-eddy simulation turbulence
+treatment, with URANS $k$--$\omega$ SST selected as the operational
+baseline and LES retained for selected high-fidelity comparison cases.
+
+The numerical-family decision is therefore:
+
+\begin{quote}
+  \centering
+  cell-centred polyhedral finite volume
+  $+$ volume-of-fluid interface capture
+  $+$ pressure correction
+\end{quote}
+
+This decision fixes the principal spatial, interface and
+incompressibility enforcement families. It does not yet fix the exact
+volume-of-fluid algorithm, pressure-correction algorithm, temporal
+discretisation, wall-function constants, mesh-motion method or
+fluid--structure coupling procedure.
+
+\paragraph{Conservative Fluid and Phase Transport.}
+\label{sec:num-local-three-dimensional-conservation-rationale}
+
+The finite-volume method evaluates the change in each control-volume
+state through fluxes crossing its bounding faces. This provides a direct
+conservative representation of fluid transport and supplies a consistent
+basis for calculating momentum exchange and structural loading. A common
+face flux also enables neighbouring control volumes to exchange equal
+and opposite contributions, which is advantageous for global
+conservation auditing and domain decomposition.
+
+The volume-of-fluid method was selected as the free-surface
+representation since it tracks the volume fraction of each phase and is
+therefore naturally compatible with conservative finite-volume
+transport. Geometric volume-of-fluid methods have been developed for
+arbitrary polyhedral meshes and have demonstrated strong phase-volume
+conservation, boundedness and interface sharpness
+\parencite{roenby2016computational}.
+
+\paragraph{Breaking, Overtopping and Interface Topology.}
+\label{sec:num-local-three-dimensional-interface-topology-rationale}
+
+The local solver must represent wave breaking, overturning, overtopping,
+jet formation, fragmentation and interface reconnection. An Eulerian
+interface-capturing method allows these changes in topology without
+requiring the computational mesh to conform to the air--water interface.
+
+A sharp finite-volume free-surface formulation combining geometric
+volume-of-fluid advection with a Ghost Fluid treatment has been verified
+for gravity-wave propagation and validated for violent green-water flow
+\parencite{vukcevic2018sharp}. This provides direct methodological
+evidence that the selected family can represent both smooth wave
+propagation and strongly deformed free-surface flow within one solver
+architecture.
+
+\paragraph{Pressure and Structural-Load Prediction.}
+\label{sec:num-local-three-dimensional-pressure-load-rationale}
+
+The structural analysis requires reliable predictions of local pressure,
+pressure impulse, resultant force, shear traction and overturning
+moment. The pressure-correction method enforces the incompressibility
+constraint by coupling the momentum predictor to a pressure equation and
+subsequently correcting the velocity and face-flux fields.
+
+The large density change across the air--water interface requires
+particular care. A diffuse pressure and density transition may alter the
+magnitude and timing of an impact load. Sharp-interface finite-volume
+formulations provide a route for imposing the pressure-gradient and
+density discontinuities consistently while retaining a compact stencil
+on general cell shapes \parencite{vukcevic2018sharp}.
+
+\paragraph{Mesh and Geometric Flexibility.}
+\label{sec:num-local-three-dimensional-mesh-rationale}
+
+Polyhedral finite-volume meshes permit body-fitted representation of
+irregular barriers, coastal topography and local three-dimensional
+structures. They also allow the mesh resolution to be concentrated
+around the free surface, barrier edges, overtopping regions and wakes
+without imposing a uniformly fine Cartesian grid.
+
+Geometric volume-of-fluid methods have been formulated for structured
+and unstructured polyhedral meshes \parencite{roenby2016computational}.
+A related OpenFOAM implementation has demonstrated unstructured
+geometric volume of fluid with local dynamic adaptive mesh refinement
+\parencite{maric2013vofoam}. The exact refinement algorithm remains
+unresolved and will be selected during the detailed mesh-framework
+study.
+
+\paragraph{URANS and LES Compatibility.}
+\label{sec:num-local-three-dimensional-turbulence-compatibility}
+
+Unsteady Reynolds-averaged Navier--Stokes and large-eddy simulation will
+be treated as alternative operating modes of the same local
+three-dimensional solver. Both modes will use the same continuity,
+momentum, phase-fraction, pressure-correction, boundary and
+force-integration infrastructure.
+
+The unsteady Reynolds-averaged Navier--Stokes mode will provide the
+operational framework for repeated barrier assessment and optimisation.
+The large-eddy simulation mode will provide higher-fidelity analysis of
+selected impact cases in which resolved separation, breaking-generated
+turbulence, fluctuating pressure or load spectra are important. The
+baseline Reynolds-averaged closure is $k$--$\omega$ SST
+\parencite{menter1994twoequation}. The LES subgrid-scale closure,
+rough-wall treatment and wall-function constants remain unresolved.
+
+\paragraph{Local URANS--VOF Solving Procedure.}
+\label{sec:num-local-three-dimensional-solving-procedure}
+
+At accepted time level $t^n$, the known local fields are:
+
+\begin{align}
+  \mathcal{Q}^{n}_{\mathrm{local}}
+  &=
+  \left\{
+    \alpha^n,\,
+    \rho^n,\,
+    \mu^n,\,
+    \mathbf{u}^n,\,
+    p^n,\,
+    k^n,\,
+    \omega^n,\,
+    \mu_t^n,\,
+    \phi^n
+  \right\}
+  \label{eq:res-num-spec-local-known-fields}
+\end{align}
+
+The local segregated update is:
+
+\begin{enumerate}
+  \setcounter{enumi}{-1}
+  \item Interpolate the accepted regional two-dimensional forcing to
+    the local three-dimensional inlet using the selected
+    regional-to-local history and the boundary reconstruction in
+    `RES-MOD-IBC`.
+  \item Select the timestep from the flow-CFL, interface-CFL,
+    gravity-wave and diffusion constraints in
+    \cref{eq:res-num-tim-local-timestep-minimum}.
+  \item Update all boundary-face states for
+    $\alpha$, $\rho$, $\mu$, $\mathbf{u}$, $p$, $k$, $\omega$ and
+    $\phi$.
+  \item Solve the bounded compressive VOF equation for
+    $\alpha^{n+1}$.
+  \item Update $\rho^{n+1}$ and $\mu^{n+1}$ from
+    $\alpha^{n+1}$ using the mixture-property definitions in
+    `RES-MOD-EQS`.
+  \item Assemble and solve the URANS momentum predictor for
+    $\mathbf{u}^{*}$.
+  \item Construct pressure-consistent face fluxes $\phi^{*}$ using
+    Rhie--Chow or an equivalent collocated-mesh interpolation.
+  \item Solve the pressure-correction equation for $p'$.
+  \item Correct pressure, velocity and face fluxes.
+  \item Repeat pressure correctors until the mass residual in
+    \cref{eq:res-num-stb-local-mass-residual} is acceptable.
+  \item Solve the $k$ and $\omega$ equations using the corrected
+    velocity and corrected face flux.
+  \item Update $\mu_t^{n+1}$ and $\mu_{\mathrm{eff}}^{n+1}$.
+  \item Apply scalable wall-function quantities on terrain and barrier
+    wall patches.
+  \item Extract pressure, shear, force, moment, run-up, overtopping,
+    transmission and energy metrics.
+  \item Check boundedness, residual, conservation, mesh-quality and
+    output-quality acceptance criteria.
+  \item Accept the fields and advance to the next timestep, or reject
+    the timestep and repeat with a reduced $\Delta t$.
+\end{enumerate}
+
+For any local transported equation with a linearised source
+$S_{\psi,i}=S_{C,i}+S_{P,i}\psi_i$, the coefficient updates are:
+
+\begin{align}
+  a_{P,i}^{\mathrm{new}}
+  &=
+  a_{P,i}^{\mathrm{base}}
+  -
+  V_i S_{P,i}
+  \label{eq:res-num-spec-local-source-ap-update}
+  \\
+  b_i^{\mathrm{new}}
+  &=
+  b_i^{\mathrm{base}}
+  +
+  V_i S_{C,i}
+  \label{eq:res-num-spec-local-source-b-update}
+\end{align}
+
+Pressure correction follows the operator-splitting principle of
+\textcite{issa1986operator}. VOF transport follows the source role
+`3D-VOF`, with \textcite{hirt1981vof},
+\textcite{roenby2016computational} and \textcite{vukcevic2018sharp}
+supporting the phase-fraction and sharp-interface requirements.
+Wave-boundary state updates use source role `3D-WAVEBC`, supported by
+\textcite{higuera2013realistic} and
+\textcite{jacobsen2012waves2foam}. Project-specific conclusion: the
+solving procedure is event-independent; event-specific inputs change
+the inlet history, terrain, bathymetry and geometry data, not the
+algorithmic ordering.
+
+\paragraph{Compatibility with the Project Software Architecture.}
+\label{sec:num-local-three-dimensional-software-compatibility}
+
+The selected framework is directly aligned with the decision to use
+OpenFOAM as the principal open-source software and architectural
+reference for the local three-dimensional model. The relevant shared
+abstractions include control volumes, owner--neighbour face
+connectivity, face-normal fluxes, boundary patches, field operations,
+pressure--velocity coupling, two-phase interface transport,
+turbulence-model modularity, domain decomposition, solver dictionaries,
+runtime configuration and source-level extensibility.
+
+This alignment does not require the regional and local solvers to share
+one executable. It provides a consistent numerical vocabulary across the
+regional finite-volume solver, the local OpenFOAM-informed solver and
+the two-dimensional--three-dimensional coupling interface. The
+finite-volume method remains selected on physical and numerical grounds;
+software compatibility provides an additional implementation advantage
+rather than the primary justification.
+
+\paragraph{Assessment of Alternative Numerical Families.}
+\label{sec:num-local-three-dimensional-alternative-assessment}
+
+Stabilised finite elements remain a credible alternative for complex
+geometry, variational multiscale turbulence modelling and monolithic
+fluid--structure interaction. A stabilised finite-element tsunami model
+using tetrahedral meshes, volume-of-fluid interface capture and
+SUPG/PSPG stabilisation has demonstrated
+two-dimensional--three-dimensional tsunami coupling
+\parencite{takase2016hybrid}. However, adopting this route would require
+a separate finite-element fluid framework and additional treatment to
+obtain the local face-conservative structure required by the present
+architecture.
+
+Structured staggered-grid projection methods provide strong
+pressure--velocity coupling and efficient regular-grid operators. Their
+use for the present barrier problem would require immersed-boundary or
+cut-cell techniques for irregular geometry, together with a separate
+Cartesian solver infrastructure.
+
+Particle methods provide natural treatment of severe free-surface
+deformation. However, pressure reconstruction, wall-traction transfer,
+explicit representation of the air phase and systematic URANS--LES
+operation remain less mature for the present requirements. The modified
+moving-particle semi-implicit method reviewed in this study required
+changes to the kernel, pressure-Poisson source and free-surface
+detection to reduce pressure fluctuation sufficiently for
+tsunami--structure comparison \parencite{huang2015modifiedmps}.
+
+The alternative methods will therefore remain in the research register
+as validation references and possible specialist methods, rather than as
+the production local-fluid solver.
+
+\paragraph{Decision Status and Remaining Numerical Choices.}
+\label{sec:num-local-three-dimensional-decision-status}
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.2}
+  \caption{Decision status for the local three-dimensional fluid solver}
+  \label{tab:num-local-three-dimensional-decision-status}
+  \begin{tabular}{
+      p{0.17\linewidth}
+      p{0.28\linewidth}
+      p{0.37\linewidth}
+    }
+    \hline
+    Status
+    &
+    Component
+    &
+    Current decision
+    \\
+    \hline
+    Selected
+    &
+    Spatial discretisation
+    &
+    Eulerian, cell-centred polyhedral finite-volume method
+    \\
+    Selected
+    &
+    Free-surface family
+    &
+    Volume-of-fluid interface capture
+    \\
+    Selected
+    &
+    Incompressibility treatment
+    &
+    Pressure-correction or projection family
+    \\
+    Selected
+    &
+    Turbulence architecture
+    &
+    Common solver supporting URANS $k$--$\omega$ SST for operational
+    assessment and LES for selected comparison cases
+    \\
+    Selected
+    &
+    Software direction
+    &
+    OpenFOAM as the principal open-source implementation and
+    architectural reference
+    \\
+    Provisional
+    &
+    Interface advection
+    &
+    Geometric volume-of-fluid method, with isoAdvector as the leading
+    candidate
+    \\
+    Provisional
+    &
+    Interface pressure treatment
+    &
+    Sharp Ghost Fluid treatment rather than a purely diffuse mixture
+    treatment
+    \\
+    Unresolved
+    &
+    Pressure correction
+    &
+    Exact PISO, PIMPLE or related correction sequence
+    \\
+    Unresolved
+    &
+    Moving structural boundary
+    &
+    Fixed terrain and fixed barrier patches are selected for the
+    hydrodynamic baseline; mesh motion, immersed boundary, cut cell or
+    overset treatment remains open only for activated FSI
+    \\
+    Unresolved
+    &
+    LES closure and wall treatment
+    &
+    LES sub-grid model, wall-function constants and rough-wall
+    treatment
+    \\
+    Unresolved
+    &
+    Discretisation details
+    &
+    Temporal scheme, momentum convection, interface compression, linear
+    solvers and preconditioners
+    \\
+    Unresolved
+    &
+    Mesh resolution
+    &
+    Static refinement, adaptive refinement and interface-focused mesh
+    criteria
+    \\
+    \hline
+  \end{tabular}
+\end{table}
+
+The next breadth-first task is to select the numerical family for the
+structural equations of motion. Detailed choices within the local
+three-dimensional fluid solver will be revisited after the structural
+solver and the principal coupling frameworks have been selected.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-spec-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The unresolved scientific and numerical decisions are:
+
+\begin{itemize}
+  \item final regional dry-depth tolerance and velocity regularisation
+    constants;
+  \item final regional HLL/HLLC wave-speed safeguards;
+  \item final regional mesh levels and domain-specific sponge placement;
+  \item exact local interface-advection algorithm;
+  \item exact local pressure-correction sequence;
+  \item exact local LES closure, wall-function constants and rough-wall
+    treatment;
+  \item local structural-boundary representation;
+  \item local mesh-resolution and refinement criteria;
+  \item structural element and time-integration method;
+  \item numerical FSI coupling algorithm;
+  \item numerical two-dimensional--three-dimensional transfer operators.
+\end{itemize}
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-spec-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The next research pass shall close the following non-regional-model
+items:
+
+\begin{enumerate}
+  \item QGIS/geospatial domain and dataset lock;
+  \item regional verification and validation test execution;
+  \item structural dynamics solver;
+  \item two-dimensional--three-dimensional coupling solver;
+  \item FSI coupling solver;
+  \item software implementation details for the locked regional and
+    local hydrodynamic specifications.
+\end{enumerate}
+
+Software work may begin with modular data structures and scaffolds:
+finite-volume mesh and field containers, manifest-driven I/O,
+boundary-face state containers, regional 2D scaffold, replay-boundary
+format and local 3D scaffold. This Research deliverable does not
+authorise implementation of the local URANS--VOF solver before the
+remaining numerical, validation and data-interface decisions are
+accepted.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-spec-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.
+
+Regional 2D NLSWE and local 3D URANS--VOF numerical-model status:
+research specification complete; implementation and validation pending.

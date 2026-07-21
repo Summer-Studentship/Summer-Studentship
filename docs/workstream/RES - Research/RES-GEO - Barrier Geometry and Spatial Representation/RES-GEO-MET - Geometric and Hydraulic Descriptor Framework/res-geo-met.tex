@@ -1,0 +1,193 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-GEO-MET
+% Deliverable: Geometric and Hydraulic Descriptor Framework
+% Status: In progress
+% Evidence status: Minimum descriptors tied to hydrodynamic outputs
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-GEO-PAR, RES-DAT-SCN
+% Downstream interfaces: RES-PHY-BAR, RES-PHY-LOD, RES-VER-MET, Software output schema
+% -------------------------------------------------------------------------
+
+\section{RES-GEO-MET --- Geometric and Hydraulic Descriptor Framework}
+\label{sec:res-geo-met}
+
+\subsection{Purpose and Scope}
+\label{sec:res-geo-met-purpose}
+
+This Deliverable defines the minimum geometric and hydraulic
+descriptors needed to compare wall-type and obstacle/array-type
+barriers in fixed-rigid local tsunami simulations. Descriptor records
+shall preserve provenance and uncertainty. Damage state, material
+deformation and scour descriptors are recorded only as deferred
+structural extensions.
+
+\subsection{Research Questions}
+\label{sec:res-geo-met-research-questions}
+
+\begin{enumerate}
+  \item Which descriptors are required before local hydrodynamic
+    comparison can begin?
+  \item Which descriptors drive software geometry, and which are
+    post-processing metrics emitted by the solver?
+  \item Which descriptors must carry uncertainty/provenance flags?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-geo-met-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-geo-met-literature-evidence}
+
+\textcite{deljesus2012porous} links vertical barrier form, porosity
+and transmission to hydraulic response. Source role: supports
+including blockage, opening and transmission descriptors.
+\textcite{watanabe2022validation} links local geometry to separate
+force, pressure, velocity and free-surface validation quantities.
+Project conclusion: descriptors must identify both what was simulated
+and which hydrodynamic outputs are meaningful for comparison.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-geo-met-governing-relations}
+
+For array and obstacle cases, the plan blockage ratio shall be
+reported as:
+
+\begin{align}
+  \beta_{\mathrm{blk}}
+  &=
+  \frac{
+    A_{\perp,\mathrm{solid}}
+  }{
+    A_{\perp,\mathrm{corridor}}
+    +
+    \epsilon_A
+  }
+  \label{eq:res-geo-met-blockage-ratio}
+\end{align}
+
+where $A_{\perp,\mathrm{solid}}$ is the projected solid area normal to
+the corridor centreline and $A_{\perp,\mathrm{corridor}}$ is the
+available projected corridor area at the comparison section. Decision
+role: \cref{eq:res-geo-met-blockage-ratio} is a comparison descriptor
+for wall/obstacle/array cases. Supporting evidence:
+\textcite{deljesus2012porous}. Limitation: it does not replace full
+3D flow solution because wake, overtopping and pressure depend on
+local geometry and bathymetry.
+
+\subsection{Geometry Family or Representation}
+\label{sec:res-geo-met-geometry-family-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Design Variables and Parameter Bounds}
+\label{sec:res-geo-met-design-variables-parameter-bounds}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Geometric Descriptors}
+\label{sec:res-geo-met-geometric-descriptors}
+
+Required pre-simulation descriptors are class label, local corridor
+coordinates, orientation, crest elevation, height, thickness or
+element width, footprint length, spacing, row count, opening fraction,
+roughness flag, blockage ratio and provenance quality.
+
+Required post-simulation hydraulic descriptors are maximum run-up,
+overtopping volume or discharge, transmitted and reflected energy
+measures, downstream maximum depth and velocity, peak pressure,
+resultant force, impulse and moment. Damage, survival state and
+structural-capacity proxies are retained only for later RES-STR
+screening and shall not be used to claim baseline hydrodynamic
+performance.
+
+\subsection{Placement and Arrangement Rules}
+\label{sec:res-geo-met-placement-arrangement-rules}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Feasibility Constraints}
+\label{sec:res-geo-met-feasibility-constraints}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Two- and Three-Dimensional Representation}
+\label{sec:res-geo-met-two-three-dimensional-representation}
+
+% TODO: Complete this RES-GEO Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-geo-met-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-geo-met-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-geo-met-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-geo-met-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-geo-met-conclusions}
+
+The geometry descriptor framework is sufficient when each barrier case
+can be reconstructed, meshed, run and post-processed using stable
+identifiers. It is not sufficient for structural certification or
+damage prediction.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-geo-met-selected-approach}
+
+The selected descriptor approach separates pre-simulation geometry
+fields from solver-emitted hydrodynamic metrics. This keeps software
+data handling parallel with Research without moving solver
+implementation into RES-GEO.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-geo-met-unresolved-decisions}
+
+Open decisions are the final blockage-normalisation section, roughness
+descriptor values, gap/opening representation and accepted uncertainty
+classes for inferred geometry.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-geo-met-requirements}
+
+Software shall emit descriptors and metrics using the same
+\texttt{corridor\_id}, \texttt{geometry\_id} and \texttt{case\_id}.
+RES-PHY-BAR and RES-PHY-LOD shall define the hydrodynamic meaning of
+the emitted metrics; RES-VER-MET shall define acceptance tolerances.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-geo-met-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,150 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-STR-SPEC
+% Deliverable: Integrated Structural and Damage Specification
+% Status: In progress
+% Evidence status: Active structural scope limited to hydrodynamic load handoff
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-STR-LOD, RES-STR-DMG, RES-STR-FSI
+% Downstream interfaces: Future structural extension, Software output schema
+% -------------------------------------------------------------------------
+
+\section{RES-STR-SPEC --- Integrated Structural and Damage Specification}
+\label{sec:res-str-spec}
+
+\subsection{Purpose and Scope}
+\label{sec:res-str-spec-purpose}
+
+This Deliverable consolidates the current structural decision:
+baseline simulations treat barriers as fixed rigid geometry and export
+hydrodynamic pressure, shear, force, impulse and moment histories.
+Material response, deformation, damage, scour and two-way FSI are
+stretch extensions requiring separate evidence and validation.
+
+\subsection{Research Questions}
+\label{sec:res-str-spec-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-str-spec-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-str-spec-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-str-spec-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Material or Structural System}
+\label{sec:res-str-spec-material-structural-system}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Load Cases}
+\label{sec:res-str-spec-load-cases}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Constitutive Behaviour}
+\label{sec:res-str-spec-constitutive-behaviour}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Response and Stability Measures}
+\label{sec:res-str-spec-response-stability-measures}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Damage and Failure Modes}
+\label{sec:res-str-spec-damage-failure-modes}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Fluid--Structure Coupling Requirements}
+\label{sec:res-str-spec-fluid-structure-coupling-requirements}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-str-spec-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-str-spec-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-str-spec-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-str-spec-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-str-spec-conclusions}
+
+The integrated structural output for the current Studentship is a
+load-transfer specification, not a structural-damage model.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-str-spec-selected-approach}
+
+The selected active approach is fixed-rigid hydrodynamic load
+extraction with structured one-way handoff. Deformable structural
+simulation and two-way FSI remain deferred.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-str-spec-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-str-spec-requirements}
+
+Software shall preserve load histories, geometry patch identifiers and
+integration metadata; it shall not implement damage, structural FEM or
+moving-boundary FSI as part of this Research handoff.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-str-spec-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

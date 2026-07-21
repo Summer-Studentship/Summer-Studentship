@@ -1,0 +1,192 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-VER-CNV
+% Deliverable: Convergence and Numerical-Error Test Methodology
+% Status: Not started
+% Evidence status: Not assessed
+% Review status: Not reviewed
+% Last updated:
+% Dependencies:
+% Downstream interfaces:
+% -------------------------------------------------------------------------
+
+\section{RES-VER-CNV --- Convergence and Numerical-Error Test Methodology}
+\label{sec:res-ver-cnv}
+
+\subsection{Purpose and Scope}
+\label{sec:res-ver-cnv-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-ver-cnv-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-ver-cnv-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-ver-cnv-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-ver-cnv-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Test Objective}
+\label{sec:res-ver-cnv-test-objective}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsubsection{Numerical and Physical Sensitivity Requirements}
+\label{sec:res-ver-cnv-local-sensitivity-requirements}
+
+The local-model validation programme shall distinguish:
+
+\begin{enumerate}
+  \item spatial and temporal discretisation sensitivity;
+  \item incident-wave and boundary-condition sensitivity;
+  \item turbulence-closure sensitivity;
+  \item wall-treatment sensitivity;
+  \item free-surface-capturing sensitivity;
+  \item pressure-filtering and load-integration sensitivity;
+  \item fluid-to-structure mapping sensitivity;
+  \item structural time-integration and damping sensitivity.
+\end{enumerate}
+
+Grid refinement shall not be treated as sufficient evidence of model
+validity. A refined solution may converge towards an incorrect result
+where the boundary conditions, closure, constitutive model, or incident
+state are inappropriate.
+
+\subsection{Reference or Benchmark Solution}
+\label{sec:res-ver-cnv-reference-benchmark-solution}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Test Configuration}
+\label{sec:res-ver-cnv-test-configuration}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsubsection{Spatial Resolution Requirements}
+\label{sec:res-ver-cnv-spatial-resolution-requirements}
+
+Grid adequacy shall be determined for each output separately.
+
+A grid that reproduces a deep-ocean leading-wave amplitude shall not be
+assumed adequate for:
+
+\begin{itemize}
+  \item narrow bays;
+  \item steep ria coastlines;
+  \item local run-up;
+  \item river propagation;
+  \item coastal structures;
+  \item barrier-scale pressure and force.
+\end{itemize}
+
+Computational-grid spacing and source-data resolution shall be reported
+independently. Refinement of the computational mesh below the
+resolution of the bathymetric or topographic input shall not be treated
+as equivalent physical refinement.
+
+\subsection{Measured Quantities}
+\label{sec:res-ver-cnv-measured-quantities}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Error Metrics}
+\label{sec:res-ver-cnv-error-metrics}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Tolerance and Acceptance Criteria}
+\label{sec:res-ver-cnv-tolerance-acceptance-criteria}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Execution Handoff}
+\label{sec:res-ver-cnv-execution-handoff}
+
+% TODO: Complete this RES-VER Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-ver-cnv-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-ver-cnv-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-ver-cnv-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-ver-cnv-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-ver-cnv-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-ver-cnv-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-ver-cnv-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-ver-cnv-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-ver-cnv-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

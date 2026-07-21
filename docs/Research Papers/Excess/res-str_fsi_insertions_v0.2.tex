@@ -1,0 +1,338 @@
+% ============================================================================
+% RES-STR research-domain insertion
+% Target: the existing res-str.tex file in the Research workstream
+% This file is not standalone and contains no preamble or document environment
+% ============================================================================
+
+% ----------------------------------------------------------------------------
+% Insert under RES-STR-LOD — Structural Load Cases and Load Transfer
+% ----------------------------------------------------------------------------
+
+\subsection{Hydrodynamic Traction Transfer}
+\label{subsec:res_str_lod_hydrodynamic_traction_transfer}
+
+The local three-dimensional fluid model supplies a transient traction field on the wetted structural surface. The traction exerted by the fluid on the solid is
+
+\begin{align}
+\bm{t}_{f\rightarrow s}
+&=
+\bm{\sigma}_{f}\bm{n}_{s}
+\label{eq:res_str_lod_fluid_traction}
+\end{align}
+
+where \(\bm{n}_{s}\) is the outward unit normal of the current structural surface and the fluid Cauchy stress is
+
+\begin{align}
+\bm{\sigma}_{f}
+&=
+-p\bm{I}+\bm{\tau}_{f}
+\label{eq:res_str_lod_fluid_cauchy_stress}
+\end{align}
+
+For a finite-element structural discretisation, the distributed interface traction is converted into the structural load vector through
+
+\begin{align}
+\bm{f}_{\mathrm{hyd}}(t)
+&=
+\int_{\Gamma_{fs}(t)}
+\bm{N}_{s}^{\mathsf{T}}
+\bm{t}_{f\rightarrow s}(t)
+\,\mathrm{d}\Gamma
+\label{eq:res_str_lod_hydrodynamic_load_vector}
+\end{align}
+
+The integration is performed over the current wetted interface \(\Gamma_{fs}(t)\). The transferred field must preserve the resultant force and moment and should preserve interface work when the fluid and structural surface discretisations do not match.
+
+The tsunami FSI model of Baragamage and Wu demonstrates the sequence from three-dimensional fluid loading to structural motion and subsequent feedback to the fluid solver, although its structural representation is reduced rather than a full three-dimensional deformable continuum \autocite{baragamage2024}
+
+\textbf{Selected approach.} Hydrodynamic loading is represented as a distributed pressure and viscous traction field on the current structural surface. Reduction to a single resultant force is not sufficient for the candidate barrier model.
+
+
+% ----------------------------------------------------------------------------
+% Insert under RES-STR-RSP — Structural Response and Stability
+% ----------------------------------------------------------------------------
+
+\subsection{Three-Dimensional Structural Equation of Motion}
+\label{subsec:res_str_rsp_three_dimensional_eom}
+
+The barrier is represented as a deformable three-dimensional solid with its base fixed or bonded to the supporting ground. Gross rigid-body translation, sliding and overturning are excluded from the initial model, while deformation of the solid remains admissible.
+
+Following spatial discretisation, the structural equation of motion is
+
+\begin{align}
+\bm{M}_{s}\ddot{\bm{q}}
++
+\bm{C}_{s}\dot{\bm{q}}
++
+\bm{f}_{\mathrm{int}}\!\left(\bm{q},\bm{z}\right)
+&=
+\bm{f}_{\mathrm{hyd}}(t)
++
+\bm{f}_{\mathrm{body}}(t)
+\label{eq:res_str_rsp_structural_eom}
+\end{align}
+
+where \(\bm{q}\) contains the structural displacement degrees of freedom, \(\bm{z}\) contains material-history variables, \(\bm{M}_{s}\) is the mass matrix, \(\bm{C}_{s}\) is the damping matrix and \(\bm{f}_{\mathrm{int}}\) is the nonlinear internal-force vector.
+
+The fixed-base boundary condition is
+
+\begin{align}
+\bm{d}
+&=
+\bm{0}
+\qquad
+\text{on }\Gamma_{\mathrm{base}}
+\label{eq:res_str_rsp_fixed_base_boundary}
+\end{align}
+
+A nonlinear and irregular tsunami load does not itself require nonlinear material behaviour. Structural nonlinearity arises from finite deformation, nonlinear constitutive response, contact, damage or failure. The anticipated displacement and damage severity nevertheless justify a finite-deformation formulation from the outset.
+
+\subsection{Updated-Lagrangian Reference Description}
+\label{subsec:res_str_rsp_updated_lagrangian}
+
+The Lagrangian formulation governs how the deforming solid is referenced during one tsunami simulation. In an Updated-Lagrangian formulation, the latest converged configuration becomes the reference for the following increment
+
+\begin{align}
+\bm{x}_{n+1}
+&=
+\bm{x}_{n}
++
+\Delta\bm{d}_{n+1}
+\label{eq:res_str_rsp_updated_lagrangian_position}
+\end{align}
+
+This differs from the optimisation loop. Each optimisation candidate begins a new structural simulation with its own undeformed design geometry, while the Updated-Lagrangian formulation governs deformation within that simulation.
+
+Early candidate geometries may undergo substantial rotation, yielding and permanent shape change. The Updated-Lagrangian description is therefore selected as the baseline finite-deformation formulation. It is compatible with three-dimensional transient solid dynamics and incremental constitutive updates \autocite{nemer2021}
+
+\textbf{Selected approach.} Use an Updated-Lagrangian three-dimensional finite-deformation solid model.
+
+
+% ----------------------------------------------------------------------------
+% Insert under RES-STR-SIM — Structural Simulation and Finite-Element Methodology
+% ----------------------------------------------------------------------------
+
+\subsection{Structural Spatial and Temporal Discretisation}
+\label{subsec:res_str_sim_spatial_temporal_discretisation}
+
+The baseline structural solution stack consists of three-dimensional finite elements, Updated-Lagrangian finite-deformation kinematics, generalised-\(\alpha\) time integration and Newton-type nonlinear equilibrium iterations. The generalised-\(\alpha\) method supplies the temporal discretisation only; it does not replace the finite-element formulation, constitutive law or nonlinear solver.
+
+At each time step, equilibrium is enforced at weighted intermediate states through a residual of the form
+
+\begin{align}
+\bm{R}_{s}
+&=
+\bm{M}_{s}\ddot{\bm{q}}_{n+1-\alpha_{m}}
++
+\bm{C}_{s}\dot{\bm{q}}_{n+1-\alpha_{f}}
++
+\bm{f}_{\mathrm{int}}\!\left(\bm{q}_{n+1-\alpha_{f}},\bm{z}_{n+1}\right)
+-
+\bm{f}_{\mathrm{ext},n+1-\alpha_{f}}
+\label{eq:res_str_sim_generalised_alpha_residual}
+\end{align}
+
+The weighted acceleration and displacement states are
+
+\begin{align}
+\ddot{\bm{q}}_{n+1-\alpha_{m}}
+&=
+\left(1-\alpha_{m}\right)\ddot{\bm{q}}_{n+1}
++
+\alpha_{m}\ddot{\bm{q}}_{n}
+\label{eq:res_str_sim_weighted_acceleration}
+\\
+\bm{q}_{n+1-\alpha_{f}}
+&=
+\left(1-\alpha_{f}\right)\bm{q}_{n+1}
++
+\alpha_{f}\bm{q}_{n}
+\label{eq:res_str_sim_weighted_displacement}
+\end{align}
+
+The displacement and velocity are updated through Newmark-type relations
+
+\begin{align}
+\bm{q}_{n+1}
+&=
+\bm{q}_{n}
++
+\Delta t\dot{\bm{q}}_{n}
++
+\Delta t^{2}
+\left[
+\left(\frac{1}{2}-\beta\right)\ddot{\bm{q}}_{n}
++
+\beta\ddot{\bm{q}}_{n+1}
+\right]
+\label{eq:res_str_sim_generalised_alpha_displacement_update}
+\\
+\dot{\bm{q}}_{n+1}
+&=
+\dot{\bm{q}}_{n}
++
+\Delta t
+\left[
+\left(1-\gamma\right)\ddot{\bm{q}}_{n}
++
+\gamma\ddot{\bm{q}}_{n+1}
+\right]
+\label{eq:res_str_sim_generalised_alpha_velocity_update}
+\end{align}
+
+Under the standard parameter conditions, the method provides second-order accuracy and controllable high-frequency numerical dissipation \autocite{chung1993}. Liu and Marsden demonstrate its use within a three-dimensional nonlinear solid and FSI framework \autocite{liu2018}
+
+\subsection{Nonlinear Equilibrium Solution}
+\label{subsec:res_str_sim_nonlinear_equilibrium_solution}
+
+Finite deformation and nonlinear constitutive behaviour require an iterative solution at each structural time step. A Newton correction is obtained from
+
+\begin{align}
+\bm{K}_{\mathrm{eff}}^{(k)}
+\Delta\bm{q}^{(k)}
+&=
+-\bm{R}_{s}^{(k)}
+\label{eq:res_str_sim_newton_correction}
+\\
+\bm{q}^{(k+1)}
+&=
+\bm{q}^{(k)}
++
+\Delta\bm{q}^{(k)}
+\label{eq:res_str_sim_newton_update}
+\end{align}
+
+where \(\bm{K}_{\mathrm{eff}}\) contains the mass, damping and consistent tangent-stiffness contributions. The structural state is accepted only after the residual and displacement correction satisfy the selected nonlinear convergence criteria.
+
+\textbf{Selected approach.} Use generalised-\(\alpha\) time integration embedded in a Newton-type nonlinear finite-element solution.
+
+\textbf{Unresolved decisions.} The constitutive family, element technology, incompressibility treatment, damping model, spectral-radius parameter and nonlinear convergence tolerances remain to be selected.
+
+
+% ----------------------------------------------------------------------------
+% Insert under RES-STR-FSI — Fluid--Structure Interaction and Coupling Fidelity
+% ----------------------------------------------------------------------------
+
+\subsection{Reference Descriptions of the Coupled Domains}
+\label{subsec:res_str_fsi_reference_descriptions}
+
+The regional and local fluid models use an Eulerian description in which fluid variables are evaluated at spatial positions
+
+\begin{align}
+\bm{u}
+&=
+\bm{u}\!\left(\bm{x},t\right)
+\label{eq:res_str_fsi_eulerian_velocity}
+\end{align}
+
+The solid uses a Lagrangian material description
+
+\begin{align}
+\bm{x}
+&=
+\bm{\chi}\!\left(\bm{X},t\right)
+=
+\bm{X}
++
+\bm{d}\!\left(\bm{X},t\right)
+\label{eq:res_str_fsi_lagrangian_motion}
+\end{align}
+
+Impact does not require a Lagrangian fluid description. Retaining an Eulerian fluid mesh is more suitable for breaking, overtopping and free-surface topology change, while the Lagrangian solid description tracks the barrier deformation and material history.
+
+\subsection{Fluid--Solid Interface Conditions}
+\label{subsec:res_str_fsi_interface_conditions}
+
+Two-way coupling requires kinematic compatibility and dynamic equilibrium on the moving interface
+
+\begin{align}
+\bm{u}_{f}
+&=
+\dot{\bm{d}}_{s}
+\qquad
+\text{on }\Gamma_{fs}(t)
+\label{eq:res_str_fsi_kinematic_condition}
+\\
+\bm{\sigma}_{f}\bm{n}_{f}
++
+\bm{\sigma}_{s}\bm{n}_{s}
+&=
+\bm{0}
+\qquad
+\text{on }\Gamma_{fs}(t)
+\label{eq:res_str_fsi_dynamic_condition}
+\end{align}
+
+The fluid solver transfers traction to the structure. The structural solver returns the current interface position and velocity to the fluid representation. A one-way calculation omits the return of structural motion, while a two-way calculation repeats this exchange throughout the transient solution.
+
+\subsection{Moving-Boundary Treatment}
+\label{subsec:res_str_fsi_moving_boundary_treatment}
+
+A body-fitted Arbitrary Lagrangian--Eulerian method moves the fluid mesh with the structure. The fluid advection velocity is then evaluated relative to the mesh velocity
+
+\begin{align}
+\bm{u}_{\mathrm{rel}}
+&=
+\bm{u}
+-
+\bm{w}_{m}
+\label{eq:res_str_fsi_ale_relative_velocity}
+\end{align}
+
+ALE provides a direct conforming interface and conventional near-wall treatment. Its principal limitation for the present application is the risk of fluid-mesh distortion under severe structural deformation, followed by remeshing and transfer of pressure, velocity, VOF and turbulence fields. It remains useful as a reference method for moderate-deformation benchmarks \autocite{girfoglio2021}
+
+The selected baseline uses a sharp immersed structural surface with conservative cut cells on a fixed Eulerian background mesh. The method avoids global fluid-mesh deformation while accounting geometrically for the changing fluid volume and moving solid boundary. Pasquariello et al. demonstrate conservative finite-volume--finite-element coupling with cut cells and nonmatching interface transfer for three-dimensional FSI with large structural deformation \autocite{pasquariello2016}. Baragamage and Wu apply a related immersed-boundary and cut-cell strategy to three-dimensional tsunami loading \autocite{baragamage2024}
+
+\textbf{Selected approach.} Use a sharp immersed-boundary representation with conservative cut-cell treatment. Retain ALE as a comparator for moderate-deformation verification cases.
+
+The selected family must subsequently define cut-cell geometry, changing fluid volumes, small-cell stabilisation, reconstructed wall states, traction recovery and conservative transfer between fluid and structural interfaces.
+
+\subsection{Current High-Level FSI Architecture}
+\label{subsec:res_str_fsi_current_architecture}
+
+The current high-level architecture is
+
+\begin{align}
+&\text{Eulerian polyhedral finite-volume two-phase fluid}
+\nonumber\\
+&\quad+
+\text{VOF free-surface capture}
+\nonumber\\
+&\quad+
+\text{Updated-Lagrangian three-dimensional solid FEM}
+\nonumber\\
+&\quad+
+\text{generalised-}\alpha\text{ structural time integration}
+\nonumber\\
+&\quad+
+\text{Newton-type nonlinear structural solution}
+\nonumber\\
+&\quad+
+\text{sharp immersed boundary with conservative cut cells}
+\label{eq:res_str_fsi_current_architecture}
+\end{align}
+
+The following high-level decisions remain unresolved:
+
+\begin{enumerate}
+    \item monolithic or partitioned coupling
+    \item loose or strong partitioned coupling if the partitioned family is selected
+    \item added-mass stabilisation, relaxation and interface quasi-Newton acceleration
+    \item conservative transfer of force, moment, displacement and interface work
+    \item coordination of fluid and structural time levels
+    \item transition criteria between rigid, one-way and two-way FSI calculations
+\end{enumerate}
+
+
+% ----------------------------------------------------------------------------
+% Insert under RES-STR-DMG — Damage, Failure and Performance-Loss Models
+% ----------------------------------------------------------------------------
+
+\subsection{Initial Failure-Modelling Scope}
+\label{subsec:res_str_dmg_initial_failure_scope}
+
+The Updated-Lagrangian formulation permits large deformation but does not independently provide plasticity, damage, fracture or topology change. Early candidate geometries may yield severely or change shape substantially under tsunami impact. The initial structural scope is therefore to follow finite deformation and constitutive degradation until a defined failure condition is reached.
+
+Full post-fracture continuation would additionally require crack or damage evolution, contact between separated surfaces, topology change and a fluid treatment for detached structural fragments. These capabilities are outside the initial FSI baseline.
+
+\textbf{Provisional scope.} Simulate large nonlinear deformation up to a defined failure or termination criterion. Treat full fragmentation and debris--fluid interaction as a later fidelity extension.

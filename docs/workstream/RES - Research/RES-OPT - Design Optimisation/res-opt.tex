@@ -1,0 +1,48 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-opt.bib}
+
+\title{RES-OPT --- Design Optimisation}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-opt-domain-purpose}
+
+RES-OPT is deferred under the current 2026-07-19 scope decision. The
+active Research work compares fixed-rigid barrier classes in the
+Kamaishi and Sendai Tohoku corridors using hydrodynamic metrics; it
+does not run surrogate optimisation, unrestricted inverse design or
+final design selection. Future optimisation may consume validated
+barrier-class outputs after data handling, hydrodynamic load
+extraction and the V1--V2--V3 validation hierarchy are accepted.
+
+\section{Domain Deliverables}
+\label{sec:res-opt-domain-deliverables}
+
+\input{"RES-OPT-PRB - Optimisation Problem and Design-Space Definition/res-opt-prb.tex"}
+\input{"RES-OPT-OBJ - Objective Functions and Performance Measures/res-opt-obj.tex"}
+\input{"RES-OPT-CST - Constraints, Feasibility and Design Admissibility/res-opt-cst.tex"}
+\input{"RES-OPT-DOE - Design of Experiments and Simulation-Sampling Strategy/res-opt-doe.tex"}
+\input{"RES-OPT-ALG - Optimisation Algorithm Assessment and Selection/res-opt-alg.tex"}
+\input{"RES-OPT-MOO - Multi-Objective Trade-Off and Design-Selection Framework/res-opt-moo.tex"}
+\input{"RES-OPT-ROB - Robust and Uncertainty-Aware Optimisation/res-opt-rob.tex"}
+\input{"RES-OPT-BUD - Computational Budget, Convergence and Termination Strategy/res-opt-bud.tex"}
+\input{"RES-OPT-SPEC - Integrated Optimisation Specification/res-opt-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

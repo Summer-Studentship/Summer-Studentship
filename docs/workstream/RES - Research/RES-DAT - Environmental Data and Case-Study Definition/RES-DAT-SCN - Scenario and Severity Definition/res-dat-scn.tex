@@ -1,0 +1,350 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-DAT-SCN
+% Deliverable: Scenario and Severity Definition
+% Status: In progress
+% Evidence status: Tohoku corridor scenario baseline established
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-DAT-OBS, RES-DAT-SRC, RES-DAT-GEO
+% Downstream interfaces: RES-DAT-CAS, RES-ML-SUR
+% -------------------------------------------------------------------------
+
+\section{RES-DAT-SCN --- Scenario and Severity Definition}
+\label{sec:res-dat-scn}
+
+\subsection{Purpose and Scope}
+\label{sec:res-dat-scn-purpose}
+
+This Deliverable defines one primary historical tsunami event and controlled
+physical variations around that event for impact testing. Unrelated tsunami
+events shall not be added to the initial project scope.
+
+The active scenario baseline is the 2011 Tōhoku event with two
+regional-to-local trajectories: epicentre to the Kamaishi region and
+epicentre to the Sendai coastal plain. Scenario definition owns the
+evidence-based corridor footprint; it does not define arbitrary drawing
+operations or solver implementation.
+
+\subsection{Research Questions}
+\label{sec:res-dat-scn-research-questions}
+
+The scenario decision asks:
+
+\begin{enumerate}
+  \item How are the two active regional-to-local corridors defined from
+    event and target coordinates?
+  \item Which evidence determines corridor width, offshore length,
+    inland length and sponge/relaxation margins?
+  \item Which scenario changes are active impact-test variations and
+    which are deferred geometry or ML-generation tasks?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-dat-scn-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-dat-scn-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-dat-scn-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsubsection{Corridor Coordinate Basis}
+\label{sec:res-dat-scn-corridor-coordinate-basis}
+
+Base geographic coordinates are longitude/latitude. The event point is:
+
+\begin{align}
+  P_{\mathrm{e}}
+  &=
+  \left(
+    \lambda_{\mathrm{e}},
+    \phi_{\mathrm{e}}
+  \right)
+  \label{eq:res-dat-scn-event-point}
+\end{align}
+
+For a target coast point
+$P_{\mathrm{t}}=(\lambda_{\mathrm{t}},\phi_{\mathrm{t}})$, a local
+metric displacement vector shall be constructed after projection or
+local tangent-plane conversion:
+
+\begin{align}
+  \Delta\mathbf{r}
+  &=
+  \left[
+    \Delta E,\,
+    \Delta N
+  \right]^{\mathsf{T}}
+  \label{eq:res-dat-scn-target-displacement}
+\end{align}
+
+The signed rotation from the latitude/north axis to the corridor
+centreline is:
+
+\begin{align}
+  \theta
+  &=
+  \operatorname{atan2}
+  \left(
+    \Delta E,\,
+    \Delta N
+  \right)
+  \label{eq:res-dat-scn-corridor-bearing-angle}
+\end{align}
+
+where positive angle is east of north under the selected projected
+coordinate convention. The rotated local basis is:
+
+\begin{align}
+  \hat{\mathbf{e}}_{x'}
+  &=
+  \left[
+    \sin\theta,\,
+    \cos\theta
+  \right]^{\mathsf{T}}
+  \label{eq:res-dat-scn-corridor-centreline-basis}
+  \\
+  \hat{\mathbf{e}}_{y'}
+  &=
+  \left[
+    \cos\theta,\,
+    -\sin\theta
+  \right]^{\mathsf{T}}
+  \label{eq:res-dat-scn-corridor-width-basis}
+\end{align}
+
+For any projected point $\mathbf{r}$ measured from $P_{\mathrm{e}}$,
+the corridor coordinates are:
+
+\begin{align}
+  x'
+  &=
+  \Delta\mathbf{r}
+  \cdot
+  \hat{\mathbf{e}}_{x'}
+  \label{eq:res-dat-scn-corridor-x-prime}
+  \\
+  y'
+  &=
+  \Delta\mathbf{r}
+  \cdot
+  \hat{\mathbf{e}}_{y'}
+  \label{eq:res-dat-scn-corridor-y-prime}
+\end{align}
+
+Here $x'$ is the corridor centreline/propagation direction and $y'$ is
+the corridor-width direction. A constant-width baseline corridor is:
+
+\begin{align}
+  \mathcal{C}
+  &=
+  \left\{
+    \mathbf{r}:
+    -L_{\mathrm{pre}}
+    \leq
+    x'
+    \leq
+    L_{\mathrm{inland}},
+    \quad
+    \left|y'\right|
+    \leq
+    \frac{W}{2}
+  \right\}
+  \label{eq:res-dat-scn-constant-width-corridor}
+\end{align}
+
+where $W$ is corridor width, $L_{\mathrm{pre}}$ is offshore/upstream
+pre-impact length and $L_{\mathrm{inland}}$ is inland/downstream
+coverage. Sponge or relaxation margins are added outside
+$\mathcal{C}$ according to `RES-DAT-GEO`, `RES-MOD-IBC` and
+`RES-NUM-IBC`.
+
+Decision trace: Source role: supports coordinate-transform and
+corridor-polygon generation for the data/model interface. Supporting
+citations: the event coordinate is anchored to
+\textcite{usgs2011tohokuEvent}; corridor width and inland/offshore
+extent shall be supported by topobathymetric sources
+\parencite{jodcJegg500,gsiDemDownload,gebco2026grid} and severe-impact
+observations \parencite{mori2012nationwide,noaaNceiHistoricalTsunami}.
+Limitation: the angles below use current coordinate proxies and must be
+recomputed from the final GIS-selected target coordinates.
+
+\subsection{Required Data Variables and Units}
+\label{sec:res-dat-scn-required-data-variables-units}
+
+Required scenario variables are
+$P_{\mathrm{e}}$, $P_{\mathrm{t}}$, $\theta$, $W$,
+$L_{\mathrm{pre}}$, $L_{\mathrm{inland}}$, upstream/downstream/lateral
+sponge widths, target-region identifier, observation-footprint polygon,
+defence-geometry footprint and source-data version.
+
+\subsection{Candidate Data Sources}
+\label{sec:res-dat-scn-candidate-data-sources}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Spatial and Temporal Coverage}
+\label{sec:res-dat-scn-spatial-temporal-coverage}
+
+The two active trajectories are:
+
+\begin{description}
+  \item[$T_{\mathrm{K}}$] epicentre $\rightarrow$ Kamaishi region,
+    using the current coordinate proxy
+    $\theta_{\mathrm{K}}\approx -21.1^{\circ}$.
+  \item[$T_{\mathrm{S}}$] epicentre $\rightarrow$ Sendai coastal
+    plain, using the current coordinate proxy
+    $\theta_{\mathrm{S}}\approx -97.4^{\circ}$.
+\end{description}
+
+The angles are not final GIS bearings. They shall be recomputed from
+the accepted target coordinates, selected projection and corridor
+origin before clipping or mesh generation.
+
+\subsection{Coordinate and Datum Requirements}
+\label{sec:res-dat-scn-coordinate-datum-requirements}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Data Processing and Transformation}
+\label{sec:res-dat-scn-data-processing-transformation}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Uncertainty, Provenance and Licensing}
+\label{sec:res-dat-scn-uncertainty-provenance-licensing}
+
+% TODO: Complete this RES-DAT Domain-specific subsection.
+
+\subsection{Data Acceptance Criteria}
+\label{sec:res-dat-scn-data-acceptance-criteria}
+
+A corridor definition is accepted only when:
+
+\begin{itemize}
+  \item final $P_{\mathrm{e}}$ and $P_{\mathrm{t}}$ coordinates are
+    recorded with source and CRS metadata;
+  \item $\theta$ is recomputed from the final GIS coordinates;
+  \item $W$, $L_{\mathrm{pre}}$, $L_{\mathrm{inland}}$ and sponge
+    widths are justified by source footprint, severe-impact
+    observations, defence geometry, bathymetry/topography coverage and
+    numerical relaxation requirements;
+  \item observation and terrain datasets fully cover the corridor plus
+    buffer;
+  \item constant-width corridor adequacy is documented for each target.
+\end{itemize}
+
+\subsection{Candidate Approaches}
+\label{sec:res-dat-scn-candidate-approaches}
+
+The active scenario approach is a validated event baseline plus bounded local
+variations in wave height, inundation depth, velocity, direction, duration and
+selected severity scaling. These variations support robustness and
+reinforcement screening within the event-conditioned domain.
+
+The baseline corridor is constant-width. A narrowing or bay-following
+corridor is deferred unless GIS evidence shows that the narrowing
+represents true physical bay, coastline or bathymetric constraints
+rather than a drawing convenience.
+
+\subsection{Critical Comparison}
+\label{sec:res-dat-scn-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+The constant-width corridor is selected for the baseline because it
+creates a reproducible clipping and replay-boundary interface. It is
+limited where a ria bay, harbour mouth, river channel or coastal plain
+controls the flow in a way that a rectangular corridor would
+misrepresent. In those cases the physical constraint shall be encoded
+from GIS coastline/topography evidence, not manually narrowed for
+visual neatness.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-dat-scn-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-dat-scn-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-dat-scn-conclusions}
+
+The initial project is a single-event reconstruction and controlled
+impact-testing study, not a multi-event generalisation study.
+
+The Tōhoku/local comparison is explicitly two-corridor: Kamaishi for a
+Sanriku/ria and defence-interaction case, and Sendai coastal plain for
+flat-plain inundation comparison. This pairing supports barrier-class
+comparison within one event while avoiding claims of cross-event
+generalisability.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-dat-scn-selected-approach}
+
+Use two evidence-defined, constant-width baseline corridors:
+$T_{\mathrm{K}}$ and $T_{\mathrm{S}}$. Corridor parameters are data
+products owned by RES-DAT, not solver constants. Source role: supports
+regional-to-local data extraction and replay-boundary generation.
+Downstream handoff: Software shall generate corridor polygons,
+clip raster/vector data, interpolate terrain, extract observation
+subsets and write replay-boundary definitions from the same manifest.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-dat-scn-unresolved-decisions}
+
+Open decisions are final GIS-selected target coordinates, final
+projection, corridor widths, upstream/downstream lengths, sponge
+widths, observation-footprint inclusion rules and whether a
+physically-constrained non-rectangular local boundary is required near
+Kamaishi Bay.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-dat-scn-requirements}
+
+Software shall start the corridor workflow in parallel with remaining
+research: coordinate-transform module, corridor-polygon generation,
+manifest-driven clipping, local inlet section extraction and
+replay-boundary metadata. `RES-VER-TST` shall use the same corridor
+parameters in interface-location and one-way-versus-coupled tests.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-dat-scn-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,554 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-IBC
+% Deliverable: Discrete Initial, Boundary and Interface Treatments
+% Status: Draft complete
+% Evidence status: Regional and local boundary research specification complete; coupling evidence partial
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-MOD-IBC, RES-DAT-GEO, RES-DAT-SRC, RES-MOD-MUL
+% Downstream interfaces: RES-VER-TST, Software boundary/interface implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-IBC --- Discrete Initial, Boundary and Interface Treatments}
+\label{sec:res-num-ibc}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-ibc-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-num-ibc-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-ibc-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-ibc-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Takase et al. (2016)}
+\label{sec:res-num-ibc-evidence-takase-2016}
+
+\textcite{takase2016hybrid} demonstrated the coupling of independently meshed two-dimensional shallow-water and three-dimensional Navier--Stokes domains through multiple-point constraints and transmission relations. The method enforced compatibility of velocity and pressure despite differences in mesh dimensionality and interface node arrangement.
+
+The paper is retained as evidence for the interface requirements rather than as a numerical formulation to reproduce directly. The present project requires an interface treatment compatible with a finite-volume regional solver, independent three-dimensional discretisation, saved restart states, and both one-way and bidirectional execution.
+
+\subsubsection{Romano et al. (2025)}
+\label{sec:res-num-ibc-evidence-romano-2025}
+
+\textcite{romano2025coupling} transferred a time-dependent
+three-dimensional tsunami signal into a reduced two-dimensional
+propagation model and examined the sensitivity of the resulting model
+chain to the coupling-boundary position. The study showed that transfer
+accuracy depended on whether the high-fidelity model had already
+resolved the nonlinear and geometrically controlled transformations
+that the receiving model could not represent.
+
+The paper is retained as evidence for physics-based interface placement,
+sequential restart coupling, and preservation of transmitted waveform
+content. Its free-surface-based, frequency-domain transfer is treated as
+one case-specific implementation rather than as the interface
+specification for the present finite-volume shallow-water model.
+
+\subsubsection{Higuera et al. (2013) and Jacobsen et al. (2012)}
+\label{sec:res-num-ibc-evidence-wave-boundaries}
+
+\textcite{higuera2013realistic} and
+\textcite{jacobsen2012waves2foam} are retained as evidence that
+Navier--Stokes/VOF numerical wave tanks require wave-generation and
+absorption boundary treatments designed around the intended incident
+wave signal. Source role: `3D-WAVEBC`. Project conclusion: local
+inlet, outlet and lateral boundary faces shall preserve the incident
+history while preventing artificial reflection from contaminating
+run-up, overtopping and loading outputs. Limitation: exact relaxation
+profiles and numerical coefficients remain case-study verification
+choices.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-ibc-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-ibc-discrete-formulation}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+For the regional solver, boundary conditions are imposed as face states
+during residual evaluation. Internal and boundary fluxes are:
+
+\begin{align}
+  \widehat{\mathbf{F}}_f
+  &=
+  \widehat{\mathbf{F}}
+  \left(
+    \mathbf{U}_{i,f},\,
+    \mathbf{U}_{j,f},\,
+    \mathbf{n}_f
+  \right)
+  \label{eq:res-num-ibc-regional-internal-face-flux}
+  \\
+  \widehat{\mathbf{F}}_f
+  &=
+  \widehat{\mathbf{F}}
+  \left(
+    \mathbf{U}_{i,f},\,
+    \mathbf{U}_{\mathrm{B},f},\,
+    \mathbf{n}_f
+  \right)
+  \label{eq:res-num-ibc-regional-boundary-face-flux}
+\end{align}
+
+The baseline regional boundary assignments are:
+
+\begin{itemize}
+  \item offshore artificial boundary: characteristic or radiation open
+    boundary;
+  \item lateral artificial ocean cuts: radiation/open boundary plus
+    sponge damping where required;
+  \item physical coastline: topography plus wetting--drying, not an
+    outer wall boundary;
+  \item true wall or resolved structure: reflective boundary state;
+  \item debug fallback only: transmissive or zero-gradient state.
+\end{itemize}
+
+For a reflective wall, the boundary state preserves depth and reverses
+normal velocity:
+
+\begin{align}
+  h_{\mathrm{B}}
+  &=
+  h_{\mathrm{I}}
+  \label{eq:res-num-ibc-regional-reflective-depth}
+  \\
+  u_{n,\mathrm{B}}
+  &=
+  -u_{n,\mathrm{I}}
+  \label{eq:res-num-ibc-regional-reflective-normal-velocity}
+  \\
+  u_{t,\mathrm{B}}
+  &=
+  u_{t,\mathrm{I}}
+  \label{eq:res-num-ibc-regional-reflective-tangential-velocity}
+\end{align}
+
+The two-dimensional-to-three-dimensional transfer shall construct a local boundary or initial state from:
+\begin{align}
+    \mathcal{D}_{2\rightarrow3} &= \left\{ h,\, \eta,\, \overline{u},\, \overline{v},\, h\overline{u},\, h\overline{v} \right\}_{\Gamma}
+    \label{eq:res-num-ibc-two-to-three-data}
+\end{align}
+
+The transferred quantities shall be mapped to:
+
+\begin{align}
+    \mathcal{D}_{3,\Gamma} &= \left\{ \vec{u}(z),\, p(z),\, \alpha(z) \right\}_{\Gamma}
+    \label{eq:res-num-ibc-three-dimensional-interface-data}
+\end{align}
+
+The initial lifting method may use a depth-uniform horizontal velocity profile where the interface lies within a hydrostatic, weakly sheared region. Alternative profiles shall remain available where evidence shows that a uniform reconstruction is inadequate. Hydrostatic pressure may be initialised using:
+
+\begin{align}
+    p(z) &= \rho g \max \left( \eta-z,\, 0 \right)
+    \label{eq:res-num-ibc-hydrostatic-pressure-lifting}
+\end{align}
+
+The local three-dimensional solver shall subsequently develop the resolved vertical velocity, shear, separation, and vortical structure.
+
+\subsubsection{Local Three-Dimensional Boundary-Face States}
+\label{sec:res-num-ibc-local-boundary-face-states}
+
+For each local boundary face $f$, the discrete boundary state contains:
+
+\begin{align}
+  \mathcal{B}_{f}^{\mathrm{3D}}
+  &=
+  \left\{
+    \alpha_f,\,
+    \rho_f,\,
+    \mu_f,\,
+    \mathbf{u}_f,\,
+    p_f,\,
+    k_f,\,
+    \omega_f,\,
+    \phi_f
+  \right\}
+  \label{eq:res-num-ibc-local-boundary-state}
+\end{align}
+
+At $\Gamma_{\mathrm{in}}$, the boundary state is reconstructed from
+the regional interface history using the inlet free-surface, velocity
+and pressure reconstruction rules defined in `RES-MOD-IBC`.
+The discrete inlet flux is:
+
+\begin{align}
+  \phi_{f,\mathrm{in}}
+  &=
+  \mathbf{u}_{f,\mathrm{in}}
+  \cdot
+  \mathbf{S}_f
+  \label{eq:res-num-ibc-local-inlet-face-flux}
+\end{align}
+
+At $\Gamma_{\mathrm{out}}$ and $\Gamma_{\mathrm{side}}$, the boundary
+state shall use an open, radiation or relaxation treatment. The
+accepted treatment shall report reflected-wave contamination at the
+measurement locations rather than assuming that a zero-gradient state is
+non-reflective.
+
+At $\Gamma_{\mathrm{top}}$, the air boundary shall act as an open
+atmospheric boundary with a pressure reference compatible with the
+pressure-correction equation. At $\Gamma_{\mathrm{T}}$ and
+$\Gamma_{\mathrm{B}}$, no penetration is imposed by:
+
+\begin{align}
+  \mathbf{u}_{f}
+  \cdot
+  \mathbf{n}_f
+  &=
+  0
+  \label{eq:res-num-ibc-local-wall-no-penetration}
+\end{align}
+
+and the tangential velocity is treated using the selected no-slip or
+wall-function discretisation. For the high-Reynolds-number baseline,
+scalable wall-function quantities shall be applied consistently to
+velocity, $k$, $\omega$ and wall shear on terrain and barrier patches.
+The exact wall-function constants and roughness parameters remain open
+until the case-study material and validation data are selected.
+
+The three-dimensional-to-two-dimensional restriction operator shall
+construct the receiving shallow-water state from the resolved
+three-dimensional solution.
+
+The depth shall be obtained from the free-surface and bed elevations:
+
+\begin{align}
+    h
+    &=
+    \eta-z_b
+    \label{eq:res-num-ibc-restricted-depth}
+\end{align}
+
+The depth-integrated discharges shall be obtained from the resolved
+horizontal velocity field:
+
+\begin{align}
+    q_x
+    &=
+    \int_{z_b}^{\eta}
+    u\,\dd z
+    \label{eq:res-num-ibc-restricted-discharge-x}
+    \\
+    q_y
+    &=
+    \int_{z_b}^{\eta}
+    v\,\dd z
+    \label{eq:res-num-ibc-restricted-discharge-y}
+\end{align}
+
+The restricted conservative state is therefore:
+
+\begin{align}
+    \vec{U}_{\mathrm{2D},\Gamma}
+    &=
+    \left[
+        h,\,
+        q_x,\,
+        q_y
+    \right]^{\mathsf{T}}
+    \label{eq:res-num-ibc-restricted-conservative-state}
+\end{align}
+
+A free-surface history alone shall not be treated as sufficient for the
+nonlinear shallow-water receiver unless an additional closure supplies
+a compatible discharge field. The restriction shall retain the spatial
+variation of the three-dimensional solution along the interface rather
+than replacing the complete section with one scalar waveform.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-ibc-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The normal volume flux transferred across an interface segment shall satisfy:
+\begin{align}
+    \int_{\Gamma_{\mathrm{3D}}} \vec{u}\cdot\vec{n}\,\dd A &= \int_{\Gamma_{\mathrm{2D}}} h\overline{\vec{u}}\cdot\vec{n}\,\dd s
+    \label{eq:res-num-ibc-interface-volume-flux}
+\end{align}
+
+The corresponding momentum transfer shall be monitored using a discrete interface balance:
+
+\begin{align}
+    \vec{\varepsilon}_{\mathrm{mom}} &= \vec{\Phi}_{\mathrm{mom},\mathrm{3D}} - \vec{\Phi}_{\mathrm{mom},\mathrm{2D}}
+    \label{eq:res-num-ibc-interface-momentum-imbalance}
+\end{align}
+
+The exact momentum-flux definition shall be consistent with the governing equations and numerical fluxes used by both solvers.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-ibc-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The interface treatment shall be regarded as a numerical transformation
+whose error must be measured separately from the errors of either
+solver.
+
+For any transferred scalar or flux quantity $\phi$, the interface error
+may be represented as:
+
+\begin{align}
+    \varepsilon_{\Gamma,\phi}
+    &=
+    \phi_{\mathrm{received}}
+    -
+    \mathcal{T}_{\Gamma}
+    \left(
+        \phi_{\mathrm{donor}}
+    \right)
+    \label{eq:res-num-ibc-interface-transfer-error}
+\end{align}
+
+where $\mathcal{T}_{\Gamma}$ denotes the complete spatial and temporal
+mapping operation.
+
+The mapping shall be assessed for:
+
+\begin{itemize}
+    \item amplitude preservation;
+    \item phase preservation;
+    \item normal mass flux;
+    \item depth-integrated momentum flux;
+    \item spatial variation along the interface;
+    \item relevant wave-frequency content;
+    \item wet and dry extent;
+    \item accumulated interpolation error.
+\end{itemize}
+
+\subsection{Stability Requirements}
+\label{sec:res-num-ibc-stability-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-ibc-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The interface treatment shall support:
+\begin{itemize}
+  \item non-conforming spatial meshes;
+  \item conservative interpolation or projection;
+  \item different two-dimensional and three-dimensional time steps;
+  \item temporal interpolation of incident states;
+  \item configurable coupling intervals;
+  \item subcycling of the local three-dimensional solver;
+  \item synchronisation at each bidirectional exchange point.
+\end{itemize}
+For simultaneous coupling, neither solver shall advance beyond a required exchange time until the interface data from the other solver are available. The software implementation may realise this requirement using a task join, future, condition variable, or equivalent synchronisation primitive.
+
+Saved interface data shall include the physical sampling interval,
+solver time, spatial coordinate system, interpolation method, and all
+metadata required to reproduce the donor signal deterministically.
+
+The sampling interval $\Delta t_{\Gamma}$ shall satisfy the Nyquist
+condition for the highest frequency that materially affects the
+quantities of interest:
+
+\begin{align}
+    f_{\mathrm{s},\Gamma}
+    &=
+    \frac{1}{\Delta t_{\Gamma}}
+    \geq
+    2 f_{\mathrm{max}}
+    \label{eq:res-num-ibc-interface-nyquist-condition}
+\end{align}
+
+where $f_{\mathrm{max}}$ is the highest physically relevant retained
+frequency.
+
+Spectral comparison shall be used as a diagnostic even when both
+solvers operate entirely in the time domain. This comparison shall
+identify attenuation, amplification, phase distortion, aliasing, or
+low-pass filtering introduced by checkpoint storage, interpolation, or
+interface reconstruction.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-ibc-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+Potential interface failure modes include:
+\begin{itemize}
+  \item loss of mass or momentum during spatial projection;
+  \item artificial reflection at the model boundary;
+  \item suppression of physical reflected waves in one-way mode;
+  \item inconsistent free-surface elevation and pressure;
+  \item nonphysical vertical profiles introduced by the lifting operator;
+  \item temporal phase error caused by interpolation or coupling lag;
+  \item instability caused by explicit bidirectional exchange;
+  \item overspecification of the three-dimensional boundary;
+  \item wetting or drying mismatch across the interface;
+  \item thread or process oversubscription during concurrent comparison runs.
+\end{itemize}
+
+The Romano et al.\ implementation demonstrates that a case-specific
+transfer may be successful with free-surface elevation as the prescribed
+quantity. That choice is not adopted directly for the present nonlinear
+shallow-water receiver, whose conservative state also requires
+depth-integrated discharge.
+
+Similarly, the paper's frequency-domain mild-slope calculation is not
+used as the primary regional model. Nevertheless, the observed
+sensitivity to retained frequency content establishes that temporal
+downsampling or interpolation may remove physically important
+short-period components even in a time-domain coupling implementation.
+
+Potential failure modes derived from this comparison include:
+
+\begin{itemize}
+    \item transferring into the reduced model before high-fidelity
+          processes have decayed;
+    \item omitting the discharge associated with a transferred
+          free-surface history;
+    \item suppressing spatial variation along a wide interface;
+    \item filtering relevant high-frequency components;
+    \item contaminating the transferred state with an artificial
+          boundary;
+    \item placing the interface within a strong geometric contraction,
+          expansion, or resonance region;
+    \item interpreting agreement at one interface position as evidence
+          of interface independence.
+\end{itemize}
+
+\subsection{Verification Requirements}
+\label{sec:res-num-ibc-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+The interface implementation shall be tested using:
+\begin{itemize}
+  \item still-water preservation;
+  \item steady uniform-flow transmission;
+  \item solitary-wave transmission;
+  \item propagation from two dimensions into three dimensions;
+  \item propagation from three dimensions back into two dimensions;
+  \item reflection from a controlled obstacle;
+  \item non-conforming mesh transfer;
+  \item time-step and coupling-interval refinement;
+  \item interface-location sensitivity;
+  \item one-way replay against simultaneous coupling.
+\end{itemize}
+Each test shall report free-surface error, phase error, reflected-wave error, mass imbalance, momentum imbalance, and the relevant engineering quantities of interest.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-ibc-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-ibc-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-ibc-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-ibc-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-ibc-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-ibc-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+The regional boundary treatment is selected at specification level.
+Regional-to-local transfer remains an interface workstream: the required
+quantities are identified, but final projection operators, synchronised
+coupling residuals and acceptance tolerances are not yet selected.
+
+The local boundary treatment is selected at role level: inlet forcing
+from regional histories, open/radiation downstream and lateral
+boundaries, open atmospheric top and wall-function-compatible
+no-penetration/no-slip treatment on terrain and barrier patches. Exact
+relaxation profiles, pressure-reference handling, wall functions and
+roughness values remain numerical and validation decisions.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-ibc-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open items are final artificial-boundary placement, domain-specific
+sponge settings, source/bathymetry projection after data lock, and
+regional-to-local coupling operators. Local open items are inlet
+relaxation strategy, side/outlet absorption coefficients, pressure
+reference treatment, wall-function constants, roughness parameters and
+coupling-interface residuals.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-ibc-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+The Software boundary implementation shall expose boundary-face state
+construction for open/radiation, sponge, reflective and transmissive
+states. Verification shall test boundary reflection, sponge damping,
+wet/dry coastline behaviour and interface transfer separately.
+
+For the local model, Software shall expose boundary-face state
+construction for inlet histories, outlet/side radiation or relaxation,
+open top and terrain/barrier wall patches. Verification shall test
+boundary reflection and inlet reconstruction before local force or
+overtopping results are accepted.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-ibc-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

@@ -1,0 +1,300 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-MOD-SYS
+% Deliverable: System Boundary and Mathematical Model Architecture
+% Status: Draft complete for regional 2D/local 3D separation
+% Evidence status: Regional and local hydrodynamic model boundaries established
+% Review status: Not reviewed
+% Last updated: 2026-07-18
+% Dependencies: RES-PHY-SYN, RES-DAT-GEO, RES-GEO-REP, RES-MOD-EQS, RES-MOD-MUL
+% Downstream interfaces: RES-MOD-LRG, RES-MOD-MUL, RES-NUM-SPEC, RES-VER-FRM
+% -------------------------------------------------------------------------
+
+\section{RES-MOD-SYS --- System Boundary and Mathematical Model Architecture}
+\label{sec:res-mod-sys}
+
+\subsection{Purpose and Scope}
+\label{sec:res-mod-sys-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+This Deliverable defines the continuous system boundary for the
+regional tsunami model and the local three-dimensional
+tsunami--barrier interaction model. It assigns physical responsibility
+to each model without prescribing software classes, file formats or
+implementation APIs.
+
+\subsection{Research Questions}
+\label{sec:res-mod-sys-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+The local-model integration answers:
+
+\begin{enumerate}
+  \item Which physical region is owned by the local three-dimensional
+    model rather than the regional depth-averaged model?
+  \item Which boundaries define the local air--water--barrier domain?
+  \item Which outputs justify activating the local model?
+  \item Which coupling modes must remain available between the
+    regional and local models?
+\end{enumerate}
+
+\subsection{Terminology and Definitions}
+\label{sec:res-mod-sys-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-mod-sys-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\textcite{qin2018comparison} showed that a three-dimensional RANS
+model is needed when local vertical velocity structure, nonhydrostatic
+pressure and direct fluid-force extraction are project outputs. Source
+role: `3D-RANSVOF`. Project conclusion: the local barrier domain cannot
+be represented solely by the regional depth-averaged equations.
+Limitation: the result supports model separation and output
+requirements, not the final numerical implementation.
+
+\textcite{takase2016hybrid} and \textcite{romano2025coupling} support
+separating regional and high-fidelity local domains while exchanging
+state information across a controlled interface. Source role:
+`3D-COUPLING`. Project conclusion: the architecture shall retain
+separable regional and local model boundaries with configurable
+interface placement. Limitation: neither paper directly fixes the
+finite-volume transfer operators used by this project.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-mod-sys-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{System Boundary}
+\label{sec:res-mod-sys-system-boundary}
+
+The regional model boundary is the horizontal two-dimensional
+depth-averaged tsunami domain. It owns regional propagation,
+bathymetric transformation, run-up and inundation at the selected
+case-study scale. The local three-dimensional model owns
+structure-scale pressure, overtopping, local free-surface topology and
+FSI where depth-averaged assumptions are insufficient.
+
+The local hydrodynamic domain is:
+
+\begin{align}
+  \Omega_{\mathrm{F}}
+  &=
+  \Omega_{\mathrm{L}}
+  \setminus
+  \Omega_{\mathrm{B}}
+  \label{eq:res-mod-sys-local-fluid-domain}
+\end{align}
+
+where $\Omega_{\mathrm{L}}$ is the selected local coastal volume and
+$\Omega_{\mathrm{B}}$ is the fixed candidate barrier or defence
+geometry. The baseline local model is activated for run-up,
+overtopping, breaking, local separation, pressure, shear traction,
+force, moment and comparative barrier-performance analysis.
+
+The local boundary is partitioned as:
+
+\begin{align}
+  \partial\Omega_{\mathrm{F}}
+  &=
+  \Gamma_{\mathrm{in}}
+  \cup
+  \Gamma_{\mathrm{out}}
+  \cup
+  \Gamma_{\mathrm{side}}
+  \cup
+  \Gamma_{\mathrm{top}}
+  \cup
+  \Gamma_{\mathrm{T}}
+  \cup
+  \Gamma_{\mathrm{B}}
+  \label{eq:res-mod-sys-local-boundary-partition}
+\end{align}
+
+Here $\Gamma_{\mathrm{in}}$ is the regional-to-local incident-wave
+boundary, $\Gamma_{\mathrm{out}}$ is the downstream open boundary,
+$\Gamma_{\mathrm{side}}$ represents artificial lateral ocean cuts,
+$\Gamma_{\mathrm{top}}$ is the atmospheric boundary,
+$\Gamma_{\mathrm{T}}$ is fixed terrain and $\Gamma_{\mathrm{B}}$ is
+the fixed barrier surface. The side boundaries represent unmodelled
+lateral ocean, not physical walls, unless a later site-specific defence
+geometry explicitly requires a wall boundary.
+
+\subsection{State Variables and Parameters}
+\label{sec:res-mod-sys-state-variables-parameters}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Continuous Governing Model}
+\label{sec:res-mod-sys-continuous-governing-model}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Source Terms and Closures}
+\label{sec:res-mod-sys-source-terms-closures}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Initial, Boundary and Interface Conditions}
+\label{sec:res-mod-sys-initial-boundary-interface-conditions}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+\subsection{Model Coupling Requirements}
+\label{sec:res-mod-sys-model-coupling-requirements}
+
+The regional model shall provide boundary histories and checkpoint data
+for local 3D/interface modelling. The final 2D--3D coupling operators,
+FSI feedback rules and local extraction region remain separate
+workstreams.
+
+The Kamaishi and Sendai corridor polygons delivered by `RES-DAT-SCN`
+are data/model interface objects. They determine where terrain,
+observations and regional replay histories are clipped and sampled, but
+they do not change the governing equations. A corridor boundary shall
+therefore be justified by event-source location, target coast, severe
+impact observations, defence geometry, topobathymetry coverage and
+numerical relaxation requirements rather than by arbitrary drawing.
+
+The baseline coupling path is one-way replay:
+
+\begin{align}
+  \mathcal{M}_{\mathrm{regional}}
+  &\rightarrow
+  \mathcal{M}_{\mathrm{local}}
+  \label{eq:res-mod-sys-one-way-replay}
+\end{align}
+
+where a saved regional state and interface history drive the local
+three-dimensional model without feedback during candidate screening.
+A simultaneously coupled mode shall also be retained where reflection,
+blocking or other local feedback materially changes regional or
+nearshore quantities of interest.
+
+\subsection{Sufficient Conditions for Validity}
+\label{sec:res-mod-sys-sufficient-conditions-validity}
+
+% TODO: Complete this RES-MOD Domain-specific subsection.
+
+The regional-to-local separation is sufficient when the coupling
+interface lies outside the region where vertical acceleration,
+breaking, local impact pressure or barrier-generated recirculation
+dominates. It shall be checked by moving the interface and comparing
+the engineering quantities of interest.
+
+\subsection{Candidate Approaches}
+\label{sec:res-mod-sys-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-mod-sys-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-mod-sys-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-mod-sys-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-mod-sys-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+The project uses a two-model hydrodynamic architecture: a regional
+depth-averaged NLSWE model for event-scale propagation and a local
+three-dimensional URANS--VOF model for barrier-scale hydrodynamics.
+The split is based on physical validity and output requirements rather
+than software convenience.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-mod-sys-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+Use a regional 2D NLSWE model for the large horizontal domain and defer
+local three-dimensional/interface/FSI modelling to the local domain.
+This preserves the distinction between a two-dimensional horizontal
+solve and cross-sectional visualisations extracted from that solve.
+
+The selected local system role is:
+
+\begin{quote}
+  local three-dimensional incompressible two-phase
+  Navier--Stokes/VOF model for fixed-terrain, fixed-barrier
+  tsunami--barrier interaction, driven by regional NLSWE interface
+  histories and used to extract free-surface, overtopping, pressure,
+  shear, force, moment and energy metrics
+\end{quote}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-mod-sys-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+Open system-boundary decisions are the final case-study local-domain
+extent, the exact interface location, the downstream buffer length, and
+the activation gate for simultaneous coupling.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-mod-sys-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+`RES-MOD-IBC` shall define the continuous boundary-condition roles on
+each local boundary. `RES-NUM-IBC` shall convert those roles into
+discrete boundary-face states and flux treatments. `RES-VER-FRM` shall
+test that the chosen boundary and coupling placement do not contaminate
+the local quantities of interest.
+
+`RES-DAT-CAS` and Software shall provide the dataset manifest,
+corridor-polygon identifiers and replay-boundary histories consumed by
+the mathematical interface. The mathematical model shall treat those as
+inputs, not as proof that validation has been executed.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-mod-sys-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

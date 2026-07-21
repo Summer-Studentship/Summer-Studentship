@@ -1,0 +1,177 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-NUM-FLX
+% Deliverable: Spatial Reconstruction and Numerical Flux Selection
+% Status: Draft complete
+% Evidence status: Regional research specification complete
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies: RES-NUM-FRM, RES-NUM-MSH, RES-MOD-EQS
+% Downstream interfaces: RES-NUM-WET, RES-NUM-SRC, RES-VER-BMK, Software flux implementation
+% -------------------------------------------------------------------------
+
+\section{RES-NUM-FLX --- Spatial Reconstruction and Numerical Flux Selection}
+\label{sec:res-num-flx}
+
+\subsection{Purpose and Scope}
+\label{sec:res-num-flx-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-num-flx-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-num-flx-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-num-flx-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-num-flx-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Discrete Formulation}
+\label{sec:res-num-flx-discrete-formulation}
+
+The regional reconstruction state is
+$\mathbf{W}=[\eta,u,v,b]^{\mathsf{T}}$. The selected reconstruction is
+MUSCL piecewise-linear reconstruction using weighted least-squares
+gradients and a Barth--Jespersen limiter, as defined in
+\cref{eq:res-num-spec-regional-reconstruction-state,eq:res-num-spec-regional-muscl-reconstruction,eq:res-num-spec-regional-ls-gradient}.
+Reconstruction reverts to first order near wet/dry fronts where needed
+for positivity.
+
+\subsection{Conservation Properties}
+\label{sec:res-num-flx-conservation-properties}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Consistency and Formal Accuracy}
+\label{sec:res-num-flx-consistency-formal-accuracy}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Stability Requirements}
+\label{sec:res-num-flx-stability-requirements}
+
+HLLC is selected as the primary flux in wet, valid states. HLL or HLLE
+is the fallback near dry, degenerate or unsafe states. Face states are
+rotated into normal/tangential coordinates before the Riemann solve, as
+recorded in
+\cref{eq:res-num-spec-regional-normal-velocity,eq:res-num-spec-regional-rotated-state}.
+
+\subsection{Mesh and Time-Step Requirements}
+\label{sec:res-num-flx-mesh-time-step-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Numerical Failure Modes}
+\label{sec:res-num-flx-numerical-failure-modes}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Verification Requirements}
+\label{sec:res-num-flx-verification-requirements}
+
+% TODO: Complete this RES-NUM Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-num-flx-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-num-flx-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-num-flx-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-num-flx-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-num-flx-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-num-flx-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+Selected regional flux/reconstruction hierarchy:
+
+\begin{itemize}
+  \item second-order MUSCL reconstruction in smooth wet regions;
+  \item weighted least-squares gradients on polygonal meshes;
+  \item Barth--Jespersen multidimensional limiting;
+  \item hydrostatically reconstructed face states before fluxing;
+  \item HLLC for the normal shallow-water Riemann problem in valid wet
+    states;
+  \item HLL/HLLE fallback for dry, nearly dry or otherwise unsafe
+    states.
+\end{itemize}
+
+\subsection{Unresolved Decisions}
+\label{sec:res-num-flx-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+The flux family, reconstruction family and limiter family are no longer
+open. Exact HLLC wave-speed estimates, dry-state switching constants and
+case-specific limiter safeguards remain verification and implementation
+parameters.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-num-flx-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-num-flx-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

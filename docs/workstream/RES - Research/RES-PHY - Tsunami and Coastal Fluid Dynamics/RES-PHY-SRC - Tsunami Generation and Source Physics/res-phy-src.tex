@@ -1,0 +1,174 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-PHY-SRC
+% Deliverable: Tsunami Generation and Source Physics
+% Status: In progress
+% Evidence status: Dynamic regional source representation established; final source dataset pending
+% Review status: Not reviewed
+% Last updated: 2026-07-07
+% Dependencies:
+% Downstream interfaces:
+% -------------------------------------------------------------------------
+
+\section{RES-PHY-SRC --- Tsunami Generation and Source Physics}
+\label{sec:res-phy-src}
+
+\subsection{Purpose and Scope}
+\label{sec:res-phy-src-purpose}
+
+% TODO: Define what this Deliverable covers and explicitly excludes.
+
+\subsection{Research Questions}
+\label{sec:res-phy-src-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-phy-src-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-phy-src-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Fujii et al. (2011)}
+\label{sec:res-phy-src-evidence-fujii-2011}
+
+\textcite{fujii2011tsunamisource}: Fujii et al.\ reconstructed the tsunami source of the 2011 Tohoku earthquake through waveform inversion using coastal tide and wave gauges, offshore GPS wave gauges, ocean-bottom pressure sensors, and DART records \cite{fujii2011tsunamisource}. The source was divided into forty rectangular subfaults measuring approximately $50 \times 50~\mathrm{km}$, with a common strike of $193^\circ$, dip of $14^\circ$, and rake of $81^\circ$. The inferred slip distribution was converted into static seabed deformation using an Okada-type elastic half-space model, with the influence of coseismic horizontal displacement included over steep bathymetric gradients.
+
+The paper is retained as the first candidate source reconstruction for the Tohoku benchmark. Its principal contribution is an observationally constrained finite-fault slip distribution that can be converted into a seabed-deformation field. Its principal limitations are the coarse subfault resolution, substantial uncertainty in the largest inferred slips, simplified rupture kinematics, and the use of the same tsunami waveforms for both inversion and waveform comparison.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-phy-src-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsection{Physical Mechanisms}
+\label{sec:res-phy-src-physical-mechanisms}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\textcite{fujii2011tsunamisource}: The reconstructed tsunami consisted of two physically distinct source components. Very large slip near the Japan Trench generated the shorter-period impulsive tsunami component, whereas deeper interplate slip beneath southern Sanriku-oki and Miyagi-oki produced the preceding gradual water-level increase and contributed to the extensive inundation of the Sendai Plain. The source should therefore not be represented as a spatially uniform fault or an arbitrary Gaussian free-surface disturbance, as either simplification would remove the observed distinction between the impulsive near-trench and broader interplate components.
+
+\subsection{Characteristic Spatial and Temporal Scales}
+\label{sec:res-phy-src-characteristic-spatial-temporal-scales}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\textcite{fujii2011tsunamisource}: The region with inferred slip exceeding $2~\mathrm{m}$ extended for approximately $350~\mathrm{km}$. The two largest subfault slips exceeded $40~\mathrm{m}$, while the source model assumed a constant rise time of $30~\mathrm{s}$. Offshore observations contained an initial gradual increase in water level of approximately $2~\mathrm{m}$ followed by an impulsive wave of approximately $3$--$5~\mathrm{m}$ with a period of approximately $8~\mathrm{min}$.
+
+\subsection{Relevant Observables}
+\label{sec:res-phy-src-relevant-observables}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Controlling Dimensionless Parameters}
+\label{sec:res-phy-src-controlling-dimensionless-parameters}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Physical Regimes and Transition Conditions}
+\label{sec:res-phy-src-physical-regimes-transition-conditions}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Implications for Model Validity}
+\label{sec:res-phy-src-model-validity-implications}
+
+% TODO: Complete this RES-PHY Domain-specific subsection.
+
+\subsection{Candidate Approaches}
+\label{sec:res-phy-src-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\textcite{fujii2011tsunamisource}: The finite-fault inversion is retained as Candidate Source Model A for the benchmark simulation. Under this approach, the reported subfault slips are converted into vertical and horizontal seabed displacement before the resulting deformation is transferred to the hydrodynamic model. The tabulated slip values are not themselves water-surface elevations and shall not be imposed directly as the tsunami initial condition.
+
+\subsection{Critical Comparison}
+\label{sec:res-phy-src-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\textcite{fujii2011tsunamisource}: The principal strength of the source model is its direct constraint by near-field and far-field tsunami observations. Its principal weaknesses are the coarse $50~\mathrm{km}$ subfault resolution, substantial uncertainty in the largest inferred slips, simplified rupture kinematics, and reliance on linear shallow-water propagation during the waveform inversion. Moreover, the observations used to infer the source cannot subsequently be treated as an independent validation dataset.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-phy-src-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\textcite{fujii2011tsunamisource}: The model assumes static elastic seabed deformation, a constant $30~\mathrm{s}$ rise time on every subfault, instantaneous rupture propagation, and uniform rigidity of $5.0 \times 10^{10}~\mathrm{Pa}$. The reported slip distribution is applicable as a first observationally constrained reconstruction of the large-scale tsunami source, but does not establish that dynamic rupture effects or smaller-scale source heterogeneity are negligible for the present project.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-phy-src-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\textcite{fujii2011tsunamisource}: The source reconstruction did not fully explain the largest reported run-up values in central Sanriku, indicating that additional or more localised source components may be absent. The inferred slip errors were estimated through delete-half jackknife analysis and shall not be interpreted automatically as complete Gaussian uncertainty distributions.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-phy-src-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\textcite{fujii2011tsunamisource}: The Fujii et al.\ finite-fault model shall be retained as the first candidate earthquake source for the Tohoku benchmark. Acceptance as the final source model is deferred until comparison with a later or independently reconstructed source. The source-severity study should consider independent perturbation of the near-trench and deeper interplate slip components rather than relying solely on uniform scaling of the complete slip field.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-phy-src-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\textcite{fujii2011tsunamisource}: The source-data workstream shall preserve the subfault number, north-east-corner latitude and longitude, depth, slip, reported error, patch dimensions, strike, dip, rake, rise time, and rigidity. The mathematical-model workstream shall define how the fault slip is converted into seabed deformation and how that deformation is applied to the hydrodynamic model. The verification workstream shall distinguish reproduction of the inversion waveforms from independent validation against held-out observations.
+
+For the regional NLSWE model, the selected source representation is a
+dynamic moving-bed field
+$b(x,y,t)=b_0(x,y)+\sum_m\Delta b_m(x,y)R_m(t)$. Static displacement
+can remain a verification/fallback case, but it is not the active
+source representation for the locked regional mathematical model. The
+exact fault-source dataset remains a RES-DAT-SRC decision.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-phy-src-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-phy-src-requirements}
+
+% TODO: State requirements passed to other Research Domains, Software,
+% verification activities or later execution work.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-phy-src-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.

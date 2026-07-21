@@ -1,0 +1,141 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[hidelayout]{../../../Latex/Style/coursework-report-core}
+
+\addbibresource{res-ml.bib}
+
+\title{RES-ML --- Machine-Learning Methodology}
+\author{}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\clearpage
+
+\section{Domain Purpose and Scope}
+\label{sec:res-ml-domain-purpose}
+
+RES-ML defines the machine-learning methodology for the revised research
+scope. Under the 2026-07-19 scope decision, ML is deferred future
+work. The active Studentship objective is to stabilise the 2011
+Tohoku hydrodynamic pipeline, Kamaishi/Sendai corridor comparison and
+fixed-rigid barrier-class metrics before any supervised-learning,
+surrogate optimisation or generative geometry work begins.
+
+The high-fidelity simulation workflow remains the authoritative source of
+physical response. A future surrogate may be an assessment, screening
+or sampling tool; it shall not be represented as replacing validated
+fluid simulation, structural analysis or direct confirmation.
+
+Machine-learning training is blocked until the selected tsunami event and the
+relevant hydrodynamic models have passed the V1--V2--V3 validation
+hierarchy recorded in the current scope decision. Historical or
+reconstructed defence geometries are evidence about plausible cases,
+not direct causal labels for optimal reinforcement; controlled,
+validated simulations remain the only acceptable future training
+targets.
+
+\subsection{Active Scope}
+\label{sec:res-ml-active-scope}
+
+There is no active ML training scope in the current Research phase.
+Future RES-ML work may cover:
+\begin{itemize}
+  \item response surrogates for validated hydrodynamic outputs;
+  \item optional adequacy or damage classification after structural
+    extensions exist;
+  \item screening within a bounded barrier-class or intervention space;
+  \item active selection of additional validated simulations;
+  \item dimensionality reduction where correlated outputs or histories justify
+    it;
+  \item small-data algorithm assessment and non-ML baselines;
+  \item predictive uncertainty and out-of-domain detection;
+  \item direct-simulation fallback for uncertain or unsupported queries;
+  \item integration with validated regional and local CFD workflows,
+    and later structural/FSI workflows if activated.
+\end{itemize}
+
+\subsection{Deferred Scope}
+\label{sec:res-ml-deferred-scope}
+
+The following are deferred to later research and shall not be represented as
+initial acceptance requirements:
+\begin{itemize}
+  \item unrestricted free-form geometry generation;
+  \item surrogate optimisation during the active hydrodynamic phase;
+  \item reinforcement learning;
+  \item unrestricted inverse design;
+  \item claims of cross-event generalisation;
+  \item direct training from before/after geometry alone;
+  \item replacement of high-fidelity confirmation.
+\end{itemize}
+
+\subsection{Supervised-Learning Relationship}
+\label{sec:res-ml-supervised-learning-relationship}
+
+The intended supervised-learning relationship is:
+\begin{align}
+  &\text{corridor descriptors}
+  + \text{fixed-rigid geometry descriptors}
+  + \text{validated hydrodynamic-condition descriptors}
+  \notag\\
+  &\qquad \rightarrow
+  \text{hydrodynamic response}
+  + \text{predictive uncertainty}
+  \label{eq:res-ml-supervised-learning-relationship}
+\end{align}
+
+Decision role: \cref{eq:res-ml-supervised-learning-relationship} is a
+future data relationship, not an active implementation requirement.
+Structural response and damage labels are excluded until RES-STR
+activates and validates those extensions.
+
+\subsection{Research Gates}
+\label{sec:res-ml-research-gates}
+
+The ML workstream is governed by the following gates:
+\begin{enumerate}
+  \item \textbf{G1 --- Data-source feasibility.} Source data,
+    CRS/datum, licence and preprocessing provenance are recorded. No
+    ML training is permitted before this gate.
+  \item \textbf{G2 --- Corridor definition.} Kamaishi and Sendai
+    corridor geometry is locked. ML remains deferred.
+  \item \textbf{G3 --- Regional replay readiness.} The Tohoku regional
+    model and replay-boundary histories are ready for validation. No
+    ML dataset may be accepted before this gate.
+  \item \textbf{G4 --- Local hydrodynamic metric extraction.}
+    Fixed-rigid local runs emit complete quality and metric labels.
+    Future dataset design may begin, but model training remains
+    blocked until validation status is known.
+  \item \textbf{G5 --- V1--V2--V3 validation.} Solver capability,
+    Tohoku hydrodynamics and local impact/loading evidence are
+    accepted. Future ML training may be reconsidered after this gate.
+  \item \textbf{G6 --- Barrier-class demonstration.} Barrier classes
+    are compared with complete provenance. This is not surrogate
+    validation.
+\end{enumerate}
+
+\section{Domain Deliverables}
+\label{sec:res-ml-domain-deliverables}
+
+\input{"RES-ML-ROL - Machine-Learning Role and Use-Case Definition/res-ml-rol.tex"}
+\input{"RES-ML-DAT - Learning Dataset and Simulation-Data Requirements/res-ml-dat.tex"}
+\input{"RES-ML-REP - Input, Output and Geometry Representation/res-ml-rep.tex"}
+\input{"RES-ML-ALG - Learning Algorithm and Architecture Assessment/res-ml-alg.tex"}
+\input{"RES-ML-OBJ - Loss Functions, Rewards and Physical Constraints/res-ml-obj.tex"}
+\input{"RES-ML-SUR - Surrogate, Multifidelity and Active-Learning Strategy/res-ml-sur.tex"}
+\input{"RES-ML-TRN - Training, Validation and Experiment Methodology/res-ml-trn.tex"}
+\input{"RES-ML-GEN - Generalisation, Uncertainty and Interpretability/res-ml-gen.tex"}
+\input{"RES-ML-INT - Integration with Simulation and Optimisation/res-ml-int.tex"}
+\input{"RES-ML-SPEC - Integrated Machine-Learning Specification/res-ml-spec.tex"}
+
+\clearpage
+\printbibliography[
+  heading=bibintoc,
+  title={References}
+]
+
+\end{document}

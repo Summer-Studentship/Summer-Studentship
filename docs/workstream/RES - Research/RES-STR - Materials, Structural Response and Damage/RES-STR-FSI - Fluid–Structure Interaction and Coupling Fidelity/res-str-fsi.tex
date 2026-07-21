@@ -1,0 +1,571 @@
+% -------------------------------------------------------------------------
+% WBS ID: RES-STR-FSI
+% Deliverable: Fluid–Structure Interaction and Coupling Fidelity
+% Status: In progress
+% Evidence status: FSI hierarchy retained as stretch extension
+% Review status: Not reviewed
+% Last updated: 2026-07-19
+% Dependencies: RES-STR-LOD, RES-MOD-EQS, RES-NUM-SPEC
+% Downstream interfaces: Future FSI extension, RES-VER-MET, Software data schema
+% -------------------------------------------------------------------------
+
+\section{RES-STR-FSI --- Fluid–Structure Interaction and Coupling Fidelity}
+\label{sec:res-str-fsi}
+
+\subsection{Purpose and Scope}
+\label{sec:res-str-fsi-purpose}
+
+This Deliverable records a future FSI capability path and the load
+history information needed to support it. The active Studentship
+baseline remains fixed terrain and fixed rigid barriers in the local
+URANS--VOF model. One-way CFD-to-FEA and two-way FSI are stretch
+extensions after hydrodynamic load extraction is stable.
+
+\subsection{Research Questions}
+\label{sec:res-str-fsi-research-questions}
+
+% TODO: State the questions that must be answered before the Deliverable
+% can be accepted.
+
+\subsection{Terminology and Definitions}
+\label{sec:res-str-fsi-definitions}
+
+% TODO: Define the technical terminology, symbols, quantities and
+% classifications used in this Deliverable.
+
+\subsection{Literature Evidence}
+\label{sec:res-str-fsi-literature-evidence}
+
+% TODO: Record evidence from peer-reviewed papers, authoritative datasets,
+% standards, technical reports and primary documentation.
+%
+% Do not create a detached literature-summary list. Explain how each source
+% supports, contradicts or limits a project decision.
+
+\subsubsection{Baragamage and Wu (2024)}
+\label{sec:res-str-fsi-evidence-baragamage-2024}
+
+\textcite{baragamage2024fullycoupled} demonstrated a tsunami-impact
+framework in which an incompressible free-surface Navier--Stokes model
+was coupled with a structural equation of motion. Fluid pressure
+generated structural force, while structural displacement and velocity
+were returned to the fluid boundary.
+
+The study establishes the feasibility of two-way tsunami FSI but does
+not establish that two-way coupling is required for every barrier
+candidate. Its bridge representation was structurally reduced, and
+parts of the validation used a constrained flow configuration.
+
+\subsubsection{Istrati and Buckle (2019)}
+\label{sec:res-str-fsi-evidence-istrati-2019}
+
+\textcite{istrati2019trappedair} demonstrated that the distribution of
+pressure and structural demand cannot always be reconstructed from the
+total force alone. Changes in internal ventilation altered uplift,
+moment, and the distribution of demand between structural components.
+
+\subsection{Governing Relations and Quantitative Definitions}
+\label{sec:res-str-fsi-governing-relations}
+
+% TODO: Record relevant equations, dimensionless groups, empirical models,
+% extraction rules or quantitative definitions.
+%
+% Use align environments for displayed equations.
+% Every displayed equation must have a unique \label{eq:...}.
+% Do not place punctuation after displayed equations.
+
+\subsubsection{Structural State and Momentum Equation}
+\label{sec:res-str-fsi-structural-equations}
+
+The structural state is provisionally defined as:
+
+\begin{align}
+  \mathcal{Q}_{\mathrm{s}}
+  &=
+  \left\{
+    \mathbf{d}_{\mathrm{s}},
+    \dot{\mathbf{d}}_{\mathrm{s}},
+    \boldsymbol{\sigma}_{\mathrm{s}},
+    \boldsymbol{\xi}_{\mathrm{s}}
+  \right\}
+  \label{eq:res-str-fsi-structural-state}
+\end{align}
+
+where $\boldsymbol{\xi}_{\mathrm{s}}$ contains the internal variables
+required by the selected material model.
+
+In continuum form, structural momentum conservation is:
+
+\begin{align}
+  \rho_{\mathrm{s}}
+  \ddot{\mathbf{d}}_{\mathrm{s}}
+  &=
+  \nabla_{0}\cdot\mathbf{P}_{\mathrm{s}}
+  +
+  \rho_{\mathrm{s}}\mathbf{b}_{\mathrm{s}}
+  \label{eq:res-str-fsi-structural-momentum}
+\end{align}
+
+where $\mathbf{P}_{\mathrm{s}}$ is the first
+Piola--Kirchhoff stress tensor.
+
+The corresponding finite-element semi-discrete form is:
+
+\begin{align}
+  \mathbf{M}_{\mathrm{s}}
+  \ddot{\mathbf{d}}_{\mathrm{s}}
+  +
+  \mathbf{C}_{\mathrm{s}}
+  \dot{\mathbf{d}}_{\mathrm{s}}
+  +
+  \mathbf{f}_{\mathrm{int}}
+  \left(
+    \mathbf{d}_{\mathrm{s}},
+    \boldsymbol{\xi}_{\mathrm{s}}
+  \right)
+  &=
+  \mathbf{f}_{\mathrm{fluid}}
+  +
+  \mathbf{f}_{\mathrm{ext}}
+  \label{eq:res-str-fsi-semidiscrete-structural-equation}
+\end{align}
+
+The formulation shall support more than a single structural
+degree of freedom. The initial structural model may be linear elastic,
+but the interface shall permit later activation of:
+
+\begin{itemize}
+  \item geometric nonlinearity;
+  \item material plasticity;
+  \item contact and connection behaviour;
+  \item damage and failure variables;
+  \item rigid-body translation and rotation.
+\end{itemize}
+
+\subsection{Fluid--Structure Interaction Model and Activation Strategy}
+\label{sec:res-str-fsi-local-coupling}
+
+The structural formulation shall therefore preserve the spatial and
+temporal hydrodynamic traction even where the optimisation initially
+uses a fixed rigid barrier.
+
+For the current project scope, this statement is a data-preservation
+requirement only: fixed-barrier simulations must retain enough surface
+history for later structural studies, but they do not move the barrier
+or solve structural response.
+
+\subsection{Material or Structural System}
+\label{sec:res-str-fsi-material-structural-system}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Load Cases}
+\label{sec:res-str-fsi-load-cases}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Constitutive Behaviour}
+\label{sec:res-str-fsi-constitutive-behaviour}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Response and Stability Measures}
+\label{sec:res-str-fsi-response-stability-measures}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Damage and Failure Modes}
+\label{sec:res-str-fsi-damage-failure-modes}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsection{Fluid--Structure Coupling Requirements}
+\label{sec:res-str-fsi-fluid-structure-coupling-requirements}
+
+% TODO: Complete this RES-STR Domain-specific subsection.
+
+\subsubsection{Fluid--Structure Interface Conditions}
+\label{sec:res-str-fsi-interface-conditions}
+
+At the fluid--structure interface $\Gamma_{\mathrm{fs}}$, kinematic
+compatibility requires:
+
+\begin{align}
+  \mathbf{u}_{\mathrm{f}}
+  &=
+  \dot{\mathbf{d}}_{\mathrm{s}}
+  \qquad
+  \text{on }
+  \Gamma_{\mathrm{fs}}
+  \label{eq:res-str-fsi-kinematic-compatibility}
+\end{align}
+
+Dynamic equilibrium requires:
+
+\begin{align}
+  \boldsymbol{\sigma}_{\mathrm{f}}
+  \mathbf{n}_{\mathrm{f}}
+  +
+  \boldsymbol{\sigma}_{\mathrm{s}}
+  \mathbf{n}_{\mathrm{s}}
+  &=
+  \mathbf{0}
+  \qquad
+  \text{on }
+  \Gamma_{\mathrm{fs}}
+  \label{eq:res-str-fsi-traction-equilibrium}
+\end{align}
+
+The structural load is obtained from the mapped fluid traction:
+
+\begin{align}
+  \mathbf{f}_{\mathrm{fluid}}
+  &=
+  \mathcal{T}_{\mathrm{f}\rightarrow\mathrm{s}}
+  \left[
+    \boldsymbol{\sigma}_{\mathrm{f}}
+    \mathbf{n}_{\mathrm{f}}
+  \right]
+  \label{eq:res-str-fsi-fluid-to-structure-transfer}
+\end{align}
+
+where $\mathcal{T}_{\mathrm{f}\rightarrow\mathrm{s}}$ is the
+fluid-to-structure load-transfer operator.
+
+For two-way coupling, the deformed structural state is returned through:
+
+\begin{align}
+  \Gamma_{\mathrm{fs}}^{\,n+1}
+  &=
+  \mathcal{T}_{\mathrm{s}\rightarrow\mathrm{f}}
+  \left[
+    \mathbf{d}_{\mathrm{s}}^{\,n+1}
+  \right]
+  \label{eq:res-str-fsi-structure-to-fluid-transfer}
+\end{align}
+
+The transfer operators shall conserve resultant force and moment to
+within the tolerances defined by `RES-VER-MET`.
+
+\subsubsection{FSI Fidelity Hierarchy}
+\label{sec:res-str-fsi-fidelity-hierarchy}
+
+The structural-coupling hierarchy is:
+
+\begin{table}[htbp]
+  \centering
+  \small
+  \renewcommand{\arraystretch}{1.25}
+  \begin{tabular}{
+      p{0.11\textwidth}
+      p{0.25\textwidth}
+      p{0.27\textwidth}
+      p{0.27\textwidth}
+    }
+    \hline
+    Mode
+    &
+    Fluid treatment
+    &
+    Structural treatment
+    &
+    Intended use
+    \\
+    \hline
+    0
+    &
+    Local URANS
+    &
+    Fixed rigid barrier
+    &
+    Initial fixed-rigid hydrodynamic comparison
+    \\
+    1
+    &
+    Local URANS or LES
+    &
+    One-way CFD-to-FEA
+    &
+    Stress, deformation, stability, and failure screening
+    \\
+    2
+    &
+    Local URANS or LES
+    &
+    Partitioned two-way FSI
+    &
+    Cases with material but moderate deformation feedback
+    \\
+    3
+    &
+    Local high-fidelity model
+    &
+    Strongly coupled nonlinear FSI
+    &
+    Flexible, moving, unstable, or intentionally compliant final
+    designs
+    \\
+    \hline
+  \end{tabular}
+  \caption{Fluid--structure coupling hierarchy for candidate and
+  shortlisted barrier designs}
+  \label{tab:res-str-fsi-fidelity-hierarchy}
+\end{table}
+
+\subsubsection{Two-Way FSI Activation Gate}
+\label{sec:res-str-fsi-activation-gate}
+
+Two-way FSI shall be activated where one or more of the following
+conditions are satisfied:
+
+\begin{enumerate}
+  \item structural displacement changes the exposed geometry or
+    wetted area materially;
+  \item structural motion changes a flow passage, opening, or
+    overtopping path;
+  \item structural velocity is no longer negligible relative to the
+    adjacent fluid velocity;
+  \item rotation or translation changes the reflected or transmitted
+    wave field;
+  \item connection flexibility controls the global response;
+  \item instability, uplift, sliding, overturning, or large rotation
+    is predicted;
+  \item the barrier relies on intentional compliant motion for energy
+    dissipation;
+  \item one-way and two-way pilot simulations produce materially
+    different hydrodynamic or structural performance measures.
+\end{enumerate}
+
+A preliminary motion-feedback indicator may be defined as:
+
+\begin{align}
+  \Pi_{\mathrm{fsi}}
+  &=
+  \max_{\Gamma_{\mathrm{fs}},t}
+  \left(
+    \frac{
+      \left\lVert
+      \dot{\mathbf{d}}_{\mathrm{s}}
+      \right\rVert
+    }{
+      \left\lVert
+      \mathbf{u}_{\mathrm{f}}
+      \right\rVert
+      +
+      \epsilon_{\mathrm{u}}
+    }
+  \right)
+  \label{eq:res-str-fsi-motion-feedback-indicator}
+\end{align}
+
+where $\epsilon_{\mathrm{u}}$ prevents division by zero.
+
+The threshold for activating two-way FSI shall be determined through
+sensitivity testing rather than assigned universally.
+
+\subsection{Reference Descriptions of the Coupled Domains}
+\label{subsec:res_str_fsi_reference_descriptions}
+
+The regional and local fluid models use an Eulerian description in which fluid variables are evaluated at spatial positions
+
+\begin{align}
+\bm{u}
+&=
+\bm{u}\!\left(\bm{x},t\right)
+\label{eq:res_str_fsi_eulerian_velocity}
+\end{align}
+
+The solid uses a Lagrangian material description
+
+\begin{align}
+\bm{x}
+&=
+\bm{\chi}\!\left(\bm{X},t\right)
+=
+\bm{X}
++
+\bm{d}\!\left(\bm{X},t\right)
+\label{eq:res_str_fsi_lagrangian_motion}
+\end{align}
+
+Impact does not require a Lagrangian fluid description. Retaining an Eulerian fluid mesh is more suitable for breaking, overtopping and free-surface topology change, while the Lagrangian solid description tracks the barrier deformation and material history.
+
+\subsection{Fluid--Solid Interface Conditions}
+\label{subsec:res_str_fsi_interface_conditions}
+
+Two-way coupling requires kinematic compatibility and dynamic equilibrium on the moving interface
+
+\begin{align}
+\bm{u}_{f}
+&=
+\dot{\bm{d}}_{s}
+\qquad
+\text{on }\Gamma_{fs}(t)
+\label{eq:res_str_fsi_kinematic_condition}
+\\
+\bm{\sigma}_{f}\bm{n}_{f}
++
+\bm{\sigma}_{s}\bm{n}_{s}
+&=
+\bm{0}
+\qquad
+\text{on }\Gamma_{fs}(t)
+\label{eq:res_str_fsi_dynamic_condition}
+\end{align}
+
+The fluid solver transfers traction to the structure. The structural solver returns the current interface position and velocity to the fluid representation. A one-way calculation omits the return of structural motion, while a two-way calculation repeats this exchange throughout the transient solution.
+
+\subsection{Moving-Boundary Treatment}
+\label{subsec:res_str_fsi_moving_boundary_treatment}
+
+A body-fitted Arbitrary Lagrangian--Eulerian method moves the fluid mesh with the structure. The fluid advection velocity is then evaluated relative to the mesh velocity
+
+\begin{align}
+\bm{u}_{\mathrm{rel}}
+&=
+\bm{u}
+-
+\bm{w}_{m}
+\label{eq:res_str_fsi_ale_relative_velocity}
+\end{align}
+
+ALE provides a direct conforming interface and conventional near-wall treatment. Its principal limitation for the present application is the risk of fluid-mesh distortion under severe structural deformation, followed by remeshing and transfer of pressure, velocity, VOF and turbulence fields. It remains useful as a reference method for moderate-deformation benchmarks \autocite{girfoglio2021}
+
+If FSI is activated as a stretch extension, the selected reference
+family is a sharp immersed structural surface with conservative cut
+cells on a fixed Eulerian background mesh. The method avoids global
+fluid-mesh deformation while accounting geometrically for the changing
+fluid volume and moving solid boundary. Pasquariello et al.
+demonstrate conservative finite-volume--finite-element coupling with
+cut cells and nonmatching interface transfer for three-dimensional FSI
+with large structural deformation \autocite{pasquariello2016}.
+Baragamage and Wu apply a related immersed-boundary and cut-cell
+strategy to three-dimensional tsunami loading
+\autocite{baragamage2024fullycoupled}
+
+\textbf{Deferred selected approach.} Retain a sharp immersed-boundary
+representation with conservative cut-cell treatment as the preferred
+FSI extension path. Retain ALE as a comparator for
+moderate-deformation verification cases.
+
+The selected family must subsequently define cut-cell geometry, changing fluid volumes, small-cell stabilisation, reconstructed wall states, traction recovery and conservative transfer between fluid and structural interfaces.
+
+\subsection{Deferred High-Level FSI Architecture}
+\label{subsec:res_str_fsi_current_architecture}
+
+The deferred high-level architecture is
+
+\begin{align}
+&\text{Eulerian polyhedral finite-volume two-phase fluid}
+\nonumber\\
+&\quad+
+\text{VOF free-surface capture}
+\nonumber\\
+&\quad+
+\text{Updated-Lagrangian three-dimensional solid FEM}
+\nonumber\\
+&\quad+
+\text{generalised-}\alpha\text{ structural time integration}
+\nonumber\\
+&\quad+
+\text{Newton-type nonlinear structural solution}
+\nonumber\\
+&\quad+
+\text{sharp immersed boundary with conservative cut cells}
+\label{eq:res_str_fsi_current_architecture}
+\end{align}
+
+The following high-level decisions remain unresolved:
+
+\begin{enumerate}
+    \item monolithic or partitioned coupling
+    \item loose or strong partitioned coupling if the partitioned family is selected
+    \item added-mass stabilisation, relaxation and interface quasi-Newton acceleration
+    \item conservative transfer of force, moment, displacement and interface work
+    \item coordination of fluid and structural time levels
+    \item transition criteria between rigid, one-way and two-way FSI calculations
+\end{enumerate}
+
+\subsection{Candidate Approaches}
+\label{sec:res-str-fsi-candidate-approaches}
+
+% TODO: Define the credible candidate approaches considered.
+
+\subsection{Critical Comparison}
+\label{sec:res-str-fsi-critical-comparison}
+
+% TODO: Compare candidates using physically and project-relevant criteria.
+% Do not select an approach solely on popularity or implementation ease.
+
+\subsection{Assumptions and Applicability}
+\label{sec:res-str-fsi-assumptions}
+
+% TODO: State assumptions and the conditions under which they are valid.
+
+\subsection{Limitations and Failure Conditions}
+\label{sec:res-str-fsi-limitations}
+
+% TODO: State where the evidence, model or selected approach ceases to be
+% reliable or applicable.
+
+\subsection{Project-Specific Conclusions}
+\label{sec:res-str-fsi-conclusions}
+
+% TODO: Convert the evidence into conclusions specific to the Studentship
+% project. Do not merely restate literature findings.
+
+\subsubsection{Project-Specific FSI Decision}
+\label{sec:res-str-fsi-project-decision}
+
+The software and data architecture shall be FSI-capable from the
+outset. The baseline hydrodynamic comparison model shall nevertheless use a fixed
+rigid barrier and retain complete surface traction histories.
+
+The initial structural verification shall use one-way CFD-to-FEA load
+transfer. Two-way FSI shall be introduced only where the activation
+gate demonstrates that structural motion feeds back materially into
+the hydrodynamic response.
+
+This approach retains the equation-level capability for coupled
+simulation without imposing fully coupled FSI on the active barrier
+comparison campaign.
+
+\subsection{Selected Approach and Rationale}
+\label{sec:res-str-fsi-selected-approach}
+
+% TODO: Record the selected approach only after sufficient evidence exists.
+% State the alternatives rejected and the reasons for rejection.
+
+\subsection{Unresolved Decisions}
+\label{sec:res-str-fsi-unresolved-decisions}
+
+% TODO: Record unresolved questions, required evidence and decision owners.
+
+\subsection{Requirements and Handoffs}
+\label{sec:res-str-fsi-requirements}
+
+Software shall preserve load, geometry and patch histories in a form
+that a later FSI extension can consume, but shall not implement moving
+boundaries, structural time integration or two-way coupling from this
+Research update. RES-VER-MET shall define force/moment transfer
+consistency metrics before FSI activation.
+
+\subsection{Deliverable Completion Record}
+\label{sec:res-str-fsi-completion-record}
+
+% TODO: Record whether the Deliverable is:
+%
+% - Not started
+% - In progress
+% - Draft complete
+% - Reviewed
+% - Accepted
+%
+% Acceptance requires:
+%
+% - the research questions to be answered;
+% - claims to be supported by appropriate evidence;
+% - assumptions and limitations to be explicit;
+% - the project-specific conclusion to be stated;
+% - downstream requirements to be traceable;
+% - unresolved decisions to be closed or formally deferred.
