@@ -39,28 +39,27 @@ CMakeUserPresets.json
 Shared presets use these environment variables:
 
 ```text
-MINGW_ROOT
-NINJA_EXE
 QT_ROOT
 VCPKG_ROOT
 ```
 
 ## 3. Build During Development
 
-The existing MinGW commands are pre-WBS development routes:
+Use the shared G0 presets for ordinary Linux development:
 
-```powershell
-cmake --preset windows-mingw-vcpkg
-cmake --build --preset windows-mingw-vcpkg-debug
+```sh
+cmake --preset linux-gcc-dev
+cmake --build --preset linux-gcc-dev-build
 ```
 
-Do not use `windows-mingw-vcpkg-all`: it still names removed vcpkg
-`visualization;gui` features. Shared developer/release/CI preset selection and
-the accepted MSVC Windows route are pending `SWE-ENV-PRS-WP1`; target migration
-is pending `SWE-ENV-BLD-WP1`.
+Use `linux-gcc-test-workflow` or `linux-clang-test-workflow` for the registered
+CTest suite. GUI work uses `linux-gcc-gui-dev` and requires an external Qt
+installation exposed through `QT_ROOT` or an equivalent local CMake prefix.
+Windows release-authority presets use MSVC and must be run from an activated
+Visual Studio environment on Windows.
 
-The Docker build is also pre-WBS evidence, not yet the authorised clean-clone
-smoke test:
+The Docker build is historical portability evidence, not yet the authorised
+clean-clone smoke test:
 
 ```sh
 docker build -t summer-studentship-build-check .
@@ -98,17 +97,21 @@ tiny curated examples under `data/examples/`.
 
 ## 6. Before Sharing Work
 
-Run the native build relevant to the change. The existing MinGW GUI command is
-available only as historical prototype validation until the preset Work Package
-replaces it:
+Run the native build relevant to the change. For headless Linux test changes:
 
-```powershell
-cmake --build --preset windows-mingw-vcpkg-debug
+```sh
+cmake --workflow --preset linux-gcc-test-workflow
 ```
 
-Do not use the historical `windows-mingw-vcpkg-all-debug` route. Inspect optional
-dependency groups directly with the manifest commands in `dependencies.md`
-until `SWE-ENV-PRS-WP1` provides supported feature-aware presets.
+For GUI scaffold changes:
+
+```sh
+cmake --preset linux-gcc-gui-dev
+cmake --build --preset linux-gcc-gui-dev-build
+```
+
+Optional dependency groups remain governed by `dependencies.md`; do not enable
+geospatial, diagnostics or netCDF features merely because a preset exists.
 
 Run the portability check:
 

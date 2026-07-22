@@ -13,7 +13,7 @@ This repository should grow around a small number of stable ownership areas:
 |-- python/                  # ML experiments, training scripts, notebooks
 |-- src/
 |   |-- core/                # Shared constants, types, error handling
-|   |-- gui/                 # Current Qt Widgets prototype
+|   |-- gui/                 # Historical GUI prototype
 |   |-- io/                  # HDF5/JSON/file format readers and writers
 |   |-- models/              # Physical/numerical models
 |   `-- visualization/       # Plotting-neutral output and optional diagnostics adapters
