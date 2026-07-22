@@ -1,0 +1,29 @@
+Tsunami Software
+    Foundation
+        tsunami_core [active; no project deps; alias Tsunami::core]
+    Shared Numerical Infrastructure
+        tsunami_fvm [planned G1; depends tsunami_core; owns optional Eigen]
+    Data
+        tsunami_data [planned G1; depends tsunami_core; owns yaml-cpp, nlohmann-json]
+        Adapters
+            tsunami_io_hdf5 [planned G1; depends tsunami_core, tsunami_data, tsunami_fvm; owns HDF5]
+            tsunami_io_xdmf [planned G1; depends tsunami_core, tsunami_data, tsunami_fvm; owns pugixml]
+    Geospatial
+        tsunami_geo [planned G1; depends tsunami_core, tsunami_data, tsunami_fvm]
+        Adapters
+            tsunami_geo_gdal [planned G1 optional; depends tsunami_core, tsunami_data, tsunami_geo; owns GDAL, PROJ]
+            tsunami_mesh_gmsh [planned G1 optional; depends tsunami_core, tsunami_data, tsunami_geo, tsunami_fvm; owns external Gmsh process]
+    Solvers
+        tsunami_r2d [planned later gate; depends tsunami_core, tsunami_fvm, tsunami_data]
+        tsunami_l3d [planned later gate; depends tsunami_core, tsunami_fvm, tsunami_data]
+    Coupling
+        tsunami_coupling [planned later gate; depends tsunami_core, tsunami_fvm, tsunami_data, tsunami_r2d, tsunami_l3d]
+    Application
+        tsunami_application [planned G0/G1; depends domain contracts and composes adapters at assembly boundary]
+    Frontends
+        tsunami_cli [active; transitional dependency tsunami_core; final dependency tsunami_application; owns CLI11]
+        tsunami_gui [active; transitional dependency tsunami_core; final dependency tsunami_application; owns Qt Quick]
+    Optional Diagnostics
+        tsunami_diagnostics_matplot [optional later adapter; depends tsunami_core and application or observer contract; owns Matplot++]
+    Verification
+        tsunami_tests [active; depends project libraries under test; owns Catch2]

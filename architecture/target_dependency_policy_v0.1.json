@@ -1,0 +1,809 @@
+{
+  "policy_version": "0.1",
+  "project_target_prefix": "tsunami_",
+  "namespace": "Tsunami",
+  "rules": {
+    "frontend_classifications": [
+      "frontend"
+    ],
+    "test_classifications": [
+      "test"
+    ],
+    "adapter_classifications": [
+      "adapter",
+      "optional_adapter"
+    ],
+    "production_library_types": [
+      "static_library",
+      "shared_library",
+      "interface_library"
+    ],
+    "external_framework_owners": {
+      "CLI11": [
+        "tsunami_cli"
+      ],
+      "CLI11::CLI11": [
+        "tsunami_cli"
+      ],
+      "Qt": [
+        "tsunami_gui"
+      ],
+      "Qt6::Core": [
+        "tsunami_gui"
+      ],
+      "Qt6::Gui": [
+        "tsunami_gui"
+      ],
+      "Qt6::Qml": [
+        "tsunami_gui"
+      ],
+      "Qt6::Quick": [
+        "tsunami_gui"
+      ],
+      "Qt6::QuickControls2": [
+        "tsunami_gui"
+      ],
+      "Qt6::Concurrent": [
+        "tsunami_gui"
+      ],
+      "Catch2": [
+        "tsunami_tests"
+      ],
+      "Catch2::Catch2WithMain": [
+        "tsunami_tests"
+      ],
+      "Matplot++": [
+        "tsunami_diagnostics_matplot"
+      ],
+      "matplot": [
+        "tsunami_diagnostics_matplot"
+      ],
+      "matplot::matplot": [
+        "tsunami_diagnostics_matplot"
+      ],
+      "HDF5": [
+        "tsunami_io_hdf5"
+      ],
+      "hdf5": [
+        "tsunami_io_hdf5"
+      ],
+      "Eigen": [
+        "tsunami_fvm"
+      ],
+      "Eigen3::Eigen": [
+        "tsunami_fvm"
+      ],
+      "yaml-cpp": [
+        "tsunami_data"
+      ],
+      "yaml-cpp::yaml-cpp": [
+        "tsunami_data"
+      ],
+      "nlohmann-json": [
+        "tsunami_data"
+      ],
+      "nlohmann_json::nlohmann_json": [
+        "tsunami_data"
+      ],
+      "pugixml": [
+        "tsunami_io_xdmf"
+      ],
+      "pugixml::pugixml": [
+        "tsunami_io_xdmf"
+      ],
+      "GDAL": [
+        "tsunami_geo_gdal"
+      ],
+      "GDAL::GDAL": [
+        "tsunami_geo_gdal"
+      ],
+      "PROJ": [
+        "tsunami_geo_gdal"
+      ],
+      "PROJ::proj": [
+        "tsunami_geo_gdal"
+      ]
+    }
+  },
+  "targets": [
+    {
+      "target_name": "tsunami_core",
+      "namespaced_alias": "Tsunami::core",
+      "status": "active scaffold",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-ARC-ERR",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Foundation",
+      "state": "active",
+      "classification": "core",
+      "allowed_direct_project_dependencies": [],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_fvm",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "CLI11",
+        "Qt",
+        "Catch2",
+        "Matplot++",
+        "GDAL",
+        "HDF5",
+        "Gmsh"
+      ],
+      "public_boundary_notes": "Owns common status, error, cancellation and platform-independent utility surface; no numerical, GUI, CLI, persistence or orchestration ownership."
+    },
+    {
+      "target_name": "tsunami_fvm",
+      "namespaced_alias": "Tsunami::fvm",
+      "status": "planned G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-FVM-*"
+      ],
+      "conceptual_layer": "Shared Numerical Infrastructure",
+      "state": "planned",
+      "classification": "domain",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "Eigen"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns mesh topology, fields, boundary abstractions, discrete operators and linear/timestep infrastructure. Eigen may be private or explicitly accepted later; it must not silently become the mandatory interchange contract."
+    },
+    {
+      "target_name": "tsunami_data",
+      "namespaced_alias": "Tsunami::data",
+      "status": "planned G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-DAT-CFG",
+        "SWE-DAT-MAN",
+        "SWE-DAT-SCH"
+      ],
+      "conceptual_layer": "Data Contracts",
+      "state": "planned",
+      "classification": "domain",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "yaml-cpp",
+        "nlohmann-json"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns persistence-neutral case, dataset, provenance, result and checkpoint models. Concrete HDF5 must remain outside this domain target."
+    },
+    {
+      "target_name": "tsunami_io_hdf5",
+      "namespaced_alias": null,
+      "status": "planned G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-DAT-SCH",
+        "SWE-DAT-CHK"
+      ],
+      "conceptual_layer": "Data Adapter",
+      "state": "planned",
+      "classification": "adapter",
+      "implements_contracts": [
+        "tsunami_data"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_fvm"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "HDF5",
+        "zlib"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns HDF5 persistence implementation; HDF5 types must not be required by tsunami_data consumers."
+    },
+    {
+      "target_name": "tsunami_io_xdmf",
+      "namespaced_alias": null,
+      "status": "planned G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-DAT-XDMF"
+      ],
+      "conceptual_layer": "Data Adapter",
+      "state": "planned",
+      "classification": "adapter",
+      "implements_contracts": [
+        "tsunami_data"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_fvm"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "pugixml"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++",
+        "ParaView"
+      ],
+      "public_boundary_notes": "Owns XDMF descriptor generation; generated XDMF is the ParaView boundary, not a ParaView library dependency."
+    },
+    {
+      "target_name": "tsunami_geo",
+      "namespaced_alias": "Tsunami::geo",
+      "status": "planned G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-GEO-*"
+      ],
+      "conceptual_layer": "Geospatial Domain",
+      "state": "planned",
+      "classification": "domain",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_fvm"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "PROJ",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns method-neutral corridor, terrain, barrier and geometry contracts. GDAL, PROJ and Gmsh types must not become mandatory public-domain types."
+    },
+    {
+      "target_name": "tsunami_geo_gdal",
+      "namespaced_alias": null,
+      "status": "planned G1 optional feature",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-GEO-IMP",
+        "SWE-GEO-CRS"
+      ],
+      "conceptual_layer": "Geospatial Adapter",
+      "state": "planned",
+      "classification": "adapter",
+      "implements_contracts": [
+        "tsunami_geo"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_geo"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_fvm",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_mesh_gmsh",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "GDAL",
+        "PROJ"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns GDAL/PROJ-specific raster, vector, CRS and datum implementation. The tsunami_geo target must not depend on this adapter."
+    },
+    {
+      "target_name": "tsunami_mesh_gmsh",
+      "namespaced_alias": null,
+      "status": "planned G1 optional adapter",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-GEO-MSH"
+      ],
+      "conceptual_layer": "Mesh Adapter",
+      "state": "planned",
+      "classification": "adapter",
+      "implements_contracts": [
+        "tsunami_geo"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_geo",
+        "tsunami_fvm"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "Gmsh executable"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++",
+        "Gmsh library"
+      ],
+      "public_boundary_notes": "Owns external Gmsh process invocation, .geo generation and MSH 4.1 import. Direct Gmsh library linkage is not accepted in the baseline."
+    },
+    {
+      "target_name": "tsunami_r2d",
+      "namespaced_alias": "Tsunami::r2d",
+      "status": "planned later gate",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-R2D-*"
+      ],
+      "conceptual_layer": "Regional Solver",
+      "state": "planned",
+      "classification": "solver",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_fvm",
+        "tsunami_data"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns regional NLSWE algorithms only. It must not depend on the local 3D solver or concrete geospatial/data adapters."
+    },
+    {
+      "target_name": "tsunami_l3d",
+      "namespaced_alias": "Tsunami::l3d",
+      "status": "planned later gate",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-L3D-*"
+      ],
+      "conceptual_layer": "Local Solver",
+      "state": "planned",
+      "classification": "solver",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_fvm",
+        "tsunami_data"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns local URANS-VOF algorithms only. It must not depend on the regional solver or replay/coupling owner."
+    },
+    {
+      "target_name": "tsunami_coupling",
+      "namespaced_alias": "Tsunami::coupling",
+      "status": "planned later gate",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-CPL-*"
+      ],
+      "conceptual_layer": "Coupling and Analysis",
+      "state": "planned",
+      "classification": "domain",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_r2d",
+        "tsunami_l3d"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns replay, mapping, inlet reconstruction and cross-model metric coordination. Regional and local solvers must not depend on this target."
+    },
+    {
+      "target_name": "tsunami_application",
+      "namespaced_alias": "Tsunami::application",
+      "status": "planned G0/G1",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-ARC-CASE",
+        "SWE-ARC-SVC",
+        "SWE-ARC-ERR"
+      ],
+      "conceptual_layer": "Application",
+      "state": "planned",
+      "classification": "application",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_geo",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns case lifecycle and run orchestration. Concrete adapters may be composed here only at implementation assembly boundaries; Qt and CLI11 remain outside."
+    },
+    {
+      "target_name": "tsunami_cli",
+      "namespaced_alias": null,
+      "status": "active scaffold",
+      "type": "executable",
+      "wbs_owner": [
+        "SWE-ARC-SVC",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Frontend",
+      "state": "active",
+      "classification": "frontend",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_application"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "CLI11"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Current direct tsunami_core link is transitional until tsunami_application exists. Final CLI ownership is command parsing and application-service invocation."
+    },
+    {
+      "target_name": "tsunami_gui",
+      "namespaced_alias": null,
+      "status": "active scaffold",
+      "type": "executable",
+      "wbs_owner": [
+        "SWE-GUI-SHL",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Frontend",
+      "state": "active",
+      "classification": "frontend",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_application"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_tests",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "Qt6::Quick",
+        "Qt Core",
+        "Qt Gui",
+        "Qt Qml",
+        "Qt Quick",
+        "Qt Quick Controls",
+        "Qt Concurrent"
+      ],
+      "prohibited_external_dependencies": [
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Current direct tsunami_core link is transitional until tsunami_application exists. GUI must not own solver, FVM, HDF5, GDAL or Gmsh integration."
+    },
+    {
+      "target_name": "tsunami_diagnostics_matplot",
+      "namespaced_alias": null,
+      "status": "optional later adapter",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-VER-ACC",
+        "SWE-REL-DOC"
+      ],
+      "conceptual_layer": "Optional Diagnostics",
+      "state": "planned",
+      "classification": "optional_adapter",
+      "implements_contracts": [
+        "tsunami_application"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_application"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling"
+      ],
+      "owned_external_dependencies": [
+        "Matplot++"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5"
+      ],
+      "public_boundary_notes": "Optional plotting adapter only. No numerical, data, application or production frontend target may require Matplot++."
+    },
+    {
+      "target_name": "tsunami_tests",
+      "namespaced_alias": null,
+      "status": "active scaffold",
+      "type": "executable",
+      "wbs_owner": [
+        "SWE-VER-UNIT",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Verification",
+      "state": "active",
+      "classification": "test",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_application",
+        "tsunami_diagnostics_matplot"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui"
+      ],
+      "owned_external_dependencies": [
+        "Catch2"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Verification target may link project libraries under test and owns Catch2. No production target may depend on tsunami_tests or Catch2."
+    }
+  ]
+}
