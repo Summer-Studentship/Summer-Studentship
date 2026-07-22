@@ -36,3 +36,18 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Target dependency policy v0.1](../../../architecture/target_dependency_policy_v0.1.json)
 - [Architectural layers v0.1](SWE-ARC/SWE-ARC-LAY/architectural_layers_v0.1.md)
 - [Layer ownership policy v0.1](../../../architecture/layer_ownership_policy_v0.1.json)
+- [Case lifecycle audit v0.1](SWE-ARC/SWE-ARC-CASE/case_lifecycle_audit_v0.1.md)
+- [Case state machine v0.1](SWE-ARC/SWE-ARC-CASE/case_state_machine_v0.1.md)
+- [Run state machine v0.1](SWE-ARC/SWE-ARC-CASE/run_state_machine_v0.1.md)
+- [Canonical case directory v0.1](SWE-ARC/SWE-ARC-CASE/canonical_case_directory_v0.1.md)
+- [Case artefact ownership matrix v0.1](SWE-ARC/SWE-ARC-CASE/case_artefact_ownership_matrix_v0.1.md)
+- [Case lifecycle policy v0.1](../../../architecture/case_lifecycle_policy_v0.1.json)
+
+## Architecture handoff notes
+
+- `SWE-ARC-CASE-WP1` defines lifecycle transitions and deterministic artefact placement only.
+- `SWE-DAT-CFG` owns the actual user configuration schema.
+- `SWE-DAT-MAN` owns dataset and provenance manifest content.
+- `SWE-DAT-SCH` and `SWE-DAT-CHK` own persistent scientific output and checkpoint schemas.
+- `SWE-ARC-API-WP1` owns concrete C++ contracts.
+- `SWE-ARC-SVC-WP1` owns orchestration semantics that execute the lifecycle transitions.

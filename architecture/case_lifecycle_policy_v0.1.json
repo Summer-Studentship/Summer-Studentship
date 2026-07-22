@@ -1,0 +1,228 @@
+{
+  "policy_version": "0.1",
+  "work_package": "SWE-ARC-CASE-WP1",
+  "deliverable": "SWE-ARC-CASE",
+  "references": {
+    "target_policy": {
+      "path": "architecture/target_dependency_policy_v0.1.json",
+      "policy_version": "0.1"
+    },
+    "layer_policy": {
+      "path": "architecture/layer_ownership_policy_v0.1.json",
+      "policy_version": "0.1"
+    }
+  },
+  "scope": {
+    "defines": [
+      "case lifecycle states and transitions",
+      "run lifecycle states and transitions",
+      "canonical case-directory layout",
+      "artefact ownership and mutability classes",
+      "schema-version, provenance and restart-compatibility rules"
+    ],
+    "excludes": [
+      "final case.yaml scientific schema",
+      "C++ case classes or interfaces",
+      "YAML or JSON parser implementation",
+      "HDF5, XDMF, checkpoint, geospatial, solver, GUI or CI implementation"
+    ]
+  },
+  "state_classifications": [
+    "editable",
+    "validation",
+    "valid",
+    "preparation",
+    "execution_ready",
+    "archive",
+    "terminal"
+  ],
+  "case_state_machine": {
+    "initial_state": "created",
+    "terminal_states": [
+      "archived"
+    ],
+    "states": [
+      {"name": "created", "classification": "editable", "mutability": "mutable", "description": "Case identity and root directory have been allocated."},
+      {"name": "draft", "classification": "editable", "mutability": "mutable", "description": "User-editable inputs may change and validation evidence is not authoritative."},
+      {"name": "validating", "classification": "validation", "mutability": "append_only", "description": "Validation is evaluating the current revision."},
+      {"name": "invalid", "classification": "editable", "mutability": "mutable", "description": "Validation failed for the current revision."},
+      {"name": "validated", "classification": "valid", "mutability": "versioned", "description": "The current revision passed validation and may be prepared for execution."},
+      {"name": "preparing", "classification": "preparation", "mutability": "append_only", "description": "Execution inputs are being materialised from the validated revision."},
+      {"name": "preparation_failed", "classification": "editable", "mutability": "mutable", "description": "Preparation failed; the case may be edited or prepared again after review."},
+      {"name": "prepared", "classification": "execution_ready", "mutability": "versioned", "description": "Execution-ready artefacts exist for the validated revision."},
+      {"name": "archiving", "classification": "archive", "mutability": "append_only", "description": "Archive manifest and retention profile are being written."},
+      {"name": "archived", "classification": "terminal", "mutability": "immutable", "description": "The case is immutable except for external storage-management metadata."}
+    ],
+    "transitions": [
+      {"from": "created", "to": "draft", "event": "initialise_case", "guard": "case_identity_allocated"},
+      {"from": "draft", "to": "validating", "event": "request_validation", "guard": "required_input_files_present"},
+      {"from": "draft", "to": "archiving", "event": "request_archive", "guard": "archive_profile_selected"},
+      {"from": "validating", "to": "invalid", "event": "validation_rejected", "guard": "validation_report_written"},
+      {"from": "validating", "to": "validated", "event": "validation_accepted", "guard": "validation_report_written"},
+      {"from": "validating", "to": "draft", "event": "validation_cancelled", "guard": "no_prepared_run_created"},
+      {"from": "invalid", "to": "draft", "event": "edit_inputs", "guard": "case_not_archived"},
+      {"from": "invalid", "to": "validating", "event": "request_revalidation", "guard": "required_input_files_present"},
+      {"from": "invalid", "to": "archiving", "event": "request_archive", "guard": "archive_profile_selected"},
+      {"from": "validated", "to": "preparing", "event": "request_prepare", "guard": "validation_revision_current"},
+      {"from": "validated", "to": "draft", "event": "edit_inputs", "guard": "new_revision_created"},
+      {"from": "validated", "to": "archiving", "event": "request_archive", "guard": "archive_profile_selected"},
+      {"from": "preparing", "to": "preparation_failed", "event": "prepare_failed", "guard": "preparation_report_written"},
+      {"from": "preparing", "to": "prepared", "event": "prepare_succeeded", "guard": "execution_manifest_written"},
+      {"from": "preparing", "to": "validated", "event": "prepare_cancelled", "guard": "partial_execution_artefacts_removed"},
+      {"from": "preparation_failed", "to": "draft", "event": "edit_inputs", "guard": "new_revision_created"},
+      {"from": "preparation_failed", "to": "validating", "event": "request_revalidation", "guard": "required_input_files_present"},
+      {"from": "preparation_failed", "to": "preparing", "event": "retry_prepare", "guard": "validation_revision_current"},
+      {"from": "preparation_failed", "to": "archiving", "event": "request_archive", "guard": "archive_profile_selected"},
+      {"from": "prepared", "to": "draft", "event": "edit_inputs", "guard": "new_revision_created"},
+      {"from": "prepared", "to": "preparing", "event": "refresh_prepared_artefacts", "guard": "validation_revision_current"},
+      {"from": "prepared", "to": "archiving", "event": "request_archive", "guard": "all_active_runs_terminal"},
+      {"from": "archiving", "to": "archived", "event": "archive_succeeded", "guard": "archive_manifest_written"},
+      {"from": "archiving", "to": "draft", "event": "archive_failed", "guard": "previous_state_was_draft"},
+      {"from": "archiving", "to": "invalid", "event": "archive_failed", "guard": "previous_state_was_invalid"},
+      {"from": "archiving", "to": "validated", "event": "archive_failed", "guard": "previous_state_was_validated"},
+      {"from": "archiving", "to": "preparation_failed", "event": "archive_failed", "guard": "previous_state_was_preparation_failed"},
+      {"from": "archiving", "to": "prepared", "event": "archive_failed", "guard": "previous_state_was_prepared"}
+    ]
+  },
+  "run_state_machine": {
+    "initial_state": "created",
+    "terminal_states": [
+      "cancelled",
+      "failed",
+      "postprocessed"
+    ],
+    "restart_eligible_states": [
+      "cancelled",
+      "failed",
+      "completed",
+      "postprocess_failed",
+      "postprocessed"
+    ],
+    "states": [
+      {"name": "created", "classification": "preparation", "mutability": "mutable", "description": "Run identity and run directory have been allocated."},
+      {"name": "queued", "classification": "execution_ready", "mutability": "versioned", "description": "Run is ready for execution by an authorised service."},
+      {"name": "running", "classification": "execution", "mutability": "append_only", "description": "Execution is active and may append logs, checkpoints and partial outputs."},
+      {"name": "cancelling", "classification": "execution", "mutability": "append_only", "description": "Cancellation has been requested and the run is draining safely."},
+      {"name": "cancelled", "classification": "terminal", "mutability": "immutable", "description": "Run stopped by request; restart, if allowed, creates a new run."},
+      {"name": "failed", "classification": "terminal", "mutability": "immutable", "description": "Run failed; restart, if allowed, creates a new run."},
+      {"name": "completed", "classification": "execution", "mutability": "immutable", "description": "Solver execution completed and primary outputs are immutable."},
+      {"name": "postprocessing", "classification": "execution", "mutability": "append_only", "description": "Derived outputs and reports are being produced."},
+      {"name": "postprocess_failed", "classification": "execution", "mutability": "versioned", "description": "Primary outputs remain immutable and postprocessing may be retried."},
+      {"name": "postprocessed", "classification": "terminal", "mutability": "immutable", "description": "Run outputs and derived artefacts are complete."}
+    ],
+    "transitions": [
+      {"from": "created", "to": "queued", "event": "queue_run", "guard": "case_state_is_prepared"},
+      {"from": "created", "to": "cancelled", "event": "cancel_before_queue", "guard": "run_has_no_execution_outputs"},
+      {"from": "queued", "to": "running", "event": "start_run", "guard": "execution_manifest_current"},
+      {"from": "queued", "to": "cancelled", "event": "cancel_queued_run", "guard": "run_has_no_execution_outputs"},
+      {"from": "queued", "to": "failed", "event": "dispatch_failed", "guard": "failure_report_written"},
+      {"from": "running", "to": "cancelling", "event": "request_cancel", "guard": "cancellation_record_written"},
+      {"from": "running", "to": "completed", "event": "execution_succeeded", "guard": "primary_outputs_closed"},
+      {"from": "running", "to": "failed", "event": "execution_failed", "guard": "failure_report_written"},
+      {"from": "cancelling", "to": "cancelled", "event": "cancel_succeeded", "guard": "checkpoint_or_cleanup_recorded"},
+      {"from": "cancelling", "to": "failed", "event": "cancel_failed", "guard": "failure_report_written"},
+      {"from": "cancelling", "to": "completed", "event": "execution_completed_during_cancel", "guard": "primary_outputs_closed"},
+      {"from": "completed", "to": "postprocessing", "event": "request_postprocess", "guard": "primary_outputs_closed"},
+      {"from": "postprocessing", "to": "postprocessed", "event": "postprocess_succeeded", "guard": "derived_outputs_closed"},
+      {"from": "postprocessing", "to": "postprocess_failed", "event": "postprocess_failed", "guard": "postprocess_report_written"},
+      {"from": "postprocess_failed", "to": "postprocessing", "event": "retry_postprocess", "guard": "primary_outputs_closed"}
+    ],
+    "restart_rule": {
+      "creates_new_run": true,
+      "reopens_parent_run": false,
+      "source_run_is_immutable": true,
+      "new_run_identity_pattern": "runs/<new-run-id>/",
+      "source_reference_required": true,
+      "restart_manifest_path": "runs/<new-run-id>/manifests/restart_from.json"
+    }
+  },
+  "case_identity": {
+    "required_fields": [
+      "case_id",
+      "case_slug",
+      "created_at_utc",
+      "created_by",
+      "schema_version",
+      "policy_version"
+    ],
+    "revision_rules": [
+      "Every material input edit creates a new monotonically increasing case revision.",
+      "Validated and prepared artefacts bind to the exact case revision that produced them.",
+      "Runs bind to one case revision and never change revision after creation.",
+      "Archive identity records the final case revision and all retained run identities."
+    ]
+  },
+  "canonical_paths": [
+    {"path": "case.json", "owner": "SWE-DAT-CFG", "mutability": "versioned", "description": "Future user-facing case configuration envelope; schema content is owned by SWE-DAT-CFG."},
+    {"path": "README.md", "owner": "SWE-ARC-CASE", "mutability": "mutable", "description": "Human case notes."},
+    {"path": "inputs/", "owner": "SWE-DAT-CFG", "mutability": "versioned", "description": "User-supplied configuration and input references."},
+    {"path": "inputs/data/", "owner": "SWE-DAT-MAN", "mutability": "versioned", "description": "Dataset references or managed input copies."},
+    {"path": "validation/", "owner": "SWE-VER", "mutability": "append_only", "description": "Validation requests, reports and rejected-rule evidence."},
+    {"path": "manifests/", "owner": "SWE-DAT-MAN", "mutability": "append_only", "description": "Case-level provenance and artefact manifests."},
+    {"path": "prepared/", "owner": "SWE-ARC-SVC", "mutability": "versioned", "description": "Execution manifests and prepared input snapshots."},
+    {"path": "runs/", "owner": "SWE-ARC-SVC", "mutability": "append_only", "description": "Run identities and execution artefacts."},
+    {"path": "runs/<run-id>/run.json", "owner": "SWE-ARC-SVC", "mutability": "versioned", "description": "Run lifecycle envelope."},
+    {"path": "runs/<run-id>/logs/", "owner": "SWE-REL", "mutability": "append_only", "description": "Execution logs and service diagnostics."},
+    {"path": "runs/<run-id>/checkpoints/", "owner": "SWE-DAT-CHK", "mutability": "append_only", "description": "Checkpoint artefacts and restart candidates."},
+    {"path": "runs/<run-id>/outputs/", "owner": "SWE-DAT-SCH", "mutability": "immutable", "description": "Primary scientific output payloads."},
+    {"path": "runs/<run-id>/derived/", "owner": "SWE-VER", "mutability": "versioned", "description": "Postprocessed reports and derived verification outputs."},
+    {"path": "runs/<run-id>/manifests/", "owner": "SWE-DAT-MAN", "mutability": "append_only", "description": "Run-level provenance and restart manifests."},
+    {"path": "archive/", "owner": "SWE-REL", "mutability": "immutable", "description": "Archive manifest, retention profile and packaging evidence."}
+  ],
+  "artefact_mutability_classes": {
+    "mutable": "May change while the case is editable.",
+    "versioned": "May change only by creating a new revision or replacement record.",
+    "append_only": "May add records but not rewrite accepted records.",
+    "immutable": "May not change once closed except by external storage migration."
+  },
+  "schema_version_rules": {
+    "version_format": "major.minor.patch",
+    "schema_classes": [
+      {"name": "case_configuration_envelope", "owner": "SWE-DAT-CFG", "version_behavior": {"major": "reject_unknown_major", "minor": "allow_forward_read_with_ignored_extensions", "patch": "allow_bugfix_equivalence", "unknown_major": "reject"}},
+      {"name": "dataset_manifest", "owner": "SWE-DAT-MAN", "version_behavior": {"major": "reject_unknown_major", "minor": "allow_forward_read_with_ignored_extensions", "patch": "allow_bugfix_equivalence", "unknown_major": "reject"}},
+      {"name": "scientific_output_schema", "owner": "SWE-DAT-SCH", "version_behavior": {"major": "reject_unknown_major", "minor": "require_declared_capability", "patch": "allow_bugfix_equivalence", "unknown_major": "reject"}},
+      {"name": "checkpoint_schema", "owner": "SWE-DAT-CHK", "version_behavior": {"major": "reject_unknown_major", "minor": "require_restart_compatibility_check", "patch": "allow_bugfix_equivalence", "unknown_major": "reject"}},
+      {"name": "run_lifecycle_envelope", "owner": "SWE-ARC-SVC", "version_behavior": {"major": "reject_unknown_major", "minor": "allow_forward_read_with_ignored_extensions", "patch": "allow_bugfix_equivalence", "unknown_major": "reject"}}
+    ]
+  },
+  "provenance": {
+    "mandatory_categories": [
+      "source_identity",
+      "build_identity",
+      "execution_identity",
+      "scientific_input_identity",
+      "numerical_identity",
+      "output_identity"
+    ],
+    "categories": [
+      {"name": "source_identity", "owner": "SWE-REL", "fields": ["repository", "commit_sha", "branch_or_tag"]},
+      {"name": "build_identity", "owner": "SWE-ENV-BLD", "fields": ["compiler_id", "compiler_version", "preset", "dependency_lock"]},
+      {"name": "execution_identity", "owner": "SWE-ARC-SVC", "fields": ["run_id", "case_revision", "started_at_utc", "service_version"]},
+      {"name": "scientific_input_identity", "owner": "SWE-DAT-MAN", "fields": ["input_digest", "dataset_ids", "configuration_digest"]},
+      {"name": "numerical_identity", "owner": "SWE-FVM", "fields": ["solver_family", "time_step_policy", "mesh_digest"]},
+      {"name": "output_identity", "owner": "SWE-DAT-SCH", "fields": ["output_digest", "schema_version", "closed_at_utc"]}
+    ]
+  },
+  "restart_compatibility": {
+    "classes": [
+      {"name": "exact_resume", "allows_restart": true, "requires_migration": false, "description": "Same executable, schema major and numerical contract."},
+      {"name": "compatible_resume", "allows_restart": true, "requires_migration": false, "description": "Compatible minor/patch versions with declared capability support."},
+      {"name": "migration_required", "allows_restart": false, "requires_migration": true, "description": "A future migration path is required before restart."},
+      {"name": "replay_only", "allows_restart": false, "requires_migration": false, "description": "Existing outputs may be replayed or inspected but not resumed."},
+      {"name": "incompatible", "allows_restart": false, "requires_migration": false, "description": "Checkpoint or output cannot be used by the current runtime."}
+    ]
+  },
+  "archive_profiles": [
+    {"name": "lightweight", "retains": ["case identity", "configuration", "manifests", "validation reports", "run summaries"]},
+    {"name": "reproducible", "retains": ["case identity", "configuration", "manifests", "validation reports", "prepared snapshots", "logs", "outputs", "checkpoint compatibility records"]},
+    {"name": "full_evidence", "retains": ["all reproducible artefacts", "all retained checkpoints", "derived reports", "archive packaging evidence"]}
+  ],
+  "downstream_wbs_owners": {
+    "SWE-DAT-CFG": "Defines the final user configuration schema and parser behaviour.",
+    "SWE-DAT-MAN": "Defines dataset and provenance manifest content.",
+    "SWE-DAT-SCH": "Defines persistent scientific output schemas.",
+    "SWE-DAT-CHK": "Defines checkpoint payload schemas and restart payload compatibility.",
+    "SWE-ARC-API-WP1": "Defines concrete C++ contracts for case and run interfaces.",
+    "SWE-ARC-SVC-WP1": "Defines orchestration service semantics that execute these transitions."
+  }
+}

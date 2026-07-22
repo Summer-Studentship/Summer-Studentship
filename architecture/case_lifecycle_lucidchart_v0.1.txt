@@ -1,0 +1,83 @@
+SWE-ARC-CASE-WP1 Case Lifecycle v0.1
+	Case lifecycle
+		created
+			initialise_case -> draft
+		draft
+			request_validation -> validating
+			request_archive -> archiving
+		validating
+			validation_rejected -> invalid
+			validation_accepted -> validated
+			validation_cancelled -> draft
+		invalid
+			edit_inputs -> draft
+			request_revalidation -> validating
+			request_archive -> archiving
+		validated
+			request_prepare -> preparing
+			edit_inputs -> draft
+			request_archive -> archiving
+		preparing
+			prepare_failed -> preparation_failed
+			prepare_succeeded -> prepared
+			prepare_cancelled -> validated
+		preparation_failed
+			edit_inputs -> draft
+			request_revalidation -> validating
+			retry_prepare -> preparing
+			request_archive -> archiving
+		prepared
+			edit_inputs -> draft
+			refresh_prepared_artefacts -> preparing
+			request_archive -> archiving
+		archiving
+			archive_succeeded -> archived
+			archive_failed -> previous stable editable state
+		archived
+			terminal immutable state
+	Run lifecycle
+		created
+			queue_run -> queued
+			cancel_before_queue -> cancelled
+		queued
+			start_run -> running
+			cancel_queued_run -> cancelled
+			dispatch_failed -> failed
+		running
+			request_cancel -> cancelling
+			execution_succeeded -> completed
+			execution_failed -> failed
+		cancelling
+			cancel_succeeded -> cancelled
+			cancel_failed -> failed
+			execution_completed_during_cancel -> completed
+		completed
+			request_postprocess -> postprocessing
+		postprocessing
+			postprocess_succeeded -> postprocessed
+			postprocess_failed -> postprocess_failed
+		postprocess_failed
+			retry_postprocess -> postprocessing
+		cancelled
+			terminal immutable state; restart creates new run
+		failed
+			terminal immutable state; restart creates new run
+		postprocessed
+			terminal immutable state; restart creates new run when eligible
+	Canonical case directory
+		case.json
+		README.md
+		inputs/
+			data/
+		validation/
+		manifests/
+		prepared/
+		runs/
+			<run-id>/
+				run.json
+				logs/
+				checkpoints/
+				outputs/
+				derived/
+				manifests/
+		archive/
