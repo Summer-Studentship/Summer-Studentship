@@ -34,3 +34,5 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Software stack decision register v0.1](SWE-ENV/SWE-ENV-STACK/studentship_software_stack_decision_register_v0.1.md)
 - [Target catalogue v0.1](SWE-ARC/SWE-ARC-TGT/target_catalogue_v0.1.md)
 - [Target dependency policy v0.1](../../../architecture/target_dependency_policy_v0.1.json)
+- [Architectural layers v0.1](SWE-ARC/SWE-ARC-LAY/architectural_layers_v0.1.md)
+- [Layer ownership policy v0.1](../../../architecture/layer_ownership_policy_v0.1.json)

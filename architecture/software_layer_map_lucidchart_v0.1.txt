@@ -1,0 +1,45 @@
+Tsunami Software Architecture [dependencies move inward unless composition/adapters are explicitly noted]
+    Development and Delivery Infrastructure [build/release only; runtime code does not depend on it]
+        SWE-ENV
+        SWE-REL
+    Foundation [innermost runtime layer]
+        tsunami_core
+        SWE-ARC foundation contracts
+    Shared Numerical Core [depends on Foundation]
+        tsunami_fvm
+        SWE-FVM
+    Data Contracts [depends on Foundation]
+        tsunami_data
+        SWE-DAT
+    Geospatial and Geometry [depends on Foundation, Data, FVM]
+        tsunami_geo
+        SWE-GEO
+    Solver Domains [depend on Foundation, FVM, Data]
+        Regional 2D [sibling-independent]
+            tsunami_r2d
+            SWE-R2D
+        Local 3D [sibling-independent]
+            tsunami_l3d
+            SWE-L3D
+    Coupling and Analysis [owns cross-solver replay and mapping]
+        tsunami_coupling
+        SWE-CPL
+    Application and Orchestration [frontend-neutral composition]
+        tsunami_application
+        SWE-ARC case/service/error
+    Infrastructure Adapters [implement inward ports; domains do not depend on adapters]
+        tsunami_io_hdf5
+        tsunami_io_xdmf
+        tsunami_geo_gdal
+        tsunami_mesh_gmsh
+        tsunami_diagnostics_matplot
+    Frontends [leaf consumers]
+        tsunami_cli
+        tsunami_gui
+        SWE-GUI
+    Verification [may consume production interfaces; never reverse]
+        tsunami_tests
+        SWE-VER
+    Deferred Extensions [not required by active baseline]
+        SWE-HPC
+        SWE-STR
