@@ -2,7 +2,7 @@
   "version": 6,
   "cmakeMinimumRequired": {
     "major": 3,
-    "minor": 25,
+    "minor": 28,
     "patch": 0
   },
   "configurePresets": [
@@ -19,8 +19,6 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_COMPILER": "$env{MINGW_ROOT}/bin/gcc.exe",
         "CMAKE_CXX_COMPILER": "$env{MINGW_ROOT}/bin/g++.exe",
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_MAKE_PROGRAM": "$env{NINJA_EXE}",
         "CMAKE_PREFIX_PATH": "$env{QT_ROOT}",
@@ -41,12 +39,10 @@
         "CMAKE_BUILD_TYPE": "Debug",
         "CMAKE_C_COMPILER": "$env{MINGW_ROOT}/bin/gcc.exe",
         "CMAKE_CXX_COMPILER": "$env{MINGW_ROOT}/bin/g++.exe",
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_MAKE_PROGRAM": "$env{NINJA_EXE}",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_MANIFEST_FEATURES": "visualization;gui",
+        "VCPKG_MANIFEST_FEATURES": "diagnostics",
         "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic"
       }
     },
@@ -57,21 +53,21 @@
       "inherits": "linux-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
+        "TSUNAMI_BUILD_CLI": "ON",
         "TSUNAMI_BUILD_GUI": "OFF",
-        "TSUNAMI_BUILD_MATPLOT_SMOKE": "OFF",
-        "TSUNAMI_BUILD_TESTS": "OFF"
+        "BUILD_TESTING": "OFF"
       }
     },
     {
       "name": "linux-gui-debug",
-      "displayName": "Linux Qt Widgets GUI debug build",
-      "description": "Builds the repository-level Qt Widgets GUI using system Qt 6 and no vcpkg Qt feature.",
+      "displayName": "Linux Qt Quick GUI debug build",
+      "description": "Builds the G0 Qt Quick GUI scaffold using an external Qt 6 installation.",
       "inherits": "linux-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
         "TSUNAMI_BUILD_GUI": "ON",
-        "TSUNAMI_BUILD_MATPLOT_SMOKE": "OFF",
-        "TSUNAMI_BUILD_TESTS": "OFF"
+        "BUILD_TESTING": "OFF"
       }
     },
     {
@@ -83,8 +79,6 @@
         "VCPKG_MAX_CONCURRENCY": "2"
       },
       "cacheVariables": {
-        "CMAKE_CXX_STANDARD": "20",
-        "CMAKE_CXX_STANDARD_REQUIRED": "ON",
         "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "VCPKG_TARGET_TRIPLET": "x64-linux"
@@ -108,7 +102,7 @@
       "name": "linux-gui-debug-build",
       "configurePreset": "linux-gui-debug",
       "targets": [
-        "TsunamiGUI"
+        "tsunami_gui"
       ]
     }
   ]
