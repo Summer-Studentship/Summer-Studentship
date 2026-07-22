@@ -1,6 +1,7 @@
 add_library(tsunami_core STATIC
     core/File_System.cpp
 )
+add_library(Tsunami::core ALIAS tsunami_core)
 
 target_include_directories(tsunami_core
     PUBLIC

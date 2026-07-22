@@ -32,3 +32,5 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Authoritative Software WBS v0.3](governance/studentship_software_wbs_v0.3.md)
 - [GitHub Project configuration v0.1](governance/github_project_configuration_v0.1.md)
 - [Software stack decision register v0.1](SWE-ENV/SWE-ENV-STACK/studentship_software_stack_decision_register_v0.1.md)
+- [Target catalogue v0.1](SWE-ARC/SWE-ARC-TGT/target_catalogue_v0.1.md)
+- [Target dependency policy v0.1](../../../architecture/target_dependency_policy_v0.1.json)
