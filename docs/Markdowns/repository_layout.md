@@ -5,24 +5,24 @@ This repository should grow around a small number of stable ownership areas:
 ```text
 .
 |-- apps/
-|   `-- gui/                 # Final Qt application entry point
+|   |-- tsunami_cli/         # Active command-line scaffold
+|   `-- tsunami_gui/         # Active Qt Quick application scaffold
 |-- cmake/                   # Project CMake helper modules
 |-- data/                    # Data staging convention; bulk data ignored by Git
 |-- docs/                    # Human docs, Doxygen config, build notes
 |-- matlab/                  # MATLAB analysis and visualisation scripts
 |-- python/                  # ML experiments, training scripts, notebooks
 |-- src/
-|   |-- core/                # Shared constants, types, error handling
+|   |-- core/                # Active tsunami_core foundation target
 |   |-- gui/                 # Historical GUI prototype
-|   |-- io/                  # HDF5/JSON/file format readers and writers
-|   |-- models/              # Physical/numerical models
+|   |-- io/                  # Planned data adapters, for example HDF5/XDMF
+|   |-- models/              # Historical model organisation; planned solver targets are policy-led
 |   `-- visualization/       # Plotting-neutral output and optional diagnostics adapters
 `-- tests/                   # C++ tests
 ```
 
-Treat the layout above as the intended direction. The old top-level `GUI/`
-prototype has been retired in favour of `src/gui/` and future `apps/gui/`
-targets.
+Treat the layout above as the intended direction. The historical GUI prototype
+is not part of the active CMake graph; new GUI work targets `apps/tsunami_gui`.
 
 ## CMake Structure
 
@@ -32,20 +32,23 @@ Keep the root `CMakeLists.txt` short. Its job should be:
 - load dependency helpers from `cmake/`
 - add subdirectories for libraries, apps, examples, and tests
 
-Each major component should own its own `CMakeLists.txt`. For example:
+Each major component should own its own `CMakeLists.txt`. The accepted target
+catalogue is recorded in
+[`target_catalogue_v0.1.md`](../workstream/SWE%20-%20Software/SWE-ARC/SWE-ARC-TGT/target_catalogue_v0.1.md).
+For example:
 
 ```text
 src/core/CMakeLists.txt       -> tsunami_core library
-src/io/CMakeLists.txt         -> tsunami_io library
-apps/gui/CMakeLists.txt       -> Qt GUI executable
+src/io_hdf5/CMakeLists.txt    -> tsunami_io_hdf5 adapter
+apps/tsunami_gui/CMakeLists.txt -> tsunami_gui executable
 tests/CMakeLists.txt          -> test executables
 ```
 
 Prefer linking targets together instead of sharing global include directories.
-For example, the GUI should link to a reusable simulation/data library:
+For example, the GUI should link to the application boundary once it exists:
 
 ```cmake
-target_link_libraries(tsunami_gui PRIVATE tsunami_core tsunami_io Qt6::Widgets)
+target_link_libraries(tsunami_gui PRIVATE tsunami_application Qt6::Quick)
 ```
 
 ## Third-party boundaries
