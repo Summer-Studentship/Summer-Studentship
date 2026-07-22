@@ -2,41 +2,150 @@
   "version": 6,
   "configurePresets": [
     {
-      "name": "local-vcpkg-root",
+      "name": "local-tools",
       "hidden": true,
-      "description": "Copy this file to CMakeUserPresets.json and replace VCPKG_ROOT with this machine's vcpkg checkout.",
+      "description": "Copy this file to CMakeUserPresets.json and replace placeholder paths with local tool installations.",
       "environment": {
-        "VCPKG_ROOT": "/absolute/path/to/vcpkg"
+        "VCPKG_ROOT": "<path-to-vcpkg>",
+        "QT_ROOT": "<path-to-qt-prefix-or-/usr>"
       }
     },
     {
-      "name": "linux-vcpkg-headless-local",
-      "displayName": "Linux headless core build with local vcpkg",
+      "name": "linux-gcc-dev-local",
+      "displayName": "Linux GCC developer build with local tools",
       "inherits": [
-        "linux-vcpkg-headless",
-        "local-vcpkg-root"
+        "linux-gcc-dev",
+        "local-tools"
       ]
     },
     {
-      "name": "linux-gui-debug-local",
-      "displayName": "Linux Qt Widgets GUI debug build with local vcpkg",
-      "description": "Uses vcpkg for non-Qt manifest dependencies only; Qt is resolved from the system Qt 6 CMake package.",
+      "name": "linux-gcc-test-local",
+      "displayName": "Linux GCC test build with local tools",
       "inherits": [
-        "linux-gui-debug",
-        "local-vcpkg-root"
+        "linux-gcc-test",
+        "local-tools"
+      ]
+    },
+    {
+      "name": "linux-gcc-gui-dev-local",
+      "displayName": "Linux GCC Qt Quick GUI build with local tools",
+      "inherits": [
+        "linux-gcc-gui-dev",
+        "local-tools"
+      ]
+    },
+    {
+      "name": "linux-clang-test-local",
+      "displayName": "Linux Clang test build with local tools",
+      "inherits": [
+        "linux-clang-test",
+        "local-tools"
+      ]
+    },
+    {
+      "name": "windows-msvc-test-local",
+      "displayName": "Windows MSVC test build with local tools",
+      "description": "Run from an activated Visual Studio Developer PowerShell or command prompt.",
+      "inherits": [
+        "windows-msvc-test",
+        "local-tools"
       ]
     }
   ],
   "buildPresets": [
     {
-      "name": "linux-vcpkg-headless-local-build",
-      "configurePreset": "linux-vcpkg-headless-local"
+      "name": "linux-gcc-dev-local-build",
+      "configurePreset": "linux-gcc-dev-local",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
     },
     {
-      "name": "linux-gui-debug-local-build",
-      "configurePreset": "linux-gui-debug-local",
+      "name": "linux-gcc-test-local-build",
+      "configurePreset": "linux-gcc-test-local",
       "targets": [
-        "TsunamiGUI"
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "linux-gcc-gui-dev-local-build",
+      "configurePreset": "linux-gcc-gui-dev-local",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_gui"
+      ]
+    },
+    {
+      "name": "linux-clang-test-local-build",
+      "configurePreset": "linux-clang-test-local",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-gcc-test-local-run",
+      "configurePreset": "linux-gcc-test-local",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-clang-test-local-run",
+      "configurePreset": "linux-clang-test-local",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-msvc-test-local-run",
+      "configurePreset": "windows-msvc-test-local",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "linux-gcc-test-local-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-test-local"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-test-local-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-test-local-run"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang-test-local-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang-test-local"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang-test-local-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang-test-local-run"
+        }
       ]
     }
   ]

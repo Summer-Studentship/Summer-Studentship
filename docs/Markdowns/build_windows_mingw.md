@@ -1,8 +1,8 @@
 # Historical Windows Build With Qt MinGW
 
-This records the pre-WBS native Windows prototype route. The accepted stack uses
-MSVC as the primary supported Windows compiler; shared replacement presets are
-owned by `SWE-ENV-PRS-WP1`. Do not treat this page as release authority.
+This records the pre-WBS native Windows prototype route. The accepted shared
+Windows preset family uses MSVC as the primary supported compiler. Do not treat
+this MinGW page as release authority.
 
 ## Required Tools
 
@@ -46,18 +46,18 @@ decision.
 
 ## Configure And Build
 
-Normal Qt GUI build:
+Historical MinGW builds are no longer represented by shared authoritative
+presets. The current shared Windows route is structural until native execution
+is performed on Windows:
 
 ```powershell
-cmake --preset windows-mingw-vcpkg
-cmake --build --preset windows-mingw-vcpkg-debug
+cmake --preset windows-msvc-dev
+cmake --build --preset windows-msvc-dev-build
 ```
 
-The existing `windows-mingw-vcpkg-all` configure/build presets and the
-`-Visualization` switch in `scripts/build_windows_qt.ps1` select removed
-`visualization;gui` features. They are unsupported historical names pending
-`SWE-ENV-PRS-WP1`; Qt is now acquired only through the Qt installer/Maintenance
-Tool, never through a vcpkg GUI feature.
+Run those commands from an activated Visual Studio Developer PowerShell or
+command prompt. Qt is acquired only through the Qt installer/Maintenance Tool,
+never through a vcpkg GUI feature.
 
 Run/debug from VS Code through CMake Tools or through the checked launch
 configuration. Avoid the C++ extension's raw "build active file" action because
@@ -65,12 +65,12 @@ it bypasses CMake include paths and linked libraries.
 
 ## Release Packaging
 
-For a Windows release, build in Release mode, run Qt's `windeployqt` on the
-final executable, then copy any vcpkg DLLs required by the dynamic MinGW triplet
-from:
+For a Windows release, use the MSVC release preset family on a native Windows
+host, run Qt's deployment tooling on the final executable, then copy any vcpkg
+runtime DLLs required by the selected MSVC triplet from:
 
 ```text
-build/<preset>/vcpkg_installed/x64-mingw-dynamic/bin
+build/<preset>/vcpkg_installed/x64-windows/bin
 ```
 
 This repository does not yet automate portable archives or installers.

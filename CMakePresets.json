@@ -7,50 +7,91 @@
   },
   "configurePresets": [
     {
-      "name": "windows-mingw-vcpkg",
-      "displayName": "Windows MinGW, vcpkg deps, Qt installer",
-      "description": "Uses vcpkg for project dependencies and QT_ROOT for a Qt installer build such as C:/Qt/6.11.1/mingw_64.",
+      "name": "base",
+      "hidden": true,
       "generator": "Ninja",
       "binaryDir": "${sourceDir}/build/${presetName}",
-      "environment": {
-        "VCPKG_MAX_CONCURRENCY": "2"
-      },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_C_COMPILER": "$env{MINGW_ROOT}/bin/gcc.exe",
-        "CMAKE_CXX_COMPILER": "$env{MINGW_ROOT}/bin/g++.exe",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_MAKE_PROGRAM": "$env{NINJA_EXE}",
-        "CMAKE_PREFIX_PATH": "$env{QT_ROOT}",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic"
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     },
     {
-      "name": "windows-mingw-vcpkg-all",
-      "displayName": "Windows MinGW, vcpkg deps including Qt/mathplot",
-      "description": "Uses vcpkg for core, visualization, and GUI packages. This can take much longer because Qt is built/installed by vcpkg.",
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "environment": {
-        "VCPKG_MAX_CONCURRENCY": "2"
-      },
+      "name": "vcpkg-base",
+      "hidden": true,
+      "inherits": "base",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_C_COMPILER": "$env{MINGW_ROOT}/bin/gcc.exe",
-        "CMAKE_CXX_COMPILER": "$env{MINGW_ROOT}/bin/g++.exe",
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_MAKE_PROGRAM": "$env{NINJA_EXE}",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_MANIFEST_FEATURES": "diagnostics",
-        "VCPKG_TARGET_TRIPLET": "x64-mingw-dynamic"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
       }
     },
     {
-      "name": "linux-vcpkg-headless",
-      "displayName": "Linux headless core build with vcpkg",
-      "description": "Builds the non-GUI project configuration for Docker and CI.",
+      "name": "linux-base",
+      "hidden": true,
+      "inherits": "vcpkg-base",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-linux"
+      }
+    },
+    {
+      "name": "linux-gcc-base",
+      "hidden": true,
       "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "g++"
+      }
+    },
+    {
+      "name": "linux-clang-base",
+      "hidden": true,
+      "inherits": "linux-base",
+      "cacheVariables": {
+        "CMAKE_CXX_COMPILER": "clang++"
+      }
+    },
+    {
+      "name": "tests-base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "VCPKG_MANIFEST_FEATURES": "tests"
+      }
+    },
+    {
+      "name": "gui-base",
+      "hidden": true,
+      "cacheVariables": {
+        "TSUNAMI_BUILD_GUI": "ON",
+        "BUILD_TESTING": "OFF",
+        "CMAKE_PREFIX_PATH": "$env{QT_ROOT}"
+      }
+    },
+    {
+      "name": "linux-gcc-dev",
+      "displayName": "Linux GCC developer build",
+      "inherits": "linux-gcc-base",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF",
+        "BUILD_TESTING": "OFF"
+      }
+    },
+    {
+      "name": "linux-gcc-test",
+      "displayName": "Linux GCC test build",
+      "inherits": [
+        "linux-gcc-base",
+        "tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-gcc-release",
+      "displayName": "Linux GCC release build",
+      "inherits": "linux-gcc-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
         "TSUNAMI_BUILD_CLI": "ON",
@@ -59,50 +100,354 @@
       }
     },
     {
-      "name": "linux-gui-debug",
-      "displayName": "Linux Qt Quick GUI debug build",
-      "description": "Builds the G0 Qt Quick GUI scaffold using an external Qt 6 installation.",
-      "inherits": "linux-base",
+      "name": "linux-gcc-gui-dev",
+      "displayName": "Linux GCC Qt Quick developer build",
+      "inherits": [
+        "linux-gcc-base",
+        "gui-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON"
+      }
+    },
+    {
+      "name": "linux-gcc-ci",
+      "displayName": "Linux GCC CI build",
+      "inherits": [
+        "linux-gcc-base",
+        "tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-clang-dev",
+      "displayName": "Linux Clang developer build",
+      "inherits": "linux-clang-base",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
         "TSUNAMI_BUILD_CLI": "ON",
-        "TSUNAMI_BUILD_GUI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF",
         "BUILD_TESTING": "OFF"
       }
     },
     {
-      "name": "linux-base",
-      "hidden": true,
-      "generator": "Ninja",
-      "binaryDir": "${sourceDir}/build/${presetName}",
-      "environment": {
-        "VCPKG_MAX_CONCURRENCY": "2"
-      },
+      "name": "linux-clang-test",
+      "displayName": "Linux Clang test build",
+      "inherits": [
+        "linux-clang-base",
+        "tests-base"
+      ],
       "cacheVariables": {
-        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
-        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_TARGET_TRIPLET": "x64-linux"
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "windows-msvc-base",
+      "hidden": true,
+      "inherits": "vcpkg-base",
+      "generator": "Ninja Multi-Config",
+      "binaryDir": "${sourceDir}/build/${presetName}",
+      "cacheVariables": {
+        "VCPKG_TARGET_TRIPLET": "x64-windows",
+        "CMAKE_CONFIGURATION_TYPES": "Debug;Release;RelWithDebInfo"
+      }
+    },
+    {
+      "name": "windows-msvc-dev",
+      "displayName": "Windows MSVC developer build",
+      "inherits": "windows-msvc-base",
+      "cacheVariables": {
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF",
+        "BUILD_TESTING": "OFF"
+      }
+    },
+    {
+      "name": "windows-msvc-test",
+      "displayName": "Windows MSVC test build",
+      "inherits": [
+        "windows-msvc-base",
+        "tests-base"
+      ],
+      "cacheVariables": {
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "windows-msvc-release",
+      "displayName": "Windows MSVC release build",
+      "inherits": "windows-msvc-base",
+      "cacheVariables": {
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF",
+        "BUILD_TESTING": "OFF"
+      }
+    },
+    {
+      "name": "windows-msvc-gui-dev",
+      "displayName": "Windows MSVC Qt Quick developer build",
+      "inherits": [
+        "windows-msvc-base",
+        "gui-base"
+      ],
+      "cacheVariables": {
+        "TSUNAMI_BUILD_CLI": "ON"
+      }
+    },
+    {
+      "name": "windows-msvc-ci",
+      "displayName": "Windows MSVC CI build",
+      "inherits": [
+        "windows-msvc-base",
+        "tests-base"
+      ],
+      "cacheVariables": {
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
       }
     }
   ],
   "buildPresets": [
     {
-      "name": "windows-mingw-vcpkg-debug",
-      "configurePreset": "windows-mingw-vcpkg"
-    },
-    {
-      "name": "windows-mingw-vcpkg-all-debug",
-      "configurePreset": "windows-mingw-vcpkg-all"
-    },
-    {
-      "name": "linux-vcpkg-headless-build",
-      "configurePreset": "linux-vcpkg-headless"
-    },
-    {
-      "name": "linux-gui-debug-build",
-      "configurePreset": "linux-gui-debug",
+      "name": "linux-gcc-dev-build",
+      "configurePreset": "linux-gcc-dev",
       "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
+    },
+    {
+      "name": "linux-gcc-test-build",
+      "configurePreset": "linux-gcc-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "linux-gcc-release-build",
+      "configurePreset": "linux-gcc-release",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
+    },
+    {
+      "name": "linux-gcc-gui-dev-build",
+      "configurePreset": "linux-gcc-gui-dev",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
         "tsunami_gui"
+      ]
+    },
+    {
+      "name": "linux-gcc-ci-build",
+      "configurePreset": "linux-gcc-ci",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "linux-clang-dev-build",
+      "configurePreset": "linux-clang-dev",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
+    },
+    {
+      "name": "linux-clang-test-build",
+      "configurePreset": "linux-clang-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "windows-msvc-dev-build",
+      "configurePreset": "windows-msvc-dev",
+      "configuration": "Debug",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
+    },
+    {
+      "name": "windows-msvc-test-build",
+      "configurePreset": "windows-msvc-test",
+      "configuration": "Debug",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "windows-msvc-release-build",
+      "configurePreset": "windows-msvc-release",
+      "configuration": "Release",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli"
+      ]
+    },
+    {
+      "name": "windows-msvc-gui-dev-build",
+      "configurePreset": "windows-msvc-gui-dev",
+      "configuration": "Debug",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_gui"
+      ]
+    },
+    {
+      "name": "windows-msvc-ci-build",
+      "configurePreset": "windows-msvc-ci",
+      "configuration": "RelWithDebInfo",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "linux-gcc-test-run",
+      "configurePreset": "linux-gcc-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-gcc-ci-test",
+      "configurePreset": "linux-gcc-ci",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-clang-test-run",
+      "configurePreset": "linux-clang-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-msvc-test-run",
+      "configurePreset": "windows-msvc-test",
+      "configuration": "Debug",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "windows-msvc-ci-test",
+      "configurePreset": "windows-msvc-ci",
+      "configuration": "RelWithDebInfo",
+      "output": {
+        "outputOnFailure": true
+      }
+    }
+  ],
+  "workflowPresets": [
+    {
+      "name": "linux-gcc-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-test-run"
+        }
+      ]
+    },
+    {
+      "name": "linux-gcc-ci-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-ci"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-ci-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-ci-test"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang-test-run"
+        }
+      ]
+    },
+    {
+      "name": "windows-msvc-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "windows-msvc-test"
+        },
+        {
+          "type": "build",
+          "name": "windows-msvc-test-build"
+        },
+        {
+          "type": "test",
+          "name": "windows-msvc-test-run"
+        }
+      ]
+    },
+    {
+      "name": "windows-msvc-ci-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "windows-msvc-ci"
+        },
+        {
+          "type": "build",
+          "name": "windows-msvc-ci-build"
+        },
+        {
+          "type": "test",
+          "name": "windows-msvc-ci-test"
+        }
       ]
     }
   ]

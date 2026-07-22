@@ -238,8 +238,13 @@ developer-specific paths or cache variables. It stays uncommitted; use
 environment variables, preset inheritance or tool discovery rather than a
 developer's absolute paths.
 
-The existing `windows-mingw-vcpkg-all` preset and the `-Visualization` path in
-`scripts/build_windows_qt.ps1` still select the removed historical
-`visualization;gui` features. They are unsupported pending `SWE-ENV-PRS-WP1` and
-must not be used as dependency-restoration instructions. This Work Package does
-not alter presets or target implementation.
+Shared configure, build, test and workflow presets are defined in
+`CMakePresets.json`. Local machine paths belong in ignored
+`CMakeUserPresets.json`, using `CMakeUserPresets.json.example` as a template.
+The shared presets reference `VCPKG_ROOT` for the manifest toolchain and
+`QT_ROOT` for external Qt discovery; they do not acquire Qt through vcpkg.
+
+The historical MinGW/visualization preset names are no longer shared preset
+authority. Optional dependency groups should still be inspected through explicit
+manifest feature selection and accepted by their owning Work Packages before
+project code depends on them.
