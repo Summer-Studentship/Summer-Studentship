@@ -42,6 +42,11 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Canonical case directory v0.1](SWE-ARC/SWE-ARC-CASE/canonical_case_directory_v0.1.md)
 - [Case artefact ownership matrix v0.1](SWE-ARC/SWE-ARC-CASE/case_artefact_ownership_matrix_v0.1.md)
 - [Case lifecycle policy v0.1](../../../architecture/case_lifecycle_policy_v0.1.json)
+- [Interface contract audit v0.1](SWE-ARC/SWE-ARC-API/interface_contract_audit_v0.1.md)
+- [Interface catalogue v0.1](SWE-ARC/SWE-ARC-API/interface_catalogue_v0.1.md)
+- [Interface dependency matrix v0.1](SWE-ARC/SWE-ARC-API/interface_dependency_matrix_v0.1.md)
+- [Interface contract validation v0.1](SWE-ARC/SWE-ARC-API/interface_contract_validation_v0.1.md)
+- [Interface contract policy v0.1](../../../architecture/interface_contract_policy_v0.1.json)
 
 ## Architecture handoff notes
 
