@@ -697,6 +697,7 @@
       ],
       "owned_external_dependencies": [
         "Qt6::Quick",
+        "Qt6::QuickControls2",
         "Qt Core",
         "Qt Gui",
         "Qt Qml",

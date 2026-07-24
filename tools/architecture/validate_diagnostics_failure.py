@@ -180,11 +180,14 @@ def validate_frontends(policy: dict, targets_policy: dict) -> None:
         raise ValidationError(f"GUI diagnostic mapping missing fields {sorted(GUI_FIELDS - gui_fields)}")
     cli_text = Path("apps/tsunami_cli/main.cpp").read_text(encoding="utf-8")
     gui_text = Path("apps/tsunami_gui/main.cpp").read_text(encoding="utf-8")
-    qml_text = Path("apps/tsunami_gui/qml/Main.qml").read_text(encoding="utf-8")
+    qml_text = "\n".join(
+        path.read_text(encoding="utf-8")
+        for path in Path("apps/tsunami_gui/qml").glob("**/*.qml")
+    )
     for token in ("--diagnostic-smoke", "diagnostic_severity", "diagnostic_category", "diagnostic_code", "diagnostic_context_preserved"):
         if token not in cli_text:
             raise ValidationError(f"CLI diagnostic smoke missing {token}")
-    for token in ("--diagnostic-smoke", "diagnosticStatusModel", "code", "severity", "category", "contextPreserved"):
+    for token in ("--diagnostic-smoke", "ShellController", "diagnosticCode", "diagnosticSeverity", "diagnosticCategory", "diagnosticContextPreserved"):
         if token not in gui_text:
             raise ValidationError(f"GUI diagnostic smoke missing {token}")
     for token in ("diagnosticCode", "diagnosticMessage", "diagnosticRuleId", "Diagnostic:"):
