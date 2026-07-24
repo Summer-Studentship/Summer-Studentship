@@ -47,6 +47,11 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Interface dependency matrix v0.1](SWE-ARC/SWE-ARC-API/interface_dependency_matrix_v0.1.md)
 - [Interface contract validation v0.1](SWE-ARC/SWE-ARC-API/interface_contract_validation_v0.1.md)
 - [Interface contract policy v0.1](../../../architecture/interface_contract_policy_v0.1.json)
+- [Application service audit v0.1](SWE-ARC/SWE-ARC-SVC/application_service_audit_v0.1.md)
+- [Application service contract v0.1](SWE-ARC/SWE-ARC-SVC/application_service_contract_v0.1.md)
+- [Service lifecycle contract v0.1](SWE-ARC/SWE-ARC-SVC/service_lifecycle_contract_v0.1.md)
+- [Frontend service boundary v0.1](SWE-ARC/SWE-ARC-SVC/frontend_service_boundary_v0.1.md)
+- [Application service validation v0.1](SWE-ARC/SWE-ARC-SVC/application_service_validation_v0.1.md)
 
 ## Architecture handoff notes
 
