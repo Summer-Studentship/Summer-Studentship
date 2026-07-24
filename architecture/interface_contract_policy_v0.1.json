@@ -12,7 +12,8 @@
     "src/data/include",
     "src/r2d/include",
     "src/l3d/include",
-    "src/coupling/include"
+    "src/coupling/include",
+    "src/application/include"
   ],
   "classifications": {
     "ownership": ["owning_value", "borrowed_view", "exclusive_interface_ownership", "shared_immutable"],
@@ -176,6 +177,31 @@
       "thread_safety": "not_thread_safe_by_default",
       "state": "active",
       "downstream_implementation_owner": "SWE-CPL-*"
+    },
+    {
+      "name": "application_service",
+      "owning_target": "tsunami_application",
+      "owning_namespace": "tsunami::application",
+      "owning_wbs": "SWE-ARC-SVC-WP1",
+      "public_headers": [
+        "src/application/include/tsunami/application/ApplicationService.hpp",
+        "src/application/include/tsunami/application/ServiceCapabilities.hpp",
+        "src/application/include/tsunami/application/ServiceOperations.hpp",
+        "src/application/include/tsunami/application/ServiceFactory.hpp"
+      ],
+      "permitted_consumer_targets": ["tsunami_application", "tsunami_cli", "tsunami_gui", "tsunami_tests"],
+      "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
+      "prohibited_dependency_targets": ["tsunami_fvm", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
+      "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::"],
+      "ownership_model": "exclusive_interface_ownership",
+      "mutability_model": "transactional_write",
+      "borrowed_lifetime_model": "call_duration",
+      "error_model": "result_based",
+      "cancellation_model": "borrowed_token",
+      "observer_model": "synchronous_callback_arguments_valid_for_call",
+      "thread_safety": "not_thread_safe_by_default",
+      "state": "active",
+      "downstream_implementation_owner": "SWE-ARC-SVC-WP1"
     }
   ]
 }

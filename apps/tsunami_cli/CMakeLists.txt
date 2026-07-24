@@ -8,7 +8,7 @@ target_compile_features(tsunami_cli PRIVATE cxx_std_20)
 
 target_link_libraries(tsunami_cli
     PRIVATE
-        tsunami_core
+        tsunami_application
         CLI11::CLI11
 )
 

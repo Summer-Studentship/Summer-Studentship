@@ -585,7 +585,7 @@
     {
       "target_name": "tsunami_application",
       "namespaced_alias": "Tsunami::application",
-      "status": "planned G0/G1",
+      "status": "active application-service scaffold; solver and persistence composition remain gated to later WPs",
       "type": "static_library",
       "wbs_owner": [
         "SWE-ARC-CASE",
@@ -593,24 +593,25 @@
         "SWE-ARC-ERR"
       ],
       "conceptual_layer": "Application",
-      "state": "planned",
+      "state": "active",
       "classification": "application",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
-        "tsunami_data",
-        "tsunami_geo",
-        "tsunami_r2d",
-        "tsunami_l3d",
-        "tsunami_coupling",
-        "tsunami_io_hdf5",
-        "tsunami_io_xdmf",
-        "tsunami_geo_gdal",
-        "tsunami_mesh_gmsh"
+        "tsunami_data"
       ],
       "prohibited_direct_project_dependencies": [
         "tsunami_cli",
         "tsunami_gui",
         "tsunami_tests",
+        "tsunami_fvm",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
         "tsunami_diagnostics_matplot"
       ],
       "owned_external_dependencies": [],
@@ -620,7 +621,7 @@
         "Catch2",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns case lifecycle and run orchestration. Concrete adapters may be composed here only at implementation assembly boundaries; Qt and CLI11 remain outside."
+      "public_boundary_notes": "Owns frontend-neutral application-service contracts and the deterministic no-solver smoke implementation. Concrete solvers, adapters, schedulers, Qt and CLI11 remain outside this target."
     },
     {
       "target_name": "tsunami_cli",
@@ -635,7 +636,6 @@
       "state": "active",
       "classification": "frontend",
       "allowed_direct_project_dependencies": [
-        "tsunami_core",
         "tsunami_application"
       ],
       "prohibited_direct_project_dependencies": [
@@ -663,7 +663,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Current direct tsunami_core link is transitional until tsunami_application exists. Final CLI ownership is command parsing and application-service invocation."
+      "public_boundary_notes": "Owns command parsing and service-status formatting. Lifecycle semantics come from tsunami_application."
     },
     {
       "target_name": "tsunami_gui",
@@ -678,7 +678,6 @@
       "state": "active",
       "classification": "frontend",
       "allowed_direct_project_dependencies": [
-        "tsunami_core",
         "tsunami_application"
       ],
       "prohibited_direct_project_dependencies": [
@@ -713,7 +712,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Current direct tsunami_core link is transitional until tsunami_application exists. GUI must not own solver, FVM, HDF5, GDAL or Gmsh integration."
+      "public_boundary_notes": "Owns Qt/QML presentation and converts neutral application-service values into Qt values. GUI must not own lifecycle, solver, FVM, HDF5, GDAL or Gmsh integration."
     },
     {
       "target_name": "tsunami_diagnostics_matplot",

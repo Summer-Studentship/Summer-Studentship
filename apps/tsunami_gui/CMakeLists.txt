@@ -23,7 +23,7 @@ target_compile_features(tsunami_gui PRIVATE cxx_std_20)
 
 target_link_libraries(tsunami_gui
     PRIVATE
-        tsunami_core
+        tsunami_application
         Qt6::Quick
 )
 

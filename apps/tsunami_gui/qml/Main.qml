@@ -14,7 +14,9 @@ Window {
 
         Text {
             anchors.centerIn: parent
-            text: "Tsunami Barrier Studentship"
+            horizontalAlignment: Text.AlignHCenter
+            text: "Tsunami Barrier Studentship\nService backend: " + serviceStatus.backend
+                  + "\nSolver available: " + (serviceStatus.solverAvailable ? "yes" : "no")
             color: "#1f2a37"
             font.pixelSize: 28
         }

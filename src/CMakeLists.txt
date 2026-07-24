@@ -34,6 +34,8 @@ target_include_directories(tsunami_data
 target_compile_features(tsunami_data INTERFACE cxx_std_20)
 target_link_libraries(tsunami_data INTERFACE tsunami_core)
 
+add_subdirectory(application)
+
 add_library(tsunami_r2d INTERFACE)
 add_library(Tsunami::r2d ALIAS tsunami_r2d)
 target_include_directories(tsunami_r2d

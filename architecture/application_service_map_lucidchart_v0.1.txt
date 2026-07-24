@@ -1,0 +1,30 @@
+Shared Application Service
+	Frontend-Neutral Boundary
+		Service Description
+		Validate Case
+		Prepare
+		Launch Run
+		Cancel Run
+		Discover Results
+	Inputs
+		Case ID and Revision
+		Preparation ID
+		Run ID
+		Artefact References
+		Cancellation
+		Observer
+	No-Solver Implementation
+		Status Available
+		Solver Unavailable
+		No Filesystem Mutation
+		No Fabricated Runs
+	Frontends
+		CLI
+			Service Status
+		Qt Quick Shell
+			Service Status
+	Future Implementations
+		Regional Solver Composition
+		Local Solver Composition
+		Coupling Composition
+		Persistence Adapters

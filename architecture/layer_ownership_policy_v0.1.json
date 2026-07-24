@@ -132,7 +132,7 @@
       "permitted_external_dependency_classes": ["none by default"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "Matplot++"],
       "interface_categories_owned": ["Service/use-case contracts", "Composition contracts", "Observer and diagnostic contracts"],
-      "status": "planned"
+      "status": "active application-service scaffold"
     },
     {
       "layer_id": "L8",
