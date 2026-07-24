@@ -1,32 +1,10 @@
 #pragma once
 
-#include <optional>
-#include <string>
-#include <utility>
-#include <vector>
+#include <tsunami/core/Status.hpp>
 
 namespace tsunami::core {
 
-struct ObservationContextEntry {
-    std::string key;
-    std::string value;
-};
-
-struct Progress {
-    double fraction{};
-
-    [[nodiscard]] auto valid() const noexcept -> bool
-    {
-        return fraction >= 0.0 && fraction <= 1.0;
-    }
-};
-
-struct Observation {
-    std::string topic_code;
-    std::string message;
-    std::optional<Progress> progress;
-    std::vector<ObservationContextEntry> context;
-};
+using Observation = OperationStatus;
 
 class IObserver {
 public:

@@ -72,7 +72,11 @@ public:
         tsunami::core::CancellationTokenRef cancellation,
         tsunami::core::IObserver& observer) -> tsunami::core::Result<tsunami::r2d::RegionalRunSummary> override
     {
-        observer.observe({"r2d.started", "regional solver contract invoked", {}, {}});
+        observer.observe({
+            "run",
+            tsunami::core::OperationState::running,
+            {"r2d.started", "regional solver contract invoked", tsunami::core::DiagnosticCategory::execution, tsunami::core::Severity::info, {}, {}},
+            {}});
         return tsunami::r2d::RegionalRunSummary{
             request.run_id,
             cancellation.stop_requested() ? tsunami::r2d::RegionalCompletion::cancelled : tsunami::r2d::RegionalCompletion::completed,
@@ -87,7 +91,11 @@ public:
         tsunami::core::CancellationTokenRef cancellation,
         tsunami::core::IObserver& observer) -> tsunami::core::Result<tsunami::l3d::LocalRunSummary> override
     {
-        observer.observe({"l3d.started", "local solver contract invoked", {}, {}});
+        observer.observe({
+            "run",
+            tsunami::core::OperationState::running,
+            {"l3d.started", "local solver contract invoked", tsunami::core::DiagnosticCategory::execution, tsunami::core::Severity::info, {}, {}},
+            {}});
         return tsunami::l3d::LocalRunSummary{
             request.run_id,
             cancellation.stop_requested() ? tsunami::l3d::LocalCompletion::cancelled : tsunami::l3d::LocalCompletion::completed,

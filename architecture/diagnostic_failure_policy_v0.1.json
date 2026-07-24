@@ -1,0 +1,137 @@
+{
+  "policy_version": "0.1",
+  "work_package": "SWE-ARC-ERR-WP1",
+  "deliverable": "SWE-ARC-ERR",
+  "references": {
+    "target_policy": {"path": "architecture/target_dependency_policy_v0.1.json", "policy_version": "0.1"},
+    "layer_policy": {"path": "architecture/layer_ownership_policy_v0.1.json", "policy_version": "0.1"},
+    "case_policy": {"path": "architecture/case_lifecycle_policy_v0.1.json", "policy_version": "0.1"},
+    "interface_policy": {"path": "architecture/interface_contract_policy_v0.1.json", "policy_version": "0.1"},
+    "service_policy": {"path": "architecture/application_service_policy_v0.1.json", "policy_version": "0.1"}
+  },
+  "public_headers": [
+    "src/core/include/tsunami/core/Diagnostic.hpp",
+    "src/core/include/tsunami/core/Status.hpp",
+    "src/core/include/tsunami/core/Error.hpp",
+    "src/core/include/tsunami/core/Observer.hpp",
+    "src/core/include/tsunami/core/Result.hpp",
+    "src/core/include/tsunami/core/Cancellation.hpp"
+  ],
+  "severity_levels": [
+    {"name": "trace", "semantics": "highly detailed execution evidence"},
+    {"name": "debug", "semantics": "developer-oriented diagnostic information"},
+    {"name": "info", "semantics": "expected operational progress or state information"},
+    {"name": "warning", "semantics": "recoverable abnormal condition requiring attention"},
+    {"name": "error", "semantics": "operation failed but process integrity remains intact"},
+    {"name": "critical", "semantics": "process, case or data integrity may be compromised and safe continuation is not available"}
+  ],
+  "diagnostic_categories": [
+    "validation",
+    "configuration",
+    "input_data",
+    "preparation",
+    "execution",
+    "persistence",
+    "geospatial",
+    "numerical",
+    "coupling",
+    "cancellation",
+    "resource",
+    "unsupported",
+    "internal"
+  ],
+  "operation_states": ["idle", "accepted", "running", "succeeded", "failed", "cancelled"],
+  "error_code_format": {
+    "pattern": "^[a-z]+(\\.[a-z0-9_]+){2,}$",
+    "rule": "<domain>.<component>.<condition>",
+    "stable_machine_identifier": true,
+    "dynamic_values_in_context": true
+  },
+  "required_diagnostic_fields": ["code", "message", "category", "severity", "context"],
+  "context_key_rules": {
+    "case": "lower_snake_case",
+    "unique_within_diagnostic": true,
+    "repeated_insertion": "replace",
+    "deterministic_ordering": true,
+    "lookup_function": "context_value",
+    "prohibited": ["secrets", "environment_dumps", "large_file_contents"]
+  },
+  "logging_record_fields": [
+    "timestamp_utc",
+    "sequence",
+    "severity",
+    "category",
+    "code",
+    "message",
+    "operation",
+    "operation_state",
+    "progress",
+    "context"
+  ],
+  "logging_rules": {
+    "timestamp_boundary": "logging boundary",
+    "sequence_scope": "monotonic within one producer stream",
+    "sink_lifecycle_owner": false,
+    "diagnostic_creation_logs_automatically": false,
+    "concrete_spdlog_integration": "deferred"
+  },
+  "cancellation_rules": {
+    "stages": ["requested", "acknowledged", "completed"],
+    "stop_requested_means": "requested only",
+    "category": "cancellation",
+    "normal_severity": ["info", "warning"],
+    "required_context": ["operation", "state_changed", "cancellation_stage"],
+    "not_solver_failure": true
+  },
+  "propagation_rules": {
+    "error_type": "tsunami::core::Error",
+    "result_failure_preserves_error": true,
+    "observer_payload": "tsunami::core::OperationStatus",
+    "observer_preserves": ["code", "message", "category", "severity", "context", "cause_code"],
+    "frontend_generates_category_or_severity": false
+  },
+  "observer_rules": {
+    "interface": "tsunami::core::IObserver",
+    "virtual_destructor": true,
+    "callback": "synchronous",
+    "gui_thread_assumption": false,
+    "ownership_transfer": false,
+    "automatic_logging": false
+  },
+  "representative_validation_failure": {
+    "operation": "validate_case",
+    "state": "failed",
+    "code": "application.validation.case_location_required",
+    "message": "case location is required",
+    "category": "validation",
+    "severity": "error",
+    "required_context": {
+      "operation": "validate_case",
+      "rule_id": "case.location.required",
+      "case_location": "<empty>",
+      "case_revision": "0",
+      "state_changed": "false"
+    },
+    "filesystem_access": false,
+    "schema_parsing": false
+  },
+  "cli_mapping": {
+    "target": "tsunami_cli",
+    "command": "--diagnostic-smoke",
+    "fields": ["operation", "state", "severity", "category", "code", "message", "context.operation", "context.rule_id", "context.case_location", "context.case_revision", "context.state_changed", "context_preserved"]
+  },
+  "gui_mapping": {
+    "target": "tsunami_gui",
+    "command": "--diagnostic-smoke --smoke-startup",
+    "context_property": "diagnosticStatusModel",
+    "fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"]
+  },
+  "qml_visible_fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"],
+  "prohibited_public_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "spdlog", "fmt::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot"],
+  "downstream_wbs_owners": {
+    "gui_shell": "SWE-GUI-SHL-WP1",
+    "case_schema": "SWE-DAT-CFG-WP1",
+    "solver_implementation": "SWE-R2D/SWE-L3D/SWE-CPL",
+    "concrete_logging_adapter": "later SWE diagnostics adapter"
+  }
+}

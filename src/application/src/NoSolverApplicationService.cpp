@@ -1,5 +1,6 @@
 #include <tsunami/application/ServiceFactory.hpp>
 
+#include <filesystem>
 #include <string>
 
 namespace tsunami::application {
@@ -9,25 +10,44 @@ constexpr const char* unavailable_reason = "no solver backend is configured";
 
 auto unavailable_error(std::string code, std::string operation) -> tsunami::core::Error
 {
-    return tsunami::core::Error{std::move(code), unavailable_reason}
+    return tsunami::core::Error{
+               std::move(code),
+               unavailable_reason,
+               tsunami::core::DiagnosticCategory::unsupported,
+               tsunami::core::Severity::error}
         .add_context("operation", std::move(operation))
         .add_context("state_changed", "false");
 }
 
 auto cancellation_error(std::string operation) -> tsunami::core::Error
 {
-    return tsunami::core::Error{"application.service.cancelled", "operation cancelled before service dispatch"}
+    return tsunami::core::Error{
+               "application.service.cancelled",
+               "operation cancelled before service dispatch",
+               tsunami::core::DiagnosticCategory::cancellation,
+               tsunami::core::Severity::info}
         .add_context("operation", std::move(operation))
+        .add_context("cancellation_stage", "requested")
         .add_context("state_changed", "false");
 }
 
-void observe_rejection(tsunami::core::IObserver& observer, const char* operation)
+auto validation_error(const ValidationRequest& request) -> tsunami::core::Error
 {
-    observer.observe({
-        "application.service.no_solver",
-        "operation inspected and rejected because no solver backend is configured",
-        {},
-        {{"operation", operation}, {"state_changed", "false"}}});
+    return tsunami::core::Error{
+               "application.validation.case_location_required",
+               "case location is required",
+               tsunami::core::DiagnosticCategory::validation,
+               tsunami::core::Severity::error}
+        .add_context("operation", "validate_case")
+        .add_context("rule_id", "case.location.required")
+        .add_context("case_location", request.case_location.empty() ? "<empty>" : request.case_location.generic_string())
+        .add_context("case_revision", std::to_string(request.case_revision))
+        .add_context("state_changed", "false");
+}
+
+void observe_failure(tsunami::core::IObserver& observer, const char* operation, const tsunami::core::Error& error)
+{
+    observer.observe(tsunami::core::failed_status(operation, error));
 }
 
 class NoSolverApplicationService final : public IApplicationService {
@@ -47,10 +67,16 @@ public:
     }
 
     auto validate_case(
-        const ValidationRequest&,
+        const ValidationRequest& request,
         tsunami::core::CancellationTokenRef cancellation,
         tsunami::core::IObserver& observer) -> tsunami::core::Result<ValidationResponse> override
     {
+        if (cancellation.stop_requested()) {
+            return fail<ValidationResponse>("validate_case", observer, cancellation_error("validate_case"));
+        }
+        if (request.case_location.empty()) {
+            return fail<ValidationResponse>("validate_case", observer, validation_error(request));
+        }
         return unsupported<ValidationResponse>("validate_case", cancellation, observer, "application.service.operation_unavailable");
     }
 
@@ -84,13 +110,19 @@ public:
         tsunami::core::IObserver& observer) -> tsunami::core::Result<ResultDiscoveryResponse> override
     {
         if (cancellation.stop_requested()) {
-            return tsunami::core::failure<ResultDiscoveryResponse>(cancellation_error("discover_results"));
+            return fail<ResultDiscoveryResponse>("discover_results", observer, cancellation_error("discover_results"));
         }
-        observe_rejection(observer, "discover_results");
         return ResultDiscoveryResponse{{}, {}, "no backend configured; no results discovered"};
     }
 
 private:
+    template <class Response>
+    auto fail(const char* operation, tsunami::core::IObserver& observer, tsunami::core::Error error) -> tsunami::core::Result<Response>
+    {
+        observe_failure(observer, operation, error);
+        return tsunami::core::failure<Response>(std::move(error));
+    }
+
     template <class Response>
     auto unsupported(
         const char* operation,
@@ -99,10 +131,9 @@ private:
         const char* error_code) -> tsunami::core::Result<Response>
     {
         if (cancellation.stop_requested()) {
-            return tsunami::core::failure<Response>(cancellation_error(operation));
+            return fail<Response>(operation, observer, cancellation_error(operation));
         }
-        observe_rejection(observer, operation);
-        return tsunami::core::failure<Response>(unavailable_error(error_code, operation));
+        return fail<Response>(operation, observer, unavailable_error(error_code, operation));
     }
 };
 
