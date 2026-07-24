@@ -52,6 +52,12 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Service lifecycle contract v0.1](SWE-ARC/SWE-ARC-SVC/service_lifecycle_contract_v0.1.md)
 - [Frontend service boundary v0.1](SWE-ARC/SWE-ARC-SVC/frontend_service_boundary_v0.1.md)
 - [Application service validation v0.1](SWE-ARC/SWE-ARC-SVC/application_service_validation_v0.1.md)
+- [Diagnostic model audit v0.1](SWE-ARC/SWE-ARC-ERR/diagnostic_model_audit_v0.1.md)
+- [Error, status and severity model v0.1](SWE-ARC/SWE-ARC-ERR/error_status_severity_model_v0.1.md)
+- [Structured logging and context v0.1](SWE-ARC/SWE-ARC-ERR/structured_logging_and_context_v0.1.md)
+- [Cancellation failure propagation v0.1](SWE-ARC/SWE-ARC-ERR/cancellation_failure_propagation_v0.1.md)
+- [Frontend diagnostic path v0.1](SWE-ARC/SWE-ARC-ERR/frontend_diagnostic_path_v0.1.md)
+- [Diagnostic failure validation v0.1](SWE-ARC/SWE-ARC-ERR/diagnostic_failure_validation_v0.1.md)
 
 ## Architecture handoff notes
 
@@ -61,3 +67,4 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - `SWE-DAT-SCH` and `SWE-DAT-CHK` own persistent scientific output and checkpoint schemas.
 - `SWE-ARC-API-WP1` owns concrete C++ contracts.
 - `SWE-ARC-SVC-WP1` owns orchestration semantics that execute the lifecycle transitions.
+- `SWE-ARC-ERR-WP1` owns diagnostic taxonomy, expected-failure propagation and frontend-neutral status semantics.
