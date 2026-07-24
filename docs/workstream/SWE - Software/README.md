@@ -58,6 +58,12 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Cancellation failure propagation v0.1](SWE-ARC/SWE-ARC-ERR/cancellation_failure_propagation_v0.1.md)
 - [Frontend diagnostic path v0.1](SWE-ARC/SWE-ARC-ERR/frontend_diagnostic_path_v0.1.md)
 - [Diagnostic failure validation v0.1](SWE-ARC/SWE-ARC-ERR/diagnostic_failure_validation_v0.1.md)
+- [GUI shell audit v0.1](SWE-GUI/SWE-GUI-SHL/gui_shell_audit_v0.1.md)
+- [Qt Quick shell structure v0.1](SWE-GUI/SWE-GUI-SHL/qt_quick_shell_structure_v0.1.md)
+- [Navigation placeholder contract v0.1](SWE-GUI/SWE-GUI-SHL/navigation_placeholder_contract_v0.1.md)
+- [Service and diagnostic binding v0.1](SWE-GUI/SWE-GUI-SHL/service_diagnostic_binding_v0.1.md)
+- [GUI shell accessibility v0.1](SWE-GUI/SWE-GUI-SHL/gui_shell_accessibility_v0.1.md)
+- [GUI shell validation v0.1](SWE-GUI/SWE-GUI-SHL/gui_shell_validation_v0.1.md)
 
 ## Architecture handoff notes
 
@@ -68,3 +74,4 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - `SWE-ARC-API-WP1` owns concrete C++ contracts.
 - `SWE-ARC-SVC-WP1` owns orchestration semantics that execute the lifecycle transitions.
 - `SWE-ARC-ERR-WP1` owns diagnostic taxonomy, expected-failure propagation and frontend-neutral status semantics.
+- `SWE-GUI-SHL-WP1` owns the G0 Qt Quick shell, navigation placeholders and GUI-owned service/diagnostic presentation.
