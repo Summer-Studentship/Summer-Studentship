@@ -1,0 +1,125 @@
+{
+  "policy_version": "0.1",
+  "work_package": "SWE-ARC-SVC-WP1",
+  "references": {
+    "target_policy": {"path": "architecture/target_dependency_policy_v0.1.json", "policy_version": "0.1"},
+    "layer_policy": {"path": "architecture/layer_ownership_policy_v0.1.json", "policy_version": "0.1"},
+    "case_policy": {"path": "architecture/case_lifecycle_policy_v0.1.json", "policy_version": "0.1"},
+    "interface_policy": {"path": "architecture/interface_contract_policy_v0.1.json", "policy_version": "0.1"}
+  },
+  "application_target": "tsunami_application",
+  "application_layer": "L7",
+  "public_headers": [
+    "src/application/include/tsunami/application/ApplicationService.hpp",
+    "src/application/include/tsunami/application/ServiceCapabilities.hpp",
+    "src/application/include/tsunami/application/ServiceOperations.hpp",
+    "src/application/include/tsunami/application/ServiceFactory.hpp"
+  ],
+  "service_interface": "tsunami::application::IApplicationService",
+  "factory": "tsunami::application::make_no_solver_application_service",
+  "operations": [
+    {
+      "name": "validate_case",
+      "request_type": "ValidationRequest",
+      "response_type": "ValidationResponse",
+      "permitted_case_states": ["draft", "invalid"],
+      "permitted_run_states": [],
+      "expected_state_effect": "enters_or_requests_validating",
+      "side_effect": "state_changing",
+      "failure_model": "Result<ValidationResponse>",
+      "capability_key": "validation",
+      "unsupported_state_changed": false
+    },
+    {
+      "name": "prepare_run",
+      "request_type": "PreparationRequest",
+      "response_type": "PreparationResponse",
+      "permitted_case_states": ["validated", "preparation_failed"],
+      "permitted_run_states": [],
+      "expected_state_effect": "enters_or_requests_preparing",
+      "side_effect": "state_changing",
+      "failure_model": "Result<PreparationResponse>",
+      "capability_key": "preparation",
+      "unsupported_state_changed": false
+    },
+    {
+      "name": "launch_run",
+      "request_type": "LaunchRequest",
+      "response_type": "LaunchResponse",
+      "permitted_case_states": ["prepared"],
+      "permitted_run_states": [],
+      "expected_state_effect": "creates_new_run_and_queues_it",
+      "restart_rule": "creates_new_run",
+      "side_effect": "state_changing",
+      "failure_model": "Result<LaunchResponse>",
+      "capability_key": "launch",
+      "unsupported_state_changed": false
+    },
+    {
+      "name": "request_cancellation",
+      "request_type": "CancellationRequest",
+      "response_type": "CancellationResponse",
+      "permitted_case_states": [],
+      "permitted_run_states": ["created", "queued", "running", "cancelling"],
+      "expected_state_effect": "requests_cancellation",
+      "side_effect": "state_changing",
+      "failure_model": "Result<CancellationResponse>",
+      "capability_key": "cancellation",
+      "unsupported_state_changed": false
+    },
+    {
+      "name": "discover_results",
+      "request_type": "ResultDiscoveryRequest",
+      "response_type": "ResultDiscoveryResponse",
+      "permitted_case_states": ["created", "draft", "validating", "invalid", "validated", "preparing", "preparation_failed", "prepared", "archiving", "archived"],
+      "permitted_run_states": ["created", "queued", "running", "cancelling", "cancelled", "failed", "completed", "postprocessing", "postprocess_failed", "postprocessed"],
+      "expected_state_effect": "none",
+      "side_effect": "read_only",
+      "failure_model": "Result<ResultDiscoveryResponse>",
+      "capability_key": "result_discovery",
+      "unsupported_state_changed": false
+    }
+  ],
+  "failure_codes": [
+    "application.service.operation_unavailable",
+    "application.service.solver_unavailable",
+    "application.service.cancelled",
+    "application.service.invalid_request",
+    "application.service.lifecycle_precondition_failed"
+  ],
+  "cancellation_behaviour": "pre_cancelled_operations_return_application.service.cancelled",
+  "observer_behaviour": "bounded_neutral_event_on_no_solver_rejection",
+  "cli_adapter": {
+    "target": "tsunami_cli",
+    "service_command": "--service-status",
+    "uses_factory": true,
+    "depends_on": "tsunami_application"
+  },
+  "gui_adapter": {
+    "target": "tsunami_gui",
+    "startup_status_property": "serviceStatus",
+    "uses_factory": true,
+    "depends_on": "tsunami_application"
+  },
+  "no_solver_behaviour": {
+    "implementation_id": "no-solver",
+    "solver_available": false,
+    "validation_available": false,
+    "preparation_available": false,
+    "launch_available": false,
+    "cancellation_available": false,
+    "result_discovery_available": false,
+    "status_available": true,
+    "state_changing_unsupported_operations_succeed": false,
+    "launch_fabricates_run": false,
+    "creates_files": false,
+    "result_discovery": "empty_success_no_backend"
+  },
+  "downstream_wbs_owner": {
+    "diagnostics": "SWE-ARC-ERR-WP1",
+    "real_service_composition": "SWE-ARC-SVC later WPs",
+    "gui_shell": "SWE-GUI-SHL-WP1",
+    "case_schema": "SWE-DAT-CFG",
+    "solver_implementations": "SWE-R2D/SWE-L3D/SWE-CPL"
+  }
+}
