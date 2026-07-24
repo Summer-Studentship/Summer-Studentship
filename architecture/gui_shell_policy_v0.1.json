@@ -1,0 +1,52 @@
+{
+  "policy_version": "0.1",
+  "work_package": "SWE-GUI-SHL-WP1",
+  "deliverable": "SWE-GUI-SHL",
+  "references": {
+    "target_policy": {"path": "architecture/target_dependency_policy_v0.1.json", "policy_version": "0.1"},
+    "layer_policy": {"path": "architecture/layer_ownership_policy_v0.1.json", "policy_version": "0.1"},
+    "interface_policy": {"path": "architecture/interface_contract_policy_v0.1.json", "policy_version": "0.1"},
+    "service_policy": {"path": "architecture/application_service_policy_v0.1.json", "policy_version": "0.1"},
+    "diagnostic_policy": {"path": "architecture/diagnostic_failure_policy_v0.1.json", "policy_version": "0.1"}
+  },
+  "gui_target": "tsunami_gui",
+  "qml_module_uri": "Tsunami.Studentship",
+  "required_qt_modules": ["Qt6::Quick", "Qt6::QuickControls2"],
+  "controller_class": "ShellController",
+  "application_service_factory": "tsunami::application::make_no_solver_application_service",
+  "root_qml": "apps/tsunami_gui/qml/Main.qml",
+  "components": [
+    "apps/tsunami_gui/qml/components/ApplicationHeader.qml",
+    "apps/tsunami_gui/qml/components/NavigationRail.qml",
+    "apps/tsunami_gui/qml/components/NavigationDelegate.qml",
+    "apps/tsunami_gui/qml/components/ServiceStatusBar.qml",
+    "apps/tsunami_gui/qml/components/DiagnosticPanel.qml",
+    "apps/tsunami_gui/qml/components/PlaceholderPage.qml"
+  ],
+  "pages": [
+    "apps/tsunami_gui/qml/pages/DataPage.qml",
+    "apps/tsunami_gui/qml/pages/DomainPage.qml",
+    "apps/tsunami_gui/qml/pages/MeshPage.qml",
+    "apps/tsunami_gui/qml/pages/PhysicsPage.qml",
+    "apps/tsunami_gui/qml/pages/SolverPage.qml",
+    "apps/tsunami_gui/qml/pages/RunPage.qml",
+    "apps/tsunami_gui/qml/pages/PostProcessingPage.qml"
+  ],
+  "navigation": [
+    {"id": "data", "label": "Data", "downstream_owners": ["SWE-DAT-CFG", "SWE-DAT-MAN", "SWE-GUI-CAS"]},
+    {"id": "domain", "label": "Domain", "downstream_owners": ["SWE-GEO-*", "SWE-GUI-CAS"]},
+    {"id": "mesh", "label": "Mesh", "downstream_owners": ["SWE-GEO-MSH", "SWE-FVM-MSH", "SWE-GUI-VIS"]},
+    {"id": "physics", "label": "Physics", "downstream_owners": ["SWE-R2D-*", "SWE-L3D-*", "SWE-GUI-CAS"]},
+    {"id": "solver", "label": "Solver", "downstream_owners": ["SWE-R2D-*", "SWE-L3D-*", "SWE-GUI-RUN"]},
+    {"id": "run", "label": "Run", "downstream_owners": ["SWE-ARC-SVC", "SWE-GUI-RUN", "SWE-GUI-LOG"]},
+    {"id": "post_processing", "label": "Post-processing", "downstream_owners": ["SWE-CPL-MET", "SWE-CPL-CMP", "SWE-GUI-POST", "SWE-GUI-VIS"]}
+  ],
+  "service_status_properties": ["serviceBackend", "serviceBoundaryAvailable", "solverAvailable", "validationAvailable", "preparationAvailable", "launchAvailable", "cancellationAvailable", "resultDiscoveryAvailable"],
+  "diagnostic_properties": ["diagnosticActive", "diagnosticOperation", "diagnosticState", "diagnosticSeverity", "diagnosticCategory", "diagnosticCode", "diagnosticMessage", "diagnosticRuleId", "diagnosticCaseLocation", "diagnosticCaseRevision", "diagnosticStateChanged", "diagnosticContextPreserved"],
+  "shell_smoke_fields": ["shellReady", "navigationCount", "activeNavigationIndex", "activeSectionId", "activeSectionTitle", "diagnosticPanelVisible"],
+  "diagnostic_smoke_fields": ["diagnosticCode", "diagnosticCategory", "diagnosticSeverity", "diagnosticContextPreserved"],
+  "prohibited_direct_target_dependencies": ["tsunami_core", "tsunami_data", "tsunami_fvm", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
+  "prohibited_backend_tokens": ["HDF5", "GDAL", "Gmsh", "IRegionalSolver", "ILocalSolver", "tsunami::r2d", "tsunami::l3d", "tsunami::data"],
+  "accessibility_requirements": ["navigation Accessible.name", "service status text", "diagnostic text selectable", "visible focus", "meaningful headings"],
+  "scope_exclusions": ["case editing", "case parsing", "dataset import", "mesh creation", "physics controls", "real solver launch", "scheduler", "HDF5/XDMF access", "result visualisation", "post-processing", "final branding"]
+}

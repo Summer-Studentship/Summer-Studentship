@@ -106,9 +106,12 @@
   },
   "gui_adapter": {
     "target": "tsunami_gui",
+    "controller": "ShellController",
     "startup_status_property": "serviceStatus",
+    "shell_status_properties": ["serviceBackend", "serviceBoundaryAvailable", "solverAvailable", "validationAvailable", "preparationAvailable", "launchAvailable", "cancellationAvailable", "resultDiscoveryAvailable"],
     "diagnostic_status_property": "diagnosticStatusModel",
     "diagnostic_smoke_command": "--diagnostic-smoke --smoke-startup",
+    "shell_smoke_command": "--shell-smoke --smoke-startup",
     "diagnostic_fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"],
     "uses_factory": true,
     "depends_on": "tsunami_application"

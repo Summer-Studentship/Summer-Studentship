@@ -122,8 +122,10 @@
   },
   "gui_mapping": {
     "target": "tsunami_gui",
-    "command": "--diagnostic-smoke --smoke-startup",
-    "context_property": "diagnosticStatusModel",
+    "command": "--diagnostic-smoke --shell-smoke --smoke-startup",
+    "controller": "ShellController",
+    "context_property": "shellController",
+    "qml_component": "DiagnosticPanel.qml",
     "fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"]
   },
   "qml_visible_fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"],

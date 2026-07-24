@@ -1,0 +1,35 @@
+Qt Quick Application Shell
+    Bootstrap
+        QGuiApplication
+        QQmlApplicationEngine
+        ShellController
+        Shared Application Service
+    Application Window
+        Application Header
+        Navigation
+            Data
+            Domain
+            Mesh
+            Physics
+            Solver
+            Run
+            Post-processing
+        Content Surface
+            Placeholder Pages
+        Diagnostic Panel
+        Service Status Bar
+    Backend Boundary
+        tsunami_application
+        No-solver Service
+        Canonical Diagnostics
+    Validation
+        Startup Smoke
+        Shell Smoke
+        Diagnostic Shell Smoke
+        QML Resource Validation
+    Future Handoffs
+        Case and Manifest UI
+        Run Control UI
+        Diagnostic Log UI
+        Result Visualisation
+        Post-processing

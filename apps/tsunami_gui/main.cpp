@@ -1,112 +1,81 @@
+#include "ShellController.hpp"
+
+#include <QCoreApplication>
 #include <QGuiApplication>
 #include <QObject>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
-#include <QVariantMap>
 #include <QString>
 #include <QTimer>
-
-#include <filesystem>
-#include <string_view>
-#include <vector>
+#include <QVariant>
 
 #include <tsunami/application/ServiceFactory.hpp>
 
 namespace {
 
-class CollectingObserver final : public tsunami::core::IObserver {
-public:
-    void observe(const tsunami::core::Observation& observation) override
-    {
-        observations.push_back(observation);
-    }
-
-    std::vector<tsunami::core::Observation> observations;
+struct SmokeFlags {
+    bool smoke_startup{};
+    bool diagnostic_smoke{};
+    bool shell_smoke{};
 };
 
-auto context_or_empty(const tsunami::core::Diagnostic& diagnostic, std::string_view key) -> QString
+auto parse_flags(int argc, char* argv[]) -> SmokeFlags
 {
-    return QString::fromStdString(diagnostic.context_value(key).value_or(""));
-}
-
-auto diagnostic_matches(const tsunami::core::Error& error, const tsunami::core::Observation& observed) -> bool
-{
-    return observed.operation == "validate_case"
-        && observed.state == tsunami::core::OperationState::failed
-        && observed.diagnostic.code == error.code()
-        && observed.diagnostic.message == error.message()
-        && observed.diagnostic.category == error.category()
-        && observed.diagnostic.severity == error.severity()
-        && observed.diagnostic.context == error.context();
-}
-
-auto make_empty_diagnostic_status() -> QVariantMap
-{
-    QVariantMap status;
-    status.insert("active", false);
-    status.insert("contextPreserved", false);
-    return status;
-}
-
-auto make_diagnostic_status(bool& preserved) -> QVariantMap
-{
-    const auto service = tsunami::application::make_no_solver_application_service();
-    tsunami::core::NeverCancelToken cancellation;
-    CollectingObserver observer;
-    const tsunami::application::ValidationRequest request{std::filesystem::path{}, {}, 0, "case"};
-    const auto result = service->validate_case(request, cancellation, observer);
-
-    QVariantMap status = make_empty_diagnostic_status();
-    if (result || observer.observations.size() != 1) {
-        preserved = false;
-        return status;
+    SmokeFlags flags;
+    for (int index = 1; index < argc; ++index) {
+        const auto flag = QString::fromLocal8Bit(argv[index]);
+        if (flag == "--smoke-startup") {
+            flags.smoke_startup = true;
+        } else if (flag == "--diagnostic-smoke") {
+            flags.diagnostic_smoke = true;
+        } else if (flag == "--shell-smoke") {
+            flags.shell_smoke = true;
+        }
     }
-
-    const auto& error = result.error();
-    const auto& observed = observer.observations.front();
-    preserved = diagnostic_matches(error, observed)
-        && error.code() == "application.validation.case_location_required"
-        && error.category() == tsunami::core::DiagnosticCategory::validation
-        && error.severity() == tsunami::core::Severity::error
-        && error.context_value("operation") == "validate_case"
-        && error.context_value("rule_id") == "case.location.required"
-        && error.context_value("case_location") == "<empty>"
-        && error.context_value("case_revision") == "0"
-        && error.context_value("state_changed") == "false";
-
-    status.insert("active", true);
-    status.insert("operation", QString::fromStdString(observed.operation));
-    status.insert("state", QString::fromUtf8(tsunami::core::to_string(observed.state).data(), static_cast<int>(tsunami::core::to_string(observed.state).size())));
-    status.insert("severity", QString::fromUtf8(tsunami::core::to_string(error.severity()).data(), static_cast<int>(tsunami::core::to_string(error.severity()).size())));
-    status.insert("category", QString::fromUtf8(tsunami::core::to_string(error.category()).data(), static_cast<int>(tsunami::core::to_string(error.category()).size())));
-    status.insert("code", QString::fromStdString(error.code()));
-    status.insert("message", QString::fromStdString(error.message()));
-    status.insert("ruleId", context_or_empty(error.diagnostic(), "rule_id"));
-    status.insert("caseLocation", context_or_empty(error.diagnostic(), "case_location"));
-    status.insert("caseRevision", context_or_empty(error.diagnostic(), "case_revision"));
-    status.insert("stateChanged", context_or_empty(error.diagnostic(), "state_changed"));
-    status.insert("contextPreserved", preserved);
-    return status;
+    return flags;
 }
 
-auto qml_diagnostic_verified(const QList<QObject*>& roots) -> bool
+auto root_property(QObject* root, const char* name) -> QVariant
 {
-    if (roots.isEmpty()) {
+    return root == nullptr ? QVariant{} : root->property(name);
+}
+
+auto run_shell_checks(QObject* root, ShellController& controller, bool expect_diagnostic) -> bool
+{
+    if (root == nullptr) {
         return false;
     }
-    const auto* root = roots.front();
-    return root->property("diagnosticActive").toBool()
-        && root->property("diagnosticOperation").toString() == "validate_case"
-        && root->property("diagnosticState").toString() == "failed"
-        && root->property("diagnosticSeverity").toString() == "error"
-        && root->property("diagnosticCategory").toString() == "validation"
-        && root->property("diagnosticCode").toString() == "application.validation.case_location_required"
-        && root->property("diagnosticMessage").toString() == "case location is required"
-        && root->property("diagnosticRuleId").toString() == "case.location.required"
-        && root->property("diagnosticCaseLocation").toString() == "<empty>"
-        && root->property("diagnosticCaseRevision").toString() == "0"
-        && root->property("diagnosticStateChanged").toString() == "false"
-        && root->property("diagnosticContextPreserved").toBool();
+    const QStringList expected_ids{
+        "data", "domain", "mesh", "physics", "solver", "run", "post_processing"};
+    if (!root_property(root, "shellReady").toBool()
+        || root_property(root, "navigationCount").toInt() != expected_ids.size()
+        || root_property(root, "activeSectionId").toString() != "data"
+        || controller.serviceBackend() != "no-solver"
+        || !controller.serviceBoundaryAvailable()
+        || controller.solverAvailable()) {
+        return false;
+    }
+    if (expect_diagnostic) {
+        if (!controller.diagnosticActive()
+            || controller.diagnosticCode() != "application.validation.case_location_required"
+            || controller.diagnosticCategory() != "validation"
+            || controller.diagnosticSeverity() != "error"
+            || !controller.diagnosticContextPreserved()
+            || !root_property(root, "diagnosticPanelVisible").toBool()) {
+            return false;
+        }
+    } else if (controller.diagnosticActive()) {
+        return false;
+    }
+    for (int index = 0; index < expected_ids.size(); ++index) {
+        if (!QMetaObject::invokeMethod(root, "activateSection", Q_ARG(QVariant, index))) {
+            return false;
+        }
+        if (root_property(root, "activeSectionId").toString() != expected_ids[index]) {
+            return false;
+        }
+    }
+    return true;
 }
 
 } // namespace
@@ -114,34 +83,15 @@ auto qml_diagnostic_verified(const QList<QObject*>& roots) -> bool
 int main(int argc, char* argv[])
 {
     QGuiApplication app(argc, argv);
-    bool smoke_startup = false;
-    bool diagnostic_smoke = false;
-
-    for (int index = 1; index < argc; ++index) {
-        if (QString::fromLocal8Bit(argv[index]) == "--smoke-startup") {
-            smoke_startup = true;
-        } else if (QString::fromLocal8Bit(argv[index]) == "--diagnostic-smoke") {
-            diagnostic_smoke = true;
-        }
+    const auto flags = parse_flags(argc, argv);
+    auto service = tsunami::application::make_no_solver_application_service();
+    ShellController controller(std::move(service));
+    if (flags.diagnostic_smoke && !controller.runDiagnosticSmoke()) {
+        return 2;
     }
 
     QQmlApplicationEngine engine;
-    const auto service = tsunami::application::make_no_solver_application_service();
-    const auto description = service->describe();
-    QVariantMap service_status;
-    service_status.insert("backend", QString::fromStdString(description.implementation_id));
-    service_status.insert("boundaryAvailable", true);
-    service_status.insert("solverAvailable", description.solver_available);
-    service_status.insert("validationAvailable", description.validation.available);
-    service_status.insert("preparationAvailable", description.preparation.available);
-    service_status.insert("launchAvailable", description.launch.available);
-    service_status.insert("cancellationAvailable", description.cancellation.available);
-    service_status.insert("resultDiscoveryAvailable", description.result_discovery.available);
-    engine.rootContext()->setContextProperty("serviceStatus", service_status);
-
-    bool diagnostic_preserved = false;
-    const auto diagnostic_status = diagnostic_smoke ? make_diagnostic_status(diagnostic_preserved) : make_empty_diagnostic_status();
-    engine.rootContext()->setContextProperty("diagnosticStatusModel", diagnostic_status);
+    engine.rootContext()->setContextProperty("shellController", &controller);
 
     QObject::connect(
         &engine,
@@ -151,12 +101,18 @@ int main(int argc, char* argv[])
         Qt::QueuedConnection);
 
     engine.loadFromModule("Tsunami.Studentship", "Main");
+    QObject* root = engine.rootObjects().isEmpty() ? nullptr : engine.rootObjects().front();
 
-    if (diagnostic_smoke && (!diagnostic_preserved || !qml_diagnostic_verified(engine.rootObjects()))) {
-        return 2;
+    if (flags.shell_smoke && !run_shell_checks(root, controller, flags.diagnostic_smoke)) {
+        return 3;
     }
 
-    if (smoke_startup) {
+    if (flags.diagnostic_smoke && !flags.shell_smoke
+        && (!controller.diagnosticActive() || controller.diagnosticCode() != "application.validation.case_location_required")) {
+        return 4;
+    }
+
+    if (flags.smoke_startup) {
         QTimer::singleShot(0, &app, &QCoreApplication::quit);
     }
 
