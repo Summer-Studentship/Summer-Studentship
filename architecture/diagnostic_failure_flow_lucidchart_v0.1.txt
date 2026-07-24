@@ -1,0 +1,70 @@
+Diagnostic and Failure Propagation
+    Core Contracts
+        Severity
+            trace
+            debug
+            info
+            warning
+            error
+            critical
+        Diagnostic Category
+            validation
+            configuration
+            input_data
+            preparation
+            execution
+            persistence
+            geospatial
+            numerical
+            coupling
+            cancellation
+            resource
+            unsupported
+            internal
+        Diagnostic Context
+            unique keys
+            deterministic ordering
+            frontend-neutral values
+        Error
+            code
+            message
+            category
+            severity
+            context
+            cause code
+        Result
+            expected failure preserves Error
+        Operation Status
+            transient presentation state
+            not case lifecycle authority
+            not run lifecycle authority
+        Cancellation
+            requested
+            acknowledged
+            completed
+        Observer
+            synchronous OperationStatus callback
+    Application Service
+        Validate Case
+        Representative Failure
+            application.validation.case_location_required
+            validation
+            error
+            state_changed false
+        Observer Propagation
+        Result Propagation
+    CLI Adapter
+        Diagnostic Smoke
+        Stable Text Fields
+        Exit-Code Verification
+    Qt Adapter
+        Standard-to-Qt Conversion
+        Diagnostic Status Map
+    QML
+        Code
+        Message
+        Context
+    Structured Logging
+        Record Fields
+        Context Rules
+        Deferred Concrete Sink

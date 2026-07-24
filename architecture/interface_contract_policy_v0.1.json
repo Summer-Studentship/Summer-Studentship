@@ -24,7 +24,7 @@
   },
   "contract_families": [
     {
-      "name": "identity_version_result_error",
+      "name": "identity_version_result_error_status_diagnostic",
       "owning_target": "tsunami_core",
       "owning_namespace": "tsunami::core",
       "owning_wbs": "SWE-ARC-API-WP1",
@@ -32,6 +32,8 @@
         "src/core/include/tsunami/core/Identity.hpp",
         "src/core/include/tsunami/core/Error.hpp",
         "src/core/include/tsunami/core/Result.hpp",
+        "src/core/include/tsunami/core/Diagnostic.hpp",
+        "src/core/include/tsunami/core/Status.hpp",
         "src/core/include/tsunami/core/Types.hpp",
         "src/core/include/tsunami/core/Constants.hpp"
       ],
@@ -43,6 +45,7 @@
       "mutability_model": "immutable",
       "borrowed_lifetime_model": "not_retained",
       "error_model": "result_based",
+      "diagnostic_model": "Error carries code, message, category, severity, deterministic context and optional cause code; OperationStatus presents transient operation state and diagnostics.",
       "cancellation_model": "none",
       "observer_model": "none",
       "thread_safety": "read_only_query_safe",
@@ -70,7 +73,7 @@
       "observer_model": "synchronous_callback_arguments_valid_for_call",
       "thread_safety": "callback_thread_unspecified",
       "state": "active",
-      "downstream_implementation_owner": "SWE-ARC-SVC-WP1"
+      "downstream_implementation_owner": "SWE-ARC-ERR-WP1"
     },
     {
       "name": "mesh_field_views",

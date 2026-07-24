@@ -2,6 +2,7 @@ find_package(Catch2 3 CONFIG REQUIRED)
 
 add_executable(tsunami_tests
     application/application_service_tests.cpp
+    core/diagnostic_tests.cpp
     contracts/contract_dummy_consumers.cpp
     contracts/interface_contracts.cpp
     smoke/core_smoke.cpp

@@ -84,22 +84,53 @@
     "application.service.operation_unavailable",
     "application.service.solver_unavailable",
     "application.service.cancelled",
+    "application.validation.case_location_required",
     "application.service.invalid_request",
     "application.service.lifecycle_precondition_failed"
   ],
+  "diagnostic_model": {
+    "error_fields": ["code", "message", "category", "severity", "context", "cause_code"],
+    "observer_payload": "tsunami::core::OperationStatus",
+    "status_states": ["idle", "accepted", "running", "succeeded", "failed", "cancelled"],
+    "context_preservation": "returned Error and observer OperationStatus carry equivalent diagnostic fields"
+  },
   "cancellation_behaviour": "pre_cancelled_operations_return_application.service.cancelled",
   "observer_behaviour": "bounded_neutral_event_on_no_solver_rejection",
   "cli_adapter": {
     "target": "tsunami_cli",
     "service_command": "--service-status",
+    "diagnostic_smoke_command": "--diagnostic-smoke",
+    "diagnostic_fields": ["operation", "state", "severity", "category", "code", "message", "context", "context_preserved"],
     "uses_factory": true,
     "depends_on": "tsunami_application"
   },
   "gui_adapter": {
     "target": "tsunami_gui",
     "startup_status_property": "serviceStatus",
+    "diagnostic_status_property": "diagnosticStatusModel",
+    "diagnostic_smoke_command": "--diagnostic-smoke --smoke-startup",
+    "diagnostic_fields": ["active", "operation", "state", "severity", "category", "code", "message", "ruleId", "caseLocation", "caseRevision", "stateChanged", "contextPreserved"],
     "uses_factory": true,
     "depends_on": "tsunami_application"
+  },
+  "representative_validation_failure": {
+    "operation": "validate_case",
+    "condition": "empty case_location",
+    "code": "application.validation.case_location_required",
+    "message": "case location is required",
+    "category": "validation",
+    "severity": "error",
+    "status_state": "failed",
+    "required_context": {
+      "operation": "validate_case",
+      "rule_id": "case.location.required",
+      "case_location": "<empty>",
+      "case_revision": "0",
+      "state_changed": "false"
+    },
+    "state_changed": false,
+    "filesystem_access": false,
+    "schema_parsing": false
   },
   "no_solver_behaviour": {
     "implementation_id": "no-solver",
@@ -113,6 +144,9 @@
     "state_changing_unsupported_operations_succeed": false,
     "launch_fabricates_run": false,
     "creates_files": false,
+    "unsupported_category": "unsupported",
+    "cancelled_category": "cancellation",
+    "observer_preserves_error_context": true,
     "result_discovery": "empty_success_no_backend"
   },
   "downstream_wbs_owner": {
