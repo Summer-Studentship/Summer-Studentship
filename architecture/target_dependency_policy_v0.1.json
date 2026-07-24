@@ -151,13 +151,13 @@
     {
       "target_name": "tsunami_fvm",
       "namespaced_alias": "Tsunami::fvm",
-      "status": "planned G1",
-      "type": "static_library",
+      "status": "active contract scaffold; implementation remains gated to later WPs",
+      "type": "interface_library",
       "wbs_owner": [
         "SWE-FVM-*"
       ],
       "conceptual_layer": "Shared Numerical Infrastructure",
-      "state": "planned",
+      "state": "active",
       "classification": "domain",
       "allowed_direct_project_dependencies": [
         "tsunami_core"
@@ -192,15 +192,15 @@
     {
       "target_name": "tsunami_data",
       "namespaced_alias": "Tsunami::data",
-      "status": "planned G1",
-      "type": "static_library",
+      "status": "active contract scaffold; implementation remains gated to later WPs",
+      "type": "interface_library",
       "wbs_owner": [
         "SWE-DAT-CFG",
         "SWE-DAT-MAN",
         "SWE-DAT-SCH"
       ],
       "conceptual_layer": "Data Contracts",
-      "state": "planned",
+      "state": "active",
       "classification": "domain",
       "allowed_direct_project_dependencies": [
         "tsunami_core"
@@ -465,17 +465,16 @@
     {
       "target_name": "tsunami_r2d",
       "namespaced_alias": "Tsunami::r2d",
-      "status": "planned later gate",
-      "type": "static_library",
+      "status": "active contract scaffold; implementation remains gated to later WPs",
+      "type": "interface_library",
       "wbs_owner": [
         "SWE-R2D-*"
       ],
       "conceptual_layer": "Regional Solver",
-      "state": "planned",
+      "state": "active",
       "classification": "solver",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
-        "tsunami_fvm",
         "tsunami_data"
       ],
       "prohibited_direct_project_dependencies": [
@@ -501,22 +500,21 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns regional NLSWE algorithms only. It must not depend on the local 3D solver or concrete geospatial/data adapters."
+      "public_boundary_notes": "Owns regional NLSWE public execution contracts in G0; algorithms remain later. Public solver boundaries use case, preparation, run and artefact references rather than mandatory FVM storage. Later implementation Work Packages may convert this target to a static library while preserving the public contract name."
     },
     {
       "target_name": "tsunami_l3d",
       "namespaced_alias": "Tsunami::l3d",
-      "status": "planned later gate",
-      "type": "static_library",
+      "status": "active contract scaffold; implementation remains gated to later WPs",
+      "type": "interface_library",
       "wbs_owner": [
         "SWE-L3D-*"
       ],
       "conceptual_layer": "Local Solver",
-      "state": "planned",
+      "state": "active",
       "classification": "solver",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
-        "tsunami_fvm",
         "tsunami_data"
       ],
       "prohibited_direct_project_dependencies": [
@@ -542,22 +540,21 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns local URANS-VOF algorithms only. It must not depend on the regional solver or replay/coupling owner."
+      "public_boundary_notes": "Owns local URANS-VOF public execution contracts in G0; algorithms remain later. Public solver boundaries use case, preparation, run and artefact references rather than mandatory FVM storage. Later implementation Work Packages may convert this target to a static library while preserving the public contract name."
     },
     {
       "target_name": "tsunami_coupling",
       "namespaced_alias": "Tsunami::coupling",
-      "status": "planned later gate",
-      "type": "static_library",
+      "status": "active contract scaffold; implementation remains gated to later WPs",
+      "type": "interface_library",
       "wbs_owner": [
         "SWE-CPL-*"
       ],
       "conceptual_layer": "Coupling and Analysis",
-      "state": "planned",
+      "state": "active",
       "classification": "domain",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
-        "tsunami_fvm",
         "tsunami_data",
         "tsunami_r2d",
         "tsunami_l3d"
@@ -583,7 +580,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns replay, mapping, inlet reconstruction and cross-model metric coordination. Regional and local solvers must not depend on this target."
+      "public_boundary_notes": "Owns replay, mapping, inlet reconstruction and cross-model metric coordination contracts. Regional and local solvers must not depend on this target. Later implementation Work Packages may convert this target to a static library while preserving the public contract name."
     },
     {
       "target_name": "tsunami_application",

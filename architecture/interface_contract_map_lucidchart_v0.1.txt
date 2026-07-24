@@ -1,0 +1,34 @@
+Software Interface Contracts
+	Foundation
+		Identity
+		Schema Version
+		Error
+		Result
+		Cancellation
+		Observer
+	FVM
+		Mesh Inspection
+		Field Inspection
+	Data
+		Case and Run References
+		Artefact References
+		Reader Port
+		Writer Port
+	Regional Solver
+		Run Request
+		Regional Solver Interface
+		Result and Artefact References
+	Local Solver
+		Run Request
+		Local Solver Interface
+		Result and Artefact References
+	Coupling
+		Replay Request
+		Replay Provider
+		Coupling Runner
+	Boundary Rules
+		No Qt in library contracts
+		No concrete adapters inward
+		No R2D to L3D dependency
+		Result-based expected failures
+		Borrowed views do not own

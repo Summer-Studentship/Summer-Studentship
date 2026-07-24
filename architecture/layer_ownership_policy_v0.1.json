@@ -52,7 +52,7 @@
       "permitted_external_dependency_classes": ["linear algebra where accepted by API work"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "GDAL", "HDF5", "Matplot++"],
       "interface_categories_owned": ["Domain model contracts", "Solver extension contracts"],
-      "status": "planned"
+      "status": "active contract scaffold"
     },
     {
       "layer_id": "L3",
@@ -68,7 +68,7 @@
       "permitted_external_dependency_classes": ["configuration parsers", "JSON libraries"],
       "prohibited_external_dependency_classes": ["HDF5", "GDAL", "Qt", "CLI11", "Catch2", "Matplot++"],
       "interface_categories_owned": ["Domain model contracts", "Adapter ports"],
-      "status": "planned"
+      "status": "active contract scaffold"
     },
     {
       "layer_id": "L4",
@@ -100,7 +100,7 @@
       "permitted_external_dependency_classes": ["none by default"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "GDAL", "Gmsh", "HDF5", "Matplot++"],
       "interface_categories_owned": ["Solver extension contracts", "Observer and diagnostic contracts"],
-      "status": "planned"
+      "status": "active contract scaffold"
     },
     {
       "layer_id": "L6",
@@ -116,7 +116,7 @@
       "permitted_external_dependency_classes": ["none by default"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "GDAL", "Gmsh", "HDF5", "Matplot++"],
       "interface_categories_owned": ["Domain model contracts", "Solver extension contracts", "Observer and diagnostic contracts"],
-      "status": "planned"
+      "status": "active contract scaffold"
     },
     {
       "layer_id": "L7",
