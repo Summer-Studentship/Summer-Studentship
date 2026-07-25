@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 
 #include <catch2/catch_test_macros.hpp>
 
@@ -28,7 +29,16 @@ class DummyFieldView final : public tsunami::fvm::IFieldView {
 public:
     auto descriptor() const -> tsunami::fvm::FieldDescriptor override
     {
-        return {{"depth"}, "depth", tsunami::fvm::FieldLocation::cell, 1, 4, "m"};
+        return {
+            {"depth"},
+            "depth",
+            {"mesh"},
+            tsunami::fvm::FieldLocation::cell,
+            tsunami::fvm::FieldValueKind::scalar,
+            1,
+            4,
+            "m",
+            std::nullopt};
     }
 };
 
