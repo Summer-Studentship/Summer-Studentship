@@ -1,4 +1,5 @@
 #include <memory>
+#include <optional>
 #include <utility>
 
 #include <tsunami/core/Cancellation.hpp>
@@ -22,7 +23,16 @@ class FieldConsumer final : public tsunami::fvm::IFieldView {
 public:
     auto descriptor() const -> tsunami::fvm::FieldDescriptor override
     {
-        return {{"field"}, "eta", tsunami::fvm::FieldLocation::cell, 1, 1, "m"};
+        return {
+            {"field"},
+            "eta",
+            {"mesh"},
+            tsunami::fvm::FieldLocation::cell,
+            tsunami::fvm::FieldValueKind::scalar,
+            1,
+            1,
+            "m",
+            std::nullopt};
     }
 };
 
