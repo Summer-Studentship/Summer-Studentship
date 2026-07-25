@@ -1,0 +1,94 @@
+{
+  "policy_version": "0.1",
+  "wbs": {
+    "work_package": "SWE-FVM-FLD-WP1",
+    "tasks": ["SWE-FVM-FLD-WP1-T1", "SWE-FVM-FLD-WP1-T2", "SWE-FVM-FLD-WP1-T3"],
+    "github_issues": [178, 179, 180, 181]
+  },
+  "model_owner": "Regional2D",
+  "supported_value_types": [
+    {"name": "Real", "kind": "scalar", "component_count": 1},
+    {"name": "Vector3", "kind": "vector", "component_count": 3}
+  ],
+  "supported_locations": ["cell", "face", "boundary_patch"],
+  "reserved_unsupported_locations": ["vertex"],
+  "metadata": [
+    "FieldId",
+    "name",
+    "MeshId",
+    "FieldLocation",
+    "FieldValueKind",
+    "component_count",
+    "entity_count",
+    "unit_id",
+    "optional BoundaryPatchId"
+  ],
+  "ownership": {
+    "storage": "one owning contiguous std::vector per field",
+    "fixed_size_after_construction": true,
+    "public_resize": false,
+    "mesh_pointer_owned": false
+  },
+  "copy_move_policy": {
+    "implicit_copy": false,
+    "move": true,
+    "explicit_clone": true,
+    "preallocated_copy_values_from": true,
+    "failed_copy_preserves_destination": true
+  },
+  "mesh_binding": {
+    "fields": [
+      "mesh_id",
+      "spatial_dimension",
+      "vertex_count",
+      "face_count",
+      "cell_count",
+      "boundary_patch_count",
+      "compatibility_signature"
+    ],
+    "signature_algorithm": "fixed-width FNV-1a over canonical mesh id, counts, coordinates, topology, owner/neighbour and patch layout",
+    "uses_more_than_id_and_counts": true,
+    "security_hash": false
+  },
+  "compatibility_rules": {
+    "field_to_mesh": "full MeshBinding equality",
+    "field_to_field_layout": ["MeshBinding", "FieldLocation", "entity_count", "value_kind", "component_count"],
+    "patch_field_extra_layout": ["BoundaryPatchId"],
+    "value_copy_extra": ["unit_id"]
+  },
+  "patch_field_layout": {
+    "meaning": "one value per boundary face in one selected patch",
+    "local_index_rule": "values[local_index] corresponds to mesh.boundary_patch(patch_id).faces[local_index]",
+    "not_one_value_per_patch": true
+  },
+  "unit_policy": "opaque stable unit identifiers; no parsing, conversion or algebra",
+  "nonfinite_value_policy": "generic fields store any representable Real or Vector3 value; physical finite-state validation is deferred",
+  "inspection_contract": "IFieldView exposes FieldDescriptor only; typed fields expose const spans for immutable inspection",
+  "target_dependency_rules": {
+    "target": "tsunami_fvm",
+    "type": "static_library",
+    "allowed_project_dependencies": ["tsunami_core"],
+    "prohibited_dependencies": ["Qt", "CLI11", "HDF5", "Gmsh", "GDAL", "Eigen", "tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling"]
+  },
+  "downstream_consumers": ["SWE-FVM-BC-WP1", "SWE-FVM-NUM-WP1", "Regional2D state storage", "Regional2D output adapters", "minimal GUI field inventory"],
+  "explicit_exclusions": ["operators", "equations", "boundary-condition algorithms", "persistence", "Local3D fields", "coupling", "GUI controls", "runtime dimension algebra", "vertex fields", "tensor fields", "MPI", "GPU"],
+  "diagnostic_codes": [
+    "fvm.field.id_required",
+    "fvm.field.name_required",
+    "fvm.field.unit_required",
+    "fvm.field.mesh_id_required",
+    "fvm.field.entity_count_mismatch",
+    "fvm.field.patch_id_out_of_range",
+    "fvm.field.patch_entity_count_mismatch",
+    "fvm.field.mesh_incompatible",
+    "fvm.field.layout_incompatible",
+    "fvm.field.patch_incompatible",
+    "fvm.field.unit_incompatible",
+    "fvm.field.descriptor_inconsistent"
+  ],
+  "reference_fixtures": {
+    "mesh_fixture": "tests/fvm/reference_mesh.hpp",
+    "field_fixture": "tests/fvm/reference_fields.hpp",
+    "multi_face_patch_fixture": "tests/fvm/reference_fields.hpp"
+  }
+}
