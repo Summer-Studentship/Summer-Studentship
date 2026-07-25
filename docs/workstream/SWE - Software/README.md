@@ -64,6 +64,10 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Service and diagnostic binding v0.1](SWE-GUI/SWE-GUI-SHL/service_diagnostic_binding_v0.1.md)
 - [GUI shell accessibility v0.1](SWE-GUI/SWE-GUI-SHL/gui_shell_accessibility_v0.1.md)
 - [GUI shell validation v0.1](SWE-GUI/SWE-GUI-SHL/gui_shell_validation_v0.1.md)
+- [Regional2D mesh model v0.1](SWE-FVM/SWE-FVM-MSH/regional_2d_mesh_model_v0.1.md)
+- [Topology and geometry separation v0.1](SWE-FVM/SWE-FVM-MSH/topology_geometry_separation_v0.1.md)
+- [Owner-neighbour orientation v0.1](SWE-FVM/SWE-FVM-MSH/owner_neighbour_orientation_v0.1.md)
+- [Mesh validation evidence v0.1](SWE-FVM/SWE-FVM-MSH/mesh_validation_evidence_v0.1.md)
 
 ## Architecture handoff notes
 
