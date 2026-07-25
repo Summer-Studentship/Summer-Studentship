@@ -1,0 +1,47 @@
+Regional2D finite-volume mesh
+	MeshTopologyInput
+		MeshId
+		spatial_dimension = 2
+		VertexRecord[]
+			VertexId
+			Point3 position
+		FaceRecord[]
+			FaceId
+			VertexId[2]
+			owner CellId
+			optional neighbour CellId
+			optional boundary_patch BoundaryPatchId
+		CellRecord[]
+			CellId
+			FaceId[3]
+		BoundaryPatchRecord[]
+			BoundaryPatchId
+			name
+			FaceId[]
+	make_finite_volume_mesh
+		validate metadata
+		validate contiguous ids
+		validate references and planar coordinates
+		validate owner/neighbour and patches
+		validate triangular cell-face membership
+		derive cell geometry
+		derive face geometry
+		orient area vectors
+		validate finite-volume closure
+	FiniteVolumeMesh
+		MeshTopology
+			immutable authoritative topology
+		MeshGeometry
+			FaceGeometry centroid and area_vector
+			CellGeometry centroid and measure
+		IMeshView
+			MeshSummary
+	Reference fixture
+		unit square split into two triangles
+		4 vertices
+		5 faces
+		2 cells
+		4 named patches
+	GUI handoff
+		no Qt in FVM headers
+		future inspection through application-service adapter only

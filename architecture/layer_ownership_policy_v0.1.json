@@ -49,10 +49,10 @@
       "provisional_source_paths": ["src/fvm/"],
       "allowed_inward_layers": ["L1"],
       "prohibited_outward_dependencies": ["regional solver", "local solver", "coupling", "GUI", "CLI", "persistence adapters", "geospatial adapters"],
-      "permitted_external_dependency_classes": ["linear algebra where accepted by API work"],
-      "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "GDAL", "HDF5", "Matplot++"],
+      "permitted_external_dependency_classes": ["C++ standard library and tsunami_core for the accepted Regional2D mesh baseline"],
+      "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2", "Eigen", "GDAL", "HDF5", "Matplot++"],
       "interface_categories_owned": ["Domain model contracts", "Solver extension contracts"],
-      "status": "active contract scaffold"
+      "status": "active Regional2D mesh implementation scaffold"
     },
     {
       "layer_id": "L3",

@@ -1,0 +1,83 @@
+{
+  "policy_version": "0.1",
+  "wbs": {
+    "work_package": "SWE-FVM-MSH-WP1",
+    "tasks": ["SWE-FVM-MSH-WP1-T1", "SWE-FVM-MSH-WP1-T2", "SWE-FVM-MSH-WP1-T3"],
+    "github_issues": [174, 175, 176, 177]
+  },
+  "scope": {
+    "stage": "G1",
+    "solver": "Standalone Regional2D",
+    "spatial_dimension": 2,
+    "accepted_cells": ["triangle"],
+    "accepted_faces": ["two_point_edge"],
+    "accepted_mesh_state": ["static", "planar", "z_zero"]
+  },
+  "topology": {
+    "authoritative_container": "MeshTopology",
+    "input_container": "MeshTopologyInput",
+    "records": {
+      "VertexRecord": ["id", "position"],
+      "FaceRecord": ["id", "vertices", "owner", "neighbour", "boundary_patch"],
+      "CellRecord": ["id", "faces"],
+      "BoundaryPatchRecord": ["id", "name", "faces"]
+    },
+    "raw_topology_prohibited_fields": ["centroid", "measure", "unit_normal", "area_vector"],
+    "id_rules": ["strong_types", "contiguous_indices", "deterministic_ordering"]
+  },
+  "geometry": {
+    "derived_container": "MeshGeometry",
+    "records": {
+      "FaceGeometry": ["centroid", "area_vector"],
+      "CellGeometry": ["centroid", "measure"]
+    },
+    "tolerance": 1e-12
+  },
+  "owner_neighbour": {
+    "internal_face": "area_vector points from owner cell centroid to neighbour cell centroid",
+    "boundary_face": "area_vector points outward from owner cell centroid through face centroid",
+    "closure": "per-cell signed area-vector sum is approximately zero"
+  },
+  "factory": {
+    "name": "make_finite_volume_mesh",
+    "result": "tsunami::core::Result<FiniteVolumeMesh>",
+    "operation_context": "make_finite_volume_mesh",
+    "state_changed_on_failure": false,
+    "diagnostic_category": "numerical",
+    "diagnostic_severity": "error"
+  },
+  "target": {
+    "name": "tsunami_fvm",
+    "type": "static_library",
+    "allowed_project_dependencies": ["tsunami_core"],
+    "prohibited_frameworks": ["Qt", "CLI11", "Catch2", "Eigen", "GDAL", "HDF5", "Gmsh"]
+  },
+  "fixture": {
+    "path": "tests/fvm/reference_mesh.hpp",
+    "vertices": 4,
+    "faces": 5,
+    "cells": 2,
+    "internal_faces": 1,
+    "boundary_faces": 4,
+    "patches": ["south", "east", "north", "west"],
+    "cell_area": 0.5,
+    "total_area": 1.0
+  },
+  "unsupported": [
+    "dimension_not_2",
+    "non_planar_points",
+    "face_vertex_count_not_2",
+    "cell_face_count_not_3",
+    "recovered_cell_vertex_count_not_3",
+    "degenerate_edges",
+    "degenerate_triangles",
+    "arbitrary_polygons",
+    "quads",
+    "3d_polyhedra",
+    "mesh_motion",
+    "mpi",
+    "gpu",
+    "gui_controls",
+    "persistence_adapters"
+  ]
+}
