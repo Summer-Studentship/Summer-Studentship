@@ -5,6 +5,7 @@ add_executable(tsunami_tests
     core/diagnostic_tests.cpp
     contracts/contract_dummy_consumers.cpp
     contracts/interface_contracts.cpp
+    fvm/mesh_records_tests.cpp
     smoke/core_smoke.cpp
 )
 
