@@ -68,15 +68,7 @@ namespace tsunami::fvm
     };
 
     /**
-     * Oriented finite-volume face.
-     *
-     * The unit normal points:
-     * - outward from the owner cell for a boundary face;
-     * - from the owner cell towards the neighbour cell for an internal face.
-     *
-     * measure is:
-     * - edge length in two dimensions;
-     * - face area in three dimensions.
+     * Authoritative finite-volume face topology.
      */
     struct FaceRecord
     {
@@ -85,10 +77,6 @@ namespace tsunami::fvm
 
         CellId owner;
         std::optional<CellId> neighbour;
-
-        Point3 centroid;
-        tsunami::core::Real measure{};
-        Vector3 unit_normal;
 
         std::optional<BoundaryPatchId> boundary_patch;
 
@@ -104,20 +92,12 @@ namespace tsunami::fvm
     };
 
     /**
-     * Finite control volume.
-     *
-     * measure is:
-     * - cell area in two dimensions;
-     * - cell volume in three dimensions.
+     * Authoritative finite-volume cell topology.
      */
     struct CellRecord
     {
         CellId id;
-        std::vector<VertexId> vertices;
         std::vector<FaceId> faces;
-
-        Point3 centroid;
-        tsunami::core::Real measure{};
     };
 
     /**

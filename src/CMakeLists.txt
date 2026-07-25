@@ -14,15 +14,20 @@ target_compile_features(tsunami_core PUBLIC cxx_std_20)
 
 tsunami_apply_compiler_warnings(tsunami_core)
 
-add_library(tsunami_fvm INTERFACE)
+add_library(tsunami_fvm STATIC
+    fvm/src/FiniteVolumeMesh.cpp
+    fvm/src/MeshGeometry.cpp
+    fvm/src/MeshTopology.cpp
+)
 add_library(Tsunami::fvm ALIAS tsunami_fvm)
 target_include_directories(tsunami_fvm
-    INTERFACE
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/fvm/include>
         $<INSTALL_INTERFACE:include>
 )
-target_compile_features(tsunami_fvm INTERFACE cxx_std_20)
-target_link_libraries(tsunami_fvm INTERFACE tsunami_core)
+target_compile_features(tsunami_fvm PUBLIC cxx_std_20)
+target_link_libraries(tsunami_fvm PUBLIC tsunami_core)
+tsunami_apply_compiler_warnings(tsunami_fvm)
 
 add_library(tsunami_data INTERFACE)
 add_library(Tsunami::data ALIAS tsunami_data)

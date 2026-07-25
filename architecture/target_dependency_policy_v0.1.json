@@ -67,12 +67,6 @@
       "hdf5": [
         "tsunami_io_hdf5"
       ],
-      "Eigen": [
-        "tsunami_fvm"
-      ],
-      "Eigen3::Eigen": [
-        "tsunami_fvm"
-      ],
       "yaml-cpp": [
         "tsunami_data"
       ],
@@ -151,8 +145,8 @@
     {
       "target_name": "tsunami_fvm",
       "namespaced_alias": "Tsunami::fvm",
-      "status": "active contract scaffold; implementation remains gated to later WPs",
-      "type": "interface_library",
+      "status": "active Regional2D mesh implementation scaffold",
+      "type": "static_library",
       "wbs_owner": [
         "SWE-FVM-*"
       ],
@@ -176,18 +170,17 @@
         "tsunami_io_xdmf",
         "tsunami_diagnostics_matplot"
       ],
-      "owned_external_dependencies": [
-        "Eigen"
-      ],
+      "owned_external_dependencies": [],
       "prohibited_external_dependencies": [
         "Qt",
         "CLI11",
         "Catch2",
+        "Eigen",
         "GDAL",
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns mesh topology, fields, boundary abstractions, discrete operators and linear/timestep infrastructure. Eigen may be private or explicitly accepted later; it must not silently become the mandatory interchange contract."
+      "public_boundary_notes": "Owns mesh topology, derived geometry, fields, boundary abstractions, discrete operators and linear/timestep infrastructure. The current accepted Regional2D mesh implementation links only tsunami_core and does not own GUI, persistence, adapter or linear-algebra dependencies."
     },
     {
       "target_name": "tsunami_data",
