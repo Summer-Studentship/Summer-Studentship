@@ -68,6 +68,10 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Topology and geometry separation v0.1](SWE-FVM/SWE-FVM-MSH/topology_geometry_separation_v0.1.md)
 - [Owner-neighbour orientation v0.1](SWE-FVM/SWE-FVM-MSH/owner_neighbour_orientation_v0.1.md)
 - [Mesh validation evidence v0.1](SWE-FVM/SWE-FVM-MSH/mesh_validation_evidence_v0.1.md)
+- [Regional2D field model v0.1](SWE-FVM/SWE-FVM-FLD/regional_2d_field_model_v0.1.md)
+- [Mesh binding and field compatibility v0.1](SWE-FVM/SWE-FVM-FLD/mesh_binding_and_compatibility_v0.1.md)
+- [Boundary patch field layout v0.1](SWE-FVM/SWE-FVM-FLD/boundary_patch_field_layout_v0.1.md)
+- [Field validation evidence v0.1](SWE-FVM/SWE-FVM-FLD/field_validation_evidence_v0.1.md)
 
 ## Architecture handoff notes
 

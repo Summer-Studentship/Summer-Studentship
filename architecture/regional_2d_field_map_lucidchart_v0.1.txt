@@ -1,0 +1,74 @@
+Regional2D Field Subsystem
+	Mathematical Values
+		Scalar
+			Water depth
+			Momentum components
+			Bathymetry
+			Flux
+		Vector
+			Gradient
+			Velocity representation
+			Face vector fixtures
+	Associations
+		Cell Field
+			One value per cell
+		Face Field
+			One value per face
+		Boundary Patch Field
+			One selected patch
+			One value per patch face
+			Local patch ordering
+	Metadata
+		Field ID
+		Name
+		Mesh ID
+		Location
+		Value kind
+		Components
+		Entity count
+		Unit ID
+		Optional patch ID
+	Ownership
+		Contiguous vector
+		Fixed size
+		Move only
+		Explicit clone
+		Mutable numerical span
+		Immutable inspection span
+	Mesh Binding
+		Mesh ID
+		Counts
+		Compatibility signature
+		Topology
+		Coordinates
+		Patch layout
+	Validation
+		Metadata
+		Entity counts
+		Patch counts
+		Mesh compatibility
+		Unit compatibility
+		Transactional copy failure
+	Interfaces
+		IFieldView
+		CellScalarField
+		FaceScalarField
+		CellVectorField
+		FaceVectorField
+		PatchScalarField
+		PatchVectorField
+	Future Consumers
+		Boundary framework
+		Interpolation
+		Gradient
+		Regional state
+		Output adapter
+		Application service
+		Minimal GUI
+	Deferred
+		Vertex fields
+		Tensor fields
+		Runtime dimensions
+		Local3D fields
+		MPI
+		GPU
