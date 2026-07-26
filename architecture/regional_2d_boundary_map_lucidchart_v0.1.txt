@@ -1,0 +1,39 @@
+# Regional2D Boundary Framework Map v0.1
+
+LucidChart source outline:
+
+1. BoundarySpecification<Value>
+   - id, name, patch_tag, unit_id
+   - operation variant:
+     - FixedValueSpecification<Value>
+     - ZeroGradientSpecification
+     - NamedBoundarySpecification
+
+2. make_boundary_condition_set(mesh, specifications)
+   - validates required metadata
+   - resolves exact patch_tag to BoundaryPatchRecord::name
+   - rejects unknown, duplicate and missing patches
+   - validates fixed-value patch-local entity counts
+   - creates one BoundaryCondition<Value> per patch
+   - sorts by BoundaryPatchId
+
+3. BoundaryConditionSet<Value>
+   - owns complete immutable collection
+   - exposes const span and patch lookup
+   - stores MeshBinding
+
+4. BoundaryCondition<Value>
+   - descriptor-only IBoundaryConditionView
+   - operation variant:
+     - FixedValueBoundary<Value>
+     - ZeroGradientBoundary<Value>
+     - NamedBoundaryReference<Value>
+
+5. Apply path
+   - FixedValueBoundary: prescribed patch values -> destination patch field
+   - ZeroGradientBoundary: owner cell value -> destination patch-local face value
+   - NamedBoundaryReference: non-executable deterministic diagnostic
+
+6. Handoffs
+   - GUI reads descriptors and executable flags only
+   - Numerics later consumes executable operations without adding solver equations here
