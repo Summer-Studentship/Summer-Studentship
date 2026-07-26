@@ -72,6 +72,9 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Mesh binding and field compatibility v0.1](SWE-FVM/SWE-FVM-FLD/mesh_binding_and_compatibility_v0.1.md)
 - [Boundary patch field layout v0.1](SWE-FVM/SWE-FVM-FLD/boundary_patch_field_layout_v0.1.md)
 - [Field validation evidence v0.1](SWE-FVM/SWE-FVM-FLD/field_validation_evidence_v0.1.md)
+- [Regional2D boundary framework v0.1](SWE-FVM/SWE-FVM-BC/regional_2d_boundary_framework_v0.1.md)
+- [Boundary identity and mapping v0.1](SWE-FVM/SWE-FVM-BC/boundary_identity_and_mapping_v0.1.md)
+- [Boundary validation evidence v0.1](SWE-FVM/SWE-FVM-BC/boundary_validation_evidence_v0.1.md)
 
 ## Architecture handoff notes
 

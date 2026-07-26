@@ -1,0 +1,91 @@
+{
+  "policy_version": "0.1",
+  "wbs": {
+    "work_package": "SWE-FVM-BC-WP1",
+    "tasks": ["SWE-FVM-BC-WP1-T1", "SWE-FVM-BC-WP1-T2", "SWE-FVM-BC-WP1-T3"],
+    "github_issues": [182, 183, 184, 185]
+  },
+  "scope": {
+    "stage": "G1",
+    "model_owner": "Regional2D",
+    "library_target": "tsunami_fvm",
+    "allowed_project_dependencies": ["tsunami_core"],
+    "explicit_exclusions": ["GUI", "CLI", "persistence", "Local3D", "coupling", "solver equations", "operators", "registration macros"]
+  },
+  "identity": {
+    "id_type": "BoundaryConditionId",
+    "kind_type": "BoundaryConditionKind",
+    "kinds": ["fixed_value", "zero_gradient", "named_reference"],
+    "descriptor": [
+      "id",
+      "name",
+      "mesh_id",
+      "patch_id",
+      "patch_name",
+      "kind",
+      "value_kind",
+      "component_count",
+      "entity_count",
+      "unit_id",
+      "executable"
+    ]
+  },
+  "patch_mapping": {
+    "resolution_rule": "BoundarySpecification::patch_tag must exactly match BoundaryPatchRecord::name",
+    "ordering_rule": "BoundaryConditionSet stores conditions in deterministic BoundaryPatchId order",
+    "coverage_rule": "one boundary condition per mesh boundary patch; no replacement or resize API",
+    "patch_field_layout": "values[local_index] corresponds to mesh.boundary_patch(patch_id).faces[local_index]"
+  },
+  "supported_value_types": [
+    {"name": "Real", "kind": "scalar", "component_count": 1},
+    {"name": "Vector3", "kind": "vector", "component_count": 3}
+  ],
+  "operations": {
+    "fixed_value": {
+      "executable": true,
+      "state_rule": "copies prescribed patch values to a compatible destination after validation",
+      "internal_field_rule": "internal field binding is validated but values are not read"
+    },
+    "zero_gradient": {
+      "executable": true,
+      "state_rule": "copies owner-cell values to each patch-local face destination after validation",
+      "mapping": "target[j] = internal[mesh.face(patch.faces[j]).owner]"
+    },
+    "named_reference": {
+      "executable": false,
+      "state_rule": "retains requested type metadata and fails deterministically when applied"
+    }
+  },
+  "transactionality": {
+    "failed_apply_preserves_destination": true,
+    "failure_context_state_changed": "false",
+    "prevalidate_before_mutation": true
+  },
+  "diagnostic_codes": [
+    "fvm.boundary.id_required",
+    "fvm.boundary.id_duplicate",
+    "fvm.boundary.name_required",
+    "fvm.boundary.patch_tag_required",
+    "fvm.boundary.unit_required",
+    "fvm.boundary.named_type_required",
+    "fvm.boundary.patch_unknown",
+    "fvm.boundary.patch_duplicate",
+    "fvm.boundary.patch_missing",
+    "fvm.boundary.patch_entity_count_mismatch",
+    "fvm.boundary.mesh_incompatible",
+    "fvm.boundary.internal_field_incompatible",
+    "fvm.boundary.target_field_incompatible",
+    "fvm.boundary.patch_incompatible",
+    "fvm.boundary.value_kind_incompatible",
+    "fvm.boundary.unit_incompatible",
+    "fvm.boundary.named_condition_not_executable",
+    "fvm.boundary.set_incomplete",
+    "fvm.boundary.descriptor_inconsistent"
+  ],
+  "reference_fixtures": {
+    "mesh_fixture": "tests/fvm/reference_mesh.hpp",
+    "field_fixture": "tests/fvm/reference_fields.hpp",
+    "boundary_fixture": "tests/fvm/reference_boundaries.hpp",
+    "boundary_tests": "tests/fvm/boundary_tests.cpp"
+  }
+}
