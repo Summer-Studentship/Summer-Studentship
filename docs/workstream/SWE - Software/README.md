@@ -75,6 +75,8 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Regional2D boundary framework v0.1](SWE-FVM/SWE-FVM-BC/regional_2d_boundary_framework_v0.1.md)
 - [Boundary identity and mapping v0.1](SWE-FVM/SWE-FVM-BC/boundary_identity_and_mapping_v0.1.md)
 - [Boundary validation evidence v0.1](SWE-FVM/SWE-FVM-BC/boundary_validation_evidence_v0.1.md)
+- [Regional2D interpolation and gradient v0.1](SWE-FVM/SWE-FVM-NUM/regional_2d_interpolation_and_gradient_v0.1.md)
+- [Numerical verification evidence v0.1](SWE-FVM/SWE-FVM-NUM/numerical_verification_evidence_v0.1.md)
 
 ## Architecture handoff notes
 

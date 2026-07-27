@@ -8,6 +8,7 @@ add_executable(tsunami_tests
     fvm/boundary_tests.cpp
     fvm/field_tests.cpp
     fvm/mesh_records_tests.cpp
+    fvm/numerics_tests.cpp
     fvm/mesh_topology_tests.cpp
     smoke/core_smoke.cpp
 )
