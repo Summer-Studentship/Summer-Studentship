@@ -77,6 +77,8 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Boundary validation evidence v0.1](SWE-FVM/SWE-FVM-BC/boundary_validation_evidence_v0.1.md)
 - [Regional2D interpolation and gradient v0.1](SWE-FVM/SWE-FVM-NUM/regional_2d_interpolation_and_gradient_v0.1.md)
 - [Numerical verification evidence v0.1](SWE-FVM/SWE-FVM-NUM/numerical_verification_evidence_v0.1.md)
+- [Regional2D state, flux and residual v0.1](SWE-R2D/regional_state_flux_residual_v0.1.md)
+- [State, flux and residual verification v0.1](SWE-R2D/state_flux_residual_verification_v0.1.md)
 
 ## Architecture handoff notes
 

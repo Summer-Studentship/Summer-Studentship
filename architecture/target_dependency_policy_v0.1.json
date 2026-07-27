@@ -458,8 +458,8 @@
     {
       "target_name": "tsunami_r2d",
       "namespaced_alias": "Tsunami::r2d",
-      "status": "active contract scaffold; implementation remains gated to later WPs",
-      "type": "interface_library",
+      "status": "active Regional2D homogeneous state and flux implementation",
+      "type": "static_library",
       "wbs_owner": [
         "SWE-R2D-*"
       ],
@@ -468,6 +468,7 @@
       "classification": "solver",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
+        "tsunami_fvm",
         "tsunami_data"
       ],
       "prohibited_direct_project_dependencies": [
@@ -493,7 +494,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns regional NLSWE public execution contracts in G0; algorithms remain later. Public solver boundaries use case, preparation, run and artefact references rather than mandatory FVM storage. Later implementation Work Packages may convert this target to a static library while preserving the public contract name."
+      "public_boundary_notes": "Owns regional NLSWE public execution contracts and the homogeneous Stage 1 state/flux/residual/update slice. The legacy solver contract still references tsunami_data, while the equation-level implementation depends on tsunami_fvm for accepted mesh, field and boundary contracts."
     },
     {
       "target_name": "tsunami_l3d",
