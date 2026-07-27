@@ -46,6 +46,8 @@ add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC
     r2d/src/RegionalConservedState.cpp
+    r2d/src/RusanovFlux.cpp
+    r2d/src/ShallowWaterFlux.cpp
     r2d/src/ShallowWaterState.cpp
 )
 add_library(Tsunami::r2d ALIAS tsunami_r2d)
