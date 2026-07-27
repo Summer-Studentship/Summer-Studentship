@@ -16,6 +16,8 @@ tsunami_apply_compiler_warnings(tsunami_core)
 
 add_library(tsunami_fvm STATIC
     fvm/src/FiniteVolumeMesh.cpp
+    fvm/src/GreenGaussGradient.cpp
+    fvm/src/LinearInterpolationStencil.cpp
     fvm/src/MeshBinding.cpp
     fvm/src/MeshGeometry.cpp
     fvm/src/MeshTopology.cpp
