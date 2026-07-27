@@ -44,15 +44,19 @@ target_link_libraries(tsunami_data INTERFACE tsunami_core)
 
 add_subdirectory(application)
 
-add_library(tsunami_r2d INTERFACE)
+add_library(tsunami_r2d STATIC
+    r2d/src/RegionalConservedState.cpp
+    r2d/src/ShallowWaterState.cpp
+)
 add_library(Tsunami::r2d ALIAS tsunami_r2d)
 target_include_directories(tsunami_r2d
-    INTERFACE
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/r2d/include>
         $<INSTALL_INTERFACE:include>
 )
-target_compile_features(tsunami_r2d INTERFACE cxx_std_20)
-target_link_libraries(tsunami_r2d INTERFACE tsunami_core tsunami_data)
+target_compile_features(tsunami_r2d PUBLIC cxx_std_20)
+target_link_libraries(tsunami_r2d PUBLIC tsunami_core tsunami_fvm tsunami_data)
+tsunami_apply_compiler_warnings(tsunami_r2d)
 
 add_library(tsunami_l3d INTERFACE)
 add_library(Tsunami::l3d ALIAS tsunami_l3d)
