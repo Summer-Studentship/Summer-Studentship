@@ -45,7 +45,10 @@ target_link_libraries(tsunami_data INTERFACE tsunami_core)
 add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC
+    r2d/src/CflTimestep.cpp
     r2d/src/RegionalConservedState.cpp
+    r2d/src/RegionalResidual.cpp
+    r2d/src/RegionalResidualEvaluation.cpp
     r2d/src/RusanovFlux.cpp
     r2d/src/ShallowWaterFlux.cpp
     r2d/src/ShallowWaterState.cpp
