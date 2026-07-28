@@ -46,14 +46,21 @@ add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC
     r2d/src/CflTimestep.cpp
+    r2d/src/ExplicitIntegration.cpp
     r2d/src/FreeSurfaceElevation.cpp
     r2d/src/ForwardEulerUpdate.cpp
     r2d/src/HydrostaticReconstruction.cpp
     r2d/src/PositivityTimestep.cpp
     r2d/src/RegionalBathymetry.cpp
     r2d/src/RegionalConservedState.cpp
+    r2d/src/RegionalDiagnostics.cpp
     r2d/src/RegionalResidual.cpp
     r2d/src/RegionalResidualEvaluation.cpp
+    r2d/src/RegionalSimulationState.cpp
+    r2d/src/RegionalSnapshot.cpp
+    r2d/src/RegionalSolveLoop.cpp
+    r2d/src/RegionalStateCombination.cpp
+    r2d/src/RegionalTimeIntegration.cpp
     r2d/src/RusanovFlux.cpp
     r2d/src/ShallowWaterFlux.cpp
     r2d/src/ShallowWaterState.cpp
@@ -69,6 +76,33 @@ target_include_directories(tsunami_r2d
 target_compile_features(tsunami_r2d PUBLIC cxx_std_20)
 target_link_libraries(tsunami_r2d PUBLIC tsunami_core tsunami_fvm tsunami_data)
 tsunami_apply_compiler_warnings(tsunami_r2d)
+
+add_library(tsunami_r2d_io STATIC
+    r2d_io/src/RegionalCsvOutputWriter.cpp
+)
+add_library(Tsunami::r2d_io ALIAS tsunami_r2d_io)
+target_include_directories(tsunami_r2d_io
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/r2d_io/include>
+        $<INSTALL_INTERFACE:include>
+)
+target_compile_features(tsunami_r2d_io PUBLIC cxx_std_20)
+target_link_libraries(tsunami_r2d_io PUBLIC tsunami_core tsunami_r2d)
+tsunami_apply_compiler_warnings(tsunami_r2d_io)
+
+add_library(tsunami_r2d_benchmarks STATIC
+    r2d_benchmarks/src/RegionalBenchmarkCases.cpp
+    r2d_benchmarks/src/StructuredTriangularMesh.cpp
+)
+add_library(Tsunami::r2d_benchmarks ALIAS tsunami_r2d_benchmarks)
+target_include_directories(tsunami_r2d_benchmarks
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/r2d_benchmarks/include>
+        $<INSTALL_INTERFACE:include>
+)
+target_compile_features(tsunami_r2d_benchmarks PUBLIC cxx_std_20)
+target_link_libraries(tsunami_r2d_benchmarks PUBLIC tsunami_core tsunami_fvm tsunami_r2d)
+tsunami_apply_compiler_warnings(tsunami_r2d_benchmarks)
 
 add_library(tsunami_l3d INTERFACE)
 add_library(Tsunami::l3d ALIAS tsunami_l3d)

@@ -497,6 +497,87 @@
       "public_boundary_notes": "Owns regional NLSWE public execution contracts and the homogeneous Stage 1 state/flux/residual/update slice. The legacy solver contract still references tsunami_data, while the equation-level implementation depends on tsunami_fvm for accepted mesh, field and boundary contracts."
     },
     {
+      "target_name": "tsunami_r2d_io",
+      "namespaced_alias": "Tsunami::r2d_io",
+      "status": "active Regional2D neutral CSV output support",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-R2D-SOL"
+      ],
+      "conceptual_layer": "Regional Solver",
+      "state": "active",
+      "classification": "solver",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_r2d"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns Regional2D CSV diagnostics and snapshot serialization behind solver-neutral callback contracts. The solver core must not depend on this target."
+    },
+    {
+      "target_name": "tsunami_r2d_benchmarks",
+      "namespaced_alias": "Tsunami::r2d_benchmarks",
+      "status": "active Regional2D programmatic benchmark cases",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-R2D-SOL"
+      ],
+      "conceptual_layer": "Regional Solver",
+      "state": "active",
+      "classification": "solver",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_fvm",
+        "tsunami_r2d"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns deterministic Regional2D benchmark meshes, state initialisation and boundary sets for executable and verification use. It is not a generic FVM fixture library."
+    },
+    {
       "target_name": "tsunami_l3d",
       "namespaced_alias": "Tsunami::l3d",
       "status": "active contract scaffold; implementation remains gated to later WPs",
@@ -643,6 +724,8 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_r2d_io",
         "tsunami_l3d",
         "tsunami_coupling",
         "tsunami_diagnostics_matplot"
@@ -685,6 +768,8 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_r2d_io",
         "tsunami_l3d",
         "tsunami_coupling",
         "tsunami_diagnostics_matplot"
@@ -708,6 +793,49 @@
         "Matplot++"
       ],
       "public_boundary_notes": "Owns Qt/QML presentation and converts neutral application-service values into Qt values. GUI must not own lifecycle, solver, FVM, HDF5, GDAL or Gmsh integration."
+    },
+    {
+      "target_name": "tsunami_r2d_benchmark",
+      "namespaced_alias": null,
+      "status": "active standalone Regional2D benchmark executable",
+      "type": "executable",
+      "wbs_owner": [
+        "SWE-R2D-SOL",
+        "SWE-VER-ACC",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Verification",
+      "state": "active",
+      "classification": "test",
+      "allowed_direct_project_dependencies": [
+        "tsunami_r2d",
+        "tsunami_r2d_io",
+        "tsunami_r2d_benchmarks"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_l3d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Standalone benchmark runner only. It composes the Regional2D solver, benchmark cases and CSV output without adding CLI11 or persistence dependencies."
     },
     {
       "target_name": "tsunami_diagnostics_matplot",
@@ -740,6 +868,8 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_r2d_io",
         "tsunami_l3d",
         "tsunami_coupling"
       ],
@@ -777,6 +907,8 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_r2d_io",
         "tsunami_l3d",
         "tsunami_coupling",
         "tsunami_application",

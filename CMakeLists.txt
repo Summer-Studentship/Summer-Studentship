@@ -33,6 +33,7 @@ add_subdirectory(src)
 
 if(TSUNAMI_BUILD_CLI)
     add_subdirectory(apps/tsunami_cli)
+    add_subdirectory(apps/r2d_benchmark)
 endif()
 
 if(TSUNAMI_BUILD_GUI)
