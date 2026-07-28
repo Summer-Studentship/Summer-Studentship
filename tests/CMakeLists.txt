@@ -11,7 +11,10 @@ add_executable(tsunami_tests
     fvm/numerics_tests.cpp
     fvm/mesh_topology_tests.cpp
     r2d/state_flux_residual_tests.cpp
+    r2d/time_integration_tests.cpp
     r2d/well_balanced_wet_dry_tests.cpp
+    r2d_benchmarks/benchmark_case_tests.cpp
+    r2d_io/csv_output_tests.cpp
     smoke/core_smoke.cpp
 )
 
@@ -24,6 +27,8 @@ target_link_libraries(tsunami_tests
         tsunami_fvm
         tsunami_data
         tsunami_r2d
+        tsunami_r2d_benchmarks
+        tsunami_r2d_io
         tsunami_l3d
         tsunami_coupling
         Catch2::Catch2WithMain
