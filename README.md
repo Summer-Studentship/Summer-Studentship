@@ -25,6 +25,8 @@ environment baseline.
 - [Windows MinGW build notes](docs/Markdowns/build_windows_mingw.md)
 - [Linux/Docker build notes](docs/Markdowns/build_linux_docker.md)
 - [Final development workflow](docs/Markdowns/workflow.md)
+- [Regional2D state, flux and residual method](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_state_flux_residual_v0.1.md)
+- [Regional2D well-balancing and wet-dry method](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_well_balancing_and_wet_dry_v0.1.md)
 
 The current C++ scaffold is CMake-based and uses C++20. Third-party C++ packages
 are declared in `vcpkg.json` and resolved from the exact registry commit in

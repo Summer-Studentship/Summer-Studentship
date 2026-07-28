@@ -46,13 +46,19 @@ add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC
     r2d/src/CflTimestep.cpp
+    r2d/src/FreeSurfaceElevation.cpp
     r2d/src/ForwardEulerUpdate.cpp
+    r2d/src/HydrostaticReconstruction.cpp
+    r2d/src/PositivityTimestep.cpp
+    r2d/src/RegionalBathymetry.cpp
     r2d/src/RegionalConservedState.cpp
     r2d/src/RegionalResidual.cpp
     r2d/src/RegionalResidualEvaluation.cpp
     r2d/src/RusanovFlux.cpp
     r2d/src/ShallowWaterFlux.cpp
     r2d/src/ShallowWaterState.cpp
+    r2d/src/WellBalancedResidualEvaluation.cpp
+    r2d/src/WetDryUpdate.cpp
 )
 add_library(Tsunami::r2d ALIAS tsunami_r2d)
 target_include_directories(tsunami_r2d
