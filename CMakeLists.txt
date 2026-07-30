@@ -26,6 +26,12 @@ option(
     OFF
 )
 
+option(
+    TSUNAMI_ENABLE_GEOSPATIAL
+    "Build the optional GDAL-backed geospatial import adapter"
+    OFF
+)
+
 include(CTest)
 include(cmake/TsunamiCompilerWarnings.cmake)
 
