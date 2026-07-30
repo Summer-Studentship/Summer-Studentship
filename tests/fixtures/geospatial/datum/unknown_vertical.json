@@ -1,0 +1,12 @@
+{
+  "component": "vertical",
+  "reference_kind": "unknown",
+  "origin": "manifest_declaration",
+  "status": "unknown",
+  "datum_name": "unknown",
+  "unit": "m",
+  "positive_direction": "up",
+  "source_document_title": "Synthetic unknown vertical datum fixture",
+  "source_document_uri": "https://example.test/tsunami/unknown-vertical",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}

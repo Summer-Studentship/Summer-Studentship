@@ -1,0 +1,12 @@
+{
+  "component": "vertical",
+  "reference_kind": "model_assumption",
+  "origin": "provider_documentation",
+  "status": "dataset_declared",
+  "datum_name": "mean sea level",
+  "unit": "m",
+  "positive_direction": "up",
+  "source_document_title": "Synthetic GEBCO-style model-assumption fixture",
+  "source_document_uri": "https://example.test/tsunami/gebco-model-assumption",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}

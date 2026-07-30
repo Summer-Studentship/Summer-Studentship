@@ -1,0 +1,13 @@
+{
+  "component": "horizontal",
+  "reference_kind": "geodetic_datum",
+  "origin": "provider_documentation",
+  "status": "conflicting",
+  "datum_name": "Fixture conflicting horizontal datum",
+  "authority_name": "EPSG",
+  "authority_code": "9999",
+  "unit": "degree",
+  "source_document_title": "Synthetic conflicting authority-code fixture",
+  "source_document_uri": "https://example.test/tsunami/conflicting-authority-code",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}
