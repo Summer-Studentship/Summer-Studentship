@@ -39,6 +39,10 @@ add_library(tsunami_data STATIC
     data/src/CaseConfigurationParsing.cpp
     data/src/CaseConfigurationSerialisation.cpp
     data/src/CaseConfigurationValidation.cpp
+    data/src/DatasetManifest.cpp
+    data/src/DatasetManifestParsing.cpp
+    data/src/DatasetManifestSerialisation.cpp
+    data/src/DatasetManifestValidation.cpp
 )
 add_library(Tsunami::data ALIAS tsunami_data)
 target_include_directories(tsunami_data
