@@ -13,6 +13,8 @@ namespace tsunami::data {
 struct CaseRevisionRef {
     tsunami::core::CaseId case_id;
     std::uint64_t revision{};
+
+    [[nodiscard]] auto operator==(const CaseRevisionRef&) const -> bool = default;
 };
 
 struct PreparationRef {
@@ -34,6 +36,8 @@ struct ArtifactRef {
 struct SchemaIdentity {
     std::string schema_name;
     tsunami::core::SemanticVersion version;
+
+    [[nodiscard]] auto operator==(const SchemaIdentity&) const -> bool = default;
 };
 
 struct ProvenanceRef {
