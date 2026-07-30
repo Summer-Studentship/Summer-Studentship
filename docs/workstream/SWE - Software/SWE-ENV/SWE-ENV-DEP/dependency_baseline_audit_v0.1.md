@@ -52,7 +52,7 @@ shortcut.
 | Group | Direct vcpkg ports | Status and rationale | Primary owner |
 |---|---|---|---|
 | Default/core | `cli11`, `eigen3`, `fmt`, `hdf5[zlib]`, `nlohmann-json`, `pugixml`, `spdlog`, `yaml-cpp` | Restored on every manifest install. HDF5 is overridden to 1.14.6; its high-level libraries are part of that port's core build | `SWE-ENV-DEP` plus capability owners in the stack register |
-| `geospatial` | `gdal`, `proj[tiff]` | Accepted production stack, feature-gated until `SWE-GEO-IMP`/`SWE-GEO-CRS` targets exist. GDAL default features are disabled to prevent an unreviewed driver/dependency expansion | `SWE-GEO-IMP`, `SWE-GEO-CRS` |
+| `geospatial` | `gdal[sqlite3]`, `proj[tiff]` | Accepted production stack, feature-gated until `SWE-GEO-IMP`/`SWE-GEO-CRS` targets exist. GDAL default features are disabled; the SQLite feature is enabled only to support the selected G1 GeoPackage vector driver | `SWE-GEO-IMP`, `SWE-GEO-CRS` |
 | `tests` | `catch2` | Development-only test/benchmark framework | `SWE-VER-UNIT`, `SWE-VER-BMK` |
 | `diagnostics` | `matplotplusplus` | Optional plotting adapter only; not the production field visualiser. Disabled by default pending backend smoke evidence | `SWE-GUI-POST`, `SWE-VER-CONV` |
 | `netcdf` | `netcdf-c[netcdf-4]` | Optional direct ingestion only when GDAL cannot preserve required multidimensional data or metadata. The same upstream 4.9.3 line is pinned to port revision 0 because later port revisions require an HDF5 feature absent from the accepted 1.14.6 port | `SWE-DAT-ING`, `SWE-GEO-IMP` |

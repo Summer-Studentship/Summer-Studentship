@@ -13,7 +13,14 @@ import tempfile
 from pathlib import Path
 
 
-ACTIVE_CONTRACT_TARGETS = {"tsunami_fvm", "tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling"}
+ACTIVE_CONTRACT_TARGETS = {
+    "tsunami_fvm",
+    "tsunami_data",
+    "tsunami_geo",
+    "tsunami_r2d",
+    "tsunami_l3d",
+    "tsunami_coupling",
+}
 FORBIDDEN_LIBRARY_TOKENS = {
     "QObject", "QString", "QVariant", "#include <Q", "CLI::", "Catch::", "#include <catch2",
     "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::",

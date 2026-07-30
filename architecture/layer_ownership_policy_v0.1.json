@@ -84,7 +84,7 @@
       "permitted_external_dependency_classes": ["none by default"],
       "prohibited_external_dependency_classes": ["GDAL", "PROJ", "Gmsh library", "Qt", "CLI11", "Catch2", "HDF5"],
       "interface_categories_owned": ["Domain model contracts", "Adapter ports"],
-      "status": "planned"
+      "status": "active G1 geospatial import contracts"
     },
     {
       "layer_id": "L5",
@@ -141,14 +141,14 @@
       "classification": "runtime",
       "owning_wbs_domains": ["SWE-DAT", "SWE-GEO", "SWE-VER"],
       "associated_targets": ["tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh", "tsunami_diagnostics_matplot"],
-      "namespace_roots": ["tsunami::adapters::hdf5", "tsunami::adapters::xdmf", "tsunami::adapters::gdal", "tsunami::adapters::gmsh", "tsunami::adapters::diagnostics"],
-      "provisional_source_paths": ["src/adapters/io/hdf5/", "src/adapters/io/xdmf/", "src/adapters/geo/gdal/", "src/adapters/mesh/gmsh/", "src/adapters/diagnostics/matplot/"],
+      "namespace_roots": ["tsunami::adapters::hdf5", "tsunami::adapters::xdmf", "tsunami::geo_gdal", "tsunami::adapters::gmsh", "tsunami::adapters::diagnostics"],
+      "provisional_source_paths": ["src/adapters/io/hdf5/", "src/adapters/io/xdmf/", "src/geo_gdal/", "src/adapters/mesh/gmsh/", "src/adapters/diagnostics/matplot/"],
       "allowed_inward_layers": ["L1", "L2", "L3", "L4", "L7"],
       "prohibited_outward_dependencies": ["domain contracts depending on adapters", "external-library types leaking into domain public headers"],
       "permitted_external_dependency_classes": ["HDF5", "XML", "GDAL", "PROJ", "external Gmsh process", "diagnostic plotting"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2 as production dependency"],
       "interface_categories_owned": ["Adapter ports", "Composition contracts"],
-      "status": "planned"
+      "status": "active with G1 GDAL geospatial import adapter"
     },
     {
       "layer_id": "L9",
