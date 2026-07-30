@@ -155,10 +155,11 @@ dt_pos = theta_pos min_i dt_i^drain,  0 < theta_pos <= 1
 Cells with zero outflow impose no positivity restriction. Dry cells with
 positive outflow are rejected.
 
-The selected stable explicit timestep is the minimum of present CFL and
-positivity estimates. When both are absent, the restriction kind is `none` and
-a finite positive externally supplied timestep may still be used with a
-compatible finite residual.
+In this slice, the selected stable explicit timestep is the minimum of present
+CFL and positivity estimates. When both are absent, the restriction kind is
+`none` and a finite positive externally supplied timestep may still be used
+with a compatible finite residual. Later boundary work extends the selector
+with relaxation and multi-limiter reporting.
 
 ## Wet-Dry Update
 

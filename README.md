@@ -27,6 +27,8 @@ environment baseline.
 - [Final development workflow](docs/Markdowns/workflow.md)
 - [Regional2D state, flux and residual method](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_state_flux_residual_v0.1.md)
 - [Regional2D well-balancing and wet-dry method](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_well_balancing_and_wet_dry_v0.1.md)
+- [Regional2D radiation and relaxation boundaries](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_radiation_and_relaxation_boundaries_v0.1.md)
+- [Regional2D boundary reflection and absorption verification](docs/workstream/SWE%20-%20Software/SWE-R2D/boundary_reflection_absorption_verification_v0.1.md)
 
 The current C++ scaffold is CMake-based and uses C++20. Third-party C++ packages
 are declared in `vcpkg.json` and resolved from the exact registry commit in
