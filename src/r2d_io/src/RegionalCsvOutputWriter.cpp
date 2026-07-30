@@ -2,6 +2,9 @@
 
 #include <fstream>
 #include <iomanip>
+#include <optional>
+#include <string>
+#include <string_view>
 
 namespace tsunami::r2d_io
 {
@@ -22,6 +25,46 @@ namespace tsunami::r2d_io
             }
             file << std::setprecision(17);
             return tsunami::core::success(std::move(file));
+        }
+
+        [[nodiscard]] auto restriction_name(tsunami::r2d::TimestepRestrictionKind restriction) -> std::string_view
+        {
+            switch (restriction) {
+            case tsunami::r2d::TimestepRestrictionKind::none:
+                return "none";
+            case tsunami::r2d::TimestepRestrictionKind::cfl:
+                return "cfl";
+            case tsunami::r2d::TimestepRestrictionKind::positivity:
+                return "positivity";
+            case tsunami::r2d::TimestepRestrictionKind::relaxation:
+                return "relaxation";
+            case tsunami::r2d::TimestepRestrictionKind::source:
+                return "source";
+            case tsunami::r2d::TimestepRestrictionKind::multiple:
+                return "multiple";
+            case tsunami::r2d::TimestepRestrictionKind::equal:
+                return "equal";
+            }
+            return "unknown";
+        }
+
+        [[nodiscard]] auto source_restriction_name(const tsunami::r2d::RegionalStepDiagnostics &diagnostics) -> std::string_view
+        {
+            const auto active = diagnostics.sources.maximum_manning_rate > 0.0 ||
+                                diagnostics.sources.maximum_coriolis_rate > 0.0;
+            if (!active) {
+                return "none";
+            }
+            if (diagnostics.stable_timestep.restriction == tsunami::r2d::TimestepRestrictionKind::source ||
+                diagnostics.stable_timestep.restriction == tsunami::r2d::TimestepRestrictionKind::multiple) {
+                return restriction_name(diagnostics.stable_timestep.restriction);
+            }
+            return "present";
+        }
+
+        [[nodiscard]] auto cell_value(std::optional<tsunami::fvm::CellId> cell_id) -> std::string
+        {
+            return cell_id ? std::to_string(cell_id->value) : std::string{};
         }
     } // namespace
 
@@ -66,7 +109,14 @@ namespace tsunami::r2d_io
             file.value() << "step,start_time,end_time,timestep,scheme,attempted_stages,accepted_stages,rejected_attempts,"
                             "maximum_signal_speed,water_volume,momentum_x,momentum_y,wet_cells,dry_cells,minimum_depth,maximum_depth,"
                             "relaxation_zones,relaxation_active_cells,relaxation_maximum_rate,"
-                            "relaxation_mass_source_rate,relaxation_outgoing_mass_rate\n";
+                            "relaxation_mass_source_rate,relaxation_outgoing_mass_rate,"
+                            "source_restriction,manning_active_cells,coriolis_active_cells,"
+                            "maximum_manning_coefficient,maximum_coriolis_magnitude,"
+                            "maximum_manning_rate,maximum_coriolis_rate,"
+                            "manning_limiting_cell,coriolis_limiting_cell,"
+                            "source_momentum_x_change,source_momentum_y_change,"
+                            "source_initial_kinetic_energy,source_final_kinetic_energy,"
+                            "friction_kinetic_energy_removed,coriolis_kinetic_energy_error\n";
             diagnostics_header_written_ = true;
         }
         file.value()
@@ -90,7 +140,22 @@ namespace tsunami::r2d_io
             << diagnostics.relaxation.active_cell_count << ','
             << diagnostics.relaxation.maximum_rate << ','
             << diagnostics.relaxation.integrated_mass_source_rate << ','
-            << diagnostics.relaxation.outgoing_mass_rate << '\n';
+            << diagnostics.relaxation.outgoing_mass_rate << ','
+            << source_restriction_name(diagnostics) << ','
+            << diagnostics.sources.manning_active_cell_count << ','
+            << diagnostics.sources.coriolis_active_cell_count << ','
+            << diagnostics.sources.maximum_manning_coefficient << ','
+            << diagnostics.sources.maximum_coriolis_magnitude << ','
+            << diagnostics.sources.maximum_manning_rate << ','
+            << diagnostics.sources.maximum_coriolis_rate << ','
+            << cell_value(diagnostics.sources.manning_limiting_cell) << ','
+            << cell_value(diagnostics.sources.coriolis_limiting_cell) << ','
+            << diagnostics.sources.momentum_x_change << ','
+            << diagnostics.sources.momentum_y_change << ','
+            << diagnostics.sources.initial_kinetic_energy << ','
+            << diagnostics.sources.final_kinetic_energy << ','
+            << diagnostics.sources.friction_kinetic_energy_removed << ','
+            << diagnostics.sources.coriolis_kinetic_energy_error << '\n';
         return tsunami::core::success();
     }
 

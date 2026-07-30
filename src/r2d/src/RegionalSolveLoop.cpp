@@ -114,6 +114,15 @@ namespace tsunami::r2d
         if (uses_physical_boundaries && relaxation_zones == nullptr) {
             relaxation_zones = std::addressof(empty_relaxation_storage.value());
         }
+        auto empty_sources_storage = make_empty_regional_source_term_set(mesh);
+        if (!empty_sources_storage) {
+            return tsunami::core::failure<RegionalSolveSummary>(empty_sources_storage.error());
+        }
+        const auto *local_sources = request.local_sources;
+        if (local_sources == nullptr) {
+            local_sources = std::addressof(empty_sources_storage.value());
+        }
+        const auto uses_local_sources = !local_sources->empty();
         auto state_policy_validation = validate_policy(request.state_policy);
         auto time_policy_validation = validate_regional_time_integration_policy(request.time_policy);
         if (!state_policy_validation) {
@@ -124,10 +133,17 @@ namespace tsunami::r2d
         }
         if (!std::isfinite(request.final_time) || request.final_time < simulation_state.time() ||
             !simulation_state.conserved_state().is_bound_to(mesh) || !workspace.is_bound_to(mesh) ||
-            !request.bathymetry->is_bound_to(mesh)) {
+            !request.bathymetry->is_bound_to(mesh) || !local_sources->is_bound_to(mesh)) {
             return tsunami::core::failure<RegionalSolveSummary>(solve_error(
                 "r2d.solve.request_invalid",
                 "regional solve request is invalid or incompatible with the simulation state",
+                "solve_regional_model",
+                &mesh));
+        }
+        if (uses_local_sources && !uses_physical_boundaries) {
+            return tsunami::core::failure<RegionalSolveSummary>(solve_error(
+                "r2d.solve.request_invalid",
+                "regional local sources require physical boundary mode",
                 "solve_regional_model",
                 &mesh));
         }
@@ -189,6 +205,21 @@ namespace tsunami::r2d
 
             auto remaining = request.final_time - simulation_state.time();
             auto timestep = std::min(request.time_policy.maximum_timestep, remaining);
+            if (uses_local_sources) {
+                auto source_limit = estimate_regional_source_timestep(
+                    mesh,
+                    simulation_state.conserved_state(),
+                    *local_sources,
+                    request.state_policy,
+                    request.time_policy.source_safety_factor,
+                    request.time_policy.timestep_comparison_tolerance);
+                if (!source_limit) {
+                    return tsunami::core::failure<RegionalSolveSummary>(source_limit.error());
+                }
+                if (source_limit.value().stable_timestep) {
+                    timestep = std::min(timestep, *source_limit.value().stable_timestep);
+                }
+            }
             if (request.output_policy.interval && next_snapshot_time < request.final_time - time_tolerance) {
                 timestep = std::min(timestep, next_snapshot_time - simulation_state.time());
             }
@@ -205,33 +236,47 @@ namespace tsunami::r2d
             RegionalStepDiagnostics accepted_diagnostics;
             auto step_rejected_attempts = std::size_t{0U};
             for (std::size_t attempt = 0; attempt <= request.time_policy.maximum_stage_retries; ++attempt) {
-                auto step = uses_physical_boundaries
+                auto step = uses_local_sources
                                 ? attempt_regional_explicit_step(
                                       mesh,
                                       simulation_state.conserved_state(),
                                       *request.bathymetry,
                                       *request.regional_boundaries,
                                       *relaxation_zones,
+                                      *local_sources,
                                       request.state_policy,
                                       request.time_policy,
                                       simulation_state.time(),
                                       timestep,
                                       simulation_state.accepted_step_count(),
                                       workspace)
-                                : attempt_regional_explicit_step(
-                                      mesh,
-                                      simulation_state.conserved_state(),
-                                      *request.bathymetry,
-                                      *request.depth_boundaries,
-                                      *request.momentum_x_boundaries,
-                                      *request.momentum_y_boundaries,
-                                      *request.bathymetry_boundaries,
-                                      request.state_policy,
-                                      request.time_policy,
-                                      simulation_state.time(),
-                                      timestep,
-                                      simulation_state.accepted_step_count(),
-                                      workspace);
+                                : uses_physical_boundaries
+                                      ? attempt_regional_explicit_step(
+                                            mesh,
+                                            simulation_state.conserved_state(),
+                                            *request.bathymetry,
+                                            *request.regional_boundaries,
+                                            *relaxation_zones,
+                                            request.state_policy,
+                                            request.time_policy,
+                                            simulation_state.time(),
+                                            timestep,
+                                            simulation_state.accepted_step_count(),
+                                            workspace)
+                                      : attempt_regional_explicit_step(
+                                            mesh,
+                                            simulation_state.conserved_state(),
+                                            *request.bathymetry,
+                                            *request.depth_boundaries,
+                                            *request.momentum_x_boundaries,
+                                            *request.momentum_y_boundaries,
+                                            *request.bathymetry_boundaries,
+                                            request.state_policy,
+                                            request.time_policy,
+                                            simulation_state.time(),
+                                            timestep,
+                                            simulation_state.accepted_step_count(),
+                                            workspace);
                 if (!step) {
                     return tsunami::core::failure<RegionalSolveSummary>(step.error());
                 }

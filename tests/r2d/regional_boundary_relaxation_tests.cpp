@@ -239,8 +239,13 @@ TEST_CASE("Physical residual and solve loop preserve a flat lake at rest", "[r2d
         .relaxation_zones = &relaxation,
         .state_policy = problem.state_policy,
         .time_policy = problem.time_policy,
+        .output_policy = tsunami::r2d::RegionalSnapshotOutputPolicy{},
         .final_time = 0.01,
-        .maximum_steps = 100U};
+        .maximum_steps = 100U,
+        .diagnostics_sink = {},
+        .snapshot_sink = {},
+        .stop_token = {},
+        .local_sources = &problem.local_sources};
     auto summary = tsunami::r2d::solve_regional_model(request, problem.simulation_state, time_workspace);
     REQUIRE(summary.has_value());
     REQUIRE(summary.value().termination_reason == tsunami::r2d::RegionalSolveTerminationReason::final_time_reached);

@@ -16,6 +16,7 @@ TEST_CASE("Regional benchmark cases build complete standalone solve inputs", "[r
         REQUIRE(problem.bathymetry_boundaries.is_complete_for(problem.mesh));
         REQUIRE(problem.regional_boundaries.is_complete_for(problem.mesh));
         REQUIRE(problem.relaxation_zones.is_bound_to(problem.mesh));
+        REQUIRE(problem.local_sources.is_bound_to(problem.mesh));
     }
 }
 
@@ -48,7 +49,8 @@ TEST_CASE("Standalone regional solve loop advances every benchmark case", "[r2d]
                 ++snapshots;
                 REQUIRE(snapshot.depth.size() == problem.mesh.summary().cell_count);
                 return tsunami::core::success();
-            }};
+            },
+            .local_sources = &problem.local_sources};
         auto summary = tsunami::r2d::solve_regional_model(request, problem.simulation_state, workspace.value());
         REQUIRE(summary.has_value());
         REQUIRE(summary.value().termination_reason == tsunami::r2d::RegionalSolveTerminationReason::final_time_reached);

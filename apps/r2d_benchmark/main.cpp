@@ -3,6 +3,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <vector>
 
 #include <tsunami/r2d/RegionalSolveLoop.hpp>
 #include <tsunami/r2d_benchmarks/RegionalBenchmarkCases.hpp>
@@ -18,11 +19,14 @@ namespace
         std::size_t maximum_steps{1000U};
         tsunami::core::Real courant_number{0.45};
         tsunami::core::Real positivity_safety_factor{0.95};
+        tsunami::core::Real source_safety_factor{1.0};
         tsunami::core::Real maximum_timestep{0.01};
         tsunami::core::Real minimum_timestep{1.0e-10};
         std::optional<tsunami::core::Real> sponge_width;
         std::optional<tsunami::core::Real> sponge_rate;
         std::optional<tsunami::core::Real> sponge_exponent;
+        std::optional<tsunami::core::Real> manning;
+        std::optional<tsunami::core::Real> coriolis;
         std::optional<tsunami::core::Real> snapshot_interval;
         std::string output_dir{"r2d-benchmark-output"};
         bool output_enabled{true};
@@ -39,11 +43,14 @@ namespace
             << "  --max-steps <count>\n"
             << "  --courant <number>\n"
             << "  --positivity <number>\n"
+            << "  --source-safety <number>\n"
             << "  --max-dt <seconds>\n"
             << "  --min-dt <seconds>\n"
             << "  --sponge-width <metres>\n"
             << "  --sponge-rate <1/s>\n"
             << "  --sponge-exponent <number>\n"
+            << "  --manning <s m^(-1/3)>\n"
+            << "  --coriolis <1/s>\n"
             << "  --snapshot-interval <seconds>\n"
             << "  --output-dir <path>\n"
             << "  --no-output\n"
@@ -100,8 +107,9 @@ namespace
                 continue;
             }
             if (arg == "--final-time" || arg == "--courant" || arg == "--positivity" ||
-                arg == "--max-dt" || arg == "--min-dt" || arg == "--sponge-width" ||
-                arg == "--sponge-rate" || arg == "--sponge-exponent" || arg == "--snapshot-interval") {
+                arg == "--source-safety" || arg == "--max-dt" || arg == "--min-dt" ||
+                arg == "--sponge-width" || arg == "--sponge-rate" || arg == "--sponge-exponent" ||
+                arg == "--manning" || arg == "--coriolis" || arg == "--snapshot-interval") {
                 const auto *value = require_value(arg);
                 if (value == nullptr) {
                     return false;
@@ -117,6 +125,8 @@ namespace
                     options.courant_number = parsed;
                 } else if (arg == "--positivity") {
                     options.positivity_safety_factor = parsed;
+                } else if (arg == "--source-safety") {
+                    options.source_safety_factor = parsed;
                 } else if (arg == "--max-dt") {
                     options.maximum_timestep = parsed;
                 } else if (arg == "--min-dt") {
@@ -127,6 +137,10 @@ namespace
                     options.sponge_rate = parsed;
                 } else if (arg == "--sponge-exponent") {
                     options.sponge_exponent = parsed;
+                } else if (arg == "--manning") {
+                    options.manning = parsed;
+                } else if (arg == "--coriolis") {
+                    options.coriolis = parsed;
                 } else {
                     options.snapshot_interval = parsed;
                 }
@@ -171,8 +185,28 @@ auto main(int argc, char **argv) -> int
     problem.time_policy.scheme = options.scheme;
     problem.time_policy.courant_number = options.courant_number;
     problem.time_policy.positivity_safety_factor = options.positivity_safety_factor;
+    problem.time_policy.source_safety_factor = options.source_safety_factor;
     problem.time_policy.maximum_timestep = options.maximum_timestep;
     problem.time_policy.minimum_timestep = options.minimum_timestep;
+    if (options.manning || options.coriolis) {
+        std::optional<std::vector<tsunami::core::Real>> manning_values;
+        std::optional<std::vector<tsunami::core::Real>> coriolis_values;
+        if (options.manning) {
+            manning_values = std::vector<tsunami::core::Real>(problem.mesh.summary().cell_count, *options.manning);
+        }
+        if (options.coriolis) {
+            coriolis_values = std::vector<tsunami::core::Real>(problem.mesh.summary().cell_count, *options.coriolis);
+        }
+        auto sources = tsunami::r2d::make_regional_source_term_set(
+            problem.mesh,
+            std::move(manning_values),
+            std::move(coriolis_values));
+        if (!sources) {
+            std::cerr << sources.error().message() << '\n';
+            return 1;
+        }
+        problem.local_sources = std::move(sources).value();
+    }
     if (options.sponge_width || options.sponge_rate || options.sponge_exponent) {
         auto relaxation = tsunami::r2d::make_regional_relaxation_zone_set(
             problem.mesh,
@@ -220,7 +254,8 @@ auto main(int argc, char **argv) -> int
         .final_time = final_time,
         .maximum_steps = options.maximum_steps,
         .diagnostics_sink = diagnostics_sink,
-        .snapshot_sink = snapshot_sink};
+        .snapshot_sink = snapshot_sink,
+        .local_sources = &problem.local_sources};
     auto summary = tsunami::r2d::solve_regional_model(request, problem.simulation_state, workspace.value());
     if (!summary) {
         std::cerr << summary.error().message() << '\n';
@@ -229,6 +264,9 @@ auto main(int argc, char **argv) -> int
 
     std::cout << "case=" << problem.id
               << " scheme=" << tsunami::r2d::to_string(problem.time_policy.scheme)
+              << " manning=" << (problem.local_sources.has_manning() ? "on" : "off")
+              << " coriolis=" << (problem.local_sources.has_coriolis() ? "on" : "off")
+              << " source_safety=" << problem.time_policy.source_safety_factor
               << " steps=" << summary.value().accepted_step_count
               << " rejected_attempts=" << summary.value().rejected_attempt_count
               << " final_time=" << summary.value().final_time

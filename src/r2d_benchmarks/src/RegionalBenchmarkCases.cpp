@@ -129,11 +129,15 @@ namespace tsunami::r2d_benchmarks
                 zb_bc.value(),
                 {});
             auto relaxation = tsunami::r2d::make_regional_relaxation_zone_set(mesh, {});
+            auto local_sources = tsunami::r2d::make_empty_regional_source_term_set(mesh);
             if (!regional_bc) {
                 return tsunami::core::failure<RegionalBenchmarkCase>(regional_bc.error());
             }
             if (!relaxation) {
                 return tsunami::core::failure<RegionalBenchmarkCase>(relaxation.error());
+            }
+            if (!local_sources) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(local_sources.error());
             }
 
             return tsunami::core::success(RegionalBenchmarkCase{
@@ -147,6 +151,7 @@ namespace tsunami::r2d_benchmarks
                 std::move(zb_bc).value(),
                 std::move(regional_bc).value(),
                 std::move(relaxation).value(),
+                std::move(local_sources).value(),
                 state_policy.value(),
                 time_policy.value(),
                 final_time});
@@ -209,6 +214,105 @@ namespace tsunami::r2d_benchmarks
             problem.relaxation_zones = std::move(relaxation).value();
             return tsunami::core::success(std::move(problem));
         }
+
+        [[nodiscard]] auto make_uniform_manning_decay_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "uniform_manning_decay",
+                StructuredTriangularMeshSpec{"uniform-manning-decay", 6U, 2U, 1.0, 0.4},
+                0.08,
+                [](const auto &) { return 0.0; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.7; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto sources = tsunami::r2d::make_uniform_manning_source_term_set(problem.mesh, 0.035);
+            if (!sources) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(sources.error());
+            }
+            problem.local_sources = std::move(sources).value();
+            problem.time_policy.maximum_timestep = 0.002;
+            problem.time_policy.source_safety_factor = 0.75;
+            return tsunami::core::success(std::move(problem));
+        }
+
+        [[nodiscard]] auto make_uniform_coriolis_oscillation_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "uniform_coriolis_oscillation",
+                StructuredTriangularMeshSpec{"uniform-coriolis-oscillation", 6U, 2U, 1.0, 0.4},
+                0.12,
+                [](const auto &) { return 0.0; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.6; },
+                [](const auto &, Real) { return 0.15; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto sources = tsunami::r2d::make_uniform_coriolis_source_term_set(problem.mesh, 1.0e-3);
+            if (!sources) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(sources.error());
+            }
+            problem.local_sources = std::move(sources).value();
+            problem.time_policy.maximum_timestep = 0.002;
+            return tsunami::core::success(std::move(problem));
+        }
+
+        [[nodiscard]] auto make_uniform_manning_coriolis_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "uniform_manning_coriolis",
+                StructuredTriangularMeshSpec{"uniform-manning-coriolis", 8U, 2U, 1.0, 0.4},
+                0.08,
+                [](const auto &) { return 0.0; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.55; },
+                [](const auto &, Real) { return -0.2; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto sources = tsunami::r2d::make_uniform_manning_coriolis_source_term_set(problem.mesh, 0.03, 8.0e-4);
+            if (!sources) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(sources.error());
+            }
+            problem.local_sources = std::move(sources).value();
+            problem.time_policy.maximum_timestep = 0.002;
+            problem.time_policy.source_safety_factor = 0.75;
+            return tsunami::core::success(std::move(problem));
+        }
+
+        [[nodiscard]] auto make_frictional_wet_dry_dam_break_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "frictional_wet_dry_dam_break",
+                StructuredTriangularMeshSpec{"frictional-wet-dry-dam-break", 8U, 2U, 1.0, 0.25},
+                0.02,
+                [](const auto &) { return 0.0; },
+                [](const auto &point, Real) { return point.x < 0.5 ? 1.5 : 0.05; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto sources = tsunami::r2d::make_uniform_manning_source_term_set(problem.mesh, 0.04);
+            if (!sources) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(sources.error());
+            }
+            problem.local_sources = std::move(sources).value();
+            problem.time_policy.maximum_timestep = 0.001;
+            problem.time_policy.source_safety_factor = 0.75;
+            return tsunami::core::success(std::move(problem));
+        }
     } // namespace
 
     auto regional_benchmark_case_ids() -> std::vector<std::string_view>
@@ -219,7 +323,11 @@ namespace tsunami::r2d_benchmarks
             "partially_dry_lake_at_rest",
             "wet_dry_dam_break",
             "outgoing_linear_wave_radiation",
-            "outgoing_linear_wave_radiation_sponge"};
+            "outgoing_linear_wave_radiation_sponge",
+            "uniform_manning_decay",
+            "uniform_coriolis_oscillation",
+            "uniform_manning_coriolis",
+            "frictional_wet_dry_dam_break"};
     }
 
     auto make_regional_benchmark_case(std::string_view id)
@@ -270,6 +378,18 @@ namespace tsunami::r2d_benchmarks
         }
         if (id == "outgoing_linear_wave_radiation_sponge") {
             return make_outgoing_wave_case("outgoing_linear_wave_radiation_sponge", true);
+        }
+        if (id == "uniform_manning_decay") {
+            return make_uniform_manning_decay_case();
+        }
+        if (id == "uniform_coriolis_oscillation") {
+            return make_uniform_coriolis_oscillation_case();
+        }
+        if (id == "uniform_manning_coriolis") {
+            return make_uniform_manning_coriolis_case();
+        }
+        if (id == "frictional_wet_dry_dam_break") {
+            return make_frictional_wet_dry_dam_break_case();
         }
         return tsunami::core::failure<RegionalBenchmarkCase>(error(
             "r2d.benchmark.case_unknown",

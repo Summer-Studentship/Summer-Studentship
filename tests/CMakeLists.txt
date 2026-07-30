@@ -12,6 +12,7 @@ add_executable(tsunami_tests
     fvm/mesh_topology_tests.cpp
     r2d/state_flux_residual_tests.cpp
     r2d/regional_boundary_relaxation_tests.cpp
+    r2d/regional_source_terms_tests.cpp
     r2d/time_integration_tests.cpp
     r2d/well_balanced_wet_dry_tests.cpp
     r2d_benchmarks/benchmark_case_tests.cpp
