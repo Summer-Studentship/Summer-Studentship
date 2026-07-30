@@ -47,6 +47,7 @@ namespace tsunami::r2d
         RegionalStepDiagnosticsSink diagnostics_sink;
         RegionalSnapshotSink snapshot_sink;
         std::stop_token stop_token{};
+        const RegionalSourceTermSet *local_sources{};
     };
 
     [[nodiscard]] auto solve_regional_model(
