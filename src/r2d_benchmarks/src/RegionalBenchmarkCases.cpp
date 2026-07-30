@@ -4,9 +4,11 @@
 #include <array>
 #include <cmath>
 #include <functional>
+#include <optional>
 #include <vector>
 
 #include <tsunami/fvm/BoundarySpecification.hpp>
+#include <tsunami/r2d/RegionalEarthquakeInitialisation.hpp>
 #include <tsunami/r2d_benchmarks/StructuredTriangularMesh.hpp>
 
 namespace tsunami::r2d_benchmarks
@@ -42,6 +44,31 @@ namespace tsunami::r2d_benchmarks
         [[nodiscard]] auto make_boundary_set(const tsunami::fvm::FiniteVolumeMesh &mesh, std::string unit)
         {
             return tsunami::fvm::make_boundary_condition_set(mesh, zero_gradient_specs(mesh, std::move(unit)));
+        }
+
+        [[nodiscard]] auto fixed_bathymetry_specs(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const std::function<Real(const tsunami::fvm::Point3 &)> &bed_function)
+            -> std::vector<tsunami::fvm::BoundarySpecification<Real>>
+        {
+            std::vector<tsunami::fvm::BoundarySpecification<Real>> specs;
+            specs.reserve(mesh.summary().boundary_patch_count);
+            for (std::size_t index = 0; index < mesh.summary().boundary_patch_count; ++index) {
+                const auto patch_id = tsunami::fvm::BoundaryPatchId{index};
+                const auto &patch = mesh.boundary_patch(patch_id);
+                std::vector<Real> values;
+                values.reserve(patch.faces.size());
+                for (const auto face_id : patch.faces) {
+                    values.push_back(bed_function(mesh.face_geometry(face_id).centroid));
+                }
+                specs.push_back(tsunami::fvm::BoundarySpecification<Real>{
+                    tsunami::fvm::BoundaryConditionId{"fixed-" + patch.name + "-bed"},
+                    patch.name + " fixed bed",
+                    patch.name,
+                    "m",
+                    tsunami::fvm::FixedValueSpecification<Real>{std::move(values)}});
+            }
+            return specs;
         }
 
         [[nodiscard]] auto make_case(
@@ -154,7 +181,8 @@ namespace tsunami::r2d_benchmarks
                 std::move(local_sources).value(),
                 state_policy.value(),
                 time_policy.value(),
-                final_time});
+                final_time,
+                std::nullopt});
         }
 
         [[nodiscard]] auto make_outgoing_wave_case(std::string id, bool sponge)
@@ -313,6 +341,254 @@ namespace tsunami::r2d_benchmarks
             problem.time_policy.source_safety_factor = 0.75;
             return tsunami::core::success(std::move(problem));
         }
+
+        [[nodiscard]] auto initialise_earthquake_case(
+            RegionalBenchmarkCase problem,
+            tsunami::r2d::RegionalSeabedDisplacement displacement,
+            tsunami::r2d::RegionalBedDeformationMappingKind bed_mapping,
+            tsunami::r2d::RegionalSurfaceTransferKind surface_transfer,
+            tsunami::r2d::RegionalEarthquakeSourceMetadata metadata,
+            const tsunami::fvm::CellScalarField *prescribed = nullptr)
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto workspace = tsunami::r2d::make_regional_earthquake_initialisation_workspace(problem.mesh);
+            if (!workspace) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(workspace.error());
+            }
+            auto request = tsunami::r2d::RegionalEarthquakeInitialisationRequest{
+                .mesh = &problem.mesh,
+                .pre_event_bathymetry = &problem.bathymetry,
+                .pre_event_state = &problem.simulation_state.conserved_state(),
+                .seabed_displacement = &displacement,
+                .bed_mapping = bed_mapping,
+                .surface_transfer = surface_transfer,
+                .bathymetry_boundaries = &problem.bathymetry_boundaries,
+                .prescribed_surface_perturbation = prescribed,
+                .state_policy = problem.state_policy,
+                .zero_momentum_tolerance = 1.0e-12,
+                .metadata = std::move(metadata)};
+            auto initialised = tsunami::r2d::initialise_regional_earthquake_state(request, workspace.value());
+            if (!initialised) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(initialised.error());
+            }
+            auto result = std::move(initialised).value();
+            problem.bathymetry = std::move(result.post_event_bathymetry);
+            problem.simulation_state = std::move(result.simulation_state);
+            problem.earthquake_initialisation = std::move(result.diagnostics);
+            return tsunami::core::success(std::move(problem));
+        }
+
+        [[nodiscard]] auto metadata_for(std::string id) -> tsunami::r2d::RegionalEarthquakeSourceMetadata
+        {
+            return tsunami::r2d::RegionalEarthquakeSourceMetadata{
+                .source_kind = tsunami::r2d::RegionalEarthquakeSourceKind::synthetic,
+                .event_id = std::move(id),
+                .model_id = "manufactured-v0.1",
+                .source_format = "programmatic",
+                .coordinate_reference = "mesh-cartesian-east-north-up",
+                .subfault_count = 0U};
+        }
+
+        [[nodiscard]] auto make_earthquake_uniform_vertical_translation_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "earthquake_uniform_vertical_translation",
+                StructuredTriangularMeshSpec{"earthquake-uniform-vertical-translation", 6U, 2U, 1.0, 0.4},
+                0.04,
+                [](const auto &point) { return 0.1 * point.x; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto displacement = tsunami::r2d::make_filled_regional_seabed_displacement(problem.mesh, 0.0, 0.0, 0.05);
+            if (!displacement) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(displacement.error());
+            }
+            problem.time_policy.maximum_timestep = 0.001;
+            return initialise_earthquake_case(
+                std::move(problem),
+                std::move(displacement).value(),
+                tsunami::r2d::RegionalBedDeformationMappingKind::vertical_only,
+                tsunami::r2d::RegionalSurfaceTransferKind::passive_equal_to_effective_bed,
+                metadata_for("earthquake_uniform_vertical_translation"));
+        }
+
+        [[nodiscard]] auto make_earthquake_localised_vertical_uplift_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "earthquake_localised_vertical_uplift",
+                StructuredTriangularMeshSpec{"earthquake-localised-vertical-uplift", 16U, 8U, 1.0, 0.5},
+                0.025,
+                [](const auto &) { return 0.0; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            std::vector<Real> uplift;
+            uplift.reserve(problem.mesh.summary().cell_count);
+            for (std::size_t index = 0; index < problem.mesh.summary().cell_count; ++index) {
+                const auto centroid = problem.mesh.cell_geometry(tsunami::fvm::CellId{index}).centroid;
+                const auto dx = centroid.x - 0.5;
+                const auto dy = centroid.y - 0.25;
+                uplift.push_back(0.04 * std::exp(-((dx * dx) + (dy * dy)) / (2.0 * 0.08 * 0.08)));
+            }
+            auto displacement = tsunami::r2d::make_vertical_regional_seabed_displacement(problem.mesh, std::move(uplift));
+            if (!displacement) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(displacement.error());
+            }
+            problem.time_policy.maximum_timestep = 0.0008;
+            return initialise_earthquake_case(
+                std::move(problem),
+                std::move(displacement).value(),
+                tsunami::r2d::RegionalBedDeformationMappingKind::vertical_only,
+                tsunami::r2d::RegionalSurfaceTransferKind::passive_equal_to_effective_bed,
+                metadata_for("earthquake_localised_vertical_uplift"));
+        }
+
+        [[nodiscard]] auto make_earthquake_uplift_subsidence_dipole_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "earthquake_uplift_subsidence_dipole",
+                StructuredTriangularMeshSpec{"earthquake-uplift-subsidence-dipole", 16U, 8U, 1.0, 0.5},
+                0.025,
+                [](const auto &) { return 0.0; },
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            std::vector<Real> displacement_values;
+            displacement_values.reserve(problem.mesh.summary().cell_count);
+            for (std::size_t index = 0; index < problem.mesh.summary().cell_count; ++index) {
+                const auto centroid = problem.mesh.cell_geometry(tsunami::fvm::CellId{index}).centroid;
+                const auto left_dx = centroid.x - 0.35;
+                const auto right_dx = centroid.x - 0.65;
+                const auto dy = centroid.y - 0.25;
+                const auto left = std::exp(-((left_dx * left_dx) + (dy * dy)) / (2.0 * 0.08 * 0.08));
+                const auto right = std::exp(-((right_dx * right_dx) + (dy * dy)) / (2.0 * 0.08 * 0.08));
+                displacement_values.push_back(0.035 * (left - right));
+            }
+            auto displacement = tsunami::r2d::make_vertical_regional_seabed_displacement(problem.mesh, std::move(displacement_values));
+            if (!displacement) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(displacement.error());
+            }
+            problem.time_policy.maximum_timestep = 0.0008;
+            return initialise_earthquake_case(
+                std::move(problem),
+                std::move(displacement).value(),
+                tsunami::r2d::RegionalBedDeformationMappingKind::vertical_only,
+                tsunami::r2d::RegionalSurfaceTransferKind::passive_equal_to_effective_bed,
+                metadata_for("earthquake_uplift_subsidence_dipole"));
+        }
+
+        [[nodiscard]] auto make_earthquake_horizontal_slope_correction_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            constexpr auto a = Real{0.12};
+            constexpr auto b = Real{-0.04};
+            constexpr auto c = Real{0.05};
+            auto bed = [](const tsunami::fvm::Point3 &point) { return a * point.x + b * point.y + c; };
+            auto result = make_case(
+                "earthquake_horizontal_slope_correction",
+                StructuredTriangularMeshSpec{"earthquake-horizontal-slope-correction", 8U, 4U, 1.0, 0.5},
+                0.04,
+                bed,
+                [](const auto &, Real bed_value) { return 1.0 - bed_value; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            auto fixed_bed = tsunami::fvm::make_boundary_condition_set(problem.mesh, fixed_bathymetry_specs(problem.mesh, bed));
+            if (!fixed_bed) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(fixed_bed.error());
+            }
+            problem.bathymetry_boundaries = std::move(fixed_bed).value();
+            auto regional = tsunami::r2d::make_regional_boundary_condition_set(
+                problem.mesh,
+                problem.depth_boundaries,
+                problem.momentum_x_boundaries,
+                problem.momentum_y_boundaries,
+                problem.bathymetry_boundaries,
+                {});
+            if (!regional) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(regional.error());
+            }
+            problem.regional_boundaries = std::move(regional).value();
+            auto displacement = tsunami::r2d::make_filled_regional_seabed_displacement(problem.mesh, 0.2, -0.1, 0.03);
+            if (!displacement) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(displacement.error());
+            }
+            problem.time_policy.maximum_timestep = 0.001;
+            return initialise_earthquake_case(
+                std::move(problem),
+                std::move(displacement).value(),
+                tsunami::r2d::RegionalBedDeformationMappingKind::horizontal_slope_corrected,
+                tsunami::r2d::RegionalSurfaceTransferKind::passive_equal_to_effective_bed,
+                metadata_for("earthquake_horizontal_slope_correction"));
+        }
+
+        [[nodiscard]] auto make_earthquake_prescribed_surface_perturbation_case()
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            auto result = make_case(
+                "earthquake_prescribed_surface_perturbation",
+                StructuredTriangularMeshSpec{"earthquake-prescribed-surface-perturbation", 12U, 4U, 1.0, 0.35},
+                0.02,
+                [](const auto &point) { return point.x < 0.2 ? 0.18 : 0.0; },
+                [](const auto &point, Real bed) { return point.x < 0.18 ? 0.0 : std::max(0.0, 0.08 - bed); },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            std::vector<Real> bed_displacement;
+            std::vector<Real> surface_values;
+            bed_displacement.reserve(problem.mesh.summary().cell_count);
+            surface_values.reserve(problem.mesh.summary().cell_count);
+            for (std::size_t index = 0; index < problem.mesh.summary().cell_count; ++index) {
+                const auto centroid = problem.mesh.cell_geometry(tsunami::fvm::CellId{index}).centroid;
+                const auto dx = centroid.x - 0.45;
+                const auto dry_dx = centroid.x - 0.1;
+                const auto dy = centroid.y - 0.175;
+                bed_displacement.push_back(0.02 * std::exp(-((dx * dx) + (dy * dy)) / (2.0 * 0.1 * 0.1)));
+                surface_values.push_back(0.16 * std::exp(-((dry_dx * dry_dx) + (dy * dy)) / (2.0 * 0.09 * 0.09)) - 0.06);
+            }
+            auto displacement = tsunami::r2d::make_vertical_regional_seabed_displacement(problem.mesh, std::move(bed_displacement));
+            if (!displacement) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(displacement.error());
+            }
+            auto prescribed = tsunami::fvm::make_mesh_field<Real, tsunami::fvm::FieldLocation::cell>(
+                problem.mesh,
+                tsunami::fvm::FieldId{"earthquake.prescribed-surface"},
+                "earthquake prescribed surface perturbation",
+                "m",
+                std::move(surface_values));
+            if (!prescribed) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(prescribed.error());
+            }
+            problem.time_policy.maximum_timestep = 0.0008;
+            return initialise_earthquake_case(
+                std::move(problem),
+                std::move(displacement).value(),
+                tsunami::r2d::RegionalBedDeformationMappingKind::vertical_only,
+                tsunami::r2d::RegionalSurfaceTransferKind::prescribed,
+                metadata_for("earthquake_prescribed_surface_perturbation"),
+                &prescribed.value());
+        }
     } // namespace
 
     auto regional_benchmark_case_ids() -> std::vector<std::string_view>
@@ -327,7 +603,12 @@ namespace tsunami::r2d_benchmarks
             "uniform_manning_decay",
             "uniform_coriolis_oscillation",
             "uniform_manning_coriolis",
-            "frictional_wet_dry_dam_break"};
+            "frictional_wet_dry_dam_break",
+            "earthquake_uniform_vertical_translation",
+            "earthquake_localised_vertical_uplift",
+            "earthquake_uplift_subsidence_dipole",
+            "earthquake_horizontal_slope_correction",
+            "earthquake_prescribed_surface_perturbation"};
     }
 
     auto make_regional_benchmark_case(std::string_view id)
@@ -390,6 +671,21 @@ namespace tsunami::r2d_benchmarks
         }
         if (id == "frictional_wet_dry_dam_break") {
             return make_frictional_wet_dry_dam_break_case();
+        }
+        if (id == "earthquake_uniform_vertical_translation") {
+            return make_earthquake_uniform_vertical_translation_case();
+        }
+        if (id == "earthquake_localised_vertical_uplift") {
+            return make_earthquake_localised_vertical_uplift_case();
+        }
+        if (id == "earthquake_uplift_subsidence_dipole") {
+            return make_earthquake_uplift_subsidence_dipole_case();
+        }
+        if (id == "earthquake_horizontal_slope_correction") {
+            return make_earthquake_horizontal_slope_correction_case();
+        }
+        if (id == "earthquake_prescribed_surface_perturbation") {
+            return make_earthquake_prescribed_surface_perturbation_case();
         }
         return tsunami::core::failure<RegionalBenchmarkCase>(error(
             "r2d.benchmark.case_unknown",

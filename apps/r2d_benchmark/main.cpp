@@ -241,6 +241,13 @@ auto main(int argc, char **argv) -> int
         }
         diagnostics_sink = [&](const auto &diagnostics) { return output_writer.write_diagnostics(diagnostics); };
         snapshot_sink = [&](const auto &snapshot) { return output_writer.write_snapshot(snapshot); };
+        if (problem.earthquake_initialisation) {
+            auto written = output_writer.write_earthquake_initialisation(*problem.earthquake_initialisation);
+            if (!written) {
+                std::cerr << written.error().message() << '\n';
+                return 1;
+            }
+        }
     }
 
     auto request = tsunami::r2d::RegionalSolveRequest{
@@ -272,5 +279,19 @@ auto main(int argc, char **argv) -> int
               << " final_time=" << summary.value().final_time
               << " water_volume=" << summary.value().final_integrals.water_volume
               << '\n';
+    if (problem.earthquake_initialisation) {
+        const auto &earthquake = *problem.earthquake_initialisation;
+        std::cout << "earthquake_source_kind=" << tsunami::r2d::to_string(earthquake.metadata.source_kind)
+                  << " earthquake_event_id=" << earthquake.metadata.event_id
+                  << " earthquake_model_id=" << earthquake.metadata.model_id
+                  << " bed_mapping=" << tsunami::r2d::to_string(earthquake.bed_mapping)
+                  << " surface_transfer=" << tsunami::r2d::to_string(earthquake.surface_transfer)
+                  << " max_effective_displacement=" << earthquake.maximum_effective_bed_displacement
+                  << " max_surface_perturbation=" << earthquake.maximum_surface_perturbation
+                  << " water_volume_change=" << earthquake.water_volume_change
+                  << " newly_wet_cells=" << earthquake.newly_wet_cell_count
+                  << " newly_dry_cells=" << earthquake.newly_dry_cell_count
+                  << '\n';
+    }
     return summary.value().completed_successfully ? 0 : 1;
 }

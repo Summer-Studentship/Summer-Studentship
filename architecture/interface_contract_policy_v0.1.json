@@ -140,7 +140,10 @@
         "src/r2d/include/tsunami/r2d/RegionalSimulationState.hpp",
         "src/r2d/include/tsunami/r2d/RegionalDiagnostics.hpp",
         "src/r2d/include/tsunami/r2d/RegionalSnapshot.hpp",
-        "src/r2d/include/tsunami/r2d/RegionalSolveLoop.hpp"
+        "src/r2d/include/tsunami/r2d/RegionalSolveLoop.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalSeabedDisplacement.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalEarthquakeDiagnostics.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalEarthquakeInitialisation.hpp"
       ],
       "permitted_consumer_targets": ["tsunami_r2d", "tsunami_r2d_io", "tsunami_r2d_benchmarks", "tsunami_r2d_benchmark", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data"],

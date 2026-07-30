@@ -85,6 +85,8 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Boundary reflection and absorption verification v0.1](SWE-R2D/boundary_reflection_absorption_verification_v0.1.md)
 - [Regional Manning and Coriolis sources v0.1](SWE-R2D/regional_manning_coriolis_sources_v0.1.md)
 - [Source term verification v0.1](SWE-R2D/source_term_verification_v0.1.md)
+- [Regional2D earthquake initialisation v0.1](SWE-R2D/regional_earthquake_initialisation_v0.1.md)
+- [Earthquake initialisation verification v0.1](SWE-R2D/earthquake_initialisation_verification_v0.1.md)
 
 ## Architecture handoff notes
 

@@ -31,6 +31,8 @@ environment baseline.
 - [Regional2D boundary reflection and absorption verification](docs/workstream/SWE%20-%20Software/SWE-R2D/boundary_reflection_absorption_verification_v0.1.md)
 - [Regional2D Manning and Coriolis sources](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_manning_coriolis_sources_v0.1.md)
 - [Regional2D source-term verification](docs/workstream/SWE%20-%20Software/SWE-R2D/source_term_verification_v0.1.md)
+- [Regional2D earthquake initialisation](docs/workstream/SWE%20-%20Software/SWE-R2D/regional_earthquake_initialisation_v0.1.md)
+- [Regional2D earthquake initialisation verification](docs/workstream/SWE%20-%20Software/SWE-R2D/earthquake_initialisation_verification_v0.1.md)
 
 The current C++ scaffold is CMake-based and uses C++20. Third-party C++ packages
 are declared in `vcpkg.json` and resolved from the exact registry commit in
