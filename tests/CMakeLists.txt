@@ -6,6 +6,7 @@ add_executable(tsunami_tests
     contracts/contract_dummy_consumers.cpp
     contracts/interface_contracts.cpp
     fvm/boundary_tests.cpp
+    data/case_configuration_tests.cpp
     fvm/field_tests.cpp
     fvm/mesh_records_tests.cpp
     fvm/numerics_tests.cpp

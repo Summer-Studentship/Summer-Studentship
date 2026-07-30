@@ -1,0 +1,231 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "schemas/case/1.0.0/case.schema.json",
+  "title": "Tsunami Barrier Studio G1 Case Configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy_version",
+    "case",
+    "scenario",
+    "coordinate_frame",
+    "datasets",
+    "regional_2d",
+    "outputs",
+    "extensions"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$",
+      "description": "Semantic schema version. Runtime support is 1.0.0."
+    },
+    "policy_version": {
+      "const": "0.1"
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["case_id", "case_slug", "revision", "created_at_utc", "created_by"],
+      "properties": {
+        "case_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$", "maxLength": 128},
+        "case_slug": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$", "maxLength": 128},
+        "revision": {"type": "integer", "minimum": 1},
+        "created_at_utc": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$"},
+        "created_by": {"type": "string", "minLength": 1}
+      }
+    },
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scenario_id", "event_id", "target_site", "model_family"],
+      "properties": {
+        "scenario_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+        "event_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+        "target_site": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+        "model_family": {"const": "regional_2d"}
+      }
+    },
+    "coordinate_frame": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizontal_crs", "vertical_datum", "horizontal_unit", "vertical_unit", "axis_order", "vertical_positive"],
+      "properties": {
+        "horizontal_crs": {"type": "string", "minLength": 1, "description": "Synthetic fixture CRS identifiers such as EPSG:0000 are not authoritative EPSG records."},
+        "vertical_datum": {"type": "string", "minLength": 1},
+        "horizontal_unit": {"const": "m"},
+        "vertical_unit": {"const": "m"},
+        "axis_order": {"const": "east_north"},
+        "vertical_positive": {"const": "up"}
+      }
+    },
+    "datasets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["manifest_path", "bindings"],
+      "properties": {
+        "manifest_path": {"type": "string", "pattern": "^manifests/(?!.*(?:^|/)\\.\\.?/)[A-Za-z0-9._/-]+$"},
+        "bindings": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["bathymetry", "topography", "earthquake_displacement", "prescribed_surface", "manning", "coriolis", "observations"],
+          "properties": {
+            "bathymetry": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "topography": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "earthquake_displacement": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "prescribed_surface": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "manning": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "coriolis": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "observations": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}
+            }
+          }
+        }
+      }
+    },
+    "regional_2d": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["corridor", "physics", "numerics", "boundaries"],
+      "properties": {
+        "corridor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["trajectory_id", "origin", "bearing_degrees_clockwise_from_north", "width_m", "offshore_extent_m", "inland_extent_m", "narrowing", "sponge"],
+          "properties": {
+            "trajectory_id": {"type": "string", "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+            "origin": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y"],
+              "properties": {"x": {"type": "number"}, "y": {"type": "number"}}
+            },
+            "bearing_degrees_clockwise_from_north": {"type": "number", "minimum": 0, "exclusiveMaximum": 360},
+            "width_m": {"type": "number", "exclusiveMinimum": 0},
+            "offshore_extent_m": {"type": "number", "exclusiveMinimum": 0},
+            "inland_extent_m": {"type": "number", "minimum": 0},
+            "narrowing": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["enabled", "inland_width_m"],
+              "properties": {"enabled": {"type": "boolean"}, "inland_width_m": {"type": ["number", "null"], "exclusiveMinimum": 0}}
+            },
+            "sponge": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["offshore_width_m", "side_width_m"],
+              "properties": {"offshore_width_m": {"type": "number", "minimum": 0}, "side_width_m": {"type": "number", "minimum": 0}}
+            }
+          }
+        },
+        "physics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["gravity_m_per_s2", "manning", "coriolis", "earthquake"],
+          "properties": {
+            "gravity_m_per_s2": {"type": "number", "exclusiveMinimum": 0},
+            "manning": {"$ref": "#/$defs/manning"},
+            "coriolis": {"$ref": "#/$defs/coriolis"},
+            "earthquake": {"$ref": "#/$defs/earthquake"}
+          }
+        },
+        "numerics": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["scheme", "courant_number", "positivity_safety_factor", "relaxation_safety_factor", "source_safety_factor", "minimum_timestep_s", "maximum_timestep_s", "final_time_s", "maximum_steps"],
+          "properties": {
+            "scheme": {"enum": ["forward_euler", "ssprk2", "ssprk3"]},
+            "courant_number": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "positivity_safety_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "relaxation_safety_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "source_safety_factor": {"type": "number", "exclusiveMinimum": 0, "maximum": 1},
+            "minimum_timestep_s": {"type": "number", "exclusiveMinimum": 0},
+            "maximum_timestep_s": {"type": "number", "exclusiveMinimum": 0},
+            "final_time_s": {"type": "number", "exclusiveMinimum": 0},
+            "maximum_steps": {"type": "integer", "minimum": 1}
+          }
+        },
+        "boundaries": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["offshore", "inland", "left_side", "right_side", "relaxation"],
+          "properties": {
+            "offshore": {"$ref": "#/$defs/boundary"},
+            "inland": {"$ref": "#/$defs/boundary"},
+            "left_side": {"$ref": "#/$defs/boundary"},
+            "right_side": {"$ref": "#/$defs/boundary"},
+            "relaxation": {"$ref": "#/$defs/relaxation"}
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["snapshot_interval_s", "diagnostics_enabled", "initialisation_diagnostics_enabled", "checkpoint_interval_s"],
+      "properties": {
+        "snapshot_interval_s": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "diagnostics_enabled": {"type": "boolean"},
+        "initialisation_diagnostics_enabled": {"type": "boolean"},
+        "checkpoint_interval_s": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      }
+    },
+    "extensions": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "$defs": {
+    "manning": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value_s_per_m_one_third", "dataset_binding"],
+      "properties": {
+        "kind": {"enum": ["disabled", "uniform", "dataset"]},
+        "value_s_per_m_one_third": {"type": ["number", "null"], "minimum": 0},
+        "dataset_binding": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "coriolis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "value_per_s", "dataset_binding"],
+      "properties": {
+        "kind": {"enum": ["disabled", "constant", "dataset"]},
+        "value_per_s": {"type": ["number", "null"]},
+        "dataset_binding": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "earthquake": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "displacement_binding", "bed_mapping", "surface_transfer", "prescribed_surface_binding"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "displacement_binding": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"},
+        "bed_mapping": {"enum": ["vertical_only", "horizontal_slope_corrected"]},
+        "surface_transfer": {"enum": ["passive_equal_to_effective_bed", "prescribed"]},
+        "prescribed_surface_binding": {"type": ["string", "null"], "pattern": "^[a-z0-9]+(?:[._-][a-z0-9]+)*$"}
+      }
+    },
+    "boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind"],
+      "properties": {"kind": {"enum": ["transmissive", "radiation"]}}
+    },
+    "relaxation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "maximum_rate_per_s", "profile_exponent"],
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "maximum_rate_per_s": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "profile_exponent": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      }
+    }
+  }
+}

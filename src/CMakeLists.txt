@@ -32,15 +32,28 @@ target_compile_features(tsunami_fvm PUBLIC cxx_std_20)
 target_link_libraries(tsunami_fvm PUBLIC tsunami_core)
 tsunami_apply_compiler_warnings(tsunami_fvm)
 
-add_library(tsunami_data INTERFACE)
+find_package(nlohmann_json CONFIG REQUIRED)
+
+add_library(tsunami_data STATIC
+    data/src/CaseConfiguration.cpp
+    data/src/CaseConfigurationParsing.cpp
+    data/src/CaseConfigurationSerialisation.cpp
+    data/src/CaseConfigurationValidation.cpp
+)
 add_library(Tsunami::data ALIAS tsunami_data)
 target_include_directories(tsunami_data
-    INTERFACE
+    PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/data/include>
         $<INSTALL_INTERFACE:include>
 )
-target_compile_features(tsunami_data INTERFACE cxx_std_20)
-target_link_libraries(tsunami_data INTERFACE tsunami_core)
+target_compile_features(tsunami_data PUBLIC cxx_std_20)
+target_link_libraries(tsunami_data
+    PUBLIC
+        tsunami_core
+    PRIVATE
+        nlohmann_json::nlohmann_json
+)
+tsunami_apply_compiler_warnings(tsunami_data)
 
 add_subdirectory(application)
 
