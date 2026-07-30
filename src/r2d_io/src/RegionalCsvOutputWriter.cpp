@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iomanip>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 
@@ -66,6 +67,31 @@ namespace tsunami::r2d_io
         {
             return cell_id ? std::to_string(cell_id->value) : std::string{};
         }
+
+        [[nodiscard]] auto csv_escape(std::string_view value) -> std::string
+        {
+            const auto needs_quotes = value.find_first_of(",\"\n\r") != std::string_view::npos;
+            if (!needs_quotes) {
+                return std::string{value};
+            }
+            std::string escaped{"\""};
+            for (const auto ch : value) {
+                if (ch == '"') {
+                    escaped += "\"\"";
+                } else {
+                    escaped += ch;
+                }
+            }
+            escaped += '"';
+            return escaped;
+        }
+
+        [[nodiscard]] auto real_string(tsunami::core::Real value) -> std::string
+        {
+            std::ostringstream stream;
+            stream << std::setprecision(17) << value;
+            return stream.str();
+        }
     } // namespace
 
     RegionalCsvOutputWriter::RegionalCsvOutputWriter(std::filesystem::path output_directory, bool overwrite_existing)
@@ -92,6 +118,7 @@ namespace tsunami::r2d_io
         if (overwrite_existing_) {
             std::filesystem::remove(output_directory_ / "diagnostics.csv", ec);
             std::filesystem::remove(output_directory_ / "snapshots.csv", ec);
+            std::filesystem::remove(output_directory_ / "earthquake_initialisation.csv", ec);
         }
         diagnostics_header_written_ = std::filesystem::exists(output_directory_ / "diagnostics.csv");
         snapshot_index_header_written_ = std::filesystem::exists(output_directory_ / "snapshots.csv");
@@ -180,6 +207,73 @@ namespace tsunami::r2d_io
                 << snapshot.momentum_y[index] << ','
                 << snapshot.bed_elevation[index] << ','
                 << snapshot.free_surface_elevation[index] << '\n';
+        }
+        return tsunami::core::success();
+    }
+
+    auto RegionalCsvOutputWriter::write_earthquake_initialisation(
+        const tsunami::r2d::RegionalEarthquakeInitialisationDiagnostics &diagnostics) -> tsunami::core::Result<void>
+    {
+        return write_regional_earthquake_initialisation_csv(output_directory_ / "earthquake_initialisation.csv", diagnostics);
+    }
+
+    auto write_regional_earthquake_initialisation_csv(
+        const std::filesystem::path &output_path,
+        const tsunami::r2d::RegionalEarthquakeInitialisationDiagnostics &diagnostics) -> tsunami::core::Result<void>
+    {
+        std::ofstream file(output_path, std::ios::trunc);
+        if (!file) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.earthquake_csv_open_failed",
+                "could not open earthquake initialisation CSV output"));
+        }
+        file << "source_kind,event_id,model_id,source_format,coordinate_reference,subfault_count,"
+                "bed_mapping,surface_transfer,cell_count,"
+                "minimum_eastward_displacement,maximum_eastward_displacement,"
+                "minimum_northward_displacement,maximum_northward_displacement,"
+                "minimum_upward_displacement,maximum_upward_displacement,"
+                "minimum_effective_bed_displacement,maximum_effective_bed_displacement,"
+                "minimum_surface_perturbation,maximum_surface_perturbation,"
+                "integrated_upward_displacement,integrated_effective_bed_displacement,integrated_surface_perturbation,"
+                "pre_event_water_volume,post_event_water_volume,water_volume_change,"
+                "maximum_absolute_bathymetry_change,maximum_absolute_surface_perturbation,maximum_absolute_depth_change,"
+                "newly_wet_cell_count,newly_dry_cell_count,pre_event_maximum_momentum,post_event_maximum_momentum\n";
+        file << tsunami::r2d::to_string(diagnostics.metadata.source_kind) << ','
+             << csv_escape(diagnostics.metadata.event_id) << ','
+             << csv_escape(diagnostics.metadata.model_id) << ','
+             << csv_escape(diagnostics.metadata.source_format) << ','
+             << csv_escape(diagnostics.metadata.coordinate_reference) << ','
+             << diagnostics.metadata.subfault_count << ','
+             << tsunami::r2d::to_string(diagnostics.bed_mapping) << ','
+             << tsunami::r2d::to_string(diagnostics.surface_transfer) << ','
+             << diagnostics.cell_count << ','
+             << real_string(diagnostics.minimum_eastward_displacement) << ','
+             << real_string(diagnostics.maximum_eastward_displacement) << ','
+             << real_string(diagnostics.minimum_northward_displacement) << ','
+             << real_string(diagnostics.maximum_northward_displacement) << ','
+             << real_string(diagnostics.minimum_upward_displacement) << ','
+             << real_string(diagnostics.maximum_upward_displacement) << ','
+             << real_string(diagnostics.minimum_effective_bed_displacement) << ','
+             << real_string(diagnostics.maximum_effective_bed_displacement) << ','
+             << real_string(diagnostics.minimum_surface_perturbation) << ','
+             << real_string(diagnostics.maximum_surface_perturbation) << ','
+             << real_string(diagnostics.integrated_upward_displacement) << ','
+             << real_string(diagnostics.integrated_effective_bed_displacement) << ','
+             << real_string(diagnostics.integrated_surface_perturbation) << ','
+             << real_string(diagnostics.pre_event_water_volume) << ','
+             << real_string(diagnostics.post_event_water_volume) << ','
+             << real_string(diagnostics.water_volume_change) << ','
+             << real_string(diagnostics.maximum_absolute_bathymetry_change) << ','
+             << real_string(diagnostics.maximum_absolute_surface_perturbation) << ','
+             << real_string(diagnostics.maximum_absolute_depth_change) << ','
+             << diagnostics.newly_wet_cell_count << ','
+             << diagnostics.newly_dry_cell_count << ','
+             << real_string(diagnostics.pre_event_maximum_momentum) << ','
+             << real_string(diagnostics.post_event_maximum_momentum) << '\n';
+        if (!file) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.earthquake_csv_write_failed",
+                "could not write earthquake initialisation CSV output"));
         }
         return tsunami::core::success();
     }

@@ -2,10 +2,12 @@
 
 #include <string>
 #include <string_view>
+#include <optional>
 #include <vector>
 
 #include <tsunami/fvm/BoundaryConditionSet.hpp>
 #include <tsunami/r2d/RegionalBathymetry.hpp>
+#include <tsunami/r2d/RegionalEarthquakeInitialisation.hpp>
 #include <tsunami/r2d/RegionalSimulationState.hpp>
 #include <tsunami/r2d/RegionalSourceTerms.hpp>
 #include <tsunami/r2d/RegionalTimeIntegration.hpp>
@@ -28,6 +30,7 @@ namespace tsunami::r2d_benchmarks
         tsunami::r2d::ShallowWaterStatePolicy state_policy;
         tsunami::r2d::RegionalTimeIntegrationPolicy time_policy;
         tsunami::core::Time default_final_time{0.05};
+        std::optional<tsunami::r2d::RegionalEarthquakeInitialisationDiagnostics> earthquake_initialisation;
     };
 
     [[nodiscard]] auto make_regional_benchmark_case(std::string_view id)
