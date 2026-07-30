@@ -79,6 +79,12 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Numerical verification evidence v0.1](SWE-FVM/SWE-FVM-NUM/numerical_verification_evidence_v0.1.md)
 - [Regional2D state, flux and residual v0.1](SWE-R2D/regional_state_flux_residual_v0.1.md)
 - [State, flux and residual verification v0.1](SWE-R2D/state_flux_residual_verification_v0.1.md)
+- [Regional2D well-balancing and wet-dry v0.1](SWE-R2D/regional_well_balancing_and_wet_dry_v0.1.md)
+- [Well-balancing and wet-dry verification v0.1](SWE-R2D/well_balancing_wet_dry_verification_v0.1.md)
+- [Regional radiation and relaxation boundaries v0.1](SWE-R2D/regional_radiation_and_relaxation_boundaries_v0.1.md)
+- [Boundary reflection and absorption verification v0.1](SWE-R2D/boundary_reflection_absorption_verification_v0.1.md)
+- [Regional Manning and Coriolis sources v0.1](SWE-R2D/regional_manning_coriolis_sources_v0.1.md)
+- [Source term verification v0.1](SWE-R2D/source_term_verification_v0.1.md)
 
 ## Architecture handoff notes
 
