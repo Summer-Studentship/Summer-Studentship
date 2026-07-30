@@ -1,0 +1,678 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "0.1",
+  "manifest": {
+    "manifest_id": "illustrative-tohoku-kamaishi-datasets",
+    "manifest_revision": 1,
+    "case_id": "illustrative-tohoku-kamaishi",
+    "case_revision": 1,
+    "created_at_utc": "2026-07-30T20:00:00Z",
+    "created_by": "fixture-author"
+  },
+  "providers": [
+    {
+      "provider_id": "illustrative-marine-provider",
+      "name": "Illustrative Provider illustrative-marine-provider",
+      "organisation": "Illustrative Organisation",
+      "homepage_uri": "https://example.invalid/provider",
+      "extensions": {}
+    },
+    {
+      "provider_id": "illustrative-land-provider",
+      "name": "Illustrative Provider illustrative-land-provider",
+      "organisation": "Illustrative Organisation",
+      "homepage_uri": "https://example.invalid/provider",
+      "extensions": {}
+    },
+    {
+      "provider_id": "illustrative-project-provider",
+      "name": "Illustrative Provider illustrative-project-provider",
+      "organisation": "Illustrative Organisation",
+      "homepage_uri": "https://example.invalid/provider",
+      "extensions": {}
+    }
+  ],
+  "licences": [
+    {
+      "licence_id": "illustrative-source-licence",
+      "name": "Illustrative Licence illustrative-source-licence",
+      "expression": "LicenseRef-Illustrative",
+      "licence_uri": "https://example.invalid/licence",
+      "attribution": "Illustrative attribution only",
+      "extensions": {}
+    },
+    {
+      "licence_id": "illustrative-project-licence",
+      "name": "Illustrative Licence illustrative-project-licence",
+      "expression": "LicenseRef-Illustrative",
+      "licence_uri": "https://example.invalid/licence",
+      "attribution": "Illustrative attribution only",
+      "extensions": {}
+    }
+  ],
+  "datasets": [
+    {
+      "dataset_id": "raw-regional-bathymetry",
+      "origin_kind": "source",
+      "representation": "raster",
+      "roles": [
+        "bathymetry"
+      ],
+      "title": "Illustrative raw regional bathymetry",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-marine-provider",
+      "licence_id": "illustrative-source-licence",
+      "source": {
+        "source_uri": "https://example.invalid/raw-regional-bathymetry",
+        "accessed_at_utc": "2026-07-30T20:05:00Z",
+        "source_version": "illustrative-v1",
+        "publication_date": "2026-07-30"
+      },
+      "generated_by_process_id": null,
+      "assets": [
+        {
+          "asset_id": "raw-regional-bathymetry-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/tohoku/raw-bathymetry.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "0000000000000000000000000000000000000000000000000000000000000000",
+            "origin": "provider_declared"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "raw-regional-topography",
+      "origin_kind": "source",
+      "representation": "raster",
+      "roles": [
+        "topography"
+      ],
+      "title": "Illustrative raw regional topography",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-land-provider",
+      "licence_id": "illustrative-source-licence",
+      "source": {
+        "source_uri": "https://example.invalid/raw-regional-topography",
+        "accessed_at_utc": "2026-07-30T20:05:00Z",
+        "source_version": "illustrative-v1",
+        "publication_date": "2026-07-30"
+      },
+      "generated_by_process_id": null,
+      "assets": [
+        {
+          "asset_id": "raw-regional-topography-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/tohoku/raw-topography.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "1111111111111111111111111111111111111111111111111111111111111111",
+            "origin": "provider_declared"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "earthquake-displacement-source",
+      "origin_kind": "source",
+      "representation": "raster",
+      "roles": [
+        "earthquake_displacement"
+      ],
+      "title": "Illustrative earthquake displacement source",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-marine-provider",
+      "licence_id": "illustrative-source-licence",
+      "source": {
+        "source_uri": "https://example.invalid/earthquake-displacement-source",
+        "accessed_at_utc": "2026-07-30T20:05:00Z",
+        "source_version": "illustrative-v1",
+        "publication_date": "2026-07-30"
+      },
+      "generated_by_process_id": null,
+      "assets": [
+        {
+          "asset_id": "earthquake-displacement-source-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/tohoku/earthquake-displacement.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "2222222222222222222222222222222222222222222222222222222222222222",
+            "origin": "provider_declared"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "offshore-observation-source",
+      "origin_kind": "source",
+      "representation": "point_series",
+      "roles": [
+        "observation"
+      ],
+      "title": "Illustrative offshore observation source",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-marine-provider",
+      "licence_id": "illustrative-source-licence",
+      "source": {
+        "source_uri": "https://example.invalid/offshore-observation-source",
+        "accessed_at_utc": "2026-07-30T20:05:00Z",
+        "source_version": "illustrative-v1",
+        "publication_date": "2026-07-30"
+      },
+      "generated_by_process_id": null,
+      "assets": [
+        {
+          "asset_id": "offshore-observation-source-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/tohoku/offshore-observation.csv",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "3333333333333333333333333333333333333333333333333333333333333333",
+            "origin": "provider_declared"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": null,
+        "horizontal_unit": "degree",
+        "vertical_unit": null,
+        "axis_order": "longitude_latitude",
+        "vertical_positive": null
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "intermediate-bathymetry",
+      "origin_kind": "generated",
+      "representation": "raster",
+      "roles": [
+        "bathymetry"
+      ],
+      "title": "Illustrative reprojected bathymetry",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-project-provider",
+      "licence_id": "illustrative-project-licence",
+      "source": null,
+      "generated_by_process_id": "reproject-bathymetry",
+      "assets": [
+        {
+          "asset_id": "intermediate-bathymetry-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/generated/intermediate-bathymetry.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "4444444444444444444444444444444444444444444444444444444444444444",
+            "origin": "project_computed"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "corridor-bathymetry",
+      "origin_kind": "generated",
+      "representation": "raster",
+      "roles": [
+        "bathymetry"
+      ],
+      "title": "Illustrative corridor bathymetry",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-project-provider",
+      "licence_id": "illustrative-project-licence",
+      "source": null,
+      "generated_by_process_id": "condition-bathymetry",
+      "assets": [
+        {
+          "asset_id": "corridor-bathymetry-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/generated/corridor-bathymetry.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "5555555555555555555555555555555555555555555555555555555555555555",
+            "origin": "project_computed"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "intermediate-topography",
+      "origin_kind": "generated",
+      "representation": "raster",
+      "roles": [
+        "topography"
+      ],
+      "title": "Illustrative reprojected topography",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-project-provider",
+      "licence_id": "illustrative-project-licence",
+      "source": null,
+      "generated_by_process_id": "reproject-topography",
+      "assets": [
+        {
+          "asset_id": "intermediate-topography-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/generated/intermediate-topography.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "6666666666666666666666666666666666666666666666666666666666666666",
+            "origin": "project_computed"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    },
+    {
+      "dataset_id": "corridor-topography",
+      "origin_kind": "generated",
+      "representation": "raster",
+      "roles": [
+        "topography"
+      ],
+      "title": "Illustrative corridor topography",
+      "description": "Synthetic fixture dataset for parser and lineage validation.",
+      "provider_id": "illustrative-project-provider",
+      "licence_id": "illustrative-project-licence",
+      "source": null,
+      "generated_by_process_id": "condition-topography",
+      "assets": [
+        {
+          "asset_id": "corridor-topography-asset",
+          "role": "primary",
+          "location": {
+            "kind": "managed_path",
+            "managed_path": "inputs/data/generated/corridor-topography.tif",
+            "external_uri": null
+          },
+          "media_type": "image/tiff",
+          "byte_size": 1024,
+          "digest": {
+            "algorithm": "sha256",
+            "value": "7777777777777777777777777777777777777777777777777777777777777777",
+            "origin": "project_computed"
+          }
+        }
+      ],
+      "spatial_reference": {
+        "applicability": "spatial",
+        "horizontal_crs": "EPSG:4326-illustrative",
+        "vertical_datum": "illustrative-vertical-datum",
+        "horizontal_unit": "degree",
+        "vertical_unit": "m",
+        "axis_order": "longitude_latitude",
+        "vertical_positive": "up"
+      },
+      "resolution": {
+        "spatial": {
+          "kind": "grid_spacing",
+          "x": 30.0,
+          "y": 30.0,
+          "unit": "m",
+          "description": null
+        },
+        "temporal": {
+          "kind": "static_dataset",
+          "value": null,
+          "unit": null,
+          "description": null
+        }
+      },
+      "uncertainty": {
+        "status": "not_reported",
+        "measures": [],
+        "description": "Illustrative uncertainty not reported"
+      },
+      "citation": "Illustrative citation only",
+      "extensions": {}
+    }
+  ],
+  "processes": [
+    {
+      "process_id": "reproject-bathymetry",
+      "operation": "reproject",
+      "executed_at_utc": "2026-07-30T20:10:00Z",
+      "software": {
+        "name": "Illustrative Processing Tool",
+        "version": "1.0.0",
+        "repository_uri": "https://example.invalid/repo",
+        "commit_sha": "abcdef1"
+      },
+      "parameters": {
+        "z": 2,
+        "a": {
+          "b": 1
+        }
+      },
+      "input_dataset_ids": [
+        "raw-regional-bathymetry"
+      ],
+      "output_dataset_ids": [
+        "intermediate-bathymetry"
+      ],
+      "extensions": {}
+    },
+    {
+      "process_id": "condition-bathymetry",
+      "operation": "corridor_conditioning",
+      "executed_at_utc": "2026-07-30T20:10:00Z",
+      "software": {
+        "name": "Illustrative Processing Tool",
+        "version": "1.0.0",
+        "repository_uri": "https://example.invalid/repo",
+        "commit_sha": "abcdef1"
+      },
+      "parameters": {
+        "z": 2,
+        "a": {
+          "b": 1
+        }
+      },
+      "input_dataset_ids": [
+        "intermediate-bathymetry"
+      ],
+      "output_dataset_ids": [
+        "corridor-bathymetry"
+      ],
+      "extensions": {}
+    },
+    {
+      "process_id": "reproject-topography",
+      "operation": "reproject",
+      "executed_at_utc": "2026-07-30T20:10:00Z",
+      "software": {
+        "name": "Illustrative Processing Tool",
+        "version": "1.0.0",
+        "repository_uri": "https://example.invalid/repo",
+        "commit_sha": "abcdef1"
+      },
+      "parameters": {
+        "z": 2,
+        "a": {
+          "b": 1
+        }
+      },
+      "input_dataset_ids": [
+        "raw-regional-topography"
+      ],
+      "output_dataset_ids": [
+        "intermediate-topography"
+      ],
+      "extensions": {}
+    },
+    {
+      "process_id": "condition-topography",
+      "operation": "corridor_conditioning",
+      "executed_at_utc": "2026-07-30T20:10:00Z",
+      "software": {
+        "name": "Illustrative Processing Tool",
+        "version": "1.0.0",
+        "repository_uri": "https://example.invalid/repo",
+        "commit_sha": "abcdef1"
+      },
+      "parameters": {
+        "z": 2,
+        "a": {
+          "b": 1
+        }
+      },
+      "input_dataset_ids": [
+        "intermediate-topography"
+      ],
+      "output_dataset_ids": [
+        "corridor-topography"
+      ],
+      "extensions": {}
+    }
+  ],
+  "extensions": {}
+}

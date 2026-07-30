@@ -50,6 +50,8 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Data domain index](SWE-DAT/README.md)
 - [G1 case schema v1.0.0](SWE-DAT/SWE-DAT-CFG/g1_case_schema_v1.0.0.md)
 - [Case schema verification v0.1](SWE-DAT/SWE-DAT-CFG/case_schema_verification_v0.1.md)
+- [G1 dataset manifest v1.0.0](SWE-DAT/SWE-DAT-MAN/g1_dataset_manifest_v1.0.0.md)
+- [Dataset manifest verification v0.1](SWE-DAT/SWE-DAT-MAN/dataset_manifest_verification_v0.1.md)
 - [Application service audit v0.1](SWE-ARC/SWE-ARC-SVC/application_service_audit_v0.1.md)
 - [Application service contract v0.1](SWE-ARC/SWE-ARC-SVC/application_service_contract_v0.1.md)
 - [Service lifecycle contract v0.1](SWE-ARC/SWE-ARC-SVC/service_lifecycle_contract_v0.1.md)
