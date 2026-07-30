@@ -108,7 +108,11 @@
       "owning_wbs": "SWE-ARC-API-WP1",
       "public_headers": [
         "src/data/include/tsunami/data/References.hpp",
-        "src/data/include/tsunami/data/Io.hpp"
+        "src/data/include/tsunami/data/Io.hpp",
+        "src/data/include/tsunami/data/CaseConfiguration.hpp",
+        "src/data/include/tsunami/data/CaseConfigurationParsing.hpp",
+        "src/data/include/tsunami/data/CaseConfigurationValidation.hpp",
+        "src/data/include/tsunami/data/CaseConfigurationSerialisation.hpp"
       ],
       "permitted_consumer_targets": ["tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core"],
