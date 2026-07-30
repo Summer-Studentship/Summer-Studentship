@@ -19,6 +19,9 @@ TEST_CASE("Regional CSV writer emits diagnostics and snapshot rows", "[r2d][io]"
     diagnostics.timestep = 0.1;
     diagnostics.scheme = tsunami::r2d::ExplicitIntegrationScheme::ssprk3;
     diagnostics.integrals.water_volume = 1.25;
+    diagnostics.stable_timestep.restriction = tsunami::r2d::TimestepRestrictionKind::source;
+    diagnostics.sources.maximum_manning_rate = 0.5;
+    diagnostics.sources.manning_limiting_cell = tsunami::fvm::CellId{0};
     REQUIRE(writer.write_diagnostics(diagnostics).has_value());
 
     auto snapshot = tsunami::r2d::RegionalSnapshot{};
@@ -37,7 +40,9 @@ TEST_CASE("Regional CSV writer emits diagnostics and snapshot rows", "[r2d][io]"
     std::ifstream diagnostics_file(output_dir / "diagnostics.csv");
     std::string diagnostics_text((std::istreambuf_iterator<char>(diagnostics_file)), std::istreambuf_iterator<char>());
     REQUIRE(diagnostics_text.find("step,start_time,end_time") != std::string::npos);
+    REQUIRE(diagnostics_text.find("source_restriction,manning_active_cells,coriolis_active_cells") != std::string::npos);
     REQUIRE(diagnostics_text.find("ssprk3") != std::string::npos);
+    REQUIRE(diagnostics_text.find("source,0,0") != std::string::npos);
 
     std::ifstream snapshots_file(output_dir / "snapshots.csv");
     std::string snapshots_text((std::istreambuf_iterator<char>(snapshots_file)), std::istreambuf_iterator<char>());

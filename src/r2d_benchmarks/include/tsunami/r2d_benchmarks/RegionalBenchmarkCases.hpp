@@ -7,6 +7,7 @@
 #include <tsunami/fvm/BoundaryConditionSet.hpp>
 #include <tsunami/r2d/RegionalBathymetry.hpp>
 #include <tsunami/r2d/RegionalSimulationState.hpp>
+#include <tsunami/r2d/RegionalSourceTerms.hpp>
 #include <tsunami/r2d/RegionalTimeIntegration.hpp>
 
 namespace tsunami::r2d_benchmarks
@@ -23,6 +24,7 @@ namespace tsunami::r2d_benchmarks
         tsunami::fvm::ScalarBoundaryConditionSet bathymetry_boundaries;
         tsunami::r2d::RegionalBoundaryConditionSet regional_boundaries;
         tsunami::r2d::RegionalRelaxationZoneSet relaxation_zones;
+        tsunami::r2d::RegionalSourceTermSet local_sources;
         tsunami::r2d::ShallowWaterStatePolicy state_policy;
         tsunami::r2d::RegionalTimeIntegrationPolicy time_policy;
         tsunami::core::Time default_final_time{0.05};
