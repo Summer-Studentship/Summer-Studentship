@@ -21,6 +21,8 @@ namespace tsunami::r2d_benchmarks
         tsunami::fvm::ScalarBoundaryConditionSet momentum_x_boundaries;
         tsunami::fvm::ScalarBoundaryConditionSet momentum_y_boundaries;
         tsunami::fvm::ScalarBoundaryConditionSet bathymetry_boundaries;
+        tsunami::r2d::RegionalBoundaryConditionSet regional_boundaries;
+        tsunami::r2d::RegionalRelaxationZoneSet relaxation_zones;
         tsunami::r2d::ShallowWaterStatePolicy state_policy;
         tsunami::r2d::RegionalTimeIntegrationPolicy time_policy;
         tsunami::core::Time default_final_time{0.05};

@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cmath>
 #include <limits>
+#include <memory>
 #include <optional>
 #include <string>
 
@@ -88,15 +89,31 @@ namespace tsunami::r2d
         RegionalSimulationState &simulation_state,
         RegionalTimeIntegrationWorkspace &workspace) -> tsunami::core::Result<RegionalSolveSummary>
     {
-        if (request.mesh == nullptr || request.bathymetry == nullptr || request.depth_boundaries == nullptr ||
-            request.momentum_x_boundaries == nullptr || request.momentum_y_boundaries == nullptr ||
-            request.bathymetry_boundaries == nullptr) {
+        if (request.mesh == nullptr || request.bathymetry == nullptr) {
             return tsunami::core::failure<RegionalSolveSummary>(solve_error(
                 "r2d.solve.request_invalid",
                 "regional solve request is missing required mesh, bathymetry or boundary references",
                 "solve_regional_model"));
         }
         const auto &mesh = *request.mesh;
+        const auto uses_physical_boundaries = request.regional_boundaries != nullptr;
+        const auto has_legacy_boundaries = request.depth_boundaries != nullptr || request.momentum_x_boundaries != nullptr ||
+                                           request.momentum_y_boundaries != nullptr || request.bathymetry_boundaries != nullptr;
+        if (uses_physical_boundaries == has_legacy_boundaries) {
+            return tsunami::core::failure<RegionalSolveSummary>(solve_error(
+                "r2d.solve.request_invalid",
+                "regional solve request must specify exactly one boundary mode",
+                "solve_regional_model",
+                &mesh));
+        }
+        auto empty_relaxation_storage = make_regional_relaxation_zone_set(mesh, {});
+        if (!empty_relaxation_storage) {
+            return tsunami::core::failure<RegionalSolveSummary>(empty_relaxation_storage.error());
+        }
+        const auto *relaxation_zones = request.relaxation_zones;
+        if (uses_physical_boundaries && relaxation_zones == nullptr) {
+            relaxation_zones = std::addressof(empty_relaxation_storage.value());
+        }
         auto state_policy_validation = validate_policy(request.state_policy);
         auto time_policy_validation = validate_regional_time_integration_policy(request.time_policy);
         if (!state_policy_validation) {
@@ -107,13 +124,31 @@ namespace tsunami::r2d
         }
         if (!std::isfinite(request.final_time) || request.final_time < simulation_state.time() ||
             !simulation_state.conserved_state().is_bound_to(mesh) || !workspace.is_bound_to(mesh) ||
-            !request.bathymetry->is_bound_to(mesh) || !request.depth_boundaries->is_complete_for(mesh) ||
-            !request.momentum_x_boundaries->is_complete_for(mesh) ||
-            !request.momentum_y_boundaries->is_complete_for(mesh) ||
-            !request.bathymetry_boundaries->is_complete_for(mesh)) {
+            !request.bathymetry->is_bound_to(mesh)) {
             return tsunami::core::failure<RegionalSolveSummary>(solve_error(
                 "r2d.solve.request_invalid",
                 "regional solve request is invalid or incompatible with the simulation state",
+                "solve_regional_model",
+                &mesh));
+        }
+        if (uses_physical_boundaries) {
+            if (!request.regional_boundaries->is_complete_for(mesh) || relaxation_zones == nullptr ||
+                !relaxation_zones->is_bound_to(mesh)) {
+                return tsunami::core::failure<RegionalSolveSummary>(solve_error(
+                    "r2d.solve.request_invalid",
+                    "regional physical boundary request is invalid or incompatible",
+                    "solve_regional_model",
+                    &mesh));
+            }
+        } else if (request.depth_boundaries == nullptr || request.momentum_x_boundaries == nullptr ||
+                   request.momentum_y_boundaries == nullptr || request.bathymetry_boundaries == nullptr ||
+                   !request.depth_boundaries->is_complete_for(mesh) ||
+                   !request.momentum_x_boundaries->is_complete_for(mesh) ||
+                   !request.momentum_y_boundaries->is_complete_for(mesh) ||
+                   !request.bathymetry_boundaries->is_complete_for(mesh)) {
+            return tsunami::core::failure<RegionalSolveSummary>(solve_error(
+                "r2d.solve.request_invalid",
+                "regional scalar boundary request is invalid or incomplete",
                 "solve_regional_model",
                 &mesh));
         }
@@ -170,20 +205,33 @@ namespace tsunami::r2d
             RegionalStepDiagnostics accepted_diagnostics;
             auto step_rejected_attempts = std::size_t{0U};
             for (std::size_t attempt = 0; attempt <= request.time_policy.maximum_stage_retries; ++attempt) {
-                auto step = attempt_regional_explicit_step(
-                    mesh,
-                    simulation_state.conserved_state(),
-                    *request.bathymetry,
-                    *request.depth_boundaries,
-                    *request.momentum_x_boundaries,
-                    *request.momentum_y_boundaries,
-                    *request.bathymetry_boundaries,
-                    request.state_policy,
-                    request.time_policy,
-                    simulation_state.time(),
-                    timestep,
-                    simulation_state.accepted_step_count(),
-                    workspace);
+                auto step = uses_physical_boundaries
+                                ? attempt_regional_explicit_step(
+                                      mesh,
+                                      simulation_state.conserved_state(),
+                                      *request.bathymetry,
+                                      *request.regional_boundaries,
+                                      *relaxation_zones,
+                                      request.state_policy,
+                                      request.time_policy,
+                                      simulation_state.time(),
+                                      timestep,
+                                      simulation_state.accepted_step_count(),
+                                      workspace)
+                                : attempt_regional_explicit_step(
+                                      mesh,
+                                      simulation_state.conserved_state(),
+                                      *request.bathymetry,
+                                      *request.depth_boundaries,
+                                      *request.momentum_x_boundaries,
+                                      *request.momentum_y_boundaries,
+                                      *request.bathymetry_boundaries,
+                                      request.state_policy,
+                                      request.time_policy,
+                                      simulation_state.time(),
+                                      timestep,
+                                      simulation_state.accepted_step_count(),
+                                      workspace);
                 if (!step) {
                     return tsunami::core::failure<RegionalSolveSummary>(step.error());
                 }

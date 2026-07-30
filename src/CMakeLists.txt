@@ -51,9 +51,12 @@ add_library(tsunami_r2d STATIC
     r2d/src/ForwardEulerUpdate.cpp
     r2d/src/HydrostaticReconstruction.cpp
     r2d/src/PositivityTimestep.cpp
+    r2d/src/RegionalBoundaryCondition.cpp
     r2d/src/RegionalBathymetry.cpp
     r2d/src/RegionalConservedState.cpp
     r2d/src/RegionalDiagnostics.cpp
+    r2d/src/RegionalExteriorState.cpp
+    r2d/src/RegionalRelaxationZone.cpp
     r2d/src/RegionalResidual.cpp
     r2d/src/RegionalResidualEvaluation.cpp
     r2d/src/RegionalSimulationState.cpp

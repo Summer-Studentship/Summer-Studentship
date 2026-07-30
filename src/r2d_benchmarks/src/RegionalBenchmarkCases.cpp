@@ -49,7 +49,9 @@ namespace tsunami::r2d_benchmarks
             StructuredTriangularMeshSpec mesh_spec,
             Real final_time,
             const std::function<Real(const tsunami::fvm::Point3 &)> &bed_function,
-            const std::function<Real(const tsunami::fvm::Point3 &, Real)> &depth_function)
+            const std::function<Real(const tsunami::fvm::Point3 &, Real)> &depth_function,
+            const std::function<Real(const tsunami::fvm::Point3 &, Real)> &velocity_x_function,
+            const std::function<Real(const tsunami::fvm::Point3 &, Real)> &velocity_y_function)
             -> tsunami::core::Result<RegionalBenchmarkCase>
         {
             auto mesh_result = make_structured_triangular_mesh(std::move(mesh_spec));
@@ -81,7 +83,10 @@ namespace tsunami::r2d_benchmarks
                 const auto centroid = mesh.cell_geometry(tsunami::fvm::CellId{index}).centroid;
                 const auto bed = bed_function(centroid);
                 bed_values.push_back(bed);
-                depth.push_back(std::max(0.0, depth_function(centroid, bed)));
+                const auto h = std::max(0.0, depth_function(centroid, bed));
+                depth.push_back(h);
+                qx[index] = h * velocity_x_function(centroid, bed);
+                qy[index] = h * velocity_y_function(centroid, bed);
             }
 
             auto bathymetry = tsunami::r2d::make_regional_bathymetry(mesh, tsunami::fvm::FieldId{"zb"}, id + " bed elevation", std::move(bed_values));
@@ -116,6 +121,20 @@ namespace tsunami::r2d_benchmarks
             if (!zb_bc) {
                 return tsunami::core::failure<RegionalBenchmarkCase>(zb_bc.error());
             }
+            auto regional_bc = tsunami::r2d::make_regional_boundary_condition_set(
+                mesh,
+                h_bc.value(),
+                qx_bc.value(),
+                qy_bc.value(),
+                zb_bc.value(),
+                {});
+            auto relaxation = tsunami::r2d::make_regional_relaxation_zone_set(mesh, {});
+            if (!regional_bc) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(regional_bc.error());
+            }
+            if (!relaxation) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(relaxation.error());
+            }
 
             return tsunami::core::success(RegionalBenchmarkCase{
                 std::move(id),
@@ -126,15 +145,81 @@ namespace tsunami::r2d_benchmarks
                 std::move(qx_bc).value(),
                 std::move(qy_bc).value(),
                 std::move(zb_bc).value(),
+                std::move(regional_bc).value(),
+                std::move(relaxation).value(),
                 state_policy.value(),
                 time_policy.value(),
                 final_time});
+        }
+
+        [[nodiscard]] auto make_outgoing_wave_case(std::string id, bool sponge)
+            -> tsunami::core::Result<RegionalBenchmarkCase>
+        {
+            constexpr auto mean_depth = Real{1.0};
+            const auto wave_speed = std::sqrt(9.81 * mean_depth);
+            auto elevation = [](const tsunami::fvm::Point3 &point) {
+                constexpr auto amp = Real{0.01};
+                constexpr auto x0 = Real{0.25};
+                constexpr auto sigma = Real{0.055};
+                const auto dx = point.x - x0;
+                return amp * std::exp(-(dx * dx) / (2.0 * sigma * sigma));
+            };
+            auto result = make_case(
+                std::move(id),
+                StructuredTriangularMeshSpec{"outgoing-linear-wave", 48U, 4U, 1.0, 0.2},
+                sponge ? 0.24 : 0.22,
+                [](const auto &) { return 0.0; },
+                [&](const auto &point, Real bed) { return (mean_depth + elevation(point)) - bed; },
+                [&](const auto &point, Real) { return (wave_speed / mean_depth) * elevation(point); },
+                [](const auto &, Real) { return 0.0; });
+            if (!result) {
+                return result;
+            }
+            auto problem = std::move(result).value();
+            problem.time_policy.maximum_timestep = 0.002;
+            auto regional = tsunami::r2d::make_regional_boundary_condition_set(
+                problem.mesh,
+                problem.depth_boundaries,
+                problem.momentum_x_boundaries,
+                problem.momentum_y_boundaries,
+                problem.bathymetry_boundaries,
+                {tsunami::r2d::RegionalBoundaryOverrideSpecification{
+                    "right",
+                    tsunami::r2d::RegionalRadiationSpecification{
+                        tsunami::r2d::RegionalFarFieldState{.free_surface_elevation = mean_depth}}}});
+            if (!regional) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(regional.error());
+            }
+            problem.regional_boundaries = std::move(regional).value();
+            std::vector<tsunami::r2d::PatchRelaxationZoneSpecification> relaxation_specs;
+            if (sponge) {
+                relaxation_specs.push_back(tsunami::r2d::PatchRelaxationZoneSpecification{
+                    .patch_tag = "right",
+                    .width = 0.25,
+                    .maximum_rate = 6.0,
+                    .profile_exponent = 2.0,
+                    .reference_state = tsunami::r2d::RegionalFarFieldState{.free_surface_elevation = mean_depth}});
+            }
+            auto relaxation = tsunami::r2d::make_regional_relaxation_zone_set(
+                problem.mesh,
+                std::move(relaxation_specs));
+            if (!relaxation) {
+                return tsunami::core::failure<RegionalBenchmarkCase>(relaxation.error());
+            }
+            problem.relaxation_zones = std::move(relaxation).value();
+            return tsunami::core::success(std::move(problem));
         }
     } // namespace
 
     auto regional_benchmark_case_ids() -> std::vector<std::string_view>
     {
-        return {"lake_at_rest_flat", "lake_at_rest_bed_step", "partially_dry_lake_at_rest", "wet_dry_dam_break"};
+        return {
+            "lake_at_rest_flat",
+            "lake_at_rest_bed_step",
+            "partially_dry_lake_at_rest",
+            "wet_dry_dam_break",
+            "outgoing_linear_wave_radiation",
+            "outgoing_linear_wave_radiation_sponge"};
     }
 
     auto make_regional_benchmark_case(std::string_view id)
@@ -146,7 +231,9 @@ namespace tsunami::r2d_benchmarks
                 StructuredTriangularMeshSpec{"lake-at-rest-flat", 4U, 2U, 1.0, 0.5},
                 0.05,
                 [](const auto &) { return 0.0; },
-                [](const auto &, Real bed) { return 1.0 - bed; });
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
         }
         if (id == "lake_at_rest_bed_step") {
             return make_case(
@@ -154,7 +241,9 @@ namespace tsunami::r2d_benchmarks
                 StructuredTriangularMeshSpec{"lake-at-rest-bed-step", 6U, 2U, 1.0, 0.5},
                 0.05,
                 [](const auto &point) { return point.x < 0.5 ? 0.0 : 0.25; },
-                [](const auto &, Real bed) { return 1.0 - bed; });
+                [](const auto &, Real bed) { return 1.0 - bed; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
         }
         if (id == "partially_dry_lake_at_rest") {
             return make_case(
@@ -162,7 +251,9 @@ namespace tsunami::r2d_benchmarks
                 StructuredTriangularMeshSpec{"partially-dry-lake-at-rest", 6U, 2U, 1.0, 0.5},
                 0.05,
                 [](const auto &point) { return point.x < 0.55 ? 0.0 : 1.2; },
-                [](const auto &, Real bed) { return std::max(0.0, 1.0 - bed); });
+                [](const auto &, Real bed) { return std::max(0.0, 1.0 - bed); },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
         }
         if (id == "wet_dry_dam_break") {
             return make_case(
@@ -170,7 +261,15 @@ namespace tsunami::r2d_benchmarks
                 StructuredTriangularMeshSpec{"wet-dry-dam-break", 8U, 2U, 1.0, 0.25},
                 0.02,
                 [](const auto &) { return 0.0; },
-                [](const auto &point, Real) { return point.x < 0.5 ? 1.5 : 0.05; });
+                [](const auto &point, Real) { return point.x < 0.5 ? 1.5 : 0.05; },
+                [](const auto &, Real) { return 0.0; },
+                [](const auto &, Real) { return 0.0; });
+        }
+        if (id == "outgoing_linear_wave_radiation") {
+            return make_outgoing_wave_case("outgoing_linear_wave_radiation", false);
+        }
+        if (id == "outgoing_linear_wave_radiation_sponge") {
+            return make_outgoing_wave_case("outgoing_linear_wave_radiation_sponge", true);
         }
         return tsunami::core::failure<RegionalBenchmarkCase>(error(
             "r2d.benchmark.case_unknown",

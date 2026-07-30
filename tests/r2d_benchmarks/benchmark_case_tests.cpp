@@ -14,6 +14,8 @@ TEST_CASE("Regional benchmark cases build complete standalone solve inputs", "[r
         REQUIRE(problem.momentum_x_boundaries.is_complete_for(problem.mesh));
         REQUIRE(problem.momentum_y_boundaries.is_complete_for(problem.mesh));
         REQUIRE(problem.bathymetry_boundaries.is_complete_for(problem.mesh));
+        REQUIRE(problem.regional_boundaries.is_complete_for(problem.mesh));
+        REQUIRE(problem.relaxation_zones.is_bound_to(problem.mesh));
     }
 }
 
@@ -29,22 +31,20 @@ TEST_CASE("Standalone regional solve loop advances every benchmark case", "[r2d]
         auto snapshots = std::size_t{0U};
         auto diagnostics = std::size_t{0U};
         auto request = tsunami::r2d::RegionalSolveRequest{
-            &problem.mesh,
-            &problem.bathymetry,
-            &problem.depth_boundaries,
-            &problem.momentum_x_boundaries,
-            &problem.momentum_y_boundaries,
-            &problem.bathymetry_boundaries,
-            problem.state_policy,
-            problem.time_policy,
-            tsunami::r2d::RegionalSnapshotOutputPolicy{true, true, std::nullopt},
-            problem.default_final_time,
-            1000U,
-            [&](const auto &) {
+            .mesh = &problem.mesh,
+            .bathymetry = &problem.bathymetry,
+            .regional_boundaries = &problem.regional_boundaries,
+            .relaxation_zones = &problem.relaxation_zones,
+            .state_policy = problem.state_policy,
+            .time_policy = problem.time_policy,
+            .output_policy = tsunami::r2d::RegionalSnapshotOutputPolicy{true, true, std::nullopt},
+            .final_time = problem.default_final_time,
+            .maximum_steps = 1000U,
+            .diagnostics_sink = [&](const auto &) {
                 ++diagnostics;
                 return tsunami::core::success();
             },
-            [&](const auto &snapshot) {
+            .snapshot_sink = [&](const auto &snapshot) {
                 ++snapshots;
                 REQUIRE(snapshot.depth.size() == problem.mesh.summary().cell_count);
                 return tsunami::core::success();

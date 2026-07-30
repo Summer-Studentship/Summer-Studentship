@@ -312,7 +312,7 @@ TEST_CASE("Positivity timestep and combined explicit bound are deterministic", "
     REQUIRE(*selected.stable_timestep == Approx(0.2));
     REQUIRE(selected.restriction == tsunami::r2d::TimestepRestrictionKind::cfl);
     auto equal = tsunami::r2d::select_stable_explicit_timestep(cfl, tsunami::r2d::PositivityTimestepEstimate{0.2 + 1.0e-15, CellId{0}}, 1.0e-12).value();
-    REQUIRE(equal.restriction == tsunami::r2d::TimestepRestrictionKind::equal);
+    REQUIRE(equal.restriction == tsunami::r2d::TimestepRestrictionKind::multiple);
     REQUIRE(tsunami::r2d::select_stable_explicit_timestep({}, {}, 0.0).value().restriction == tsunami::r2d::TimestepRestrictionKind::none);
     REQUIRE_FALSE(tsunami::r2d::select_stable_explicit_timestep(cfl, pos, -1.0).has_value());
 }

@@ -64,7 +64,9 @@ namespace tsunami::r2d_io
         }
         if (!diagnostics_header_written_) {
             file.value() << "step,start_time,end_time,timestep,scheme,attempted_stages,accepted_stages,rejected_attempts,"
-                            "maximum_signal_speed,water_volume,momentum_x,momentum_y,wet_cells,dry_cells,minimum_depth,maximum_depth\n";
+                            "maximum_signal_speed,water_volume,momentum_x,momentum_y,wet_cells,dry_cells,minimum_depth,maximum_depth,"
+                            "relaxation_zones,relaxation_active_cells,relaxation_maximum_rate,"
+                            "relaxation_mass_source_rate,relaxation_outgoing_mass_rate\n";
             diagnostics_header_written_ = true;
         }
         file.value()
@@ -83,7 +85,12 @@ namespace tsunami::r2d_io
             << diagnostics.integrals.wet_cell_count << ','
             << diagnostics.integrals.dry_cell_count << ','
             << diagnostics.integrals.minimum_depth << ','
-            << diagnostics.integrals.maximum_depth << '\n';
+            << diagnostics.integrals.maximum_depth << ','
+            << diagnostics.relaxation.zone_count << ','
+            << diagnostics.relaxation.active_cell_count << ','
+            << diagnostics.relaxation.maximum_rate << ','
+            << diagnostics.relaxation.integrated_mass_source_rate << ','
+            << diagnostics.relaxation.outgoing_mass_rate << '\n';
         return tsunami::core::success();
     }
 

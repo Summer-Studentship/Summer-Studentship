@@ -135,6 +135,14 @@ namespace tsunami::r2d
             }
             return tsunami::core::success();
         }
+
+        [[nodiscard]] auto patch_local_index(
+            const tsunami::fvm::BoundaryPatchRecord &patch,
+            tsunami::fvm::FaceId face_id) -> std::size_t
+        {
+            const auto found = std::ranges::find(patch.faces, face_id);
+            return static_cast<std::size_t>(found - patch.faces.begin());
+        }
     } // namespace
 
     WellBalancedResidualWorkspace::WellBalancedResidualWorkspace(
@@ -211,6 +219,35 @@ namespace tsunami::r2d
             std::move(residual).value(),
             std::move(spectral).value(),
             std::move(outgoing).value()});
+    }
+
+    PhysicalBoundaryResidualWorkspace::PhysicalBoundaryResidualWorkspace(
+        WellBalancedResidualWorkspace residual,
+        RegionalExteriorStateWorkspace exterior)
+        : residual_{std::move(residual)}
+        , exterior_{std::move(exterior)}
+    {
+    }
+
+    auto PhysicalBoundaryResidualWorkspace::is_bound_to(const tsunami::fvm::FiniteVolumeMesh &mesh) const -> bool
+    {
+        return residual_.is_bound_to(mesh) && exterior_.is_bound_to(mesh);
+    }
+
+    auto make_physical_boundary_residual_workspace(const tsunami::fvm::FiniteVolumeMesh &mesh)
+        -> tsunami::core::Result<PhysicalBoundaryResidualWorkspace>
+    {
+        auto residual = make_well_balanced_residual_workspace(mesh);
+        auto exterior = make_regional_exterior_state_workspace(mesh);
+        if (!residual) {
+            return tsunami::core::failure<PhysicalBoundaryResidualWorkspace>(residual.error());
+        }
+        if (!exterior) {
+            return tsunami::core::failure<PhysicalBoundaryResidualWorkspace>(exterior.error());
+        }
+        return tsunami::core::success(PhysicalBoundaryResidualWorkspace{
+            std::move(residual).value(),
+            std::move(exterior).value()});
     }
 
     auto evaluate_well_balanced_rusanov_residual(
@@ -359,6 +396,172 @@ namespace tsunami::r2d
                 workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
             }
             maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+        }
+
+        for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
+            if (!finite(workspace.residual().mass().at(index)) || !finite(workspace.residual().momentum_x().at(index)) ||
+                !finite(workspace.residual().momentum_y().at(index)) || !finite(workspace.spectral_sum().at(index)) ||
+                workspace.spectral_sum().at(index) < 0.0 || !finite(workspace.outgoing_mass_rate().at(index)) ||
+                workspace.outgoing_mass_rate().at(index) < 0.0) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "well-balanced residual outputs must be finite", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, tsunami::fvm::CellId{index}));
+            }
+        }
+
+        auto residual_copy = destination_residual.copy_values_from(workspace.residual());
+        if (!residual_copy) {
+            return tsunami::core::failure(residual_copy.error());
+        }
+        auto spectral_copy = destination_spectral_sum.copy_values_from(workspace.spectral_sum());
+        if (!spectral_copy) {
+            return tsunami::core::failure(spectral_copy.error());
+        }
+        auto outgoing_copy = destination_outgoing_mass_rate.copy_values_from(workspace.outgoing_mass_rate());
+        if (!outgoing_copy) {
+            return tsunami::core::failure(outgoing_copy.error());
+        }
+        destination_maximum_signal_speed = maximum_speed;
+        return tsunami::core::success();
+    }
+
+    auto evaluate_well_balanced_rusanov_residual(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const RegionalConservedState &state,
+        const RegionalBathymetry &bathymetry,
+        const RegionalBoundaryConditionSet &boundaries,
+        const RegionalRelaxationZoneSet &relaxation_zones,
+        const ShallowWaterStatePolicy &policy,
+        tsunami::core::Time time,
+        RegionalResidual &destination_residual,
+        tsunami::fvm::CellScalarField &destination_spectral_sum,
+        tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
+        tsunami::core::Real &destination_maximum_signal_speed,
+        PhysicalBoundaryResidualWorkspace &workspace) -> tsunami::core::Result<void>
+    {
+        const auto id = mesh_id(mesh);
+        auto policy_validation = validate_policy(policy);
+        if (!policy_validation) {
+            return tsunami::core::failure(policy_validation.error());
+        }
+        if (!finite(time) || !state.is_bound_to(mesh) || state.size() != mesh.summary().cell_count) {
+            return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.state_incompatible", "state is not bound to the mesh", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+        }
+        if (!bathymetry.is_bound_to(mesh) || bathymetry.size() != mesh.summary().cell_count ||
+            bathymetry.bed_elevation().descriptor().unit_id != bed_unit) {
+            return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.bathymetry_incompatible", "bathymetry is not bound to the mesh", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+        }
+        if (!boundaries.is_complete_for(mesh) || !relaxation_zones.is_bound_to(mesh)) {
+            return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_incompatible", "physical boundary or relaxation set is not complete for the mesh", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+        }
+        if (!destination_residual.is_bound_to(mesh) || destination_residual.size() != mesh.summary().cell_count ||
+            !destination_spectral_sum.is_bound_to(mesh) || destination_spectral_sum.size() != mesh.summary().cell_count ||
+            destination_spectral_sum.descriptor().unit_id != spectral_unit ||
+            !destination_outgoing_mass_rate.is_bound_to(mesh) || destination_outgoing_mass_rate.size() != mesh.summary().cell_count ||
+            destination_outgoing_mass_rate.descriptor().unit_id != outgoing_unit) {
+            return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.destination_incompatible", "well-balanced destinations are incompatible", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+        }
+        if (!workspace.is_bound_to(mesh)) {
+            return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.workspace_incompatible", "physical boundary residual workspace is incompatible", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+        }
+        for (std::size_t index = 0; index < mesh.geometry().cells().size(); ++index) {
+            const auto &cell = mesh.geometry().cells()[index];
+            if (!finite(cell.measure) || cell.measure <= 0.0) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "cell area must be finite and positive", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, tsunami::fvm::CellId{index}));
+            }
+        }
+        for (const auto &face_geometry : mesh.geometry().faces()) {
+            if (!finite(face_geometry.area_vector.x) || !finite(face_geometry.area_vector.y) || !finite(face_geometry.area_vector.z)) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face geometry must be finite", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id));
+            }
+        }
+        for (std::size_t index = 0; index < state.size(); ++index) {
+            auto local = validate_and_canonicalise_state(state.local_state(tsunami::fvm::CellId{index}), policy, tsunami::fvm::CellId{index});
+            if (!local || !finite(bathymetry.bed_elevation().at(index))) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.state_incompatible", "interior state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, tsunami::fvm::CellId{index}));
+            }
+        }
+
+        auto exterior = populate_regional_exterior_states(
+            mesh,
+            state,
+            bathymetry,
+            boundaries,
+            policy,
+            time,
+            workspace.exterior_workspace());
+        if (!exterior) {
+            return tsunami::core::failure(exterior.error());
+        }
+
+        workspace.residual().fill(ConservedVariables2D{});
+        workspace.spectral_sum().fill(0.0);
+        workspace.outgoing_mass_rate().fill(0.0);
+        workspace.relaxation_diagnostics() = RegionalRelaxationDiagnostics{};
+        auto maximum_speed = tsunami::core::Real{0.0};
+
+        for (const auto &face : mesh.topology().faces()) {
+            auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
+            if (!normal) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
+            }
+
+            auto left = state.local_state(face.owner);
+            auto right = ConservedVariables2D{};
+            auto left_bed = bathymetry.local_bed_elevation(face.owner);
+            auto right_bed = tsunami::core::Real{};
+            if (face.neighbour) {
+                right = state.local_state(*face.neighbour);
+                right_bed = bathymetry.local_bed_elevation(*face.neighbour);
+            } else {
+                const auto patch_id = *face.boundary_patch;
+                const auto &patch = mesh.boundary_patch(patch_id);
+                const auto local_index = patch_local_index(patch, face.id);
+                right = ConservedVariables2D{
+                    .depth = workspace.exterior_workspace().depth_patches()[patch_id.value].at(local_index),
+                    .momentum_x = workspace.exterior_workspace().momentum_x_patches()[patch_id.value].at(local_index),
+                    .momentum_y = workspace.exterior_workspace().momentum_y_patches()[patch_id.value].at(local_index)};
+                right_bed = workspace.exterior_workspace().bed_elevation_patches()[patch_id.value].at(local_index);
+                auto exterior_state = validate_and_canonicalise_state(right, policy, std::nullopt);
+                if (!exterior_state || !finite(right_bed)) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
+                }
+                right = exterior_state.value();
+            }
+
+            auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
+            if (!reconstructed) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "hydrostatic reconstruction failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(reconstructed.error().code()));
+            }
+            auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normal.value(), policy);
+            if (!flux) {
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(flux.error().code()));
+            }
+
+            const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
+            add_flux(workspace.residual(), face.owner, owner_flux, normal.value().length);
+            workspace.spectral_sum().at(face.owner.value) += flux.value().maximum_signal_speed * normal.value().length;
+            const auto integrated_mass_flux = flux.value().flux.mass * normal.value().length;
+            workspace.outgoing_mass_rate().at(face.owner.value) += std::max(integrated_mass_flux, 0.0);
+
+            if (face.neighbour) {
+                const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
+                add_flux(workspace.residual(), *face.neighbour, neighbour_flux, -normal.value().length);
+                workspace.spectral_sum().at(face.neighbour->value) += flux.value().maximum_signal_speed * normal.value().length;
+                workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
+            }
+            maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+        }
+
+        auto relaxation = apply_regional_relaxation_source(
+            mesh,
+            state,
+            bathymetry,
+            relaxation_zones,
+            policy,
+            workspace.residual(),
+            workspace.outgoing_mass_rate(),
+            workspace.relaxation_diagnostics());
+        if (!relaxation) {
+            return tsunami::core::failure(relaxation.error());
         }
 
         for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {

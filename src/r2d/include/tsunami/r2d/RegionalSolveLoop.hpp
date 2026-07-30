@@ -37,6 +37,8 @@ namespace tsunami::r2d
         const ScalarBoundaryConditionSet *momentum_x_boundaries{};
         const ScalarBoundaryConditionSet *momentum_y_boundaries{};
         const ScalarBoundaryConditionSet *bathymetry_boundaries{};
+        const RegionalBoundaryConditionSet *regional_boundaries{};
+        const RegionalRelaxationZoneSet *relaxation_zones{};
         ShallowWaterStatePolicy state_policy;
         RegionalTimeIntegrationPolicy time_policy;
         RegionalSnapshotOutputPolicy output_policy;
