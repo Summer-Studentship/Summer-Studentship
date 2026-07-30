@@ -185,7 +185,7 @@
     {
       "target_name": "tsunami_data",
       "namespaced_alias": "Tsunami::data",
-      "status": "active G1 case-configuration implementation",
+      "status": "active G1 case-configuration and dataset-manifest implementation",
       "type": "static_library",
       "wbs_owner": [
         "SWE-DAT-CFG",
@@ -224,7 +224,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns persistence-neutral case, dataset, provenance, result and checkpoint models. G1 implements JSON-only case.json parsing, semantic validation and canonical serialisation privately through nlohmann-json. Concrete HDF5 and dataset-manifest content remain outside this domain target."
+      "public_boundary_notes": "Owns persistence-neutral case, dataset, provenance, result and checkpoint models. G1 implements JSON-only case configuration, dataset manifest, provenance and lineage contracts with semantic validation and canonical serialisation privately through nlohmann-json. Concrete HDF5, geospatial import and checksum computation remain outside this domain target."
     },
     {
       "target_name": "tsunami_io_hdf5",
