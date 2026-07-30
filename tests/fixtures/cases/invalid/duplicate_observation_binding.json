@@ -1,0 +1,1 @@
+{"schema_version":"1.0.0","policy_version":"0.1","case":{},"scenario":{},"coordinate_frame":{},"datasets":{"manifest_path":"manifests/datasets.json","bindings":{"bathymetry":"a","topography":"b","earthquake_displacement":null,"prescribed_surface":null,"manning":null,"coriolis":null,"observations":["obs","obs"]}},"regional_2d":{},"outputs":{},"extensions":{}}

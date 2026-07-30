@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0.0",
+  "policy_version": "0.1",
+  "case": {
+    "case_id": "synthetic-kamaishi-r2d",
+    "case_slug": "synthetic-kamaishi-r2d",
+    "revision": 1,
+    "created_at_utc": "2026-07-30T18:00:00Z",
+    "created_by": "fixture-author"
+  },
+  "scenario": {
+    "scenario_id": "synthetic-tohoku-kamaishi",
+    "event_id": "synthetic-tohoku",
+    "target_site": "kamaishi",
+    "model_family": "regional_2d"
+  },
+  "coordinate_frame": {
+    "horizontal_crs": "EPSG:0000-synthetic",
+    "vertical_datum": "synthetic-vertical-datum",
+    "horizontal_unit": "m",
+    "vertical_unit": "m",
+    "axis_order": "east_north",
+    "vertical_positive": "down"
+  },
+  "datasets": {
+    "manifest_path": "manifests/datasets.json",
+    "bindings": {
+      "bathymetry": "bathymetry-primary",
+      "topography": "topography-primary",
+      "earthquake_displacement": null,
+      "prescribed_surface": null,
+      "manning": null,
+      "coriolis": null,
+      "observations": []
+    }
+  },
+  "regional_2d": {
+    "corridor": {
+      "trajectory_id": "kamaishi",
+      "origin": {
+        "x": 0.0,
+        "y": 0.0
+      },
+      "bearing_degrees_clockwise_from_north": 0.0,
+      "width_m": 50000.0,
+      "offshore_extent_m": 200000.0,
+      "inland_extent_m": 10000.0,
+      "narrowing": {
+        "enabled": false,
+        "inland_width_m": null
+      },
+      "sponge": {
+        "offshore_width_m": 0.0,
+        "side_width_m": 0.0
+      }
+    },
+    "physics": {
+      "gravity_m_per_s2": 9.80665,
+      "manning": {
+        "kind": "disabled",
+        "value_s_per_m_one_third": null,
+        "dataset_binding": null
+      },
+      "coriolis": {
+        "kind": "disabled",
+        "value_per_s": null,
+        "dataset_binding": null
+      },
+      "earthquake": {
+        "enabled": false,
+        "displacement_binding": null,
+        "bed_mapping": "vertical_only",
+        "surface_transfer": "passive_equal_to_effective_bed",
+        "prescribed_surface_binding": null
+      }
+    },
+    "numerics": {
+      "scheme": "ssprk3",
+      "courant_number": 0.45,
+      "positivity_safety_factor": 0.95,
+      "relaxation_safety_factor": 1.0,
+      "source_safety_factor": 1.0,
+      "minimum_timestep_s": 0.001,
+      "maximum_timestep_s": 1.0,
+      "final_time_s": 60.0,
+      "maximum_steps": 1000
+    },
+    "boundaries": {
+      "offshore": {
+        "kind": "radiation"
+      },
+      "inland": {
+        "kind": "transmissive"
+      },
+      "left_side": {
+        "kind": "radiation"
+      },
+      "right_side": {
+        "kind": "radiation"
+      },
+      "relaxation": {
+        "enabled": false,
+        "maximum_rate_per_s": null,
+        "profile_exponent": null
+      }
+    }
+  },
+  "outputs": {
+    "snapshot_interval_s": 30.0,
+    "diagnostics_enabled": true,
+    "initialisation_diagnostics_enabled": true,
+    "checkpoint_interval_s": null
+  },
+  "extensions": {}
+}
