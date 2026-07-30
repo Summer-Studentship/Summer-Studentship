@@ -91,12 +91,8 @@
       "GDAL::GDAL": [
         "tsunami_geo_gdal"
       ],
-      "PROJ": [
-        "tsunami_geo_gdal"
-      ],
-      "PROJ::proj": [
-        "tsunami_geo_gdal"
-      ]
+      "PROJ": [],
+      "PROJ::proj": []
     }
   },
   "targets": [
@@ -321,18 +317,17 @@
     {
       "target_name": "tsunami_geo",
       "namespaced_alias": "Tsunami::geo",
-      "status": "planned G1",
+      "status": "active G1 method-neutral geospatial import contracts",
       "type": "static_library",
       "wbs_owner": [
         "SWE-GEO-*"
       ],
       "conceptual_layer": "Geospatial Domain",
-      "state": "planned",
+      "state": "active",
       "classification": "domain",
       "allowed_direct_project_dependencies": [
         "tsunami_core",
-        "tsunami_data",
-        "tsunami_fvm"
+        "tsunami_data"
       ],
       "prohibited_direct_project_dependencies": [
         "tsunami_cli",
@@ -359,19 +354,18 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns method-neutral corridor, terrain, barrier and geometry contracts. GDAL, PROJ and Gmsh types must not become mandatory public-domain types."
+      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation and canonical import-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
     },
     {
       "target_name": "tsunami_geo_gdal",
       "namespaced_alias": null,
-      "status": "planned G1 optional feature",
+      "status": "active G1 optional GDAL geospatial import adapter",
       "type": "static_library",
       "wbs_owner": [
-        "SWE-GEO-IMP",
-        "SWE-GEO-CRS"
+        "SWE-GEO-IMP"
       ],
       "conceptual_layer": "Geospatial Adapter",
-      "state": "planned",
+      "state": "active",
       "classification": "adapter",
       "implements_contracts": [
         "tsunami_geo"
@@ -396,17 +390,17 @@
         "tsunami_diagnostics_matplot"
       ],
       "owned_external_dependencies": [
-        "GDAL",
-        "PROJ"
+        "GDAL"
       ],
       "prohibited_external_dependencies": [
         "Qt",
         "CLI11",
         "Catch2",
         "HDF5",
+        "PROJ",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns GDAL/PROJ-specific raster, vector, CRS and datum implementation. The tsunami_geo target must not depend on this adapter."
+      "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction and error translation behind the tsunami_geo contracts. G1 does not call PROJ transformation APIs, and the tsunami_geo target must not depend on this adapter."
     },
     {
       "target_name": "tsunami_mesh_gmsh",

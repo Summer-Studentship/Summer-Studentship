@@ -1,0 +1,12 @@
+{
+  "component": "vertical",
+  "reference_kind": "mean_sea_level",
+  "origin": "provider_documentation",
+  "status": "conflicting",
+  "datum_name": "Fixture conflicting vertical datum",
+  "unit": "m",
+  "positive_direction": "down",
+  "source_document_title": "Synthetic conflicting vertical-sign fixture",
+  "source_document_uri": "https://example.test/tsunami/conflicting-vertical-sign",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}

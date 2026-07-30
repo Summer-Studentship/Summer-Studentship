@@ -56,6 +56,15 @@
       }
     },
     {
+      "name": "geospatial-tests-base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "TSUNAMI_ENABLE_GEOSPATIAL": "ON",
+        "VCPKG_MANIFEST_FEATURES": "tests;geospatial"
+      }
+    },
+    {
       "name": "gui-base",
       "hidden": true,
       "cacheVariables": {
@@ -81,6 +90,19 @@
       "inherits": [
         "linux-gcc-base",
         "tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-gcc-geospatial-test",
+      "displayName": "Linux GCC geospatial test build",
+      "inherits": [
+        "linux-gcc-base",
+        "geospatial-tests-base"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -141,6 +163,19 @@
       "inherits": [
         "linux-clang-base",
         "tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-clang-geospatial-test",
+      "displayName": "Linux Clang geospatial test build",
+      "inherits": [
+        "linux-clang-base",
+        "geospatial-tests-base"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -234,6 +269,15 @@
       ]
     },
     {
+      "name": "linux-gcc-geospatial-test-build",
+      "configurePreset": "linux-gcc-geospatial-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
       "name": "linux-gcc-release-build",
       "configurePreset": "linux-gcc-release",
       "targets": [
@@ -270,6 +314,15 @@
     {
       "name": "linux-clang-test-build",
       "configurePreset": "linux-clang-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "linux-clang-geospatial-test-build",
+      "configurePreset": "linux-clang-geospatial-test",
       "targets": [
         "tsunami_core",
         "tsunami_cli",
@@ -334,6 +387,13 @@
       }
     },
     {
+      "name": "linux-gcc-geospatial-test-run",
+      "configurePreset": "linux-gcc-geospatial-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
       "name": "linux-gcc-ci-test",
       "configurePreset": "linux-gcc-ci",
       "output": {
@@ -343,6 +403,13 @@
     {
       "name": "linux-clang-test-run",
       "configurePreset": "linux-clang-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-clang-geospatial-test-run",
+      "configurePreset": "linux-clang-geospatial-test",
       "output": {
         "outputOnFailure": true
       }
@@ -383,6 +450,23 @@
       ]
     },
     {
+      "name": "linux-gcc-geospatial-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-geospatial-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-geospatial-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-geospatial-test-run"
+        }
+      ]
+    },
+    {
       "name": "linux-gcc-ci-workflow",
       "steps": [
         {
@@ -413,6 +497,23 @@
         {
           "type": "test",
           "name": "linux-clang-test-run"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang-geospatial-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang-geospatial-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang-geospatial-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang-geospatial-test-run"
         }
       ]
     },

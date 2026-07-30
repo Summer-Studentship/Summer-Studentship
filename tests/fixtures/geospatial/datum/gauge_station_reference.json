@@ -1,0 +1,16 @@
+{
+  "component": "vertical",
+  "reference_kind": "tide_gauge_reference",
+  "origin": "station_metadata",
+  "status": "authoritative_declared",
+  "datum_name": "Fixture tide-gauge zero",
+  "datum_realisation": "station-local",
+  "station_id": "FIXTURE-GAUGE-001",
+  "unit": "m",
+  "positive_direction": "up",
+  "effective_from": "2011-03-01",
+  "effective_to": "2011-03-31",
+  "source_document_title": "Synthetic tide-gauge station metadata fixture",
+  "source_document_uri": "https://example.test/tsunami/gauge-station-reference",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}

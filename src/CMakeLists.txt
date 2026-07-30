@@ -59,6 +59,53 @@ target_link_libraries(tsunami_data
 )
 tsunami_apply_compiler_warnings(tsunami_data)
 
+add_library(tsunami_geo STATIC
+    geo/src/GeospatialImport.cpp
+    geo/src/GeospatialImportRecord.cpp
+    geo/src/GeospatialImportSerialisation.cpp
+    geo/src/ImportedRaster.cpp
+    geo/src/ImportedVector.cpp
+    geo/src/SpatialReferenceEvidence.cpp
+)
+add_library(Tsunami::geo ALIAS tsunami_geo)
+target_include_directories(tsunami_geo
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/geo/include>
+        $<INSTALL_INTERFACE:include>
+)
+target_compile_features(tsunami_geo PUBLIC cxx_std_20)
+target_link_libraries(tsunami_geo
+    PUBLIC
+        tsunami_core
+        tsunami_data
+)
+tsunami_apply_compiler_warnings(tsunami_geo)
+
+if(TSUNAMI_ENABLE_GEOSPATIAL)
+    find_package(GDAL CONFIG REQUIRED)
+    add_library(tsunami_geo_gdal STATIC
+        geo_gdal/src/GdalGeospatialImporter.cpp
+        geo_gdal/src/GdalMetadataExtraction.cpp
+        geo_gdal/src/GdalRasterImporter.cpp
+        geo_gdal/src/GdalVectorImporter.cpp
+    )
+    target_include_directories(tsunami_geo_gdal
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/geo_gdal/include>
+            $<INSTALL_INTERFACE:include>
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/geo_gdal/src
+    )
+    target_compile_features(tsunami_geo_gdal PUBLIC cxx_std_20)
+    target_link_libraries(tsunami_geo_gdal
+        PUBLIC
+            tsunami_geo
+        PRIVATE
+            GDAL::GDAL
+    )
+    tsunami_apply_compiler_warnings(tsunami_geo_gdal)
+endif()
+
 add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC

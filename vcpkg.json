@@ -39,7 +39,10 @@
       "dependencies": [
         {
           "name": "gdal",
-          "default-features": false
+          "default-features": false,
+          "features": [
+            "sqlite3"
+          ]
         },
         {
           "name": "proj",

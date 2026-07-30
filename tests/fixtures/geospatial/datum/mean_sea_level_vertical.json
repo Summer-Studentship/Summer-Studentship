@@ -1,0 +1,12 @@
+{
+  "component": "vertical",
+  "reference_kind": "mean_sea_level",
+  "origin": "manifest_declaration",
+  "status": "dataset_declared",
+  "datum_name": "mean_sea_level",
+  "unit": "m",
+  "positive_direction": "up",
+  "source_document_title": "Fixture datum register",
+  "source_document_uri": "https://example.test/tsunami/fixture-datum-register",
+  "accessed_at_utc": "2026-07-30T00:00:00Z"
+}

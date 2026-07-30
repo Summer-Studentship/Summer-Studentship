@@ -31,6 +31,7 @@ target_link_libraries(tsunami_tests
         tsunami_application
         tsunami_fvm
         tsunami_data
+        tsunami_geo
         tsunami_r2d
         tsunami_r2d_benchmarks
         tsunami_r2d_io
@@ -40,6 +41,14 @@ target_link_libraries(tsunami_tests
 )
 
 tsunami_apply_compiler_warnings(tsunami_tests)
+
+if(TSUNAMI_ENABLE_GEOSPATIAL)
+    target_sources(tsunami_tests PRIVATE
+        geo_gdal/gdal_geospatial_import_tests.cpp
+    )
+    target_link_libraries(tsunami_tests PRIVATE tsunami_geo_gdal)
+    target_compile_definitions(tsunami_tests PRIVATE TSUNAMI_ENABLE_GEOSPATIAL=1)
+endif()
 
 include(Catch)
 catch_discover_tests(tsunami_tests)
