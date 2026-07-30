@@ -55,12 +55,15 @@ add_library(tsunami_r2d STATIC
     r2d/src/RegionalBathymetry.cpp
     r2d/src/RegionalConservedState.cpp
     r2d/src/RegionalDiagnostics.cpp
+    r2d/src/RegionalEarthquakeDiagnostics.cpp
+    r2d/src/RegionalEarthquakeInitialisation.cpp
     r2d/src/RegionalExteriorState.cpp
     r2d/src/RegionalRelaxationZone.cpp
     r2d/src/RegionalResidual.cpp
     r2d/src/RegionalResidualEvaluation.cpp
     r2d/src/RegionalSimulationState.cpp
     r2d/src/RegionalSnapshot.cpp
+    r2d/src/RegionalSeabedDisplacement.cpp
     r2d/src/RegionalSolveLoop.cpp
     r2d/src/RegionalSourceTerms.cpp
     r2d/src/RegionalSourceTimestep.cpp
