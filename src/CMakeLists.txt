@@ -59,6 +59,28 @@ target_link_libraries(tsunami_data
 )
 tsunami_apply_compiler_warnings(tsunami_data)
 
+add_library(tsunami_geo STATIC
+    geo/src/GeospatialImport.cpp
+    geo/src/GeospatialImportRecord.cpp
+    geo/src/GeospatialImportSerialisation.cpp
+    geo/src/ImportedRaster.cpp
+    geo/src/ImportedVector.cpp
+    geo/src/SpatialReferenceEvidence.cpp
+)
+add_library(Tsunami::geo ALIAS tsunami_geo)
+target_include_directories(tsunami_geo
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/geo/include>
+        $<INSTALL_INTERFACE:include>
+)
+target_compile_features(tsunami_geo PUBLIC cxx_std_20)
+target_link_libraries(tsunami_geo
+    PUBLIC
+        tsunami_core
+        tsunami_data
+)
+tsunami_apply_compiler_warnings(tsunami_geo)
+
 add_subdirectory(application)
 
 add_library(tsunami_r2d STATIC
