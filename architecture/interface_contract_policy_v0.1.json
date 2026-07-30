@@ -15,6 +15,9 @@
     "src/coupling/include",
     "src/application/include"
   ],
+  "rules": {
+    "production_library_types": ["interface_library", "static_library", "shared_library"]
+  },
   "classifications": {
     "ownership": ["owning_value", "borrowed_view", "exclusive_interface_ownership", "shared_immutable"],
     "mutability": ["immutable", "read_only_view", "transactional_write", "append_only"],
@@ -126,9 +129,18 @@
       "owning_target": "tsunami_r2d",
       "owning_namespace": "tsunami::r2d",
       "owning_wbs": "SWE-ARC-API-WP1",
-      "public_headers": ["src/r2d/include/tsunami/r2d/Solver.hpp"],
-      "permitted_consumer_targets": ["tsunami_r2d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
-      "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
+      "public_headers": [
+        "src/r2d/include/tsunami/r2d/Solver.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalConservedState.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalBathymetry.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalTimeIntegration.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalSimulationState.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalDiagnostics.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalSnapshot.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalSolveLoop.hpp"
+      ],
+      "permitted_consumer_targets": ["tsunami_r2d", "tsunami_r2d_io", "tsunami_r2d_benchmarks", "tsunami_r2d_benchmark", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_dependency_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data"],
       "prohibited_dependency_targets": ["tsunami_l3d", "tsunami_coupling", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::", "tsunami::l3d"],
       "ownership_model": "borrowed_view",

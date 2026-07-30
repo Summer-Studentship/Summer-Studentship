@@ -73,8 +73,11 @@ def read_headers(families: dict[str, dict]) -> dict[Path, str]:
     return headers
 
 
-def validate_targets(policy: dict, families: dict[str, dict], targets: dict[str, dict]) -> None:
+def validate_targets(policy: dict, families: dict[str, dict], targets_policy: dict, targets: dict[str, dict]) -> None:
     known = set(targets)
+    production_library_types = set(targets_policy.get("rules", {}).get("production_library_types", []))
+    if not production_library_types:
+        production_library_types = {"interface_library", "static_library", "shared_library"}
     for family_name, family in families.items():
         owner = family.get("owning_target")
         if owner not in targets:
@@ -88,9 +91,10 @@ def validate_targets(policy: dict, families: dict[str, dict], targets: dict[str,
             target = targets[owner]
             if target.get("state") != "active":
                 raise ValidationError(f"{owner}: active contract target is not active in target policy")
-            if target.get("type") != "interface_library":
-                raise ValidationError(f"{owner}: active contract target must be interface_library")
-            if "contract scaffold" not in target.get("status", ""):
+            target_type = target.get("type")
+            if target_type not in production_library_types:
+                raise ValidationError(f"{owner}: active contract target must be a production library type")
+            if target_type == "interface_library" and "contract scaffold" not in target.get("status", ""):
                 raise ValidationError(f"{owner}: target status must record contract scaffold")
             target_deps = set(target.get("allowed_direct_project_dependencies", []))
             if not dependencies.issubset(target_deps):
@@ -222,7 +226,7 @@ def main(argv: list[str] | None = None) -> int:
         validate_references(policy, targets_policy, layers_policy, cases_policy)
         targets = index_by(targets_policy.get("targets", []), "target_name", "targets")
         families = index_by(policy.get("contract_families", []), "name", "contract families")
-        validate_targets(policy, families, targets)
+        validate_targets(policy, families, targets_policy, targets)
         validate_classifications(policy, families)
         headers = read_headers(families)
         validate_forbidden_tokens(families, headers)
