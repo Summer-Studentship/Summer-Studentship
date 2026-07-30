@@ -228,4 +228,41 @@ namespace tsunami::r2d
         return tsunami::core::success(selected);
     }
 
+    auto select_stable_explicit_timestep(
+        const CflTimestepEstimate &cfl,
+        const PositivityTimestepEstimate &positivity,
+        const RelaxationTimestepEstimate &relaxation,
+        const RegionalSourceTimestepEstimate &source,
+        tsunami::core::Real comparison_tolerance) -> tsunami::core::Result<StableExplicitTimestepEstimate>
+    {
+        if (!std::isfinite(comparison_tolerance) || comparison_tolerance < 0.0 ||
+            !valid_estimate_value(cfl.stable_timestep) || !valid_estimate_value(positivity.stable_timestep) ||
+            !valid_estimate_value(relaxation.stable_timestep) || !valid_estimate_value(source.stable_timestep) ||
+            !std::isfinite(relaxation.maximum_rate) || relaxation.maximum_rate < 0.0 ||
+            !std::isfinite(source.maximum_manning_rate) || source.maximum_manning_rate < 0.0 ||
+            !std::isfinite(source.maximum_coriolis_rate) || source.maximum_coriolis_rate < 0.0) {
+            return tsunami::core::failure<StableExplicitTimestepEstimate>(detail::r2d_error(
+                "r2d.timestep.estimate_invalid",
+                "timestep estimates and comparison tolerance must be finite and valid",
+                "select_stable_explicit_timestep",
+                "SWE-R2D-TIM"));
+        }
+        if (cfl.stable_timestep.has_value() != cfl.limiting_cell.has_value() ||
+            positivity.stable_timestep.has_value() != positivity.limiting_cell.has_value() ||
+            relaxation.stable_timestep.has_value() != relaxation.limiting_cell.has_value() ||
+            source.stable_timestep.has_value() != source.limiting_cell.has_value()) {
+            return tsunami::core::failure<StableExplicitTimestepEstimate>(detail::r2d_error(
+                "r2d.timestep.estimate_invalid",
+                "timestep estimate must provide limiting cell with its stable timestep",
+                "select_stable_explicit_timestep",
+                "SWE-R2D-TIM"));
+        }
+        StableExplicitTimestepEstimate selected;
+        select_candidate(selected, cfl.stable_timestep, cfl.limiting_cell, TimestepRestrictionKind::cfl, comparison_tolerance);
+        select_candidate(selected, positivity.stable_timestep, positivity.limiting_cell, TimestepRestrictionKind::positivity, comparison_tolerance);
+        select_candidate(selected, relaxation.stable_timestep, relaxation.limiting_cell, TimestepRestrictionKind::relaxation, comparison_tolerance);
+        select_candidate(selected, source.stable_timestep, source.limiting_cell, TimestepRestrictionKind::source, comparison_tolerance);
+        return tsunami::core::success(selected);
+    }
+
 } // namespace tsunami::r2d

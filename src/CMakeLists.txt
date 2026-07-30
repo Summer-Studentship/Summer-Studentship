@@ -62,6 +62,9 @@ add_library(tsunami_r2d STATIC
     r2d/src/RegionalSimulationState.cpp
     r2d/src/RegionalSnapshot.cpp
     r2d/src/RegionalSolveLoop.cpp
+    r2d/src/RegionalSourceTerms.cpp
+    r2d/src/RegionalSourceTimestep.cpp
+    r2d/src/RegionalSourceUpdate.cpp
     r2d/src/RegionalStateCombination.cpp
     r2d/src/RegionalTimeIntegration.cpp
     r2d/src/RusanovFlux.cpp
