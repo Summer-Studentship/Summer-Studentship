@@ -4,6 +4,7 @@
 
 #include <tsunami/r2d/ExplicitIntegration.hpp>
 #include <tsunami/r2d/PositivityTimestep.hpp>
+#include <tsunami/r2d/RegionalRelaxationZone.hpp>
 #include <tsunami/r2d/WetDryUpdate.hpp>
 
 namespace tsunami::r2d
@@ -31,6 +32,7 @@ namespace tsunami::r2d
         std::size_t rejected_attempts{};
         tsunami::core::Real maximum_signal_speed{};
         StableExplicitTimestepEstimate stable_timestep;
+        RegionalRelaxationDiagnostics relaxation;
         WetDryUpdateDiagnostics wet_dry;
         RegionalIntegralDiagnostics integrals;
     };

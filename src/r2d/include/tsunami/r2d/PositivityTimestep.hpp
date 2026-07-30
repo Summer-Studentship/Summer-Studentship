@@ -4,6 +4,7 @@
 
 #include <tsunami/r2d/CflTimestep.hpp>
 #include <tsunami/r2d/RegionalConservedState.hpp>
+#include <tsunami/r2d/RegionalRelaxationZone.hpp>
 
 namespace tsunami::r2d
 {
@@ -18,6 +19,8 @@ namespace tsunami::r2d
         none,
         cfl,
         positivity,
+        relaxation,
+        multiple,
         equal
     };
 
@@ -37,6 +40,12 @@ namespace tsunami::r2d
     [[nodiscard]] auto select_stable_explicit_timestep(
         const CflTimestepEstimate &cfl,
         const PositivityTimestepEstimate &positivity,
+        tsunami::core::Real comparison_tolerance) -> tsunami::core::Result<StableExplicitTimestepEstimate>;
+
+    [[nodiscard]] auto select_stable_explicit_timestep(
+        const CflTimestepEstimate &cfl,
+        const PositivityTimestepEstimate &positivity,
+        const RelaxationTimestepEstimate &relaxation,
         tsunami::core::Real comparison_tolerance) -> tsunami::core::Result<StableExplicitTimestepEstimate>;
 
 } // namespace tsunami::r2d

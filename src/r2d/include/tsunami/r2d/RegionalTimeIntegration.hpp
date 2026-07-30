@@ -15,6 +15,7 @@ namespace tsunami::r2d
         ExplicitIntegrationScheme scheme{ExplicitIntegrationScheme::ssprk3};
         tsunami::core::Real courant_number{0.45};
         tsunami::core::Real positivity_safety_factor{0.95};
+        tsunami::core::Real relaxation_safety_factor{1.0};
         tsunami::core::Real timestep_comparison_tolerance{1.0e-12};
         tsunami::core::Real minimum_timestep{1.0e-12};
         tsunami::core::Real maximum_timestep{1.0};
@@ -45,6 +46,7 @@ namespace tsunami::r2d
             RegionalConservedState candidate,
             RegionalStateCombinationWorkspace combination,
             WellBalancedResidualWorkspace residual,
+            PhysicalBoundaryResidualWorkspace physical_residual,
             WetDryUpdateWorkspace wet_dry,
             tsunami::fvm::CellScalarField free_surface);
 
@@ -60,6 +62,7 @@ namespace tsunami::r2d
         [[nodiscard]] auto candidate() const noexcept -> const RegionalConservedState & { return candidate_; }
         [[nodiscard]] auto combination() noexcept -> RegionalStateCombinationWorkspace & { return combination_; }
         [[nodiscard]] auto residual_workspace() noexcept -> WellBalancedResidualWorkspace & { return residual_; }
+        [[nodiscard]] auto physical_residual_workspace() noexcept -> PhysicalBoundaryResidualWorkspace & { return physical_residual_; }
         [[nodiscard]] auto wet_dry_workspace() noexcept -> WetDryUpdateWorkspace & { return wet_dry_; }
         [[nodiscard]] auto free_surface_workspace() noexcept -> tsunami::fvm::CellScalarField & { return free_surface_; }
         [[nodiscard]] auto is_bound_to(const tsunami::fvm::FiniteVolumeMesh &mesh) const -> bool;
@@ -71,6 +74,7 @@ namespace tsunami::r2d
         RegionalConservedState candidate_;
         RegionalStateCombinationWorkspace combination_;
         WellBalancedResidualWorkspace residual_;
+        PhysicalBoundaryResidualWorkspace physical_residual_;
         WetDryUpdateWorkspace wet_dry_;
         tsunami::fvm::CellScalarField free_surface_;
     };
@@ -97,6 +101,19 @@ namespace tsunami::r2d
         const ScalarBoundaryConditionSet &momentum_x_boundaries,
         const ScalarBoundaryConditionSet &momentum_y_boundaries,
         const ScalarBoundaryConditionSet &bathymetry_boundaries,
+        const ShallowWaterStatePolicy &state_policy,
+        const RegionalTimeIntegrationPolicy &time_policy,
+        tsunami::core::Time start_time,
+        tsunami::core::Real timestep,
+        std::size_t step_index,
+        RegionalTimeIntegrationWorkspace &workspace) -> tsunami::core::Result<RegionalStepAttemptResult>;
+
+    [[nodiscard]] auto attempt_regional_explicit_step(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const RegionalConservedState &current,
+        const RegionalBathymetry &bathymetry,
+        const RegionalBoundaryConditionSet &boundaries,
+        const RegionalRelaxationZoneSet &relaxation_zones,
         const ShallowWaterStatePolicy &state_policy,
         const RegionalTimeIntegrationPolicy &time_policy,
         tsunami::core::Time start_time,

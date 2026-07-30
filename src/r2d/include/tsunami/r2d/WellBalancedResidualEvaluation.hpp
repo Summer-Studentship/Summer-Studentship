@@ -7,6 +7,8 @@
 #include <tsunami/fvm/BoundaryPatchField.hpp>
 #include <tsunami/r2d/HydrostaticReconstruction.hpp>
 #include <tsunami/r2d/RegionalBathymetry.hpp>
+#include <tsunami/r2d/RegionalExteriorState.hpp>
+#include <tsunami/r2d/RegionalRelaxationZone.hpp>
 #include <tsunami/r2d/RegionalResidualEvaluation.hpp>
 
 namespace tsunami::r2d
@@ -60,6 +62,38 @@ namespace tsunami::r2d
     [[nodiscard]] auto make_well_balanced_residual_workspace(const tsunami::fvm::FiniteVolumeMesh &mesh)
         -> tsunami::core::Result<WellBalancedResidualWorkspace>;
 
+    class PhysicalBoundaryResidualWorkspace
+    {
+    public:
+        PhysicalBoundaryResidualWorkspace(const PhysicalBoundaryResidualWorkspace &) = delete;
+        auto operator=(const PhysicalBoundaryResidualWorkspace &) -> PhysicalBoundaryResidualWorkspace & = delete;
+        PhysicalBoundaryResidualWorkspace(PhysicalBoundaryResidualWorkspace &&) noexcept = default;
+        auto operator=(PhysicalBoundaryResidualWorkspace &&) noexcept -> PhysicalBoundaryResidualWorkspace & = default;
+
+        [[nodiscard]] auto residual_workspace() noexcept -> WellBalancedResidualWorkspace & { return residual_; }
+        [[nodiscard]] auto exterior_workspace() noexcept -> RegionalExteriorStateWorkspace & { return exterior_; }
+        [[nodiscard]] auto relaxation_diagnostics() noexcept -> RegionalRelaxationDiagnostics & { return relaxation_; }
+        [[nodiscard]] auto residual() noexcept -> RegionalResidual & { return residual_.residual(); }
+        [[nodiscard]] auto spectral_sum() noexcept -> tsunami::fvm::CellScalarField & { return residual_.spectral_sum(); }
+        [[nodiscard]] auto outgoing_mass_rate() noexcept -> tsunami::fvm::CellScalarField & { return residual_.outgoing_mass_rate(); }
+        [[nodiscard]] auto is_bound_to(const tsunami::fvm::FiniteVolumeMesh &mesh) const -> bool;
+
+    private:
+        friend auto make_physical_boundary_residual_workspace(const tsunami::fvm::FiniteVolumeMesh &mesh)
+            -> tsunami::core::Result<PhysicalBoundaryResidualWorkspace>;
+
+        PhysicalBoundaryResidualWorkspace(
+            WellBalancedResidualWorkspace residual,
+            RegionalExteriorStateWorkspace exterior);
+
+        WellBalancedResidualWorkspace residual_;
+        RegionalExteriorStateWorkspace exterior_;
+        RegionalRelaxationDiagnostics relaxation_;
+    };
+
+    [[nodiscard]] auto make_physical_boundary_residual_workspace(const tsunami::fvm::FiniteVolumeMesh &mesh)
+        -> tsunami::core::Result<PhysicalBoundaryResidualWorkspace>;
+
     auto evaluate_well_balanced_rusanov_residual(
         const tsunami::fvm::FiniteVolumeMesh &mesh,
         const RegionalConservedState &state,
@@ -74,5 +108,19 @@ namespace tsunami::r2d
         tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
         tsunami::core::Real &destination_maximum_signal_speed,
         WellBalancedResidualWorkspace &workspace) -> tsunami::core::Result<void>;
+
+    auto evaluate_well_balanced_rusanov_residual(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const RegionalConservedState &state,
+        const RegionalBathymetry &bathymetry,
+        const RegionalBoundaryConditionSet &boundaries,
+        const RegionalRelaxationZoneSet &relaxation_zones,
+        const ShallowWaterStatePolicy &policy,
+        tsunami::core::Time time,
+        RegionalResidual &destination_residual,
+        tsunami::fvm::CellScalarField &destination_spectral_sum,
+        tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
+        tsunami::core::Real &destination_maximum_signal_speed,
+        PhysicalBoundaryResidualWorkspace &workspace) -> tsunami::core::Result<void>;
 
 } // namespace tsunami::r2d

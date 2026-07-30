@@ -12,6 +12,34 @@ namespace tsunami::r2d
         {
             return !value || (std::isfinite(*value) && *value > 0.0);
         }
+
+        auto select_candidate(
+            StableExplicitTimestepEstimate &selected,
+            std::optional<tsunami::core::Real> timestep,
+            std::optional<tsunami::fvm::CellId> limiting_cell,
+            TimestepRestrictionKind restriction,
+            tsunami::core::Real comparison_tolerance) -> void
+        {
+            if (!timestep) {
+                return;
+            }
+            if (!selected.stable_timestep) {
+                selected = StableExplicitTimestepEstimate{timestep, limiting_cell, restriction};
+                return;
+            }
+            const auto diff = std::abs(*timestep - *selected.stable_timestep);
+            if (diff <= comparison_tolerance) {
+                selected.stable_timestep = std::min(*selected.stable_timestep, *timestep);
+                selected.restriction = TimestepRestrictionKind::multiple;
+                if (!selected.limiting_cell) {
+                    selected.limiting_cell = limiting_cell;
+                }
+                return;
+            }
+            if (*timestep < *selected.stable_timestep) {
+                selected = StableExplicitTimestepEstimate{timestep, limiting_cell, restriction};
+            }
+        }
     } // namespace
 
     auto estimate_positivity_timestep(
@@ -160,12 +188,44 @@ namespace tsunami::r2d
         }
         const auto diff = std::abs(*cfl.stable_timestep - *positivity.stable_timestep);
         if (diff <= comparison_tolerance) {
-            return tsunami::core::success(StableExplicitTimestepEstimate{std::min(*cfl.stable_timestep, *positivity.stable_timestep), cfl.limiting_cell, TimestepRestrictionKind::equal});
+            return tsunami::core::success(StableExplicitTimestepEstimate{std::min(*cfl.stable_timestep, *positivity.stable_timestep), cfl.limiting_cell, TimestepRestrictionKind::multiple});
         }
         if (*cfl.stable_timestep < *positivity.stable_timestep) {
             return tsunami::core::success(StableExplicitTimestepEstimate{cfl.stable_timestep, cfl.limiting_cell, TimestepRestrictionKind::cfl});
         }
         return tsunami::core::success(StableExplicitTimestepEstimate{positivity.stable_timestep, positivity.limiting_cell, TimestepRestrictionKind::positivity});
+    }
+
+    auto select_stable_explicit_timestep(
+        const CflTimestepEstimate &cfl,
+        const PositivityTimestepEstimate &positivity,
+        const RelaxationTimestepEstimate &relaxation,
+        tsunami::core::Real comparison_tolerance) -> tsunami::core::Result<StableExplicitTimestepEstimate>
+    {
+        if (!std::isfinite(comparison_tolerance) || comparison_tolerance < 0.0 ||
+            !valid_estimate_value(cfl.stable_timestep) || !valid_estimate_value(positivity.stable_timestep) ||
+            !valid_estimate_value(relaxation.stable_timestep) || !std::isfinite(relaxation.maximum_rate) ||
+            relaxation.maximum_rate < 0.0) {
+            return tsunami::core::failure<StableExplicitTimestepEstimate>(detail::r2d_error(
+                "r2d.timestep.estimate_invalid",
+                "timestep estimates and comparison tolerance must be finite and valid",
+                "select_stable_explicit_timestep",
+                "SWE-R2D-TIM"));
+        }
+        if (cfl.stable_timestep.has_value() != cfl.limiting_cell.has_value() ||
+            positivity.stable_timestep.has_value() != positivity.limiting_cell.has_value() ||
+            relaxation.stable_timestep.has_value() != relaxation.limiting_cell.has_value()) {
+            return tsunami::core::failure<StableExplicitTimestepEstimate>(detail::r2d_error(
+                "r2d.timestep.estimate_invalid",
+                "timestep estimate must provide limiting cell with its stable timestep",
+                "select_stable_explicit_timestep",
+                "SWE-R2D-TIM"));
+        }
+        StableExplicitTimestepEstimate selected;
+        select_candidate(selected, cfl.stable_timestep, cfl.limiting_cell, TimestepRestrictionKind::cfl, comparison_tolerance);
+        select_candidate(selected, positivity.stable_timestep, positivity.limiting_cell, TimestepRestrictionKind::positivity, comparison_tolerance);
+        select_candidate(selected, relaxation.stable_timestep, relaxation.limiting_cell, TimestepRestrictionKind::relaxation, comparison_tolerance);
+        return tsunami::core::success(selected);
     }
 
 } // namespace tsunami::r2d

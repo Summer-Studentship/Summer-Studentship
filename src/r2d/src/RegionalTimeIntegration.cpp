@@ -99,6 +99,54 @@ namespace tsunami::r2d
             return tsunami::core::success(limit);
         }
 
+        [[nodiscard]] auto evaluate_physical_stage_limit(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalConservedState &state,
+            const RegionalBathymetry &bathymetry,
+            const RegionalBoundaryConditionSet &boundaries,
+            const RegionalRelaxationZoneSet &relaxation_zones,
+            const ShallowWaterStatePolicy &state_policy,
+            const RegionalTimeIntegrationPolicy &time_policy,
+            tsunami::core::Time time,
+            PhysicalBoundaryResidualWorkspace &workspace) -> tsunami::core::Result<StageLimit>
+        {
+            StageLimit limit;
+            auto residual = evaluate_well_balanced_rusanov_residual(
+                mesh,
+                state,
+                bathymetry,
+                boundaries,
+                relaxation_zones,
+                state_policy,
+                time,
+                workspace.residual(),
+                workspace.spectral_sum(),
+                workspace.outgoing_mass_rate(),
+                limit.maximum_signal_speed,
+                workspace);
+            if (!residual) {
+                return tsunami::core::failure<StageLimit>(residual.error());
+            }
+            auto cfl = estimate_cfl_timestep(mesh, workspace.spectral_sum(), time_policy.courant_number);
+            if (!cfl) {
+                return tsunami::core::failure<StageLimit>(cfl.error());
+            }
+            auto positivity = estimate_positivity_timestep(mesh, state, workspace.outgoing_mass_rate(), time_policy.positivity_safety_factor);
+            if (!positivity) {
+                return tsunami::core::failure<StageLimit>(positivity.error());
+            }
+            auto relaxation = estimate_relaxation_timestep(mesh, relaxation_zones, time_policy.relaxation_safety_factor);
+            if (!relaxation) {
+                return tsunami::core::failure<StageLimit>(relaxation.error());
+            }
+            auto stable = select_stable_explicit_timestep(cfl.value(), positivity.value(), relaxation.value(), time_policy.timestep_comparison_tolerance);
+            if (!stable) {
+                return tsunami::core::failure<StageLimit>(stable.error());
+            }
+            limit.stable = stable.value();
+            return tsunami::core::success(limit);
+        }
+
         [[nodiscard]] auto retry_result(
             const RegionalStepDiagnostics &diagnostics,
             const StableExplicitTimestepEstimate &stable) -> RegionalStepAttemptResult
@@ -164,6 +212,64 @@ namespace tsunami::r2d
             diagnostics.wet_dry = wet_dry;
             return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
         }
+
+        [[nodiscard]] auto physical_euler_stage(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalConservedState &source,
+            const RegionalBathymetry &bathymetry,
+            const RegionalBoundaryConditionSet &boundaries,
+            const RegionalRelaxationZoneSet &relaxation_zones,
+            const ShallowWaterStatePolicy &state_policy,
+            const RegionalTimeIntegrationPolicy &time_policy,
+            tsunami::core::Time stage_time,
+            tsunami::core::Real timestep,
+            RegionalConservedState &destination,
+            WetDryUpdateDiagnostics &wet_dry,
+            RegionalTimeIntegrationWorkspace &workspace,
+            RegionalStepDiagnostics &diagnostics) -> tsunami::core::Result<RegionalStepAttemptResult>
+        {
+            auto limit = evaluate_physical_stage_limit(
+                mesh,
+                source,
+                bathymetry,
+                boundaries,
+                relaxation_zones,
+                state_policy,
+                time_policy,
+                stage_time,
+                workspace.physical_residual_workspace());
+            if (!limit) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(limit.error());
+            }
+            diagnostics.stable_timestep = limit.value().stable;
+            diagnostics.maximum_signal_speed = std::max(diagnostics.maximum_signal_speed, limit.value().maximum_signal_speed);
+            auto &relaxation = workspace.physical_residual_workspace().relaxation_diagnostics();
+            diagnostics.relaxation.zone_count = std::max(diagnostics.relaxation.zone_count, relaxation.zone_count);
+            diagnostics.relaxation.active_cell_count = std::max(diagnostics.relaxation.active_cell_count, relaxation.active_cell_count);
+            diagnostics.relaxation.maximum_rate = std::max(diagnostics.relaxation.maximum_rate, relaxation.maximum_rate);
+            diagnostics.relaxation.integrated_mass_source_rate += relaxation.integrated_mass_source_rate;
+            diagnostics.relaxation.outgoing_mass_rate += relaxation.outgoing_mass_rate;
+            ++diagnostics.attempted_stages;
+            if (!requested_timestep_is_within(timestep, limit.value().stable)) {
+                return tsunami::core::success(retry_result(diagnostics, limit.value().stable));
+            }
+            auto update = wet_dry_forward_euler_update(
+                mesh,
+                source,
+                workspace.physical_residual_workspace().residual(),
+                timestep,
+                limit.value().stable,
+                state_policy,
+                destination,
+                wet_dry,
+                workspace.wet_dry_workspace());
+            if (!update) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(update.error());
+            }
+            ++diagnostics.accepted_stages;
+            diagnostics.wet_dry = wet_dry;
+            return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
+        }
     } // namespace
 
     RegionalTimeIntegrationWorkspace::RegionalTimeIntegrationWorkspace(
@@ -171,16 +277,18 @@ namespace tsunami::r2d
         RegionalConservedState stage_2,
         RegionalConservedState euler_stage,
         RegionalConservedState candidate,
-        RegionalStateCombinationWorkspace combination,
-        WellBalancedResidualWorkspace residual,
-        WetDryUpdateWorkspace wet_dry,
-        tsunami::fvm::CellScalarField free_surface)
+            RegionalStateCombinationWorkspace combination,
+            WellBalancedResidualWorkspace residual,
+            PhysicalBoundaryResidualWorkspace physical_residual,
+            WetDryUpdateWorkspace wet_dry,
+            tsunami::fvm::CellScalarField free_surface)
         : stage_1_{std::move(stage_1)}
         , stage_2_{std::move(stage_2)}
         , euler_stage_{std::move(euler_stage)}
         , candidate_{std::move(candidate)}
         , combination_{std::move(combination)}
         , residual_{std::move(residual)}
+        , physical_residual_{std::move(physical_residual)}
         , wet_dry_{std::move(wet_dry)}
         , free_surface_{std::move(free_surface)}
     {
@@ -190,7 +298,7 @@ namespace tsunami::r2d
     {
         return stage_1_.is_bound_to(mesh) && stage_2_.is_bound_to(mesh) && euler_stage_.is_bound_to(mesh) &&
                candidate_.is_bound_to(mesh) && combination_.is_bound_to(mesh) && residual_.is_bound_to(mesh) &&
-               wet_dry_.is_bound_to(mesh) && free_surface_.is_bound_to(mesh) &&
+               physical_residual_.is_bound_to(mesh) && wet_dry_.is_bound_to(mesh) && free_surface_.is_bound_to(mesh) &&
                free_surface_.size() == mesh.summary().cell_count;
     }
 
@@ -219,6 +327,8 @@ namespace tsunami::r2d
     {
         if (!std::isfinite(policy.courant_number) || policy.courant_number <= 0.0 || policy.courant_number > 1.0 ||
             !std::isfinite(policy.positivity_safety_factor) || policy.positivity_safety_factor <= 0.0 || policy.positivity_safety_factor > 1.0 ||
+            !std::isfinite(policy.relaxation_safety_factor) || policy.relaxation_safety_factor <= 0.0 ||
+            policy.relaxation_safety_factor > 1.0 ||
             !std::isfinite(policy.timestep_comparison_tolerance) || policy.timestep_comparison_tolerance < 0.0 ||
             !std::isfinite(policy.minimum_timestep) || policy.minimum_timestep <= 0.0 ||
             !std::isfinite(policy.maximum_timestep) || policy.maximum_timestep <= 0.0 ||
@@ -247,6 +357,7 @@ namespace tsunami::r2d
         }
         auto combination = make_regional_state_combination_workspace(mesh);
         auto residual = make_well_balanced_residual_workspace(mesh);
+        auto physical_residual = make_physical_boundary_residual_workspace(mesh);
         auto wet_dry = make_wet_dry_update_workspace(mesh);
         auto free_surface = tsunami::fvm::make_filled_mesh_field<tsunami::core::Real, tsunami::fvm::FieldLocation::cell>(
             mesh,
@@ -259,6 +370,9 @@ namespace tsunami::r2d
         }
         if (!residual) {
             return tsunami::core::failure<RegionalTimeIntegrationWorkspace>(residual.error());
+        }
+        if (!physical_residual) {
+            return tsunami::core::failure<RegionalTimeIntegrationWorkspace>(physical_residual.error());
         }
         if (!wet_dry) {
             return tsunami::core::failure<RegionalTimeIntegrationWorkspace>(wet_dry.error());
@@ -273,6 +387,7 @@ namespace tsunami::r2d
             reference_state.clone(),
             std::move(combination).value(),
             std::move(residual).value(),
+            std::move(physical_residual).value(),
             std::move(wet_dry).value(),
             std::move(free_surface).value()});
     }
@@ -428,6 +543,181 @@ namespace tsunami::r2d
             bathymetry_boundaries,
             state_policy,
             time_policy,
+            timestep,
+            workspace.euler_stage(),
+            wet_dry,
+            workspace,
+            diagnostics);
+        if (!third_stage_euler || third_stage_euler.value().status == RegionalStepAttemptStatus::retry_with_smaller_timestep) {
+            return third_stage_euler;
+        }
+        diagnostics = third_stage_euler.value().diagnostics;
+
+        auto combine_candidate = convex_combine_regional_states(
+            mesh,
+            current,
+            1.0 / 3.0,
+            workspace.euler_stage(),
+            2.0 / 3.0,
+            state_policy,
+            workspace.candidate(),
+            workspace.combination());
+        if (!combine_candidate) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(combine_candidate.error());
+        }
+        auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+        if (!integrals) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
+        }
+        diagnostics.integrals = integrals.value();
+        return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
+    }
+
+    auto attempt_regional_explicit_step(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const RegionalConservedState &current,
+        const RegionalBathymetry &bathymetry,
+        const RegionalBoundaryConditionSet &boundaries,
+        const RegionalRelaxationZoneSet &relaxation_zones,
+        const ShallowWaterStatePolicy &state_policy,
+        const RegionalTimeIntegrationPolicy &time_policy,
+        tsunami::core::Time start_time,
+        tsunami::core::Real timestep,
+        std::size_t step_index,
+        RegionalTimeIntegrationWorkspace &workspace) -> tsunami::core::Result<RegionalStepAttemptResult>
+    {
+        const auto mesh_id = mesh.summary().id;
+        auto state_policy_validation = validate_policy(state_policy);
+        auto time_policy_validation = validate_regional_time_integration_policy(time_policy);
+        if (!state_policy_validation) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(state_policy_validation.error());
+        }
+        if (!time_policy_validation) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(time_policy_validation.error());
+        }
+        if (!std::isfinite(start_time) || !std::isfinite(timestep) || timestep <= 0.0 ||
+            !current.is_bound_to(mesh) || !bathymetry.is_bound_to(mesh) || !workspace.is_bound_to(mesh) ||
+            !boundaries.is_complete_for(mesh) || !relaxation_zones.is_bound_to(mesh)) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(detail::r2d_error(
+                "r2d.time.request_invalid",
+                "regional physical time-step attempt inputs are invalid",
+                "attempt_regional_explicit_step",
+                "SWE-R2D-TIM",
+                &mesh_id,
+                std::nullopt,
+                std::nullopt,
+                std::nullopt,
+                {},
+                {},
+                {},
+                std::nullopt,
+                std::nullopt,
+                std::nullopt,
+                timestep));
+        }
+
+        auto diagnostics = RegionalStepDiagnostics{};
+        diagnostics.step_index = step_index;
+        diagnostics.start_time = start_time;
+        diagnostics.end_time = start_time + timestep;
+        diagnostics.timestep = timestep;
+        diagnostics.scheme = time_policy.scheme;
+
+        auto wet_dry = WetDryUpdateDiagnostics{};
+        auto first_stage = physical_euler_stage(
+            mesh,
+            current,
+            bathymetry,
+            boundaries,
+            relaxation_zones,
+            state_policy,
+            time_policy,
+            start_time,
+            timestep,
+            workspace.stage_1(),
+            wet_dry,
+            workspace,
+            diagnostics);
+        if (!first_stage || first_stage.value().status == RegionalStepAttemptStatus::retry_with_smaller_timestep) {
+            return first_stage;
+        }
+        diagnostics = first_stage.value().diagnostics;
+
+        if (time_policy.scheme == ExplicitIntegrationScheme::forward_euler) {
+            auto copy = workspace.candidate().copy_values_from(workspace.stage_1());
+            if (!copy) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(copy.error());
+            }
+            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            if (!integrals) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
+            }
+            diagnostics.integrals = integrals.value();
+            return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
+        }
+
+        auto second_stage_euler = physical_euler_stage(
+            mesh,
+            workspace.stage_1(),
+            bathymetry,
+            boundaries,
+            relaxation_zones,
+            state_policy,
+            time_policy,
+            start_time + timestep,
+            timestep,
+            workspace.euler_stage(),
+            wet_dry,
+            workspace,
+            diagnostics);
+        if (!second_stage_euler || second_stage_euler.value().status == RegionalStepAttemptStatus::retry_with_smaller_timestep) {
+            return second_stage_euler;
+        }
+        diagnostics = second_stage_euler.value().diagnostics;
+
+        if (time_policy.scheme == ExplicitIntegrationScheme::ssprk2) {
+            auto combine = convex_combine_regional_states(
+                mesh,
+                current,
+                0.5,
+                workspace.euler_stage(),
+                0.5,
+                state_policy,
+                workspace.candidate(),
+                workspace.combination());
+            if (!combine) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(combine.error());
+            }
+            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            if (!integrals) {
+                return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
+            }
+            diagnostics.integrals = integrals.value();
+            return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
+        }
+
+        auto combine_stage_2 = convex_combine_regional_states(
+            mesh,
+            current,
+            0.75,
+            workspace.euler_stage(),
+            0.25,
+            state_policy,
+            workspace.stage_2(),
+            workspace.combination());
+        if (!combine_stage_2) {
+            return tsunami::core::failure<RegionalStepAttemptResult>(combine_stage_2.error());
+        }
+
+        auto third_stage_euler = physical_euler_stage(
+            mesh,
+            workspace.stage_2(),
+            bathymetry,
+            boundaries,
+            relaxation_zones,
+            state_policy,
+            time_policy,
+            start_time + (0.5 * timestep),
             timestep,
             workspace.euler_stage(),
             wet_dry,

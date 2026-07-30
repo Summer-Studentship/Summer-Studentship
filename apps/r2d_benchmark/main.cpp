@@ -20,6 +20,9 @@ namespace
         tsunami::core::Real positivity_safety_factor{0.95};
         tsunami::core::Real maximum_timestep{0.01};
         tsunami::core::Real minimum_timestep{1.0e-10};
+        std::optional<tsunami::core::Real> sponge_width;
+        std::optional<tsunami::core::Real> sponge_rate;
+        std::optional<tsunami::core::Real> sponge_exponent;
         std::optional<tsunami::core::Real> snapshot_interval;
         std::string output_dir{"r2d-benchmark-output"};
         bool output_enabled{true};
@@ -38,6 +41,9 @@ namespace
             << "  --positivity <number>\n"
             << "  --max-dt <seconds>\n"
             << "  --min-dt <seconds>\n"
+            << "  --sponge-width <metres>\n"
+            << "  --sponge-rate <1/s>\n"
+            << "  --sponge-exponent <number>\n"
             << "  --snapshot-interval <seconds>\n"
             << "  --output-dir <path>\n"
             << "  --no-output\n"
@@ -94,7 +100,8 @@ namespace
                 continue;
             }
             if (arg == "--final-time" || arg == "--courant" || arg == "--positivity" ||
-                arg == "--max-dt" || arg == "--min-dt" || arg == "--snapshot-interval") {
+                arg == "--max-dt" || arg == "--min-dt" || arg == "--sponge-width" ||
+                arg == "--sponge-rate" || arg == "--sponge-exponent" || arg == "--snapshot-interval") {
                 const auto *value = require_value(arg);
                 if (value == nullptr) {
                     return false;
@@ -114,6 +121,12 @@ namespace
                     options.maximum_timestep = parsed;
                 } else if (arg == "--min-dt") {
                     options.minimum_timestep = parsed;
+                } else if (arg == "--sponge-width") {
+                    options.sponge_width = parsed;
+                } else if (arg == "--sponge-rate") {
+                    options.sponge_rate = parsed;
+                } else if (arg == "--sponge-exponent") {
+                    options.sponge_exponent = parsed;
                 } else {
                     options.snapshot_interval = parsed;
                 }
@@ -160,6 +173,21 @@ auto main(int argc, char **argv) -> int
     problem.time_policy.positivity_safety_factor = options.positivity_safety_factor;
     problem.time_policy.maximum_timestep = options.maximum_timestep;
     problem.time_policy.minimum_timestep = options.minimum_timestep;
+    if (options.sponge_width || options.sponge_rate || options.sponge_exponent) {
+        auto relaxation = tsunami::r2d::make_regional_relaxation_zone_set(
+            problem.mesh,
+            {tsunami::r2d::PatchRelaxationZoneSpecification{
+                .patch_tag = "right",
+                .width = options.sponge_width.value_or(0.2),
+                .maximum_rate = options.sponge_rate.value_or(6.0),
+                .profile_exponent = options.sponge_exponent.value_or(2.0),
+                .reference_state = tsunami::r2d::RegionalFarFieldState{.free_surface_elevation = 1.0}}});
+        if (!relaxation) {
+            std::cerr << relaxation.error().message() << '\n';
+            return 1;
+        }
+        problem.relaxation_zones = std::move(relaxation).value();
+    }
     const auto final_time = options.final_time >= 0.0 ? options.final_time : problem.default_final_time;
 
     auto workspace = tsunami::r2d::make_regional_time_integration_workspace(problem.mesh, problem.simulation_state.conserved_state());
@@ -182,19 +210,17 @@ auto main(int argc, char **argv) -> int
     }
 
     auto request = tsunami::r2d::RegionalSolveRequest{
-        &problem.mesh,
-        &problem.bathymetry,
-        &problem.depth_boundaries,
-        &problem.momentum_x_boundaries,
-        &problem.momentum_y_boundaries,
-        &problem.bathymetry_boundaries,
-        problem.state_policy,
-        problem.time_policy,
-        tsunami::r2d::RegionalSnapshotOutputPolicy{true, true, options.snapshot_interval},
-        final_time,
-        options.maximum_steps,
-        diagnostics_sink,
-        snapshot_sink};
+        .mesh = &problem.mesh,
+        .bathymetry = &problem.bathymetry,
+        .regional_boundaries = &problem.regional_boundaries,
+        .relaxation_zones = &problem.relaxation_zones,
+        .state_policy = problem.state_policy,
+        .time_policy = problem.time_policy,
+        .output_policy = tsunami::r2d::RegionalSnapshotOutputPolicy{true, true, options.snapshot_interval},
+        .final_time = final_time,
+        .maximum_steps = options.maximum_steps,
+        .diagnostics_sink = diagnostics_sink,
+        .snapshot_sink = snapshot_sink};
     auto summary = tsunami::r2d::solve_regional_model(request, problem.simulation_state, workspace.value());
     if (!summary) {
         std::cerr << summary.error().message() << '\n';

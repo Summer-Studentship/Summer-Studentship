@@ -131,8 +131,11 @@
       "owning_wbs": "SWE-ARC-API-WP1",
       "public_headers": [
         "src/r2d/include/tsunami/r2d/Solver.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalBoundaryCondition.hpp",
         "src/r2d/include/tsunami/r2d/RegionalConservedState.hpp",
         "src/r2d/include/tsunami/r2d/RegionalBathymetry.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalExteriorState.hpp",
+        "src/r2d/include/tsunami/r2d/RegionalRelaxationZone.hpp",
         "src/r2d/include/tsunami/r2d/RegionalTimeIntegration.hpp",
         "src/r2d/include/tsunami/r2d/RegionalSimulationState.hpp",
         "src/r2d/include/tsunami/r2d/RegionalDiagnostics.hpp",
