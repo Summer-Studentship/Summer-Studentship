@@ -68,4 +68,3 @@ namespace tsunami::r2d
         const tsunami::fvm::FiniteVolumeMesh &mesh) -> tsunami::core::Result<RegionalSeabedDisplacement>;
 
 } // namespace tsunami::r2d
-
