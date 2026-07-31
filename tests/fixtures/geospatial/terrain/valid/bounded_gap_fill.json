@@ -1,0 +1,1 @@
+{"fixture":"bounded_gap_fill","status":"illustrative","expected":{"policy":"bounded_inverse_distance","connectivity":"eight_neighbour","lineage_family":"single_source"}}

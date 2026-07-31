@@ -1,0 +1,1 @@
+{"fixture":"priority_merge","status":"illustrative","expected":{"priority":"explicit","overlap":"diagnostics_only","no_elevation_sign_merge":true}}
