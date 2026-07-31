@@ -64,6 +64,7 @@ add_library(tsunami_geo STATIC
     geo/src/CorridorConstruction.cpp
     geo/src/CorridorConstructionRecord.cpp
     geo/src/CorridorConstructionSerialisation.cpp
+    geo/src/ConditionedTerrainRaster.cpp
     geo/src/CoordinateTransformation.cpp
     geo/src/CoordinateTransformationPlan.cpp
     geo/src/CoordinateTransformationRecord.cpp
@@ -74,6 +75,11 @@ add_library(tsunami_geo STATIC
     geo/src/ImportedRaster.cpp
     geo/src/ImportedVector.cpp
     geo/src/SpatialReferenceEvidence.cpp
+    geo/src/TerrainConditioning.cpp
+    geo/src/TerrainConditioningRecord.cpp
+    geo/src/TerrainConditioningSerialisation.cpp
+    geo/src/TerrainResampling.cpp
+    geo/src/TerrainTargetGrid.cpp
     geo/src/TransformedVector.cpp
 )
 add_library(Tsunami::geo ALIAS tsunami_geo)
@@ -96,6 +102,7 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
         geo_gdal/src/GdalGeospatialImporter.cpp
         geo_gdal/src/GdalMetadataExtraction.cpp
         geo_gdal/src/GdalRasterImporter.cpp
+        geo_gdal/src/GdalTerrainResampler.cpp
         geo_gdal/src/GdalVectorImporter.cpp
     )
     target_include_directories(tsunami_geo_gdal
