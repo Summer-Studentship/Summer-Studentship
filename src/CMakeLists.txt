@@ -60,12 +60,17 @@ target_link_libraries(tsunami_data
 tsunami_apply_compiler_warnings(tsunami_data)
 
 add_library(tsunami_geo STATIC
+    geo/src/CoordinateTransformation.cpp
+    geo/src/CoordinateTransformationPlan.cpp
+    geo/src/CoordinateTransformationRecord.cpp
+    geo/src/CoordinateTransformationSerialisation.cpp
     geo/src/GeospatialImport.cpp
     geo/src/GeospatialImportRecord.cpp
     geo/src/GeospatialImportSerialisation.cpp
     geo/src/ImportedRaster.cpp
     geo/src/ImportedVector.cpp
     geo/src/SpatialReferenceEvidence.cpp
+    geo/src/TransformedVector.cpp
 )
 add_library(Tsunami::geo ALIAS tsunami_geo)
 target_include_directories(tsunami_geo
@@ -104,6 +109,35 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
             GDAL::GDAL
     )
     tsunami_apply_compiler_warnings(tsunami_geo_gdal)
+endif()
+
+if(TSUNAMI_ENABLE_CRS_TRANSFORMATIONS)
+    find_package(PROJ CONFIG REQUIRED)
+    add_library(tsunami_geo_proj STATIC
+        geo_proj/src/ProjContext.cpp
+        geo_proj/src/ProjCoordinateTransformer.cpp
+        geo_proj/src/ProjMetadataExtraction.cpp
+        geo_proj/src/ProjMetadataRecord.cpp
+        geo_proj/src/ProjOperationSelection.cpp
+        geo_proj/src/ProjPointTransformation.cpp
+        geo_proj/src/ProjRasterTransformationPlan.cpp
+        geo_proj/src/ProjVectorTransformation.cpp
+    )
+    target_include_directories(tsunami_geo_proj
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/geo_proj/include>
+            $<INSTALL_INTERFACE:include>
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/geo_proj/src
+    )
+    target_compile_features(tsunami_geo_proj PUBLIC cxx_std_20)
+    target_link_libraries(tsunami_geo_proj
+        PUBLIC
+            tsunami_geo
+        PRIVATE
+            PROJ::proj
+    )
+    tsunami_apply_compiler_warnings(tsunami_geo_proj)
 endif()
 
 add_subdirectory(application)
