@@ -187,6 +187,31 @@
       "downstream_implementation_owner": "SWE-GEO-CRS-WP1"
     },
     {
+      "name": "corridor_construction_ports",
+      "owning_target": "tsunami_geo",
+      "owning_namespace": "tsunami::geo",
+      "owning_wbs": "SWE-GEO-COR-WP1",
+      "public_headers": [
+        "src/geo/include/tsunami/geo/ConstructedCorridor.hpp",
+        "src/geo/include/tsunami/geo/CorridorConstruction.hpp",
+        "src/geo/include/tsunami/geo/CorridorConstructionRecord.hpp",
+        "src/geo/include/tsunami/geo/CorridorConstructionSerialisation.hpp"
+      ],
+      "permitted_consumer_targets": ["tsunami_geo", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
+      "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_geo_proj", "tsunami_mesh_gmsh"],
+      "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "OSR", "CPL", "PJ", "PJ_CONTEXT", "PROJ", "proj_", "Gmsh", "matplot", "Eigen::", "nlohmann::"],
+      "ownership_model": "owning_value",
+      "mutability_model": "transactional_write",
+      "borrowed_lifetime_model": "call_duration",
+      "error_model": "result_based",
+      "cancellation_model": "none",
+      "observer_model": "none",
+      "thread_safety": "not_thread_safe_by_default",
+      "state": "active",
+      "downstream_implementation_owner": "SWE-GEO-COR-WP1/SWE-GEO-TER-WP1/SWE-GEO-CHK-WP1"
+    },
+    {
       "name": "regional_solver",
       "owning_target": "tsunami_r2d",
       "owning_namespace": "tsunami::r2d",
