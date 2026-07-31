@@ -65,6 +65,16 @@
       }
     },
     {
+      "name": "crs-tests-base",
+      "hidden": true,
+      "cacheVariables": {
+        "BUILD_TESTING": "ON",
+        "TSUNAMI_ENABLE_GEOSPATIAL": "ON",
+        "TSUNAMI_ENABLE_CRS_TRANSFORMATIONS": "ON",
+        "VCPKG_MANIFEST_FEATURES": "tests;geospatial"
+      }
+    },
+    {
       "name": "gui-base",
       "hidden": true,
       "cacheVariables": {
@@ -103,6 +113,19 @@
       "inherits": [
         "linux-gcc-base",
         "geospatial-tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-gcc-crs-test",
+      "displayName": "Linux GCC CRS transformation test build",
+      "inherits": [
+        "linux-gcc-base",
+        "crs-tests-base"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -176,6 +199,19 @@
       "inherits": [
         "linux-clang-base",
         "geospatial-tests-base"
+      ],
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "TSUNAMI_BUILD_CLI": "ON",
+        "TSUNAMI_BUILD_GUI": "OFF"
+      }
+    },
+    {
+      "name": "linux-clang-crs-test",
+      "displayName": "Linux Clang CRS transformation test build",
+      "inherits": [
+        "linux-clang-base",
+        "crs-tests-base"
       ],
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
@@ -278,6 +314,15 @@
       ]
     },
     {
+      "name": "linux-gcc-crs-test-build",
+      "configurePreset": "linux-gcc-crs-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
       "name": "linux-gcc-release-build",
       "configurePreset": "linux-gcc-release",
       "targets": [
@@ -323,6 +368,15 @@
     {
       "name": "linux-clang-geospatial-test-build",
       "configurePreset": "linux-clang-geospatial-test",
+      "targets": [
+        "tsunami_core",
+        "tsunami_cli",
+        "tsunami_tests"
+      ]
+    },
+    {
+      "name": "linux-clang-crs-test-build",
+      "configurePreset": "linux-clang-crs-test",
       "targets": [
         "tsunami_core",
         "tsunami_cli",
@@ -394,6 +448,13 @@
       }
     },
     {
+      "name": "linux-gcc-crs-test-run",
+      "configurePreset": "linux-gcc-crs-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
       "name": "linux-gcc-ci-test",
       "configurePreset": "linux-gcc-ci",
       "output": {
@@ -410,6 +471,13 @@
     {
       "name": "linux-clang-geospatial-test-run",
       "configurePreset": "linux-clang-geospatial-test",
+      "output": {
+        "outputOnFailure": true
+      }
+    },
+    {
+      "name": "linux-clang-crs-test-run",
+      "configurePreset": "linux-clang-crs-test",
       "output": {
         "outputOnFailure": true
       }
@@ -467,6 +535,23 @@
       ]
     },
     {
+      "name": "linux-gcc-crs-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-gcc-crs-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-gcc-crs-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-gcc-crs-test-run"
+        }
+      ]
+    },
+    {
       "name": "linux-gcc-ci-workflow",
       "steps": [
         {
@@ -514,6 +599,23 @@
         {
           "type": "test",
           "name": "linux-clang-geospatial-test-run"
+        }
+      ]
+    },
+    {
+      "name": "linux-clang-crs-test-workflow",
+      "steps": [
+        {
+          "type": "configure",
+          "name": "linux-clang-crs-test"
+        },
+        {
+          "type": "build",
+          "name": "linux-clang-crs-test-build"
+        },
+        {
+          "type": "test",
+          "name": "linux-clang-crs-test-run"
         }
       ]
     },
