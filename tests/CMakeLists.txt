@@ -21,6 +21,7 @@ add_executable(tsunami_tests
     r2d_benchmarks/benchmark_case_tests.cpp
     r2d_io/csv_output_tests.cpp
     smoke/core_smoke.cpp
+    geo/coordinate_transformation_tests.cpp
 )
 
 target_compile_features(tsunami_tests PRIVATE cxx_std_20)
@@ -48,6 +49,14 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
     )
     target_link_libraries(tsunami_tests PRIVATE tsunami_geo_gdal)
     target_compile_definitions(tsunami_tests PRIVATE TSUNAMI_ENABLE_GEOSPATIAL=1)
+endif()
+
+if(TSUNAMI_ENABLE_CRS_TRANSFORMATIONS)
+    target_sources(tsunami_tests PRIVATE
+        geo_proj/proj_coordinate_transformation_tests.cpp
+    )
+    target_link_libraries(tsunami_tests PRIVATE tsunami_geo_proj)
+    target_compile_definitions(tsunami_tests PRIVATE TSUNAMI_ENABLE_CRS_TRANSFORMATIONS=1)
 endif()
 
 include(Catch)

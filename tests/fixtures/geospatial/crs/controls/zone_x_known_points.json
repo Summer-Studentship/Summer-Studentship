@@ -1,0 +1,38 @@
+{
+  "control_id": "zone_x_known_points",
+  "controls": [
+    {
+      "name": "kamaishi_region_fixture",
+      "source_coordinates": {
+        "longitude_degrees": 141.885,
+        "latitude_degrees": 39.275
+      },
+      "target_crs": "EPSG:6678",
+      "expected_source": "Committed fixture control table for implementation regression; not a production survey control"
+    },
+    {
+      "name": "sendai_region_fixture",
+      "source_coordinates": {
+        "longitude_degrees": 140.8719,
+        "latitude_degrees": 38.2682
+      },
+      "target_crs": "EPSG:6678",
+      "expected_source": "Committed fixture control table for implementation regression; outside final corridor-selection authority"
+    },
+    {
+      "name": "off_axis_zone_x_fixture",
+      "source_coordinates": {
+        "longitude_degrees": 140.9,
+        "latitude_degrees": 40.1
+      },
+      "target_crs": "EPSG:6678",
+      "expected_source": "Committed fixture control table for nonlinear edge and round-trip checks"
+    }
+  ],
+  "source_crs": "EPSG:6668",
+  "source_datum_evidence": "JGD2011 geographic 2D, EPSG registry",
+  "source_document_title": "Synthetic CRS control register",
+  "source_document_uri": "https://example.test/tsunami/crs-control-register",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.001
+}

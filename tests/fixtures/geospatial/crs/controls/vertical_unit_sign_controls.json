@@ -1,0 +1,17 @@
+{
+  "control_id": "vertical_unit_sign_controls",
+  "source_coordinates": {
+    "depth_positive_down_cm": 250.0
+  },
+  "source_crs": "synthetic-product-depth",
+  "source_datum_evidence": "Same zero, centimetre unit, positive down, synthetic fixture",
+  "target_crs": "synthetic-product-elevation",
+  "expected_coordinates": {
+    "z_up_m": -2.5
+  },
+  "expected_source": "Analytical unit scale followed by sign inversion",
+  "source_document_title": "Synthetic vertical unit/sign control",
+  "source_document_uri": "https://example.test/tsunami/vertical-unit-sign-control",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.001
+}

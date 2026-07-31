@@ -1,0 +1,20 @@
+{
+  "control_id": "zone_x_natural_origin",
+  "source_coordinates": {
+    "longitude_degrees": 140.83333333333334,
+    "latitude_degrees": 40.0,
+    "height_m": 0.0
+  },
+  "source_crs": "EPSG:6668",
+  "source_datum_evidence": "JGD2011 geographic 2D, EPSG registry",
+  "target_crs": "EPSG:6678",
+  "expected_coordinates": {
+    "x_east_m": 0.0,
+    "y_north_m": 0.0
+  },
+  "expected_source": "EPSG coordinate-operation definition for Japan Plane Rectangular CS X natural origin",
+  "source_document_title": "EPSG:6678 JGD2011 / Japan Plane Rectangular CS X",
+  "source_document_uri": "https://epsg.org/crs_6678/JGD2011-Japan-Plane-Rectangular-CS-X.html",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.001
+}

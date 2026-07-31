@@ -1,0 +1,11 @@
+{
+  "control_id": "wgs84_to_metric_known_points",
+  "source_crs": "EPSG:4326",
+  "source_datum_evidence": "WGS 84 ensemble; realisation and epoch must remain explicit when survey-grade use is requested",
+  "target_crs": "case-configured metric CRS",
+  "expected_source": "Policy fixture: generic WGS84 is not identity-equivalent to JGD2011",
+  "source_document_title": "Synthetic WGS84 policy control",
+  "source_document_uri": "https://example.test/tsunami/wgs84-policy-control",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.05
+}
