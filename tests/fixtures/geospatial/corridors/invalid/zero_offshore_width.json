@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.extent_invalid", "expected_rule_id": "geo.corridor.width.offshore_positive" }

@@ -1,0 +1,16 @@
+{
+  "case_fixture_path": "tests/fixtures/cases/valid/illustrative_sendai_corridor_case.json",
+  "disclaimer": "illustrative non-authoritative Sendai control geometry; not accepted production geometry and not suitable for scientific validation",
+  "epicentre_transformed_point_evidence": { "point_id": "sendai-epicentre-illustrative", "coordinate": { "x": -2000.0, "y": 1000.0, "z": -6.0 } },
+  "target_transformed_point_evidence": { "point_id": "sendai-target-illustrative", "coordinate": { "x": 2000.0, "y": 1000.0, "z": 2.0 } },
+  "transformation_record_references": ["sendai-epicentre-transform", "sendai-target-transform"],
+  "construction_identity": { "corridor_id": "corridor-sendai-illustrative", "trajectory_id": "sendai-illustrative", "output_dataset_id": "sendai-corridor-dataset", "output_process_id": "sendai-corridor-process" },
+  "policy": { "minimum_reference_separation_m": 1.0, "origin_tolerance_m": 0.001, "bearing_tolerance_degrees": 0.001, "basis_orthonormal_tolerance": 1e-12, "geometry_absolute_tolerance_m": 1e-7, "geometry_relative_tolerance": 1e-12 },
+  "expected_basis": { "tangent": { "x": 1.0, "y": 0.0 }, "left_normal": { "x": 0.0, "y": 1.0 }, "distance_m": 4000.0 },
+  "expected_bearing": 90.0,
+  "expected_polygon": [{"x": -2500.0, "y": 1150.0}, {"x": -2500.0, "y": 850.0}, {"x": -2000.0, "y": 850.0}, {"x": 2000.0, "y": 940.0}, {"x": 2500.0, "y": 940.0}, {"x": 2500.0, "y": 1060.0}, {"x": 2000.0, "y": 1060.0}, {"x": -2000.0, "y": 1150.0}, {"x": -2500.0, "y": 1150.0}],
+  "expected_extent": { "minimum_x": -2500.0, "minimum_y": 850.0, "maximum_x": 2500.0, "maximum_y": 1150.0 },
+  "expected_area": 1050000.0,
+  "expected_perimeter": 10422.02458730867,
+  "expected_canonical_record_path": "manifests/corridors/sendai-illustrative.json"
+}

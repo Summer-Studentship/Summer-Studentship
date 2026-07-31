@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.origin_mismatch", "expected_rule_id": "geo.corridor.origin.case_matches_epicentre" }

@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.transformation_record_missing", "expected_rule_id": "geo.corridor.request.references_present" }

@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.sponge_invalid", "expected_rule_id": "geo.corridor.sponge.side_inside" }

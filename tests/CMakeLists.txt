@@ -21,6 +21,7 @@ add_executable(tsunami_tests
     r2d_benchmarks/benchmark_case_tests.cpp
     r2d_io/csv_output_tests.cpp
     smoke/core_smoke.cpp
+    geo/corridor_construction_tests.cpp
     geo/coordinate_transformation_tests.cpp
 )
 

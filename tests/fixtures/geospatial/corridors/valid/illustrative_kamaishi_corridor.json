@@ -1,0 +1,16 @@
+{
+  "case_fixture_path": "tests/fixtures/cases/valid/illustrative_kamaishi_corridor_case.json",
+  "disclaimer": "illustrative non-authoritative Kamaishi control geometry; not accepted production geometry and not suitable for scientific validation",
+  "epicentre_transformed_point_evidence": { "point_id": "kamaishi-epicentre-illustrative", "coordinate": { "x": 1000.0, "y": 2000.0, "z": -8.0 } },
+  "target_transformed_point_evidence": { "point_id": "kamaishi-target-illustrative", "coordinate": { "x": 4000.0, "y": 6000.0, "z": 3.0 } },
+  "transformation_record_references": ["kamaishi-epicentre-transform", "kamaishi-target-transform"],
+  "construction_identity": { "corridor_id": "corridor-kamaishi-illustrative", "trajectory_id": "kamaishi-illustrative", "output_dataset_id": "kamaishi-corridor-dataset", "output_process_id": "kamaishi-corridor-process" },
+  "policy": { "minimum_reference_separation_m": 1.0, "origin_tolerance_m": 0.001, "bearing_tolerance_degrees": 0.001, "basis_orthonormal_tolerance": 1e-12, "geometry_absolute_tolerance_m": 1e-7, "geometry_relative_tolerance": 1e-12 },
+  "expected_basis": { "tangent": { "x": 0.6, "y": 0.8 }, "left_normal": { "x": -0.8, "y": 0.6 }, "distance_m": 5000.0 },
+  "expected_bearing": 36.86989764584402,
+  "expected_polygon": [{"x": 500.0, "y": 1750.0}, {"x": 900.0, "y": 1450.0}, {"x": 4500.0, "y": 6250.0}, {"x": 4100.0, "y": 6550.0}, {"x": 500.0, "y": 1750.0}],
+  "expected_extent": { "minimum_x": 500.0, "minimum_y": 1450.0, "maximum_x": 4500.0, "maximum_y": 6550.0 },
+  "expected_area": 3000000.0,
+  "expected_perimeter": 13000.0,
+  "expected_canonical_record_path": "manifests/corridors/kamaishi-illustrative.json"
+}

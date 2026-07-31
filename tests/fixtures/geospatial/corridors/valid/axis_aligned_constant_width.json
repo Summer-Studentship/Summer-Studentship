@@ -1,0 +1,16 @@
+{
+  "case_fixture_path": "tests/fixtures/cases/valid/axis_aligned_corridor_case.json",
+  "disclaimer": "illustrative non-authoritative geometry for contract verification only; not suitable for scientific validation",
+  "epicentre_transformed_point_evidence": { "point_id": "epicentre-point", "coordinate": { "x": 0.0, "y": 0.0, "z": 0.0 } },
+  "target_transformed_point_evidence": { "point_id": "target-point", "coordinate": { "x": 1000.0, "y": 0.0, "z": 0.0 } },
+  "transformation_record_references": ["epicentre-transform", "target-transform"],
+  "construction_identity": { "corridor_id": "corridor-axis-aligned", "trajectory_id": "axis-aligned", "output_dataset_id": "corridor-dataset", "output_process_id": "corridor-process" },
+  "policy": { "minimum_reference_separation_m": 1.0, "origin_tolerance_m": 0.001, "bearing_tolerance_degrees": 0.001, "basis_orthonormal_tolerance": 1e-12, "geometry_absolute_tolerance_m": 1e-7, "geometry_relative_tolerance": 1e-12 },
+  "expected_basis": { "tangent": { "x": 1.0, "y": 0.0 }, "left_normal": { "x": 0.0, "y": 1.0 }, "distance_m": 1000.0 },
+  "expected_bearing": 90.0,
+  "expected_polygon": [{"x": -200.0, "y": 50.0}, {"x": -200.0, "y": -50.0}, {"x": 1300.0, "y": -50.0}, {"x": 1300.0, "y": 50.0}, {"x": -200.0, "y": 50.0}],
+  "expected_extent": { "minimum_x": -200.0, "minimum_y": -50.0, "maximum_x": 1300.0, "maximum_y": 50.0 },
+  "expected_area": 150000.0,
+  "expected_perimeter": 3200.0,
+  "expected_canonical_record_path": "manifests/corridors/axis-aligned.json"
+}

@@ -321,7 +321,7 @@
     {
       "target_name": "tsunami_geo",
       "namespaced_alias": "Tsunami::geo",
-      "status": "active G1 method-neutral geospatial import and coordinate-transformation contracts",
+      "status": "active G1 method-neutral geospatial import, coordinate-transformation and corridor-construction contracts",
       "type": "static_library",
       "wbs_owner": [
         "SWE-GEO-*"
@@ -359,7 +359,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation, coordinate-transformation contracts, raster transformation plans, transformed vector/point values and canonical import/transformation-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
+      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation, coordinate-transformation contracts, raster transformation plans, transformed vector/point values, evidence-driven corridor geometry, local corridor frames, corridor construction records and canonical import/transformation/corridor-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
     },
     {
       "target_name": "tsunami_geo_gdal",

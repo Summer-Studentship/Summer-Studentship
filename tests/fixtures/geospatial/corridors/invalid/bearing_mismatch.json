@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.bearing_mismatch", "expected_rule_id": "geo.corridor.bearing.case_matches_evidence" }

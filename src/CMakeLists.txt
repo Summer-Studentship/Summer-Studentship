@@ -60,6 +60,10 @@ target_link_libraries(tsunami_data
 tsunami_apply_compiler_warnings(tsunami_data)
 
 add_library(tsunami_geo STATIC
+    geo/src/ConstructedCorridor.cpp
+    geo/src/CorridorConstruction.cpp
+    geo/src/CorridorConstructionRecord.cpp
+    geo/src/CorridorConstructionSerialisation.cpp
     geo/src/CoordinateTransformation.cpp
     geo/src/CoordinateTransformationPlan.cpp
     geo/src/CoordinateTransformationRecord.cpp
