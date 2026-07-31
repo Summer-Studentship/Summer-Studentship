@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.coordinate_nonfinite", "expected_rule_id": "geo.corridor.reference.coordinate_exists", "point_role": "epicentre" }

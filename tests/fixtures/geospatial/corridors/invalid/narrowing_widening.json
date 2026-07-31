@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.narrowing_invalid", "expected_rule_id": "geo.corridor.narrowing.rule_supported" }

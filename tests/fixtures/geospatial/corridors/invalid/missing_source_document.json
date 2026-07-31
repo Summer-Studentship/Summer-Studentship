@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.provenance_invalid", "expected_rule_id": "geo.corridor.reference.provenance_complete" }

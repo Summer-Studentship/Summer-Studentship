@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.case_manifest_mismatch", "expected_rule_id": "geo.corridor.request.identities_match" }

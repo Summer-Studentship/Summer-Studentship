@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://summer-studentship.example/schemas/corridor_construction_record/1.0.0/corridor_construction_record.schema.json",
+  "title": "tsunami.corridor_construction_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "policy_version",
+    "formula_version",
+    "identity",
+    "scenario_id",
+    "target_site",
+    "epicentre",
+    "target",
+    "target_reference",
+    "policy",
+    "configured_origin",
+    "configured_bearing_degrees",
+    "derived_bearing_degrees",
+    "origin_residual_m",
+    "bearing_residual_degrees",
+    "offshore_extent_m",
+    "epicentre_target_distance_m",
+    "inland_extent_m",
+    "total_length_m",
+    "offshore_width_m",
+    "inland_width_m",
+    "narrowing_enabled",
+    "narrowing_rule",
+    "local_basis",
+    "stations",
+    "sponge_limits",
+    "polygon",
+    "vertex_order_convention",
+    "extent",
+    "area_m2",
+    "perimeter_m",
+    "diagnostics",
+    "configured_field_paths",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "required": ["schema_name", "version"],
+      "properties": {
+        "schema_name": { "const": "tsunami.corridor_construction_record" },
+        "version": {
+          "type": "object",
+          "required": ["major", "minor", "patch"],
+          "properties": {
+            "major": { "const": 1 },
+            "minor": { "const": 0 },
+            "patch": { "const": 0 }
+          }
+        }
+      }
+    },
+    "policy_version": { "const": "0.1" },
+    "formula_version": { "const": "flat-ended-epicentre-target-v1" },
+    "identity": { "$ref": "#/$defs/identity" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "target_site": { "type": "string", "minLength": 1 },
+    "epicentre": { "$ref": "#/$defs/evidence" },
+    "target": { "$ref": "#/$defs/evidence" },
+    "target_reference": { "type": "object" },
+    "policy": { "$ref": "#/$defs/policy" },
+    "configured_origin": { "$ref": "#/$defs/point2" },
+    "configured_bearing_degrees": { "type": "number" },
+    "derived_bearing_degrees": { "type": "number" },
+    "origin_residual_m": { "type": "number", "minimum": 0 },
+    "bearing_residual_degrees": { "type": "number", "minimum": 0 },
+    "offshore_extent_m": { "type": "number", "exclusiveMinimum": 0 },
+    "epicentre_target_distance_m": { "type": "number", "exclusiveMinimum": 0 },
+    "inland_extent_m": { "type": "number", "minimum": 0 },
+    "total_length_m": { "type": "number", "exclusiveMinimum": 0 },
+    "offshore_width_m": { "type": "number", "exclusiveMinimum": 0 },
+    "inland_width_m": { "type": "number", "exclusiveMinimum": 0 },
+    "narrowing_enabled": { "type": "boolean" },
+    "narrowing_rule": { "enum": ["constant_width", "epicentre_to_target_linear_taper"] },
+    "local_basis": { "type": "object" },
+    "stations": { "type": "object" },
+    "sponge_limits": { "type": "object" },
+    "polygon": { "type": "object" },
+    "vertex_order_convention": { "type": "string", "minLength": 1 },
+    "extent": { "type": "object" },
+    "area_m2": { "type": "number", "exclusiveMinimum": 0 },
+    "perimeter_m": { "type": "number", "exclusiveMinimum": 0 },
+    "diagnostics": { "type": "object" },
+    "configured_field_paths": { "type": "array", "items": { "type": "string" }, "minItems": 1 },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "identity": {
+      "type": "object",
+      "required": ["corridor_id", "corridor_revision", "case_id", "case_revision", "trajectory_id", "output_dataset_id", "output_process_id", "executed_at_utc"]
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["role", "point_id", "definition", "coordinate", "coordinate_index", "source_feature_id", "transformation_identity", "source_reference", "target_reference", "source_document_title", "source_document_uri", "accessed_at_utc"],
+      "properties": {
+        "role": { "enum": ["epicentre", "target"] },
+        "coordinate": { "$ref": "#/$defs/point3" },
+        "source_feature_id": { "type": ["string", "null"] }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "required": ["minimum_reference_separation_m", "origin_tolerance_m", "bearing_tolerance_degrees", "basis_orthonormal_tolerance", "geometry_absolute_tolerance_m", "geometry_relative_tolerance", "tolerance_basis"]
+    },
+    "point2": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" } }
+    },
+    "point3": {
+      "type": "object",
+      "required": ["x", "y", "z"],
+      "properties": { "x": { "type": "number" }, "y": { "type": "number" }, "z": { "type": "number" } }
+    }
+  }
+}

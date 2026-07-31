@@ -1,0 +1,1 @@
+{ "expected_success": false, "expected_error_code": "geo.corridor.reference_points_coincident", "expected_rule_id": "geo.corridor.reference.points_distinct" }
