@@ -5,6 +5,7 @@ add_executable(tsunami_tests
     core/diagnostic_tests.cpp
     contracts/contract_dummy_consumers.cpp
     contracts/interface_contracts.cpp
+    adapters/gmsh_import_tests.cpp
     fvm/boundary_tests.cpp
     data/case_configuration_tests.cpp
     data/dataset_manifest_tests.cpp
@@ -32,6 +33,7 @@ target_link_libraries(tsunami_tests
     PRIVATE
         tsunami_core
         tsunami_application
+        tsunami_mesh_gmsh
         tsunami_fvm
         tsunami_data
         tsunami_geo

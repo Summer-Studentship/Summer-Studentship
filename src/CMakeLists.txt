@@ -32,6 +32,18 @@ target_compile_features(tsunami_fvm PUBLIC cxx_std_20)
 target_link_libraries(tsunami_fvm PUBLIC tsunami_core)
 tsunami_apply_compiler_warnings(tsunami_fvm)
 
+add_library(tsunami_mesh_gmsh STATIC
+    adapters/mesh/gmsh/src/GmshMeshImporter.cpp
+)
+target_include_directories(tsunami_mesh_gmsh
+    PUBLIC
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/adapters/mesh/gmsh/include>
+        $<INSTALL_INTERFACE:include>
+)
+target_compile_features(tsunami_mesh_gmsh PUBLIC cxx_std_20)
+target_link_libraries(tsunami_mesh_gmsh PUBLIC tsunami_core tsunami_fvm)
+tsunami_apply_compiler_warnings(tsunami_mesh_gmsh)
+
 find_package(nlohmann_json CONFIG REQUIRED)
 
 add_library(tsunami_data STATIC
