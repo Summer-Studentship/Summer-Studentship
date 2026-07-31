@@ -1,0 +1,1 @@
+{"fixture":"illustrative_conditioned_terrain_record","status":"illustrative_non_authoritative","expected":{"schema":"tsunami.terrain_conditioning_record","formula_version":"corridor-grid-priority-merge-v1","digest_status":"not_computed_by_terrain_conditioning"}}

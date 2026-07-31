@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://summer-studentship.example/schemas/terrain_conditioning_record/1.0.0/terrain_conditioning_record.schema.json",
+  "title": "Terrain conditioning record",
+  "type": "object",
+  "required": [
+    "schema",
+    "policy_version",
+    "formula_version",
+    "identity",
+    "grid",
+    "grid_policy",
+    "bathymetry_resampling",
+    "topography_resampling",
+    "merge_policy",
+    "gap_policy",
+    "diagnostics",
+    "output_media_type",
+    "output_path",
+    "digest_status"
+  ],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "required": ["schema_name", "version"],
+      "properties": {
+        "schema_name": { "const": "tsunami.terrain_conditioning_record" },
+        "version": {
+          "type": "object",
+          "required": ["major", "minor", "patch"],
+          "properties": {
+            "major": { "const": 1 },
+            "minor": { "const": 0 },
+            "patch": { "const": 0 }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "policy_version": { "const": "0.1" },
+    "formula_version": { "const": "corridor-grid-priority-merge-v1" },
+    "identity": {
+      "type": "object",
+      "required": [
+        "terrain_id",
+        "terrain_revision",
+        "case_id",
+        "case_revision",
+        "manifest_id",
+        "manifest_revision",
+        "output_dataset_id",
+        "output_process_id",
+        "executed_at_utc"
+      ],
+      "properties": {
+        "terrain_id": { "type": "string" },
+        "terrain_revision": { "type": "integer", "minimum": 1 },
+        "case_id": { "type": "string" },
+        "case_revision": { "type": "integer", "minimum": 1 },
+        "manifest_id": { "type": "string" },
+        "manifest_revision": { "type": "integer", "minimum": 1 },
+        "output_dataset_id": { "type": "string" },
+        "output_process_id": { "type": "string" },
+        "executed_at_utc": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "grid": { "type": "object" },
+    "grid_policy": { "type": "object" },
+    "bathymetry_resampling": { "type": "object" },
+    "topography_resampling": { "type": "object" },
+    "merge_policy": { "type": "object" },
+    "gap_policy": { "type": "object" },
+    "diagnostics": {
+      "type": "object",
+      "required": ["active_cell_count", "unresolved_cell_count"],
+      "properties": {
+        "active_cell_count": { "type": "integer", "minimum": 1 },
+        "unresolved_cell_count": { "const": 0 }
+      },
+      "additionalProperties": true
+    },
+    "output_uncertainty_status": { "type": "string" },
+    "output_media_type": { "const": "image/tiff" },
+    "output_path": { "type": "string" },
+    "digest_status": { "const": "not_computed_by_terrain_conditioning" },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": true
+}

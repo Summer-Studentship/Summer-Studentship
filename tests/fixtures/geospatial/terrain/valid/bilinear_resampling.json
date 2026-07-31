@@ -1,0 +1,1 @@
+{"fixture":"bilinear_resampling","status":"illustrative","expected":{"kernel":"bilinear","source_mask":"propagated","registration":"pixel_is_area"}}

@@ -321,7 +321,7 @@
     {
       "target_name": "tsunami_geo",
       "namespaced_alias": "Tsunami::geo",
-      "status": "active G1 method-neutral geospatial import, coordinate-transformation and corridor-construction contracts",
+      "status": "active G1 method-neutral geospatial import, coordinate-transformation, corridor-construction and terrain-conditioning contracts",
       "type": "static_library",
       "wbs_owner": [
         "SWE-GEO-*"
@@ -359,15 +359,16 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation, coordinate-transformation contracts, raster transformation plans, transformed vector/point values, evidence-driven corridor geometry, local corridor frames, corridor construction records and canonical import/transformation/corridor-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
+      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation, coordinate-transformation contracts, raster transformation plans, transformed vector/point values, evidence-driven corridor geometry, local corridor frames, corridor construction records, corridor-aligned terrain grids, corridor coverage masks, terrain merge and nodata policies, conditioned terrain values, terrain conditioning records and canonical import/transformation/corridor/terrain-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
     },
     {
       "target_name": "tsunami_geo_gdal",
       "namespaced_alias": null,
-      "status": "active G1 optional GDAL geospatial import adapter",
+      "status": "active G1 optional GDAL geospatial import and terrain-conditioning adapter",
       "type": "static_library",
       "wbs_owner": [
-        "SWE-GEO-IMP"
+        "SWE-GEO-IMP",
+        "SWE-GEO-TER"
       ],
       "conceptual_layer": "Geospatial Adapter",
       "state": "active",
@@ -405,7 +406,7 @@
         "PROJ",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction and error translation behind the tsunami_geo contracts. G1 does not call PROJ transformation APIs, and the tsunami_geo target must not depend on this adapter."
+      "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction, in-memory terrain raster warp, accepted coordinate-operation reuse, source-mask propagation, conditioned terrain GeoTIFF export and error translation behind the tsunami_geo contracts. Direct external dependency remains GDAL only; G1 does not link directly to PROJ transformation APIs from this adapter, and the tsunami_geo target must not depend on this adapter."
     },
     {
       "target_name": "tsunami_geo_proj",

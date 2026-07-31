@@ -1,0 +1,1 @@
+{"fixture":"average_downsampling","status":"illustrative","expected":{"kernel":"area_average","downsampling":"material","invalid_contributors":"ignored"}}
