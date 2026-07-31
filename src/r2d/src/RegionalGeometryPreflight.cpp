@@ -8,6 +8,7 @@
 #include <set>
 #include <string>
 #include <utility>
+#include <vector>
 
 #include <tsunami/core/Error.hpp>
 #include <tsunami/geo/CorridorConstruction.hpp>
@@ -24,6 +25,7 @@ namespace tsunami::r2d
             "boundary.inland",
             "boundary.left_side",
             "boundary.right_side"};
+        constexpr auto mesh_geometry_tolerance = 1.0e-12;
 
         [[nodiscard]] auto finite(double value) noexcept -> bool
         {
@@ -50,6 +52,33 @@ namespace tsunami::r2d
         [[nodiscard]] auto point_from(tsunami::fvm::Point3 point) noexcept -> tsunami::geo::Point2D
         {
             return tsunami::geo::Point2D{point.x, point.y};
+        }
+
+        [[nodiscard]] auto near_equal(double left, double right, double tolerance) noexcept -> bool
+        {
+            if (!finite(left) || !finite(right)) {
+                return false;
+            }
+            const auto scale = std::max({1.0, std::abs(left), std::abs(right)});
+            return std::abs(left - right) <= tolerance * scale;
+        }
+
+        [[nodiscard]] auto near_equal(
+            tsunami::fvm::Point3 left,
+            tsunami::fvm::Point3 right,
+            double tolerance) noexcept -> bool
+        {
+            return near_equal(left.x, right.x, tolerance) && near_equal(left.y, right.y, tolerance) &&
+                near_equal(left.z, right.z, tolerance);
+        }
+
+        [[nodiscard]] auto near_equal(
+            tsunami::fvm::Vector3 left,
+            tsunami::fvm::Vector3 right,
+            double tolerance) noexcept -> bool
+        {
+            return near_equal(left.x, right.x, tolerance) && near_equal(left.y, right.y, tolerance) &&
+                near_equal(left.z, right.z, tolerance);
         }
 
         [[nodiscard]] auto subtract(tsunami::geo::Point2D left, tsunami::geo::Point2D right) noexcept
@@ -196,6 +225,17 @@ namespace tsunami::r2d
                 error.add_context("x", std::to_string(point->x)).add_context("y", std::to_string(point->y));
             }
             return error;
+        }
+
+        auto add_forwarded_mesh_context(
+            tsunami::core::Error &error,
+            const tsunami::core::Error &cause) -> void
+        {
+            for (const auto &entry : cause.context()) {
+                if (entry.key == "entity_type" || entry.key == "entity_id" || entry.key == "referenced_id") {
+                    error.add_context(entry.key, entry.value);
+                }
+            }
         }
 
         [[nodiscard]] auto validate_polygon(
@@ -506,11 +546,94 @@ namespace tsunami::r2d
             return tsunami::core::success();
         }
 
+        [[nodiscard]] auto reconstruct_validated_mesh(
+            const RegionalGeometryPreflightRequest &request)
+            -> tsunami::core::Result<tsunami::fvm::FiniteVolumeMesh>
+        {
+            auto input = tsunami::fvm::MeshTopologyInput{};
+            input.id = request.mesh->topology().id();
+            input.spatial_dimension = request.mesh->topology().spatial_dimension();
+            input.vertices = {
+                request.mesh->topology().vertices().begin(),
+                request.mesh->topology().vertices().end()};
+            input.faces = {
+                request.mesh->topology().faces().begin(),
+                request.mesh->topology().faces().end()};
+            input.cells = {
+                request.mesh->topology().cells().begin(),
+                request.mesh->topology().cells().end()};
+            input.boundary_patches = {
+                request.mesh->topology().boundary_patches().begin(),
+                request.mesh->topology().boundary_patches().end()};
+
+            auto reconstructed = tsunami::fvm::make_finite_volume_mesh(std::move(input));
+            if (!reconstructed) {
+                auto error = make_error(
+                    "r2d.preflight.mesh_invalid",
+                    "Regional2D preflight mesh failed authoritative finite-volume validation",
+                    request)
+                                 .with_cause_code(reconstructed.error().code());
+                add_forwarded_mesh_context(error, reconstructed.error());
+                return tsunami::core::failure<tsunami::fvm::FiniteVolumeMesh>(std::move(error));
+            }
+            return reconstructed;
+        }
+
+        [[nodiscard]] auto validate_geometry_consistency(
+            const RegionalGeometryPreflightRequest &request,
+            const tsunami::fvm::FiniteVolumeMesh &reconstructed) -> tsunami::core::Result<void>
+        {
+            const auto supplied_faces = request.mesh->geometry().faces();
+            const auto reconstructed_faces = reconstructed.geometry().faces();
+            if (supplied_faces.size() != reconstructed_faces.size()) {
+                return tsunami::core::failure(make_error(
+                    "r2d.preflight.mesh_geometry_mismatch",
+                    "supplied mesh face-geometry count differs from reconstructed finite-volume geometry",
+                    request));
+            }
+            for (std::size_t index = 0U; index < supplied_faces.size(); ++index) {
+                const auto face_id = tsunami::fvm::FaceId{index};
+                if (!near_equal(supplied_faces[index].centroid, reconstructed_faces[index].centroid, mesh_geometry_tolerance) ||
+                    !near_equal(supplied_faces[index].area_vector, reconstructed_faces[index].area_vector, mesh_geometry_tolerance)) {
+                    return tsunami::core::failure(make_error(
+                        "r2d.preflight.mesh_geometry_mismatch",
+                        "supplied mesh face geometry differs from reconstructed finite-volume geometry",
+                        request,
+                        std::nullopt,
+                        std::nullopt,
+                        face_id));
+                }
+            }
+
+            const auto supplied_cells = request.mesh->geometry().cells();
+            const auto reconstructed_cells = reconstructed.geometry().cells();
+            if (supplied_cells.size() != reconstructed_cells.size()) {
+                return tsunami::core::failure(make_error(
+                    "r2d.preflight.mesh_geometry_mismatch",
+                    "supplied mesh cell-geometry count differs from reconstructed finite-volume geometry",
+                    request));
+            }
+            for (std::size_t index = 0U; index < supplied_cells.size(); ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                if (!near_equal(supplied_cells[index].centroid, reconstructed_cells[index].centroid, mesh_geometry_tolerance) ||
+                    !near_equal(supplied_cells[index].measure, reconstructed_cells[index].measure, mesh_geometry_tolerance)) {
+                    return tsunami::core::failure(make_error(
+                        "r2d.preflight.mesh_geometry_mismatch",
+                        "supplied mesh cell geometry differs from reconstructed finite-volume geometry",
+                        request,
+                        std::nullopt,
+                        cell_id));
+                }
+            }
+            return tsunami::core::success();
+        }
+
         [[nodiscard]] auto validate_mesh(
             const RegionalGeometryPreflightRequest &request,
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
             RegionalGeometryPreflightReport &report) -> tsunami::core::Result<void>
         {
-            const auto summary = request.mesh->summary();
+            const auto summary = mesh.summary();
             if (summary.spatial_dimension != 2U || summary.cell_count == 0U) {
                 return tsunami::core::failure(make_error(
                     "r2d.preflight.mesh_empty_or_invalid",
@@ -522,9 +645,8 @@ namespace tsunami::r2d
             report.cell_count = summary.cell_count;
             report.face_count = summary.face_count;
 
-            std::vector<std::size_t> face_references(summary.face_count, 0U);
             auto first_vertex = true;
-            for (const auto &vertex : request.mesh->topology().vertices()) {
+            for (const auto &vertex : mesh.topology().vertices()) {
                 const auto point = point_from(vertex.position);
                 if (!finite(point) || !contains_point(request.corridor->polygon(), point, request.corridor_record->policy.geometry_absolute_tolerance_m)) {
                     return tsunami::core::failure(make_error(
@@ -555,17 +677,9 @@ namespace tsunami::r2d
             }
 
             report.minimum_cell_measure = std::numeric_limits<double>::infinity();
-            for (const auto &cell : request.mesh->topology().cells()) {
-                const auto &geometry = request.mesh->cell_geometry(cell.id);
+            for (const auto &cell : mesh.topology().cells()) {
+                const auto &geometry = mesh.cell_geometry(cell.id);
                 const auto point = point_from(geometry.centroid);
-                if (!finite(point) || !finite(geometry.measure) || geometry.measure <= 0.0) {
-                    return tsunami::core::failure(make_error(
-                        "r2d.preflight.cell_geometry_invalid",
-                        "mesh cell centroid and measure must be finite and positive",
-                        request,
-                        std::nullopt,
-                        cell.id));
-                }
                 if (!contains_point(request.corridor->polygon(), point, request.corridor_record->policy.geometry_absolute_tolerance_m)) {
                     return tsunami::core::failure(make_error(
                         "r2d.preflight.mesh_outside_corridor",
@@ -584,35 +698,12 @@ namespace tsunami::r2d
                     return terrain;
                 }
                 report.minimum_cell_measure = std::min(report.minimum_cell_measure, geometry.measure);
-                for (const auto face_id : cell.faces) {
-                    if (face_id.value >= face_references.size()) {
-                        return tsunami::core::failure(make_error(
-                            "r2d.preflight.face_addressing_invalid",
-                            "cell references a face outside the mesh face range",
-                            request,
-                            std::nullopt,
-                            cell.id,
-                            face_id));
-                    }
-                    ++face_references[face_id.value];
-                }
             }
 
             report.minimum_face_length = std::numeric_limits<double>::infinity();
-            for (const auto &face : request.mesh->topology().faces()) {
-                const auto &geometry = request.mesh->face_geometry(face.id);
+            for (const auto &face : mesh.topology().faces()) {
+                const auto &geometry = mesh.face_geometry(face.id);
                 const auto length_value = std::hypot(geometry.area_vector.x, geometry.area_vector.y);
-                if (!finite(geometry.centroid.x) || !finite(geometry.centroid.y) ||
-                    !finite(geometry.area_vector.x) || !finite(geometry.area_vector.y) ||
-                    !finite(length_value) || length_value <= 0.0) {
-                    return tsunami::core::failure(make_error(
-                        "r2d.preflight.face_geometry_invalid",
-                        "mesh face lengths and normals must be finite and valid",
-                        request,
-                        std::nullopt,
-                        std::nullopt,
-                        face.id));
-                }
                 report.minimum_face_length = std::min(report.minimum_face_length, length_value);
                 if (face.is_internal()) {
                     ++report.internal_face_count;
@@ -625,26 +716,8 @@ namespace tsunami::r2d
                             std::nullopt,
                             face.id));
                     }
-                    if (face_references[face.id.value] != 2U) {
-                        return tsunami::core::failure(make_error(
-                            "r2d.preflight.face_addressing_invalid",
-                            "internal face must be addressed by exactly its owner and neighbour cells",
-                            request,
-                            std::nullopt,
-                            std::nullopt,
-                            face.id));
-                    }
                 } else {
                     ++report.boundary_face_count;
-                    if (face.boundary_patch == std::nullopt || face_references[face.id.value] != 1U) {
-                        return tsunami::core::failure(make_error(
-                            "r2d.preflight.face_addressing_invalid",
-                            "boundary face must have one owner-cell address and a patch id",
-                            request,
-                            std::nullopt,
-                            std::nullopt,
-                            face.id));
-                    }
                 }
             }
             return tsunami::core::success();
@@ -652,11 +725,11 @@ namespace tsunami::r2d
 
         [[nodiscard]] auto validate_patches(
             const RegionalGeometryPreflightRequest &request,
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
             RegionalGeometryPreflightReport &report) -> tsunami::core::Result<void>
         {
             auto seen = std::set<std::string>{};
-            auto covered_boundary_faces = std::set<tsunami::core::Index>{};
-            for (const auto &patch : request.mesh->topology().boundary_patches()) {
+            for (const auto &patch : mesh.topology().boundary_patches()) {
                 if (!seen.insert(patch.name).second) {
                     return tsunami::core::failure(make_error(
                         "r2d.preflight.patch_duplicate",
@@ -690,19 +763,6 @@ namespace tsunami::r2d
                         std::nullopt,
                         patch.id,
                         patch.name));
-                }
-                for (const auto face_id : patch.faces) {
-                    if (!covered_boundary_faces.insert(face_id.value).second) {
-                        return tsunami::core::failure(make_error(
-                            "r2d.preflight.patch_coverage_invalid",
-                            "boundary patches must cover each boundary face exactly once",
-                            request,
-                            std::nullopt,
-                            std::nullopt,
-                            face_id,
-                            patch.id,
-                            patch.name));
-                    }
                 }
                 report.patches.push_back(RegionalGeometryPreflightPatchReport{patch.name, patch.faces.size()});
             }
@@ -773,10 +833,17 @@ namespace tsunami::r2d
         report.terrain_id = request.terrain_record->identity.terrain_id;
         report.terrain_support_bounds = request.terrain->grid().extent();
 
-        if (auto valid = validate_mesh(request, report); !valid) {
+        auto reconstructed = reconstruct_validated_mesh(request);
+        if (!reconstructed) {
+            return tsunami::core::failure<RegionalGeometryPreflightReport>(reconstructed.error());
+        }
+        if (auto valid = validate_geometry_consistency(request, reconstructed.value()); !valid) {
             return tsunami::core::failure<RegionalGeometryPreflightReport>(valid.error());
         }
-        if (auto valid = validate_patches(request, report); !valid) {
+        if (auto valid = validate_mesh(request, reconstructed.value(), report); !valid) {
+            return tsunami::core::failure<RegionalGeometryPreflightReport>(valid.error());
+        }
+        if (auto valid = validate_patches(request, reconstructed.value(), report); !valid) {
             return tsunami::core::failure<RegionalGeometryPreflightReport>(valid.error());
         }
         return tsunami::core::success(std::move(report));

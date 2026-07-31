@@ -404,16 +404,61 @@ $EndElements
             tsunami::fvm::MeshGeometry{std::move(face_geometry), std::move(cell_geometry)}};
     }
 
+    [[nodiscard]] auto topology_input_from(
+        const tsunami::fvm::FiniteVolumeMesh &mesh) -> tsunami::fvm::MeshTopologyInput
+    {
+        return tsunami::fvm::MeshTopologyInput{
+            mesh.summary().id,
+            mesh.summary().spatial_dimension,
+            {mesh.topology().vertices().begin(), mesh.topology().vertices().end()},
+            {mesh.topology().faces().begin(), mesh.topology().faces().end()},
+            {mesh.topology().cells().begin(), mesh.topology().cells().end()},
+            {mesh.topology().boundary_patches().begin(), mesh.topology().boundary_patches().end()}};
+    }
+
+    [[nodiscard]] auto reconstructed_mesh_from(tsunami::fvm::MeshTopologyInput input)
+        -> tsunami::fvm::FiniteVolumeMesh
+    {
+        auto mesh = tsunami::fvm::make_finite_volume_mesh(std::move(input));
+        REQUIRE(mesh.has_value());
+        return std::move(mesh).value();
+    }
+
     [[nodiscard]] auto mesh_with_vertices(
         const tsunami::fvm::FiniteVolumeMesh &mesh,
         std::vector<tsunami::fvm::VertexRecord> vertices) -> tsunami::fvm::FiniteVolumeMesh
     {
+        auto input = topology_input_from(mesh);
+        input.vertices = std::move(vertices);
+        return reconstructed_mesh_from(std::move(input));
+    }
+
+    [[nodiscard]] auto invalid_mesh_with(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        std::vector<tsunami::fvm::FaceRecord> faces,
+        std::vector<tsunami::fvm::CellRecord> cells,
+        std::vector<tsunami::fvm::BoundaryPatchRecord> patches) -> tsunami::fvm::FiniteVolumeMesh
+    {
         return cloned_mesh_with(
             mesh,
-            std::move(vertices),
-            {mesh.topology().faces().begin(), mesh.topology().faces().end()},
-            {mesh.topology().cells().begin(), mesh.topology().cells().end()},
-            {mesh.topology().boundary_patches().begin(), mesh.topology().boundary_patches().end()});
+            {mesh.topology().vertices().begin(), mesh.topology().vertices().end()},
+            std::move(faces),
+            std::move(cells),
+            std::move(patches));
+    }
+
+    auto expect_mesh_invalid_with_cause(
+        const PreflightFixture &data,
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        std::string_view cause_code) -> void
+    {
+        auto request = request_for(data);
+        request.mesh = &mesh;
+        const auto result = tsunami::r2d::validate_regional2d_geometry_preflight(request);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.preflight.mesh_invalid");
+        REQUIRE(result.error().cause_code().has_value());
+        CHECK(*result.error().cause_code() == cause_code);
     }
 }
 
@@ -520,24 +565,22 @@ TEST_CASE("Regional2D geometry preflight rejects CRS target mismatch", "[r2d][pr
 TEST_CASE("Regional2D geometry preflight enforces required patch set", "[r2d][preflight]")
 {
     auto data = fixture();
-    auto vertices = std::vector<tsunami::fvm::VertexRecord>{
-        data.imported.mesh.topology().vertices().begin(),
-        data.imported.mesh.topology().vertices().end()};
-    auto faces = std::vector<tsunami::fvm::FaceRecord>{
-        data.imported.mesh.topology().faces().begin(),
-        data.imported.mesh.topology().faces().end()};
-    auto cells = std::vector<tsunami::fvm::CellRecord>{
-        data.imported.mesh.topology().cells().begin(),
-        data.imported.mesh.topology().cells().end()};
-    auto patches = std::vector<tsunami::fvm::BoundaryPatchRecord>{
-        data.imported.mesh.topology().boundary_patches().begin(),
-        data.imported.mesh.topology().boundary_patches().end()};
+    auto input = topology_input_from(data.imported.mesh);
 
-    auto missing_patches = patches;
-    missing_patches.erase(std::remove_if(missing_patches.begin(), missing_patches.end(), [](const auto &patch) {
+    auto missing_input = input;
+    const auto missing_face = missing_input.boundary_patches[1U].faces.front();
+    missing_input.faces[missing_face.value].boundary_patch = tsunami::fvm::BoundaryPatchId{0U};
+    missing_input.boundary_patches[0U].faces.push_back(missing_face);
+    missing_input.boundary_patches.erase(std::remove_if(missing_input.boundary_patches.begin(), missing_input.boundary_patches.end(), [](const auto &patch) {
         return patch.name == "boundary.inland";
-    }), missing_patches.end());
-    auto missing_mesh = cloned_mesh_with(data.imported.mesh, vertices, faces, cells, missing_patches);
+    }), missing_input.boundary_patches.end());
+    for (std::size_t index = 0U; index < missing_input.boundary_patches.size(); ++index) {
+        missing_input.boundary_patches[index].id = tsunami::fvm::BoundaryPatchId{index};
+        for (const auto face_id : missing_input.boundary_patches[index].faces) {
+            missing_input.faces[face_id.value].boundary_patch = missing_input.boundary_patches[index].id;
+        }
+    }
+    auto missing_mesh = reconstructed_mesh_from(std::move(missing_input));
     auto missing_request = request_for(data);
     missing_request.mesh = &missing_mesh;
     auto missing = tsunami::r2d::validate_regional2d_geometry_preflight(missing_request);
@@ -545,18 +588,21 @@ TEST_CASE("Regional2D geometry preflight enforces required patch set", "[r2d][pr
     CHECK(missing.error().code() == "r2d.preflight.patch_missing");
     CHECK(context_value(missing.error(), "patch_name") == "boundary.inland");
 
-    auto empty_patches = patches;
-    empty_patches.front().faces.clear();
-    auto empty_mesh = cloned_mesh_with(data.imported.mesh, vertices, faces, cells, empty_patches);
+    auto empty_input = input;
+    const auto empty_face = empty_input.boundary_patches.front().faces.front();
+    empty_input.faces[empty_face.value].boundary_patch = tsunami::fvm::BoundaryPatchId{1U};
+    empty_input.boundary_patches[1U].faces.push_back(empty_face);
+    empty_input.boundary_patches.front().faces.clear();
+    auto empty_mesh = reconstructed_mesh_from(std::move(empty_input));
     auto empty_request = request_for(data);
     empty_request.mesh = &empty_mesh;
     auto empty = tsunami::r2d::validate_regional2d_geometry_preflight(empty_request);
     REQUIRE_FALSE(empty.has_value());
     CHECK(empty.error().code() == "r2d.preflight.patch_empty");
 
-    auto extra_patches = patches;
-    extra_patches.push_back(tsunami::fvm::BoundaryPatchRecord{tsunami::fvm::BoundaryPatchId{4U}, "boundary.extra", {}});
-    auto extra_mesh = cloned_mesh_with(data.imported.mesh, vertices, faces, cells, extra_patches);
+    auto extra_input = input;
+    extra_input.boundary_patches.push_back(tsunami::fvm::BoundaryPatchRecord{tsunami::fvm::BoundaryPatchId{4U}, "boundary.extra", {}});
+    auto extra_mesh = reconstructed_mesh_from(std::move(extra_input));
     auto extra_request = request_for(data);
     extra_request.mesh = &extra_mesh;
     auto extra = tsunami::r2d::validate_regional2d_geometry_preflight(extra_request);
@@ -567,26 +613,169 @@ TEST_CASE("Regional2D geometry preflight enforces required patch set", "[r2d][pr
 TEST_CASE("Regional2D geometry preflight rejects noncanonical internal owner neighbour order", "[r2d][preflight]")
 {
     auto data = fixture();
-    auto faces = std::vector<tsunami::fvm::FaceRecord>{
-        data.imported.mesh.topology().faces().begin(),
-        data.imported.mesh.topology().faces().end()};
-    auto internal = std::find_if(faces.begin(), faces.end(), [](const auto &face) {
+    auto input = topology_input_from(data.imported.mesh);
+    auto internal = std::find_if(input.faces.begin(), input.faces.end(), [](const auto &face) {
         return face.neighbour.has_value();
     });
-    REQUIRE(internal != faces.end());
+    REQUIRE(internal != input.faces.end());
     std::swap(internal->owner, *internal->neighbour);
-    auto mesh = cloned_mesh_with(
-        data.imported.mesh,
-        {data.imported.mesh.topology().vertices().begin(), data.imported.mesh.topology().vertices().end()},
-        std::move(faces),
-        {data.imported.mesh.topology().cells().begin(), data.imported.mesh.topology().cells().end()},
-        {data.imported.mesh.topology().boundary_patches().begin(), data.imported.mesh.topology().boundary_patches().end()});
+    const auto internal_face_id = internal->id;
+    auto mesh = reconstructed_mesh_from(std::move(input));
     auto request = request_for(data);
     request.mesh = &mesh;
     const auto result = tsunami::r2d::validate_regional2d_geometry_preflight(request);
     REQUIRE_FALSE(result.has_value());
     CHECK(result.error().code() == "r2d.preflight.internal_owner_not_canonical");
-    CHECK(context_value(result.error(), "face_id") == std::to_string(internal->id.value));
+    CHECK(context_value(result.error(), "face_id") == std::to_string(internal_face_id.value));
+}
+
+TEST_CASE("Regional2D geometry preflight wraps authoritative FVM topology failures", "[r2d][preflight]")
+{
+    auto data = fixture();
+    const auto base = topology_input_from(data.imported.mesh);
+
+    SECTION("internal face is not addressed by its declared neighbour")
+    {
+        auto faces = base.faces;
+        auto cells = base.cells;
+        const auto internal = std::find_if(faces.begin(), faces.end(), [](const auto &face) {
+            return face.neighbour.has_value();
+        });
+        REQUIRE(internal != faces.end());
+        auto &neighbour_faces = cells[internal->neighbour->value].faces;
+        const auto internal_slot = std::find(neighbour_faces.begin(), neighbour_faces.end(), internal->id);
+        REQUIRE(internal_slot != neighbour_faces.end());
+        const auto replacement = std::find_if(base.faces.begin(), base.faces.end(), [&](const auto &face) {
+            return face.is_boundary() && face.owner != cells[internal->neighbour->value].id &&
+                std::find(neighbour_faces.begin(), neighbour_faces.end(), face.id) == neighbour_faces.end();
+        });
+        REQUIRE(replacement != base.faces.end());
+        *internal_slot = replacement->id;
+        auto mesh = invalid_mesh_with(data.imported.mesh, std::move(faces), std::move(cells), base.boundary_patches);
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.cell_face_membership_invalid");
+    }
+
+    SECTION("boundary face is referenced by a cell other than its declared owner")
+    {
+        auto cells = base.cells;
+        auto &target_faces = cells[1U].faces;
+        const auto replacement = std::find_if(base.faces.begin(), base.faces.end(), [&](const auto &face) {
+            return face.is_boundary() && face.owner != cells[1U].id &&
+                std::find(target_faces.begin(), target_faces.end(), face.id) == target_faces.end();
+        });
+        REQUIRE(replacement != base.faces.end());
+        target_faces.front() = replacement->id;
+        auto mesh = invalid_mesh_with(data.imported.mesh, base.faces, std::move(cells), base.boundary_patches);
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.cell_face_membership_invalid");
+    }
+
+    SECTION("owner is outside the cell range")
+    {
+        auto faces = base.faces;
+        faces.front().owner = tsunami::fvm::CellId{99U};
+        auto mesh = invalid_mesh_with(data.imported.mesh, std::move(faces), base.cells, base.boundary_patches);
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.face_owner_out_of_range");
+    }
+
+    SECTION("neighbour is outside the cell range")
+    {
+        auto faces = base.faces;
+        const auto internal = std::find_if(faces.begin(), faces.end(), [](const auto &face) {
+            return face.neighbour.has_value();
+        });
+        REQUIRE(internal != faces.end());
+        internal->neighbour = tsunami::fvm::CellId{99U};
+        auto mesh = invalid_mesh_with(data.imported.mesh, std::move(faces), base.cells, base.boundary_patches);
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.face_neighbour_out_of_range");
+    }
+
+    SECTION("internal face appears in a boundary patch")
+    {
+        auto patches = base.boundary_patches;
+        const auto internal = std::find_if(base.faces.begin(), base.faces.end(), [](const auto &face) {
+            return face.neighbour.has_value();
+        });
+        REQUIRE(internal != base.faces.end());
+        patches.front().faces.push_back(internal->id);
+        auto mesh = invalid_mesh_with(data.imported.mesh, base.faces, base.cells, std::move(patches));
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.internal_face_in_patch");
+    }
+
+    SECTION("boundary face appears under a different patch")
+    {
+        auto faces = base.faces;
+        faces[base.boundary_patches.front().faces.front().value].boundary_patch = tsunami::fvm::BoundaryPatchId{1U};
+        auto mesh = invalid_mesh_with(data.imported.mesh, std::move(faces), base.cells, base.boundary_patches);
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.boundary_face_unassigned");
+    }
+
+    SECTION("boundary face is omitted from patches")
+    {
+        auto patches = base.boundary_patches;
+        patches.front().faces.clear();
+        auto mesh = invalid_mesh_with(data.imported.mesh, base.faces, base.cells, std::move(patches));
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.boundary_face_unassigned");
+    }
+
+    SECTION("patch references an out-of-range face")
+    {
+        auto patches = base.boundary_patches;
+        patches.front().faces.push_back(tsunami::fvm::FaceId{99U});
+        auto mesh = invalid_mesh_with(data.imported.mesh, base.faces, base.cells, std::move(patches));
+        expect_mesh_invalid_with_cause(data, mesh, "fvm.mesh.boundary_face_unassigned");
+    }
+}
+
+TEST_CASE("Regional2D geometry preflight rejects stale supplied geometry", "[r2d][preflight]")
+{
+    auto data = fixture();
+    auto input = topology_input_from(data.imported.mesh);
+    auto face_geometry = std::vector<tsunami::fvm::FaceGeometry>{
+        data.imported.mesh.geometry().faces().begin(),
+        data.imported.mesh.geometry().faces().end()};
+    auto cell_geometry = std::vector<tsunami::fvm::CellGeometry>{
+        data.imported.mesh.geometry().cells().begin(),
+        data.imported.mesh.geometry().cells().end()};
+
+    SECTION("face geometry mismatch")
+    {
+        face_geometry.front().centroid.x += 0.01;
+        auto mesh = tsunami::fvm::FiniteVolumeMesh{
+            tsunami::fvm::MeshTopology{
+                input.id,
+                input.spatial_dimension,
+                std::move(input.vertices),
+                std::move(input.faces),
+                std::move(input.cells),
+                std::move(input.boundary_patches)},
+            tsunami::fvm::MeshGeometry{std::move(face_geometry), std::move(cell_geometry)}};
+        auto request = request_for(data);
+        request.mesh = &mesh;
+        const auto result = tsunami::r2d::validate_regional2d_geometry_preflight(request);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.preflight.mesh_geometry_mismatch");
+        CHECK(context_value(result.error(), "face_id") == "0");
+    }
+
+    SECTION("cell geometry mismatch")
+    {
+        cell_geometry.front().measure += 0.01;
+        auto mesh = tsunami::fvm::FiniteVolumeMesh{
+            tsunami::fvm::MeshTopology{
+                input.id,
+                input.spatial_dimension,
+                std::move(input.vertices),
+                std::move(input.faces),
+                std::move(input.cells),
+                std::move(input.boundary_patches)},
+            tsunami::fvm::MeshGeometry{std::move(face_geometry), std::move(cell_geometry)}};
+        auto request = request_for(data);
+        request.mesh = &mesh;
+        const auto result = tsunami::r2d::validate_regional2d_geometry_preflight(request);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.preflight.mesh_geometry_mismatch");
+        CHECK(context_value(result.error(), "cell_id") == "0");
+    }
 }
 
 TEST_CASE("Regional2D geometry preflight relies on FVM factory for degenerate cells", "[r2d][preflight][fvm]")
