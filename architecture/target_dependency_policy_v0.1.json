@@ -516,7 +516,8 @@
       "allowed_direct_project_dependencies": [
         "tsunami_core",
         "tsunami_fvm",
-        "tsunami_data"
+        "tsunami_data",
+        "tsunami_geo"
       ],
       "prohibited_direct_project_dependencies": [
         "tsunami_cli",

@@ -62,6 +62,46 @@ Mesh construction can consume immutable terrain values, valid masks, lineage,
 target spacing, rotated affine, corridor coverage and conditioning provenance
 without redefining resampling, merge or gap-resolution policy.
 
+## Regional2D Geometry Preflight Contract
+
+`validate_regional2d_geometry_preflight` is the Regional2D acceptance gate for
+binding an imported triangular FVM mesh to one accepted corridor and one
+conditioned terrain product. The API lives in `tsunami::r2d`, borrows immutable
+`ConstructedCorridor`, `CorridorConstructionRecord`, `ConditionedTerrainRaster`,
+`TerrainConditioningRecord` and `FiniteVolumeMesh` inputs, and optionally accepts
+generic imported physical-group evidence populated from the Gmsh importer.
+
+The preflight composes the existing corridor and terrain record validators, then
+adds cross-domain checks for corridor geometry consistency, basis
+orthonormality, bearing compatibility, shared computational target reference,
+terrain/corridor identity, terrain grid/vector consistency, support lookup for
+every mesh vertex and cell centroid, required nodata explanation, Regional2D
+patch identity and canonical internal owner/neighbour ordering. It performs no
+CRS conversion, terrain interpolation, bathymetry field transfer, solver
+execution, GDAL access or GUI formatting.
+
+On success the report retains only acceptance evidence: corridor and terrain
+identity, mesh counts, internal/boundary face counts, patch names and face
+counts, mesh bounds, terrain support bounds, minimum cell measure, minimum face
+length and `accepted` status. On failure it returns the existing structured
+`tsunami::core::Error` diagnostic with stable `r2d.preflight.*` codes,
+`validation` category, `error` severity, operation
+`validate_regional2d_geometry_preflight`, `SWE-GEO-CHK-WP1` rule context and
+deterministic mesh/corridor/terrain/entity keys.
+
+Focused verification on this branch:
+
+```text
+cmake --build --preset linux-gcc-test-build --target tsunami_tests
+./build/linux-gcc-test/tests/tsunami_tests "[preflight]" --reporter compact
+```
+
+The focused GCC preflight filter passed 99 assertions across 11 test cases,
+covering the valid imported triangular mesh path, corridor/terrain/CRS
+mismatches, terrain support and nodata failures, required/empty/extra patches,
+noncanonical internal owner/neighbour ordering, lower-level FVM degenerate-cell
+rejection, deterministic diagnostic context and transactional non-mutation.
+
 ## Exclusions
 
 This increment does not implement production terrain selection, automatic
