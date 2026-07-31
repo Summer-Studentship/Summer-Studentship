@@ -140,15 +140,15 @@
       "layer_order": 8,
       "classification": "runtime",
       "owning_wbs_domains": ["SWE-DAT", "SWE-GEO", "SWE-VER"],
-      "associated_targets": ["tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh", "tsunami_diagnostics_matplot"],
-      "namespace_roots": ["tsunami::adapters::hdf5", "tsunami::adapters::xdmf", "tsunami::geo_gdal", "tsunami::adapters::gmsh", "tsunami::adapters::diagnostics"],
-      "provisional_source_paths": ["src/adapters/io/hdf5/", "src/adapters/io/xdmf/", "src/geo_gdal/", "src/adapters/mesh/gmsh/", "src/adapters/diagnostics/matplot/"],
+      "associated_targets": ["tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_geo_proj", "tsunami_mesh_gmsh", "tsunami_diagnostics_matplot"],
+      "namespace_roots": ["tsunami::adapters::hdf5", "tsunami::adapters::xdmf", "tsunami::geo_gdal", "tsunami::geo_proj", "tsunami::adapters::gmsh", "tsunami::adapters::diagnostics"],
+      "provisional_source_paths": ["src/adapters/io/hdf5/", "src/adapters/io/xdmf/", "src/geo_gdal/", "src/geo_proj/", "src/adapters/mesh/gmsh/", "src/adapters/diagnostics/matplot/"],
       "allowed_inward_layers": ["L1", "L2", "L3", "L4", "L7"],
       "prohibited_outward_dependencies": ["domain contracts depending on adapters", "external-library types leaking into domain public headers"],
       "permitted_external_dependency_classes": ["HDF5", "XML", "GDAL", "PROJ", "external Gmsh process", "diagnostic plotting"],
       "prohibited_external_dependency_classes": ["Qt", "CLI11", "Catch2 as production dependency"],
       "interface_categories_owned": ["Adapter ports", "Composition contracts"],
-      "status": "active with G1 GDAL geospatial import adapter"
+      "status": "active with G1 GDAL geospatial import and PROJ coordinate transformation adapters"
     },
     {
       "layer_id": "L9",
@@ -222,6 +222,7 @@
     "tsunami_io_xdmf": "L8",
     "tsunami_geo": "L4",
     "tsunami_geo_gdal": "L8",
+    "tsunami_geo_proj": "L8",
     "tsunami_mesh_gmsh": "L8",
     "tsunami_r2d": "L5",
     "tsunami_r2d_io": "L5",

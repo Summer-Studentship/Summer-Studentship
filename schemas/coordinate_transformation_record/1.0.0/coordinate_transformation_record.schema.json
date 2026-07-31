@@ -1,0 +1,236 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.test/tsunami/schemas/coordinate_transformation_record/1.0.0/coordinate_transformation_record.schema.json",
+  "title": "tsunami.coordinate_transformation_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "policy_version",
+    "identity",
+    "source_horizontal",
+    "source_vertical",
+    "target",
+    "area_of_interest",
+    "horizontal_operation",
+    "vertical_operation",
+    "storage_axes",
+    "grids",
+    "source_extent",
+    "target_extent",
+    "diagnostics",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "required": [
+        "schema_name",
+        "version"
+      ],
+      "properties": {
+        "schema_name": {
+          "const": "tsunami.coordinate_transformation_record"
+        },
+        "version": {
+          "type": "object",
+          "properties": {
+            "major": {
+              "const": 1
+            },
+            "minor": {
+              "const": 0
+            },
+            "patch": {
+              "const": 0
+            }
+          }
+        }
+      }
+    },
+    "policy_version": {
+      "const": "0.1"
+    },
+    "identity": {
+      "type": "object"
+    },
+    "source_horizontal": {
+      "$ref": "#/$defs/reference"
+    },
+    "source_vertical": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/reference"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "target": {
+      "type": "object"
+    },
+    "area_of_interest": {
+      "$ref": "#/$defs/geographic_area"
+    },
+    "horizontal_operation": {
+      "type": "object"
+    },
+    "vertical_operation": {
+      "type": "object"
+    },
+    "storage_axes": {
+      "enum": [
+        "east_north",
+        "east_north_up"
+      ]
+    },
+    "grids": {
+      "type": "array"
+    },
+    "source_extent": {
+      "$ref": "#/$defs/bounding_box"
+    },
+    "target_extent": {
+      "$ref": "#/$defs/bounding_box"
+    },
+    "diagnostics": {
+      "type": "object"
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "object",
+      "required": [
+        "authority_name",
+        "authority_code",
+        "name",
+        "canonical_wkt2",
+        "canonical_projjson",
+        "datum_name",
+        "datum_realisation",
+        "coordinate_epoch_decimal_year",
+        "axis_names",
+        "axis_directions",
+        "axis_units"
+      ],
+      "properties": {
+        "authority_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "authority_code": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "name": {
+          "type": "string"
+        },
+        "canonical_wkt2": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "canonical_projjson": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "datum_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "datum_realisation": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "coordinate_epoch_decimal_year": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "axis_names": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "axis_directions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "axis_units": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "geographic_area": {
+      "type": "object",
+      "required": [
+        "west_longitude_degrees",
+        "south_latitude_degrees",
+        "east_longitude_degrees",
+        "north_latitude_degrees"
+      ],
+      "properties": {
+        "west_longitude_degrees": {
+          "type": "number"
+        },
+        "south_latitude_degrees": {
+          "type": "number"
+        },
+        "east_longitude_degrees": {
+          "type": "number"
+        },
+        "north_latitude_degrees": {
+          "type": "number"
+        }
+      }
+    },
+    "bounding_box": {
+      "type": "object",
+      "required": [
+        "minimum_x",
+        "minimum_y",
+        "maximum_x",
+        "maximum_y"
+      ],
+      "properties": {
+        "minimum_x": {
+          "type": "number"
+        },
+        "minimum_y": {
+          "type": "number"
+        },
+        "maximum_x": {
+          "type": "number"
+        },
+        "maximum_y": {
+          "type": "number"
+        }
+      }
+    }
+  }
+}

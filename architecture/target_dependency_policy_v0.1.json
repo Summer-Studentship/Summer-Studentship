@@ -91,8 +91,12 @@
       "GDAL::GDAL": [
         "tsunami_geo_gdal"
       ],
-      "PROJ": [],
-      "PROJ::proj": []
+      "PROJ": [
+        "tsunami_geo_proj"
+      ],
+      "PROJ::proj": [
+        "tsunami_geo_proj"
+      ]
     }
   },
   "targets": [
@@ -317,7 +321,7 @@
     {
       "target_name": "tsunami_geo",
       "namespaced_alias": "Tsunami::geo",
-      "status": "active G1 method-neutral geospatial import contracts",
+      "status": "active G1 method-neutral geospatial import and coordinate-transformation contracts",
       "type": "static_library",
       "wbs_owner": [
         "SWE-GEO-*"
@@ -338,6 +342,7 @@
         "tsunami_r2d",
         "tsunami_l3d",
         "tsunami_geo_gdal",
+        "tsunami_geo_proj",
         "tsunami_mesh_gmsh",
         "tsunami_io_hdf5",
         "tsunami_io_xdmf",
@@ -354,7 +359,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation and canonical import-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
+      "public_boundary_notes": "Owns method-neutral imported raster/vector values, native spatial-reference records, datum-source evidence, asset import validation, coordinate-transformation contracts, raster transformation plans, transformed vector/point values and canonical import/transformation-record serialisation. GDAL, PROJ, HDF5, Gmsh, solver and GUI types must not become public-domain dependencies."
     },
     {
       "target_name": "tsunami_geo_gdal",
@@ -401,6 +406,53 @@
         "Matplot++"
       ],
       "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction and error translation behind the tsunami_geo contracts. G1 does not call PROJ transformation APIs, and the tsunami_geo target must not depend on this adapter."
+    },
+    {
+      "target_name": "tsunami_geo_proj",
+      "namespaced_alias": null,
+      "status": "active G1 optional PROJ coordinate transformation adapter",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-GEO-CRS"
+      ],
+      "conceptual_layer": "Geospatial Adapter",
+      "state": "active",
+      "classification": "adapter",
+      "implements_contracts": [
+        "tsunami_geo"
+      ],
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_geo"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_r2d",
+        "tsunami_l3d",
+        "tsunami_fvm",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "PROJ"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "GDAL",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns PROJ-specific coordinate-operation discovery, resource availability checks, point/vector execution and raster transformation planning behind tsunami_geo contracts. PROJ native types and functions remain private implementation details."
     },
     {
       "target_name": "tsunami_mesh_gmsh",

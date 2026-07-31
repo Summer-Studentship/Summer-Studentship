@@ -32,6 +32,12 @@ option(
     OFF
 )
 
+option(
+    TSUNAMI_ENABLE_CRS_TRANSFORMATIONS
+    "Build the optional PROJ-backed coordinate transformation adapter"
+    OFF
+)
+
 include(CTest)
 include(cmake/TsunamiCompilerWarnings.cmake)
 

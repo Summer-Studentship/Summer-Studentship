@@ -1,0 +1,17 @@
+{
+  "control_id": "authoritative_offset_controls",
+  "source_coordinates": {
+    "station_height_m": 1.2
+  },
+  "source_crs": "synthetic-station-zero",
+  "source_datum_evidence": "Synthetic station zero with declared offset to target zero",
+  "target_crs": "synthetic-target-height",
+  "expected_coordinates": {
+    "z_up_m": 1.45
+  },
+  "expected_source": "Authoritative fixture offset +0.25 m; not a production tide-gauge datum",
+  "source_document_title": "Synthetic authoritative offset control",
+  "source_document_uri": "https://example.test/tsunami/authoritative-offset-control",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.001
+}

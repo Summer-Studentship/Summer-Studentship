@@ -1,0 +1,17 @@
+{
+  "control_id": "vertical_identity_controls",
+  "source_coordinates": {
+    "z_m": 3.25
+  },
+  "source_crs": "EPSG:6695",
+  "source_datum_evidence": "JGD2011 vertical height, positive up",
+  "target_crs": "EPSG:6695",
+  "expected_coordinates": {
+    "z_up_m": 3.25
+  },
+  "expected_source": "Identity applies only when vertical reference, unit and positive direction match",
+  "source_document_title": "Synthetic vertical identity control",
+  "source_document_uri": "https://example.test/tsunami/vertical-identity-control",
+  "access_date": "2026-07-31",
+  "tolerance_m": 0.001
+}
