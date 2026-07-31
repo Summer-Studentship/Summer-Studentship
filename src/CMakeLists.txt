@@ -179,6 +179,7 @@ add_library(tsunami_r2d STATIC
     r2d/src/RegionalEarthquakeDiagnostics.cpp
     r2d/src/RegionalEarthquakeInitialisation.cpp
     r2d/src/RegionalExteriorState.cpp
+    r2d/src/RegionalGeometryPreflight.cpp
     r2d/src/RegionalRelaxationZone.cpp
     r2d/src/RegionalResidual.cpp
     r2d/src/RegionalResidualEvaluation.cpp
@@ -204,7 +205,7 @@ target_include_directories(tsunami_r2d
         $<INSTALL_INTERFACE:include>
 )
 target_compile_features(tsunami_r2d PUBLIC cxx_std_20)
-target_link_libraries(tsunami_r2d PUBLIC tsunami_core tsunami_fvm tsunami_data)
+target_link_libraries(tsunami_r2d PUBLIC tsunami_core tsunami_fvm tsunami_data tsunami_geo)
 tsunami_apply_compiler_warnings(tsunami_r2d)
 
 add_library(tsunami_r2d_io STATIC
