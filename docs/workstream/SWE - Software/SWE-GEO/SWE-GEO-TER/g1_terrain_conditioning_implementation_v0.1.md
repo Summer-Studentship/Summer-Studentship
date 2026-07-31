@@ -96,7 +96,7 @@ cmake --build --preset linux-gcc-test-build --target tsunami_tests
 ./build/linux-gcc-test/tests/tsunami_tests "[preflight]" --reporter compact
 ```
 
-The focused GCC preflight filter passed 99 assertions across 11 test cases,
+The focused GCC preflight filter passed 180 assertions across 13 test cases,
 covering the valid imported triangular mesh path, corridor/terrain/CRS
 mismatches, terrain support and nodata failures, required/empty/extra patches,
 noncanonical internal owner/neighbour ordering, lower-level FVM degenerate-cell
