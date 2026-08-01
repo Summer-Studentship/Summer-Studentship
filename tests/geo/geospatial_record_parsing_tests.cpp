@@ -1,12 +1,16 @@
 #include <catch2/catch_test_macros.hpp>
 
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <limits>
 #include <optional>
 #include <string>
 #include <string_view>
 #include <vector>
+
+#include <nlohmann/json.hpp>
 
 #include <tsunami/geo/CorridorConstructionParsing.hpp>
 #include <tsunami/geo/CorridorConstructionSerialisation.hpp>
@@ -175,7 +179,7 @@ namespace
         record.source_valid_cell_count = 4U;
         record.output_valid_cell_count = role == tsunami::geo::TerrainSourceRole::bathymetry ? 3U : 1U;
         record.source_nodata_cell_count = role == tsunami::geo::TerrainSourceRole::topography ? 2U : 1U;
-        record.outside_coverage_cell_count = role == tsunami::geo::TerrainSourceRole::bathymetry ? 5U : 6U;
+        record.outside_coverage_cell_count = role == tsunami::geo::TerrainSourceRole::bathymetry ? 0U : 1U;
         record.operation = tsunami::geo::CoordinateOperationRecord{
             dataset_id + " accepted operation",
             std::string{"TEST"},
@@ -193,7 +197,7 @@ namespace
             {
                 tsunami::geo::CoordinateOperationGrid{
                     "zeta-grid",
-                    std::filesystem::path{"grids/zeta.gsb"},
+                    std::string{"grids/zeta.gsb"},
                     std::string{"zeta-package"},
                     std::string{"https://example.test/zeta.gsb"},
                     true,
@@ -202,7 +206,7 @@ namespace
                     tsunami::geo::GeodeticResourceVerificationStatus::declared_not_verified},
                 tsunami::geo::CoordinateOperationGrid{
                     "alpha-grid",
-                    std::filesystem::path{"grids/alpha.gsb"},
+                    std::string{"grids/alpha.gsb"},
                     std::string{"alpha-package"},
                     std::string{"https://example.test/alpha.gsb"},
                     true,
@@ -302,6 +306,44 @@ namespace
         auto file = std::ifstream{path, std::ios::binary};
         REQUIRE(file);
         return std::string{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+    }
+
+    [[nodiscard]] auto repository_root() -> std::filesystem::path
+    {
+        return std::filesystem::path{__FILE__}.parent_path().parent_path().parent_path();
+    }
+
+    auto require_closed_schema_objects_declare_required_properties(
+        const nlohmann::ordered_json &json,
+        const std::string &pointer = "/") -> void
+    {
+        if (json.is_object()) {
+            if (json.value("additionalProperties", true) == false && json.contains("required")) {
+                REQUIRE(json.contains("properties"));
+                REQUIRE(json.at("properties").is_object());
+                for (const auto &required : json.at("required")) {
+                    REQUIRE(required.is_string());
+                    INFO("closed schema object " << pointer << " requires undeclared property " << required.get<std::string>());
+                    CHECK(json.at("properties").contains(required.get<std::string>()));
+                }
+            }
+            for (const auto &[key, value] : json.items()) {
+                require_closed_schema_objects_declare_required_properties(value, pointer == "/" ? "/" + key : pointer + "/" + key);
+            }
+        } else if (json.is_array()) {
+            for (std::size_t i = 0U; i < json.size(); ++i) {
+                require_closed_schema_objects_declare_required_properties(json[i], pointer + "/" + std::to_string(i));
+            }
+        }
+    }
+
+    auto require_terrain_record_invalid(const tsunami::geo::TerrainConditioningRecord &record) -> void
+    {
+        const auto serialised = tsunami::geo::serialise_terrain_conditioning_record(record);
+        CHECK_FALSE(serialised.has_value());
+        if (!serialised) {
+            CHECK(serialised.error().code() == "geo.terrain.record_invalid");
+        }
     }
 
     auto check_reference_equal(const tsunami::geo::CoordinateReferenceDescriptor &left, const tsunami::geo::CoordinateReferenceDescriptor &right) -> void
@@ -540,6 +582,152 @@ TEST_CASE("canonical terrain records parse and reserialise byte-identically", "[
     check_terrain_equal(parsed.value(), original);
     CHECK(first.find("\"major\": 2") != std::string::npos);
     CHECK(second.ends_with('\n'));
+}
+
+TEST_CASE("terrain v2 schema declares closed object requirements", "[geo-record-parsing]")
+{
+    const auto schema_path = repository_root() / "schemas/terrain_conditioning_record/2.0.0/terrain_conditioning_record.schema.json";
+    const auto schema = nlohmann::ordered_json::parse(read_text(schema_path));
+    require_closed_schema_objects_declare_required_properties(schema);
+
+    const auto canonical = nlohmann::ordered_json::parse(tsunami::geo::serialise_terrain_conditioning_record(terrain_record()).value());
+    for (const auto &required : schema.at("required")) {
+        REQUIRE(required.is_string());
+        INFO("canonical terrain v2 JSON is missing top-level schema property " << required.get<std::string>());
+        CHECK(canonical.contains(required.get<std::string>()));
+    }
+}
+
+TEST_CASE("terrain record validation binds source provenance to terrain identity", "[geo-record-parsing]")
+{
+    SECTION("stale source case revision fails")
+    {
+        auto record = terrain_record();
+        record.bathymetry_import_identity.case_revision.revision = 2U;
+        record.bathymetry_resampling.import_identity.case_revision.revision = 2U;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("stale source manifest revision fails")
+    {
+        auto record = terrain_record();
+        record.topography_import_identity.manifest_revision = 2U;
+        record.topography_resampling.import_identity.manifest_revision = 2U;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("stale transformation manifest ID fails")
+    {
+        auto record = terrain_record();
+        record.bathymetry_transformation_identity.manifest_id = "stale-manifest";
+        record.bathymetry_resampling.transformation_identity.manifest_id = "stale-manifest";
+        require_terrain_record_invalid(record);
+    }
+}
+
+TEST_CASE("terrain record validation enforces resampling target-grid invariants", "[geo-record-parsing]")
+{
+    SECTION("inconsistent target spacing fails")
+    {
+        auto record = terrain_record();
+        record.bathymetry_resampling.target_spacing_m = 10.25;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("inconsistent maximum upsampling factor fails")
+    {
+        auto record = terrain_record();
+        record.topography_resampling.maximum_upsampling_factor = 3.0;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("operation target CRS mismatch fails")
+    {
+        auto record = terrain_record();
+        record.topography_resampling.operation.target_crs.authority_code = std::string{"OTHER"};
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("resampling status counts must equal the target cell count")
+    {
+        auto record = terrain_record();
+        record.bathymetry_resampling.outside_coverage_cell_count = 1U;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("overflow-scale resampling counts fail safely")
+    {
+        auto record = terrain_record();
+        record.bathymetry_resampling.output_valid_cell_count = std::numeric_limits<std::uint64_t>::max();
+        record.bathymetry_resampling.source_nodata_cell_count = 1U;
+        record.bathymetry_resampling.outside_coverage_cell_count = 0U;
+        require_terrain_record_invalid(record);
+    }
+}
+
+TEST_CASE("terrain record validation enforces merge gap and diagnostic invariants", "[geo-record-parsing]")
+{
+    SECTION("invalid merge source IDs fail")
+    {
+        auto record = terrain_record();
+        record.merge_policy.second_priority_dataset_id = "rogue-terrain";
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("invalid reject gap policy fails")
+    {
+        auto record = terrain_record();
+        record.gap_policy.maximum_fill_distance_m = 1.0;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("diagnostic partition contradiction fails")
+    {
+        auto record = terrain_record();
+        record.diagnostics.topography_selected_cell_count = 2U;
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("diagnostic count overflow fails safely")
+    {
+        auto record = terrain_record();
+        record.diagnostics.total_cell_count = std::numeric_limits<std::uint64_t>::max();
+        record.diagnostics.active_cell_count = std::numeric_limits<std::uint64_t>::max();
+        record.diagnostics.outside_corridor_cell_count = 1U;
+        require_terrain_record_invalid(record);
+    }
+}
+
+TEST_CASE("terrain record validation hardens output paths and persisted strings", "[geo-record-parsing]")
+{
+    SECTION("unsafe output path fails")
+    {
+        auto record = terrain_record();
+        record.output_path = std::filesystem::path{"outputs/terrain/../conditioned-terrain.tif"};
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("operation-grid full_path round-trips exactly as a string")
+    {
+        auto record = terrain_record();
+        record.bathymetry_resampling.operation.grids.front().full_path = std::string{"C:\\fixtures\\grids\\zeta.gsb"};
+        const auto serialised = tsunami::geo::serialise_terrain_conditioning_record(record);
+        REQUIRE(serialised.has_value());
+        auto parsed = tsunami::geo::parse_terrain_conditioning_record(serialised.value(), "terrain-grid-path");
+        REQUIRE(parsed.has_value());
+        CHECK(parsed.value().bathymetry_resampling.operation.grids.front().full_path == std::string{"C:\\fixtures\\grids\\zeta.gsb"});
+    }
+
+    SECTION("embedded-NUL warning data cannot be serialized as a valid record")
+    {
+        auto record = terrain_record();
+        record.diagnostics.warnings.push_back(std::string{"bad\0diagnostic", 14U});
+        require_terrain_record_invalid(record);
+
+        record = terrain_record();
+        record.warnings.push_back(std::string{"bad\0warning", 11U});
+        require_terrain_record_invalid(record);
+    }
 }
 
 TEST_CASE("terrain v1 records require explicit migration for lossless read-back", "[geo-record-parsing]")

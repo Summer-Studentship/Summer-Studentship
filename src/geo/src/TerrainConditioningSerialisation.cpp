@@ -129,20 +129,6 @@ namespace tsunami::geo
             out << '\n';
         }
 
-        auto optional_path_line(std::ostringstream &out, int indent, std::string_view key, const std::optional<std::filesystem::path> &value, bool comma = true) -> void
-        {
-            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": ";
-            if (value) {
-                out << '"' << escape(value->generic_string()) << '"';
-            } else {
-                out << "null";
-            }
-            if (comma) {
-                out << ',';
-            }
-            out << '\n';
-        }
-
         auto open_object(std::ostringstream &out, int indent, std::string_view key) -> void
         {
             out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": {\n";
@@ -372,7 +358,7 @@ namespace tsunami::geo
             for (std::size_t i = 0U; i < grids.size(); ++i) {
                 out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "{\n";
                 line(out, indent + 4, "short_name", grids[i].short_name);
-                optional_path_line(out, indent + 4, "full_path", grids[i].full_path);
+                optional_string_line(out, indent + 4, "full_path", grids[i].full_path);
                 optional_string_line(out, indent + 4, "package_name", grids[i].package_name);
                 optional_string_line(out, indent + 4, "source_uri", grids[i].source_uri);
                 bool_line(out, indent + 4, "available", grids[i].available);

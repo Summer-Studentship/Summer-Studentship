@@ -243,43 +243,217 @@
     "grid_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["target_spacing_m", "active_coverage_threshold", "maximum_upsampling_factor", "maximum_output_cells", "numerical_absolute_tolerance", "numerical_relative_tolerance", "policy_basis"]
+      "required": ["target_spacing_m", "active_coverage_threshold", "maximum_upsampling_factor", "maximum_output_cells", "numerical_absolute_tolerance", "numerical_relative_tolerance", "policy_basis"],
+      "properties": {
+        "target_spacing_m": { "$ref": "#/$defs/number" },
+        "active_coverage_threshold": { "$ref": "#/$defs/number" },
+        "maximum_upsampling_factor": { "$ref": "#/$defs/number" },
+        "maximum_output_cells": { "$ref": "#/$defs/positive_uint" },
+        "numerical_absolute_tolerance": { "$ref": "#/$defs/number" },
+        "numerical_relative_tolerance": { "$ref": "#/$defs/number" },
+        "policy_basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "geographic_area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["west_longitude_degrees", "south_latitude_degrees", "east_longitude_degrees", "north_latitude_degrees"],
+      "properties": {
+        "west_longitude_degrees": { "$ref": "#/$defs/number" },
+        "south_latitude_degrees": { "$ref": "#/$defs/number" },
+        "east_longitude_degrees": { "$ref": "#/$defs/number" },
+        "north_latitude_degrees": { "$ref": "#/$defs/number" }
+      }
+    },
+    "digest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["algorithm", "value", "origin"],
+      "properties": {
+        "algorithm": { "const": "sha256" },
+        "value": { "type": "string", "minLength": 1 },
+        "origin": { "enum": ["provider_declared", "project_computed"] }
+      }
+    },
+    "operation_grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["short_name", "full_path", "package_name", "source_uri", "available", "open_licence", "declared_digest", "verification_status"],
+      "properties": {
+        "short_name": { "type": "string", "minLength": 1 },
+        "full_path": { "$ref": "#/$defs/nullable_string" },
+        "package_name": { "$ref": "#/$defs/nullable_string" },
+        "source_uri": { "$ref": "#/$defs/nullable_string" },
+        "available": { "type": "boolean" },
+        "open_licence": { "type": "boolean" },
+        "declared_digest": { "oneOf": [{ "$ref": "#/$defs/digest" }, { "type": "null" }] },
+        "verification_status": { "enum": ["externally_verified", "declared_not_verified", "unavailable"] }
+      }
     },
     "operation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["operation_name", "operation_authority", "operation_code", "operation_method", "operation_accuracy_m", "scope", "area_of_use", "canonical_wkt2", "canonical_projjson", "canonical_pipeline", "ballpark", "source_crs", "target_crs", "grids", "engine_name", "engine_version", "database_version"]
+      "required": ["operation_name", "operation_authority", "operation_code", "operation_method", "operation_accuracy_m", "scope", "area_of_use", "canonical_wkt2", "canonical_projjson", "canonical_pipeline", "ballpark", "source_crs", "target_crs", "grids", "engine_name", "engine_version", "database_version"],
+      "properties": {
+        "operation_name": { "type": "string", "minLength": 1 },
+        "operation_authority": { "$ref": "#/$defs/nullable_string" },
+        "operation_code": { "$ref": "#/$defs/nullable_string" },
+        "operation_method": { "$ref": "#/$defs/nullable_string" },
+        "operation_accuracy_m": { "$ref": "#/$defs/nullable_number" },
+        "scope": { "$ref": "#/$defs/nullable_string" },
+        "area_of_use": { "oneOf": [{ "$ref": "#/$defs/geographic_area" }, { "type": "null" }] },
+        "canonical_wkt2": { "$ref": "#/$defs/nullable_string" },
+        "canonical_projjson": { "$ref": "#/$defs/nullable_string" },
+        "canonical_pipeline": { "$ref": "#/$defs/nullable_string" },
+        "ballpark": { "type": "boolean" },
+        "source_crs": { "$ref": "#/$defs/reference" },
+        "target_crs": { "$ref": "#/$defs/reference" },
+        "grids": { "type": "array", "items": { "$ref": "#/$defs/operation_grid" } },
+        "engine_name": { "type": "string", "minLength": 1 },
+        "engine_version": { "type": "string", "minLength": 1 },
+        "database_version": { "$ref": "#/$defs/nullable_string" }
+      }
+    },
+    "vertical_step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "scale_factor", "offset_m", "operation_authority", "operation_code", "required_resource_name", "source_reference", "target_reference"],
+      "properties": {
+        "kind": { "enum": ["identity", "unit_scale", "sign_inversion", "constant_offset", "geodetic_grid_operation"] },
+        "scale_factor": { "$ref": "#/$defs/nullable_number" },
+        "offset_m": { "$ref": "#/$defs/nullable_number" },
+        "operation_authority": { "$ref": "#/$defs/nullable_string" },
+        "operation_code": { "$ref": "#/$defs/nullable_string" },
+        "required_resource_name": { "$ref": "#/$defs/nullable_string" },
+        "source_reference": { "type": "string", "minLength": 1 },
+        "target_reference": { "type": "string", "minLength": 1 }
+      }
     },
     "vertical_operation": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["enabled", "steps"]
+      "required": ["enabled", "steps"],
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "steps": { "type": "array", "items": { "$ref": "#/$defs/vertical_step" } }
+      }
     },
     "resampling": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["dataset_id", "asset_id", "import_id", "import_identity", "transformation_id", "transformation_identity", "role", "kernel", "source_registration", "target_registration", "source_scale", "source_offset", "minimum_source_spacing_m", "maximum_source_spacing_m", "nominal_source_spacing_m", "target_spacing_m", "maximum_upsampling_factor", "source_valid_cell_count", "output_valid_cell_count", "source_nodata_cell_count", "outside_coverage_cell_count", "operation_name", "operation", "vertical_operation", "adapter_name", "adapter_version"]
+      "required": ["dataset_id", "asset_id", "import_id", "import_identity", "transformation_id", "transformation_identity", "role", "kernel", "source_registration", "target_registration", "source_scale", "source_offset", "minimum_source_spacing_m", "maximum_source_spacing_m", "nominal_source_spacing_m", "target_spacing_m", "maximum_upsampling_factor", "source_valid_cell_count", "output_valid_cell_count", "source_nodata_cell_count", "outside_coverage_cell_count", "operation_name", "operation", "vertical_operation", "adapter_name", "adapter_version"],
+      "properties": {
+        "dataset_id": { "type": "string", "minLength": 1 },
+        "asset_id": { "type": "string", "minLength": 1 },
+        "import_id": { "type": "string", "minLength": 1 },
+        "import_identity": { "$ref": "#/$defs/import_identity" },
+        "transformation_id": { "type": "string", "minLength": 1 },
+        "transformation_identity": { "$ref": "#/$defs/transformation_identity" },
+        "role": { "enum": ["bathymetry", "topography"] },
+        "kernel": { "enum": ["bilinear", "area_average"] },
+        "source_registration": { "enum": ["pixel_is_area", "pixel_is_point", "unknown"] },
+        "target_registration": { "enum": ["pixel_is_area", "pixel_is_point", "unknown"] },
+        "source_scale": { "$ref": "#/$defs/nullable_number" },
+        "source_offset": { "$ref": "#/$defs/nullable_number" },
+        "minimum_source_spacing_m": { "$ref": "#/$defs/number" },
+        "maximum_source_spacing_m": { "$ref": "#/$defs/number" },
+        "nominal_source_spacing_m": { "$ref": "#/$defs/number" },
+        "target_spacing_m": { "$ref": "#/$defs/number" },
+        "maximum_upsampling_factor": { "$ref": "#/$defs/number" },
+        "source_valid_cell_count": { "$ref": "#/$defs/uint" },
+        "output_valid_cell_count": { "$ref": "#/$defs/uint" },
+        "source_nodata_cell_count": { "$ref": "#/$defs/uint" },
+        "outside_coverage_cell_count": { "$ref": "#/$defs/uint" },
+        "operation_name": { "type": "string", "minLength": 1 },
+        "operation": { "$ref": "#/$defs/operation" },
+        "vertical_operation": { "$ref": "#/$defs/vertical_operation" },
+        "adapter_name": { "type": "string", "minLength": 1 },
+        "adapter_version": { "type": "string", "minLength": 1 }
+      }
     },
     "merge_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["first_priority_dataset_id", "second_priority_dataset_id", "maximum_overlap_disagreement_m", "conflict_policy", "priority_basis"]
+      "required": ["first_priority_dataset_id", "second_priority_dataset_id", "maximum_overlap_disagreement_m", "conflict_policy", "priority_basis"],
+      "properties": {
+        "first_priority_dataset_id": { "type": "string", "minLength": 1 },
+        "second_priority_dataset_id": { "type": "string", "minLength": 1 },
+        "maximum_overlap_disagreement_m": { "$ref": "#/$defs/number" },
+        "conflict_policy": { "enum": ["reject", "accept_priority_with_warning"] },
+        "priority_basis": { "type": "string", "minLength": 1 }
+      }
     },
     "gap_policy": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "maximum_fill_distance_m", "maximum_component_diameter_m", "maximum_component_cells", "minimum_donor_count", "distance_exponent", "maximum_filled_fraction", "policy_basis"]
+      "required": ["kind", "maximum_fill_distance_m", "maximum_component_diameter_m", "maximum_component_cells", "minimum_donor_count", "distance_exponent", "maximum_filled_fraction", "policy_basis"],
+      "properties": {
+        "kind": { "enum": ["reject", "bounded_inverse_distance"] },
+        "maximum_fill_distance_m": { "$ref": "#/$defs/number" },
+        "maximum_component_diameter_m": { "$ref": "#/$defs/number" },
+        "maximum_component_cells": { "$ref": "#/$defs/uint" },
+        "minimum_donor_count": { "$ref": "#/$defs/uint" },
+        "distance_exponent": { "$ref": "#/$defs/number" },
+        "maximum_filled_fraction": { "$ref": "#/$defs/number" },
+        "policy_basis": { "type": "string", "minLength": 1 }
+      }
+    },
+    "overlap_diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overlap_cell_count", "disagreement_exceedance_count", "mean_signed_difference_m", "root_mean_square_difference_m", "maximum_absolute_difference_m"],
+      "properties": {
+        "overlap_cell_count": { "$ref": "#/$defs/uint" },
+        "disagreement_exceedance_count": { "$ref": "#/$defs/uint" },
+        "mean_signed_difference_m": { "$ref": "#/$defs/number" },
+        "root_mean_square_difference_m": { "$ref": "#/$defs/number" },
+        "maximum_absolute_difference_m": { "$ref": "#/$defs/number" }
+      }
     },
     "diagnostics": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["total_cell_count", "active_cell_count", "outside_corridor_cell_count", "excluded_boundary_cell_count", "bathymetry_selected_cell_count", "topography_selected_cell_count", "overlap_cell_count", "overlap_conflict_cell_count", "initially_unresolved_cell_count", "filled_cell_count", "unresolved_cell_count", "overlap", "minimum_elevation_m", "maximum_elevation_m", "warnings"]
+      "required": ["total_cell_count", "active_cell_count", "outside_corridor_cell_count", "excluded_boundary_cell_count", "bathymetry_selected_cell_count", "topography_selected_cell_count", "overlap_cell_count", "overlap_conflict_cell_count", "initially_unresolved_cell_count", "filled_cell_count", "unresolved_cell_count", "overlap", "minimum_elevation_m", "maximum_elevation_m", "warnings"],
+      "properties": {
+        "total_cell_count": { "$ref": "#/$defs/uint" },
+        "active_cell_count": { "$ref": "#/$defs/uint" },
+        "outside_corridor_cell_count": { "$ref": "#/$defs/uint" },
+        "excluded_boundary_cell_count": { "$ref": "#/$defs/uint" },
+        "bathymetry_selected_cell_count": { "$ref": "#/$defs/uint" },
+        "topography_selected_cell_count": { "$ref": "#/$defs/uint" },
+        "overlap_cell_count": { "$ref": "#/$defs/uint" },
+        "overlap_conflict_cell_count": { "$ref": "#/$defs/uint" },
+        "initially_unresolved_cell_count": { "$ref": "#/$defs/uint" },
+        "filled_cell_count": { "$ref": "#/$defs/uint" },
+        "unresolved_cell_count": { "$ref": "#/$defs/uint" },
+        "overlap": { "$ref": "#/$defs/overlap_diagnostics" },
+        "minimum_elevation_m": { "$ref": "#/$defs/number" },
+        "maximum_elevation_m": { "$ref": "#/$defs/number" },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
     },
     "uncertainty_status": { "enum": ["reported", "estimated", "not_reported", "not_applicable"] },
+    "uncertainty_measure": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quantity", "value", "unit", "confidence_level", "method"],
+      "properties": {
+        "quantity": { "type": "string", "minLength": 1 },
+        "value": { "$ref": "#/$defs/number" },
+        "unit": { "type": "string", "minLength": 1 },
+        "confidence_level": { "$ref": "#/$defs/nullable_number" },
+        "method": { "$ref": "#/$defs/nullable_string" }
+      }
+    },
     "uncertainty": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["status", "measures", "description"]
+      "required": ["status", "measures", "description"],
+      "properties": {
+        "status": { "$ref": "#/$defs/uncertainty_status" },
+        "measures": { "type": "array", "items": { "$ref": "#/$defs/uncertainty_measure" } },
+        "description": { "$ref": "#/$defs/nullable_string" }
+      }
     }
   }
 }

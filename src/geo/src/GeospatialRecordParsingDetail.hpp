@@ -659,13 +659,9 @@ namespace tsunami::geo::detail
         RecordKind kind) -> CoordinateOperationGrid
     {
         reject_unknown(value, {"short_name", "full_path", "package_name", "source_uri", "available", "open_licence", "declared_digest", "verification_status"}, pointer, source, kind);
-        auto full_path = std::optional<std::filesystem::path>{};
-        if (auto text = nullable_string(value, "full_path", pointer, source, kind)) {
-            full_path = std::filesystem::path{*text};
-        }
         return CoordinateOperationGrid{
             string_value(value, "short_name", pointer, source, kind),
-            std::move(full_path),
+            nullable_string(value, "full_path", pointer, source, kind),
             nullable_string(value, "package_name", pointer, source, kind),
             nullable_string(value, "source_uri", pointer, source, kind),
             bool_value(value, "available", pointer, source, kind),

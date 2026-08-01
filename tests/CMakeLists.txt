@@ -1,4 +1,5 @@
 find_package(Catch2 3 CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 add_executable(tsunami_tests
     application/application_service_tests.cpp
@@ -46,6 +47,7 @@ target_link_libraries(tsunami_tests
         tsunami_r2d_io
         tsunami_l3d
         tsunami_coupling
+        nlohmann_json::nlohmann_json
         Catch2::Catch2WithMain
 )
 
