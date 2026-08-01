@@ -4,9 +4,12 @@
 
 #include <algorithm>
 #include <cmath>
+#include <filesystem>
 #include <limits>
 #include <optional>
+#include <span>
 #include <string>
+#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -40,6 +43,38 @@ namespace
             tsunami::fvm::MeshGeometry{
                 {},
                 {{{(first.x + second.x + third.x) / 3.0, (first.y + second.y + third.y) / 3.0, 0.0}, area}}}};
+    }
+
+    [[nodiscard]] auto two_cell_mesh() -> tsunami::fvm::FiniteVolumeMesh
+    {
+        return tsunami::fvm::FiniteVolumeMesh{
+            tsunami::fvm::MeshTopology{
+                tsunami::fvm::MeshId{"terrain-transfer-two-cell-mesh"},
+                2U,
+                {
+                    {{0U}, {0.0, 0.0, 0.0}},
+                    {{1U}, {1.0, 0.0, 0.0}},
+                    {{2U}, {0.0, 1.0, 0.0}},
+                    {{3U}, {1.0, 0.0, 0.0}},
+                    {{4U}, {2.0, 0.0, 0.0}},
+                    {{5U}, {1.0, 1.0, 0.0}},
+                },
+                {
+                    {{0U}, {{0U}, {1U}}, {0U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                    {{1U}, {{1U}, {2U}}, {0U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                    {{2U}, {{2U}, {0U}}, {0U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                    {{3U}, {{3U}, {4U}}, {1U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                    {{4U}, {{4U}, {5U}}, {1U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                    {{5U}, {{5U}, {3U}}, {1U}, std::nullopt, tsunami::fvm::BoundaryPatchId{0U}},
+                },
+                {{{0U}, {{0U}, {1U}, {2U}}}, {{1U}, {{3U}, {4U}, {5U}}}},
+                {{{0U}, "boundary.synthetic", {{0U}, {1U}, {2U}, {3U}, {4U}, {5U}}}}},
+            tsunami::fvm::MeshGeometry{
+                {},
+                {
+                    {{1.0 / 3.0, 1.0 / 3.0, 0.0}, 0.5},
+                    {{4.0 / 3.0, 1.0 / 3.0, 0.0}, 0.5},
+                }}};
     }
 
     [[nodiscard]] auto grid(
@@ -82,10 +117,47 @@ namespace
             lineage.assign(count, tsunami::geo::TerrainCellLineage::bathymetry_selected);
         }
         auto record = tsunami::geo::TerrainConditioningRecord{};
+        record.schema = tsunami::data::SchemaIdentity{
+            std::string{tsunami::geo::terrain_conditioning_record_schema_name},
+            tsunami::geo::supported_terrain_conditioning_record_version};
+        record.policy_version = tsunami::geo::supported_terrain_conditioning_record_policy_version;
+        record.formula_version = tsunami::geo::terrain_conditioning_formula_version;
         record.identity.terrain_id = "conditioned-terrain-1";
+        record.identity.terrain_revision = 1U;
+        record.identity.manifest_id = "conditioned-terrain-manifest";
+        record.identity.manifest_revision = 1U;
+        record.identity.output_dataset_id = "conditioned-terrain-output";
+        record.identity.output_process_id = "terrain-conditioning-process";
+        record.identity.executed_at_utc = "2026-07-31T00:00:00Z";
         record.grid = target_grid;
-        record.grid_policy.active_coverage_threshold = 0.5;
-        const auto [minimum, maximum] = std::minmax_element(values.begin(), values.end());
+        record.target_reference = target_grid.target_reference();
+        record.grid_policy = tsunami::geo::TerrainTargetGridPolicy{
+            1.0,
+            0.5,
+            1.0,
+            static_cast<std::uint64_t>(count),
+            1.0e-12,
+            1.0e-12,
+            "terrain-transfer-test"};
+        record.diagnostics.total_cell_count = static_cast<std::uint64_t>(count);
+        record.diagnostics.active_cell_count = static_cast<std::uint64_t>(count);
+        record.output_media_type = "image/tiff";
+        record.output_path = std::filesystem::path{"outputs/terrain/conditioned-terrain-output.tif"};
+        record.digest_status = "not_computed_by_terrain_conditioning";
+        auto minimum = std::numeric_limits<double>::infinity();
+        auto maximum = -std::numeric_limits<double>::infinity();
+        for (const auto value : values) {
+            if (std::isfinite(value)) {
+                minimum = std::min(minimum, value);
+                maximum = std::max(maximum, value);
+            }
+        }
+        if (!std::isfinite(minimum)) {
+            minimum = 0.0;
+            maximum = 0.0;
+        }
+        record.diagnostics.minimum_elevation_m = minimum;
+        record.diagnostics.maximum_elevation_m = maximum;
         return TerrainInput{
             tsunami::geo::ConditionedTerrainRaster{
                 target_grid,
@@ -93,8 +165,8 @@ namespace
                 std::move(mask),
                 std::vector<double>(count, 1.0),
                 std::move(lineage),
-                *minimum,
-                *maximum},
+                minimum,
+                maximum},
             std::move(record)};
     }
 
@@ -148,6 +220,21 @@ namespace
     }
 }
 
+static_assert(!std::is_aggregate_v<tsunami::r2d::RegionalRasterCellTransferStencil>);
+static_assert(!std::is_default_constructible_v<tsunami::r2d::RegionalRasterCellTransferStencil>);
+static_assert(std::is_same_v<
+    decltype(std::declval<const tsunami::r2d::RegionalRasterCellTransferStencil &>().cell_ranges()),
+    std::span<const tsunami::r2d::RegionalRasterCellContributionRange>>);
+static_assert(std::is_same_v<
+    decltype(std::declval<const tsunami::r2d::RegionalRasterCellTransferStencil &>().mapped_area_m2()),
+    std::span<const double>>);
+static_assert(std::is_same_v<
+    decltype(std::declval<const tsunami::r2d::RegionalRasterCellTransferStencil &>().contributions()),
+    std::span<const tsunami::r2d::RegionalRasterCellContribution>>);
+static_assert(!std::is_assignable_v<
+    decltype((std::declval<const tsunami::r2d::RegionalRasterCellTransferStencil &>().contributions()[0].weight)),
+    double>);
+
 TEST_CASE("Regional terrain transfer conservatively preserves values and evidence", "[terrain-transfer]")
 {
     const auto mesh = triangle_mesh();
@@ -183,18 +270,18 @@ TEST_CASE("Regional terrain transfer conservatively preserves values and evidenc
 
     SECTION("weights and mapped area reproduce the authoritative cell")
     {
-        REQUIRE(stencil.cell_ranges.size() == 1U);
-        CHECK(stencil.mapped_area_m2[0] == Approx(1.0));
+        REQUIRE(stencil.cell_ranges().size() == 1U);
+        CHECK(stencil.mapped_area_m2()[0] == Approx(1.0));
         auto sum = 0.0;
-        for (const auto &contribution : stencil.contributions) {
+        for (const auto &contribution : stencil.contributions()) {
             sum += contribution.weight;
         }
         CHECK(sum == Approx(1.0));
-        REQUIRE(stencil.contributions.size() == 2U);
-        CHECK(stencil.contributions[0].raster_cell_index == 0U);
-        CHECK(stencil.contributions[1].raster_cell_index == 1U);
-        CHECK(stencil.contributions[0].weight == Approx(0.75));
-        CHECK(stencil.contributions[1].weight == Approx(0.25));
+        REQUIRE(stencil.contributions().size() == 2U);
+        CHECK(stencil.contributions()[0].raster_cell_index == 0U);
+        CHECK(stencil.contributions()[1].raster_cell_index == 1U);
+        CHECK(stencil.contributions()[0].weight == Approx(0.75));
+        CHECK(stencil.contributions()[1].weight == Approx(0.25));
     }
 
     SECTION("rebuilding produces an equal deterministic stencil")
@@ -226,6 +313,20 @@ TEST_CASE("Regional terrain transfer stencil rejects invalid geometry", "[terrai
         CHECK(result.error().code() == "r2d.terrain_transfer.affine_invalid");
     }
 
+    SECTION("near-singular affine")
+    {
+        const auto nearly_singular = grid({
+            0.0,
+            1.0,
+            1.0,
+            0.0,
+            1.0,
+            1.0 + (32.0 * std::numeric_limits<double>::epsilon())});
+        const auto result = tsunami::r2d::make_regional_raster_cell_transfer_stencil(mesh, nearly_singular, policy());
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.terrain_transfer.affine_invalid");
+    }
+
     SECTION("incomplete raster coverage")
     {
         const auto extended = triangle_mesh({0.0, 0.0, 0.0}, {2.5, 0.0, 0.0}, {0.0, 1.0, 0.0});
@@ -242,11 +343,63 @@ TEST_CASE("Regional terrain transfer stencil rejects invalid geometry", "[terrai
     }
 }
 
+TEST_CASE("Regional terrain transfer stencil exposes immutable contiguous ranges", "[terrain-transfer]")
+{
+    const auto mesh = two_cell_mesh();
+    const auto target_grid = grid();
+    const auto stencil = stencil_for(mesh, target_grid, 1U);
+    const auto input = terrain_input(target_grid, {2.0, 6.0});
+
+    REQUIRE(stencil.cell_ranges().size() == 2U);
+    REQUIRE(stencil.contributions().size() == 2U);
+    CHECK((stencil.cell_ranges()[0] == tsunami::r2d::RegionalRasterCellContributionRange{0U, 1U}));
+    CHECK((stencil.cell_ranges()[1] == tsunami::r2d::RegionalRasterCellContributionRange{1U, 1U}));
+    CHECK(stencil.mapped_area_m2()[0] == Approx(0.5));
+    CHECK(stencil.mapped_area_m2()[1] == Approx(0.5));
+    CHECK((stencil.contributions()[0] == tsunami::r2d::RegionalRasterCellContribution{0U, 0.5, 1.0}));
+    CHECK((stencil.contributions()[1] == tsunami::r2d::RegionalRasterCellContribution{1U, 0.5, 1.0}));
+
+    const auto transferred = apply(mesh, input, stencil);
+    REQUIRE(transferred.has_value());
+    CHECK(transferred.value().diagnostics.minimum_contributors_per_cell == 1U);
+    CHECK(transferred.value().diagnostics.maximum_contributors_per_cell == 1U);
+    CHECK(transferred.value().bathymetry.local_bed_elevation({0U}) == Approx(2.0));
+    CHECK(transferred.value().bathymetry.local_bed_elevation({1U}) == Approx(6.0));
+}
+
 TEST_CASE("Regional terrain transfer rejects stale and unacceptable sources without mutation", "[terrain-transfer]")
 {
     const auto mesh = triangle_mesh();
     const auto target_grid = grid();
     const auto stencil = stencil_for(mesh, target_grid);
+
+    SECTION("valid terrain record succeeds")
+    {
+        const auto input = terrain_input(target_grid, {2.0, 6.0});
+        const auto result = apply(mesh, input, stencil);
+        REQUIRE(result.has_value());
+        CHECK(result.value().bathymetry.local_bed_elevation({0U}) == Approx(3.0));
+    }
+
+    SECTION("invalid terrain record")
+    {
+        auto input = terrain_input(target_grid, {2.0, 6.0});
+        input.record.schema.schema_name = "stale.terrain_record";
+        const auto result = apply(mesh, input, stencil);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.terrain_transfer.record_invalid");
+        REQUIRE(result.error().cause_code().has_value());
+        CHECK(*result.error().cause_code() == "geo.terrain.record_invalid");
+    }
+
+    SECTION("zero active coverage threshold")
+    {
+        auto input = terrain_input(target_grid, {2.0, 6.0});
+        input.record.grid_policy.active_coverage_threshold = 0.0;
+        const auto result = apply(mesh, input, stencil);
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == "r2d.terrain_transfer.request_invalid");
+    }
 
     SECTION("nonfinite contributing value")
     {

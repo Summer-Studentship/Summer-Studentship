@@ -3,6 +3,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <map>
+#include <span>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -46,16 +47,51 @@ namespace tsunami::r2d
         [[nodiscard]] auto operator==(const RegionalRasterCellContributionRange &) const -> bool = default;
     };
 
-    struct RegionalRasterCellTransferStencil
+    class RegionalRasterCellTransferStencil
     {
-        tsunami::fvm::MeshBinding mesh_binding;
-        tsunami::geo::TerrainTargetGrid grid;
-        RegionalRasterCellTransferPolicy policy;
-        std::vector<RegionalRasterCellContributionRange> cell_ranges;
-        std::vector<double> mapped_area_m2;
-        std::vector<RegionalRasterCellContribution> contributions;
+    public:
+        RegionalRasterCellTransferStencil(const RegionalRasterCellTransferStencil &) = default;
+        RegionalRasterCellTransferStencil(RegionalRasterCellTransferStencil &&) noexcept = default;
+        auto operator=(const RegionalRasterCellTransferStencil &) -> RegionalRasterCellTransferStencil & = default;
+        auto operator=(RegionalRasterCellTransferStencil &&) noexcept -> RegionalRasterCellTransferStencil & = default;
+        ~RegionalRasterCellTransferStencil() = default;
+
+        [[nodiscard]] auto mesh_binding() const noexcept -> const tsunami::fvm::MeshBinding & { return mesh_binding_; }
+        [[nodiscard]] auto grid() const noexcept -> const tsunami::geo::TerrainTargetGrid & { return grid_; }
+        [[nodiscard]] auto policy() const noexcept -> const RegionalRasterCellTransferPolicy & { return policy_; }
+        [[nodiscard]] auto cell_ranges() const noexcept -> std::span<const RegionalRasterCellContributionRange>
+        {
+            return cell_ranges_;
+        }
+        [[nodiscard]] auto mapped_area_m2() const noexcept -> std::span<const double> { return mapped_area_m2_; }
+        [[nodiscard]] auto contributions() const noexcept -> std::span<const RegionalRasterCellContribution>
+        {
+            return contributions_;
+        }
 
         [[nodiscard]] auto operator==(const RegionalRasterCellTransferStencil &) const -> bool = default;
+
+    private:
+        friend auto make_regional_raster_cell_transfer_stencil(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const tsunami::geo::TerrainTargetGrid &grid,
+            const RegionalRasterCellTransferPolicy &policy)
+            -> tsunami::core::Result<RegionalRasterCellTransferStencil>;
+
+        RegionalRasterCellTransferStencil(
+            tsunami::fvm::MeshBinding mesh_binding,
+            tsunami::geo::TerrainTargetGrid grid,
+            RegionalRasterCellTransferPolicy policy,
+            std::vector<RegionalRasterCellContributionRange> cell_ranges,
+            std::vector<double> mapped_area_m2,
+            std::vector<RegionalRasterCellContribution> contributions);
+
+        tsunami::fvm::MeshBinding mesh_binding_;
+        tsunami::geo::TerrainTargetGrid grid_;
+        RegionalRasterCellTransferPolicy policy_;
+        std::vector<RegionalRasterCellContributionRange> cell_ranges_;
+        std::vector<double> mapped_area_m2_;
+        std::vector<RegionalRasterCellContribution> contributions_;
     };
 
     struct RegionalTerrainTransferDiagnostics

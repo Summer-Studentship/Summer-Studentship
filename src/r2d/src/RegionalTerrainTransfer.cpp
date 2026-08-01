@@ -15,7 +15,8 @@ namespace tsunami::r2d
     {
         constexpr auto stencil_operation = "make_regional_raster_cell_transfer_stencil";
         constexpr auto transfer_operation = "transfer_conditioned_terrain_to_regional_bathymetry";
-        constexpr auto rule_id = "SWE-R2D-TER-WP1";
+        constexpr auto rule_id = "r2d.terrain_transfer";
+        constexpr auto affine_singularity_safety_multiplier = 64.0;
 
         struct Point
         {
@@ -80,6 +81,24 @@ namespace tsunami::r2d
             return std::isfinite(transform.origin_x) && std::isfinite(transform.pixel_width) &&
                 std::isfinite(transform.row_rotation) && std::isfinite(transform.origin_y) &&
                 std::isfinite(transform.column_rotation) && std::isfinite(transform.pixel_height);
+        }
+
+        [[nodiscard]] auto affine_is_numerically_singular(
+            const tsunami::geo::RasterAffineTransform &transform,
+            double determinant) noexcept -> bool
+        {
+            if (!finite_transform(transform) || !std::isfinite(determinant)) {
+                return true;
+            }
+            const auto scale = std::max({
+                1.0,
+                std::abs(transform.pixel_width * transform.pixel_height),
+                std::abs(transform.row_rotation * transform.column_rotation)});
+            // The multiplier keeps the affine inversion away from machine-precision cancellation without making it
+            // a user-facing modelling policy.
+            const auto singular_bound = affine_singularity_safety_multiplier *
+                std::numeric_limits<double>::epsilon() * scale;
+            return std::abs(determinant) <= singular_bound;
         }
 
         [[nodiscard]] auto inverse_point(
@@ -206,6 +225,22 @@ namespace tsunami::r2d
         }
     } // namespace
 
+    RegionalRasterCellTransferStencil::RegionalRasterCellTransferStencil(
+        tsunami::fvm::MeshBinding mesh_binding,
+        tsunami::geo::TerrainTargetGrid grid,
+        RegionalRasterCellTransferPolicy policy,
+        std::vector<RegionalRasterCellContributionRange> cell_ranges,
+        std::vector<double> mapped_area_m2,
+        std::vector<RegionalRasterCellContribution> contributions)
+        : mesh_binding_{std::move(mesh_binding)},
+          grid_{std::move(grid)},
+          policy_{policy},
+          cell_ranges_{std::move(cell_ranges)},
+          mapped_area_m2_{std::move(mapped_area_m2)},
+          contributions_{std::move(contributions)}
+    {
+    }
+
     auto make_regional_raster_cell_transfer_stencil(
         const tsunami::fvm::FiniteVolumeMesh &mesh,
         const tsunami::geo::TerrainTargetGrid &grid,
@@ -224,20 +259,19 @@ namespace tsunami::r2d
         const auto &transform = grid.transform();
         const auto determinant = transform.pixel_width * transform.pixel_height -
             transform.row_rotation * transform.column_rotation;
-        if (!finite_transform(transform) || !std::isfinite(determinant) || determinant == 0.0) {
+        if (affine_is_numerically_singular(transform, determinant)) {
             return tsunami::core::failure<RegionalRasterCellTransferStencil>(transfer_error(
                 "r2d.terrain_transfer.affine_invalid",
-                "terrain affine transform must be finite and invertible",
+                "terrain affine transform must be finite and numerically invertible",
                 stencil_operation,
                 &mesh));
         }
         const auto physical_scale = std::abs(determinant);
-        auto stencil = RegionalRasterCellTransferStencil{};
-        stencil.mesh_binding = tsunami::fvm::make_mesh_binding(mesh);
-        stencil.grid = grid;
-        stencil.policy = policy;
-        stencil.cell_ranges.reserve(summary.cell_count);
-        stencil.mapped_area_m2.reserve(summary.cell_count);
+        auto cell_ranges = std::vector<RegionalRasterCellContributionRange>{};
+        auto mapped_area_m2 = std::vector<double>{};
+        auto contributions = std::vector<RegionalRasterCellContribution>{};
+        cell_ranges.reserve(summary.cell_count);
+        mapped_area_m2.reserve(summary.cell_count);
 
         for (std::size_t cell_index = 0U; cell_index < summary.cell_count; ++cell_index) {
             const auto vertices = cell_vertices(mesh, cell_index);
@@ -273,7 +307,7 @@ namespace tsunami::r2d
             const auto minimum_row = std::max(0.0, std::floor(minimum_row_it->row));
             const auto maximum_row = std::min(
                 static_cast<double>(grid.height() - 1U), std::floor(maximum_row_it->row));
-            const auto contribution_begin = stencil.contributions.size();
+            const auto contribution_begin = contributions.size();
             auto mapped_area = 0.0;
             if (minimum_column <= maximum_column && minimum_row <= maximum_row) {
                 const auto last_row = static_cast<std::uint64_t>(maximum_row);
@@ -292,7 +326,7 @@ namespace tsunami::r2d
                             ++column;
                             continue;
                         }
-                        if (stencil.contributions.size() - contribution_begin >= policy.maximum_contributors_per_cell) {
+                        if (contributions.size() - contribution_begin >= policy.maximum_contributors_per_cell) {
                             auto error = transfer_error(
                                 "r2d.terrain_transfer.contributor_limit_exceeded",
                                 "cell contributor count exceeds the configured transfer limit",
@@ -300,11 +334,11 @@ namespace tsunami::r2d
                                 &mesh,
                                 {},
                                 cell_index);
-                            error.add_context("contributor_count", std::to_string(stencil.contributions.size() - contribution_begin + 1U));
+                            error.add_context("contributor_count", std::to_string(contributions.size() - contribution_begin + 1U));
                             return tsunami::core::failure<RegionalRasterCellTransferStencil>(std::move(error));
                         }
                         const auto raster_index = row * grid.width() + column;
-                        stencil.contributions.push_back(RegionalRasterCellContribution{raster_index, overlap_area, 0.0});
+                        contributions.push_back(RegionalRasterCellContribution{raster_index, overlap_area, 0.0});
                         mapped_area += overlap_area;
                         if (column == last_column) {
                             break;
@@ -318,7 +352,7 @@ namespace tsunami::r2d
                 }
             }
             const auto cell_measure = mesh.cell_geometry(tsunami::fvm::CellId{cell_index}).measure;
-            const auto contributor_count = stencil.contributions.size() - contribution_begin;
+            const auto contributor_count = contributions.size() - contribution_begin;
             const auto allowed_residual = policy.absolute_area_tolerance_m2 +
                 policy.relative_area_tolerance * std::max(1.0, cell_measure);
             if (!std::isfinite(cell_measure) || cell_measure <= 0.0 || contributor_count == 0U ||
@@ -334,9 +368,9 @@ namespace tsunami::r2d
                 return tsunami::core::failure<RegionalRasterCellTransferStencil>(std::move(error));
             }
             auto weight_sum = 0.0;
-            for (auto index = contribution_begin; index < stencil.contributions.size(); ++index) {
-                stencil.contributions[index].weight = stencil.contributions[index].overlap_area_m2 / mapped_area;
-                weight_sum += stencil.contributions[index].weight;
+            for (auto index = contribution_begin; index < contributions.size(); ++index) {
+                contributions[index].weight = contributions[index].overlap_area_m2 / mapped_area;
+                weight_sum += contributions[index].weight;
             }
             if (!std::isfinite(weight_sum) || std::abs(weight_sum - 1.0) >
                     32.0 * std::numeric_limits<double>::epsilon() * std::max(1.0, static_cast<double>(contributor_count))) {
@@ -348,10 +382,16 @@ namespace tsunami::r2d
                     {},
                     cell_index));
             }
-            stencil.cell_ranges.push_back(RegionalRasterCellContributionRange{contribution_begin, contributor_count});
-            stencil.mapped_area_m2.push_back(mapped_area);
+            cell_ranges.push_back(RegionalRasterCellContributionRange{contribution_begin, contributor_count});
+            mapped_area_m2.push_back(mapped_area);
         }
-        return tsunami::core::success(std::move(stencil));
+        return tsunami::core::success(RegionalRasterCellTransferStencil{
+            tsunami::fvm::make_mesh_binding(mesh),
+            grid,
+            policy,
+            std::move(cell_ranges),
+            std::move(mapped_area_m2),
+            std::move(contributions)});
     }
 
     auto transfer_conditioned_terrain_to_regional_bathymetry(
@@ -365,6 +405,15 @@ namespace tsunami::r2d
     {
         const auto summary = mesh.summary();
         const auto terrain_id = record.identity.terrain_id;
+        if (const auto valid_record = tsunami::geo::validate_terrain_conditioning_record(record); !valid_record) {
+            return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
+                "r2d.terrain_transfer.record_invalid",
+                "terrain conditioning record must be valid before Regional2D transfer",
+                transfer_operation,
+                &mesh,
+                terrain_id)
+                    .with_cause_code(valid_record.error().code()));
+        }
         if (preflight.validation_status != "accepted" || preflight.mesh_id != summary.id.value ||
             preflight.vertex_count != summary.vertex_count || preflight.face_count != summary.face_count ||
             preflight.cell_count != summary.cell_count || preflight.terrain_id != terrain_id) {
@@ -375,7 +424,7 @@ namespace tsunami::r2d
                 &mesh,
                 terrain_id));
         }
-        if (terrain.grid() != record.grid || terrain.grid() != stencil.grid) {
+        if (terrain.grid() != record.grid || terrain.grid() != stencil.grid()) {
             return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
                 "r2d.terrain_transfer.grid_mismatch",
                 "terrain, conditioning record, and stencil grids must match exactly",
@@ -384,12 +433,16 @@ namespace tsunami::r2d
                 terrain_id));
         }
         const auto cell_count = terrain.cell_count();
+        const auto cell_ranges = stencil.cell_ranges();
+        const auto mapped_area_m2 = stencil.mapped_area_m2();
+        const auto contributions = stencil.contributions();
+        const auto &stencil_policy = stencil.policy();
         if (terrain.values().size() != cell_count || terrain.valid_mask().size() != cell_count ||
             terrain.corridor_coverage_fraction().size() != cell_count || terrain.cell_lineage().size() != cell_count ||
-            stencil.mesh_binding != tsunami::fvm::make_mesh_binding(mesh) ||
-            stencil.cell_ranges.size() != summary.cell_count || stencil.mapped_area_m2.size() != summary.cell_count ||
-            !valid_policy(stencil.policy) || !std::isfinite(record.grid_policy.active_coverage_threshold) ||
-            record.grid_policy.active_coverage_threshold < 0.0 ||
+            stencil.mesh_binding() != tsunami::fvm::make_mesh_binding(mesh) ||
+            cell_ranges.size() != summary.cell_count || mapped_area_m2.size() != summary.cell_count ||
+            !valid_policy(stencil_policy) || !std::isfinite(record.grid_policy.active_coverage_threshold) ||
+            record.grid_policy.active_coverage_threshold <= 0.0 ||
             record.grid_policy.active_coverage_threshold > 1.0) {
             return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
                 "r2d.terrain_transfer.request_invalid",
@@ -405,17 +458,17 @@ namespace tsunami::r2d
         diagnostics.mesh_id = summary.id.value;
         diagnostics.terrain_id = terrain_id;
         diagnostics.cell_count = summary.cell_count;
-        diagnostics.total_contributor_count = stencil.contributions.size();
+        diagnostics.total_contributor_count = contributions.size();
         diagnostics.minimum_contributors_per_cell = std::numeric_limits<std::size_t>::max();
         diagnostics.minimum_bed_elevation_m = std::numeric_limits<double>::infinity();
         diagnostics.maximum_bed_elevation_m = -std::numeric_limits<double>::infinity();
 
         auto expected_range_begin = std::size_t{0U};
         for (std::size_t cell_index = 0U; cell_index < summary.cell_count; ++cell_index) {
-            const auto range = stencil.cell_ranges[cell_index];
-            if (range.begin != expected_range_begin || range.begin > stencil.contributions.size() ||
-                range.count > stencil.contributions.size() - range.begin ||
-                range.count == 0U) {
+            const auto range = cell_ranges[cell_index];
+            if (range.begin != expected_range_begin || range.begin > contributions.size() ||
+                range.count > contributions.size() - range.begin ||
+                range.count == 0U || range.count > stencil_policy.maximum_contributors_per_cell) {
                 return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
                     "r2d.terrain_transfer.weight_invalid",
                     "stencil contribution range is invalid",
@@ -428,7 +481,17 @@ namespace tsunami::r2d
             diagnostics.minimum_contributors_per_cell = std::min(diagnostics.minimum_contributors_per_cell, range.count);
             diagnostics.maximum_contributors_per_cell = std::max(diagnostics.maximum_contributors_per_cell, range.count);
             const auto cell_measure = mesh.cell_geometry(tsunami::fvm::CellId{cell_index}).measure;
-            const auto mapped_area = stencil.mapped_area_m2[cell_index];
+            const auto mapped_area = mapped_area_m2[cell_index];
+            if (!std::isfinite(cell_measure) || cell_measure <= 0.0 ||
+                !std::isfinite(mapped_area) || mapped_area <= 0.0) {
+                return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
+                    "r2d.terrain_transfer.weight_invalid",
+                    "stencil mapped area and FVM cell measure must be finite and positive",
+                    transfer_operation,
+                    &mesh,
+                    terrain_id,
+                    cell_index));
+            }
             diagnostics.total_mesh_area_m2 += cell_measure;
             diagnostics.total_mapped_terrain_area_m2 += mapped_area;
             diagnostics.maximum_cell_area_residual_m2 = std::max(
@@ -438,7 +501,7 @@ namespace tsunami::r2d
             auto overlap_area_sum = 0.0;
             auto previous_raster_index = std::optional<std::uint64_t>{};
             for (std::size_t offset = 0U; offset < range.count; ++offset) {
-                const auto &contribution = stencil.contributions[range.begin + offset];
+                const auto &contribution = contributions[range.begin + offset];
                 if (contribution.raster_cell_index >= cell_count) {
                     return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
                         "r2d.terrain_transfer.source_index_invalid",
@@ -478,6 +541,22 @@ namespace tsunami::r2d
                         column));
                 }
                 previous_raster_index = contribution.raster_cell_index;
+                const auto expected_weight = contribution.overlap_area_m2 / mapped_area;
+                const auto weight_ratio_tolerance = 64.0 * std::numeric_limits<double>::epsilon() *
+                    std::max({1.0, std::abs(contribution.weight), std::abs(expected_weight)});
+                if (!std::isfinite(expected_weight) ||
+                    std::abs(contribution.weight - expected_weight) > weight_ratio_tolerance) {
+                    return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
+                        "r2d.terrain_transfer.weight_invalid",
+                        "stencil weight must match overlap area divided by mapped area",
+                        transfer_operation,
+                        &mesh,
+                        terrain_id,
+                        cell_index,
+                        contribution.raster_cell_index,
+                        row,
+                        column));
+                }
                 if (terrain.valid_mask()[index] == 0U || !std::isfinite(terrain.corridor_coverage_fraction()[index]) ||
                     terrain.corridor_coverage_fraction()[index] < record.grid_policy.active_coverage_threshold ||
                     terrain.corridor_coverage_fraction()[index] > 1.0) {
@@ -524,8 +603,8 @@ namespace tsunami::r2d
                 overlap_area_sum += contribution.overlap_area_m2;
                 ++diagnostics.contributor_lineage_counts[std::string{tsunami::geo::to_string(lineage)}];
             }
-            const auto area_tolerance = stencil.policy.absolute_area_tolerance_m2 +
-                stencil.policy.relative_area_tolerance * std::max(1.0, cell_measure);
+            const auto area_tolerance = stencil_policy.absolute_area_tolerance_m2 +
+                stencil_policy.relative_area_tolerance * std::max(1.0, cell_measure);
             const auto weight_tolerance = 32.0 * std::numeric_limits<double>::epsilon() *
                 std::max(1.0, static_cast<double>(range.count));
             if (!std::isfinite(elevation) || !std::isfinite(mapped_area) ||
@@ -544,7 +623,7 @@ namespace tsunami::r2d
             diagnostics.minimum_bed_elevation_m = std::min(diagnostics.minimum_bed_elevation_m, elevation);
             diagnostics.maximum_bed_elevation_m = std::max(diagnostics.maximum_bed_elevation_m, elevation);
         }
-        if (expected_range_begin != stencil.contributions.size()) {
+        if (expected_range_begin != contributions.size()) {
             return tsunami::core::failure<RegionalTerrainTransferResult>(transfer_error(
                 "r2d.terrain_transfer.weight_invalid",
                 "stencil contains contributions outside its contiguous cell ranges",
