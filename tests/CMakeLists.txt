@@ -27,6 +27,7 @@ add_executable(tsunami_tests
     smoke/core_smoke.cpp
     geo/corridor_construction_tests.cpp
     geo/coordinate_transformation_tests.cpp
+    geo/geospatial_record_parsing_tests.cpp
     geo/terrain_conditioning_tests.cpp
 )
 

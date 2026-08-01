@@ -82,7 +82,8 @@ namespace tsunami::geo
 
         auto number_line(std::ostringstream &out, int indent, std::string_view key, double value, bool comma = true) -> void
         {
-            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": " << std::setprecision(17) << value;
+            const auto canonical = value == 0.0 ? 0.0 : value;
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": " << std::setprecision(17) << canonical;
             if (comma) {
                 out << ',';
             }
@@ -93,7 +94,8 @@ namespace tsunami::geo
         {
             out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": ";
             if (value) {
-                out << std::setprecision(17) << *value;
+                const auto canonical = *value == 0.0 ? 0.0 : *value;
+                out << std::setprecision(17) << canonical;
             } else {
                 out << "null";
             }
