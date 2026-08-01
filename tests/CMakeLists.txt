@@ -15,6 +15,7 @@ add_executable(tsunami_tests
     fvm/mesh_topology_tests.cpp
     r2d/state_flux_residual_tests.cpp
     r2d/regional_geometry_preflight_tests.cpp
+    r2d/regional_terrain_transfer_tests.cpp
     r2d/regional_earthquake_initialisation_tests.cpp
     r2d/regional_boundary_relaxation_tests.cpp
     r2d/regional_source_terms_tests.cpp
