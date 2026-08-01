@@ -174,6 +174,7 @@ add_library(tsunami_r2d STATIC
     r2d/src/PositivityTimestep.cpp
     r2d/src/RegionalBoundaryCondition.cpp
     r2d/src/RegionalBathymetry.cpp
+    r2d/src/RegionalCasePreparation.cpp
     r2d/src/RegionalConservedState.cpp
     r2d/src/RegionalDiagnostics.cpp
     r2d/src/RegionalEarthquakeDiagnostics.cpp
