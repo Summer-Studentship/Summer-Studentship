@@ -69,7 +69,29 @@ namespace tsunami::geo
 
     auto terrain_lineage_code(TerrainCellLineage value) noexcept -> std::uint16_t
     {
-        return static_cast<std::uint16_t>(value) + 1U;
+        switch (value) {
+        case TerrainCellLineage::outside_corridor:
+            return 1U;
+        case TerrainCellLineage::excluded_boundary_fraction:
+            return 2U;
+        case TerrainCellLineage::bathymetry_selected:
+            return 3U;
+        case TerrainCellLineage::topography_selected:
+            return 4U;
+        case TerrainCellLineage::overlap_bathymetry_selected:
+            return 5U;
+        case TerrainCellLineage::overlap_topography_selected:
+            return 6U;
+        case TerrainCellLineage::overlap_bathymetry_selected_with_conflict:
+            return 7U;
+        case TerrainCellLineage::overlap_topography_selected_with_conflict:
+            return 8U;
+        case TerrainCellLineage::filled_from_bathymetry_neighbourhood:
+            return 9U;
+        case TerrainCellLineage::filled_from_topography_neighbourhood:
+            return 10U;
+        }
+        return 0U;
     }
 
     auto terrain_cell_lineage_from_code(std::uint16_t code)

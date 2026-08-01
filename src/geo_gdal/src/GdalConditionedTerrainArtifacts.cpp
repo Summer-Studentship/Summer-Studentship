@@ -2,6 +2,8 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <filesystem>
@@ -9,8 +11,10 @@
 #include <map>
 #include <memory>
 #include <optional>
+#include <random>
 #include <string>
 #include <string_view>
+#include <thread>
 #include <utility>
 #include <vector>
 
@@ -163,6 +167,24 @@ namespace tsunami::geo_gdal
                 "write_conditioned_terrain_artifacts_with_gdal");
         }
 
+        enum class DiagnosticFamily
+        {
+            read,
+            write
+        };
+
+        [[nodiscard]] auto artifact_family_error(
+            DiagnosticFamily family,
+            std::string suffix,
+            std::string message,
+            tsunami::core::DiagnosticCategory category,
+            std::string rule_id) -> tsunami::core::Error
+        {
+            return family == DiagnosticFamily::write
+                ? write_error(std::move(suffix), std::move(message), category, std::move(rule_id))
+                : read_error(std::move(suffix), std::move(message), category, std::move(rule_id));
+        }
+
         [[nodiscard]] auto finite(double value) noexcept -> bool
         {
             return std::isfinite(value);
@@ -172,6 +194,25 @@ namespace tsunami::geo_gdal
         {
             const auto tolerance = absolute_tolerance + (relative_tolerance * std::max({1.0, std::abs(left), std::abs(right)}));
             return finite(left) && finite(right) && std::abs(left - right) <= tolerance;
+        }
+
+        [[nodiscard]] auto test_config_enabled(const char *key) noexcept -> bool
+        {
+            const auto *value = CPLGetConfigOption(key, nullptr);
+            return value != nullptr && CPLTestBool(value);
+        }
+
+        [[nodiscard]] auto test_config_count(const char *key) -> std::optional<std::size_t>
+        {
+            const auto *value = CPLGetConfigOption(key, nullptr);
+            if (value == nullptr || std::string{value}.empty()) {
+                return std::nullopt;
+            }
+            try {
+                return static_cast<std::size_t>(std::stoull(value));
+            } catch (const std::exception &) {
+                return std::nullopt;
+            }
         }
 
         [[nodiscard]] auto path_text_valid(const std::filesystem::path &path) -> bool
@@ -199,6 +240,44 @@ namespace tsunami::geo_gdal
                 }
             }
             return true;
+        }
+
+        [[nodiscard]] auto contains_parent_component(const std::filesystem::path &path) -> bool
+        {
+            for (const auto &part : path) {
+                if (part == "..") {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [[nodiscard]] auto existing_symlink_escapes_root(
+            const std::filesystem::path &case_root,
+            const std::filesystem::path &relative_output) -> bool
+        {
+            std::error_code ec;
+            if (!std::filesystem::exists(case_root, ec)) {
+                return false;
+            }
+            const auto canonical_root = std::filesystem::weakly_canonical(case_root, ec);
+            if (ec) {
+                return false;
+            }
+            auto current = case_root;
+            auto remaining = relative_output;
+            remaining.remove_filename();
+            for (const auto &part : remaining) {
+                current /= part;
+                if (std::filesystem::exists(current, ec) && std::filesystem::is_symlink(current, ec)) {
+                    const auto canonical_current = std::filesystem::weakly_canonical(current, ec);
+                    if (!ec && !lexically_under_root(canonical_root, canonical_current)) {
+                        return true;
+                    }
+                }
+                ec.clear();
+            }
+            return false;
         }
 
         [[nodiscard]] auto paths_distinct(const ConditionedTerrainArtifactPaths &paths) -> bool
@@ -347,9 +426,14 @@ namespace tsunami::geo_gdal
         auto set_metadata(GDALDataset &dataset, const tsunami::geo::TerrainConditioningRecord &record, ArtifactRole role)
             -> tsunami::core::Result<void>
         {
-            dataset.SetMetadataItem("AREA_OR_POINT", "Area");
+            if (dataset.SetMetadataItem("AREA_OR_POINT", "Area") != CE_None) {
+                return tsunami::core::failure(write_error("temporary_validation_failed", "failed to set conditioned terrain artefact pixel registration metadata", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.metadata"));
+            }
             for (const auto key : required_metadata_keys(role)) {
-                dataset.SetMetadataItem(std::string{key}.c_str(), metadata_value(record, key, role).c_str());
+                if (dataset.SetMetadataItem(std::string{key}.c_str(), metadata_value(record, key, role).c_str()) != CE_None) {
+                    return tsunami::core::failure(write_error("temporary_validation_failed", "failed to set conditioned terrain artefact metadata", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.metadata")
+                        .add_context("expected", std::string{key}));
+                }
             }
             return tsunami::core::success();
         }
@@ -734,7 +818,8 @@ namespace tsunami::geo_gdal
             const std::vector<std::uint8_t> &mask,
             const std::vector<double> &coverage,
             const std::vector<tsunami::geo::TerrainCellLineage> &lineage,
-            const tsunami::geo::TerrainConditioningRecord &record) -> tsunami::core::Result<SemanticCounts>
+            const tsunami::geo::TerrainConditioningRecord &record,
+            DiagnosticFamily diagnostic_family) -> tsunami::core::Result<SemanticCounts>
         {
             auto counts = SemanticCounts{};
             counts.minimum_bed = std::numeric_limits<double>::infinity();
@@ -746,13 +831,19 @@ namespace tsunami::geo_gdal
                 const auto column = i % static_cast<std::size_t>(record.grid.width());
                 const auto cov = coverage[i];
                 if (!finite(cov) || cov < 0.0 || cov > 1.0) {
-                    return tsunami::core::failure<SemanticCounts>(read_error("coverage_invalid", "corridor coverage value is outside [0, 1]", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.coverage_range")
+                    return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "coverage_invalid", "corridor coverage value is outside [0, 1]", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.coverage_range")
                         .add_context("row", std::to_string(row))
                         .add_context("column", std::to_string(column))
                         .add_context("raster_index", std::to_string(i)));
                 }
                 counts.minimum_coverage = std::min(counts.minimum_coverage, cov);
                 counts.maximum_coverage = std::max(counts.maximum_coverage, cov);
+                if (tsunami::geo::terrain_lineage_code(lineage[i]) == 0U) {
+                    return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "lineage_code_invalid", "conditioned terrain contains an unrecognised lineage value", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.lineage_code")
+                        .add_context("row", std::to_string(row))
+                        .add_context("column", std::to_string(column))
+                        .add_context("raster_index", std::to_string(i)));
+                }
                 counts.lineage_counts[std::string{tsunami::geo::to_string(lineage[i])}] += 1U;
                 const auto is_outside = cov <= record.grid_policy.numerical_absolute_tolerance;
                 const auto is_excluded = !is_outside &&
@@ -760,7 +851,7 @@ namespace tsunami::geo_gdal
                 if (is_outside) {
                     ++counts.outside;
                     if (lineage[i] != tsunami::geo::TerrainCellLineage::outside_corridor || mask[i] != 0U) {
-                        return tsunami::core::failure<SemanticCounts>(read_error("bundle_inconsistent", "outside-corridor cell has inconsistent mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
+                        return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "bundle_inconsistent", "outside-corridor cell has inconsistent mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
                             .add_context("row", std::to_string(row))
                             .add_context("column", std::to_string(column)));
                     }
@@ -770,7 +861,7 @@ namespace tsunami::geo_gdal
                 if (is_excluded) {
                     ++counts.excluded;
                     if (lineage[i] != tsunami::geo::TerrainCellLineage::excluded_boundary_fraction || mask[i] != 0U) {
-                        return tsunami::core::failure<SemanticCounts>(read_error("bundle_inconsistent", "excluded boundary-fraction cell has inconsistent mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
+                        return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "bundle_inconsistent", "excluded boundary-fraction cell has inconsistent mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
                             .add_context("row", std::to_string(row))
                             .add_context("column", std::to_string(column)));
                     }
@@ -779,7 +870,7 @@ namespace tsunami::geo_gdal
                 }
                 ++counts.active;
                 if (!lineage_is_active(lineage[i]) || mask[i] == 0U || !finite(bed[i])) {
-                    return tsunami::core::failure<SemanticCounts>(read_error("bundle_inconsistent", "active terrain cell has inconsistent value, mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
+                    return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "bundle_inconsistent", "active terrain cell has inconsistent value, mask or lineage", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.semantic_partition")
                         .add_context("row", std::to_string(row))
                         .add_context("column", std::to_string(column)));
                 }
@@ -813,7 +904,7 @@ namespace tsunami::geo_gdal
                 counts.unresolved != record.diagnostics.unresolved_cell_count ||
                 !close(counts.minimum_bed, record.diagnostics.minimum_elevation_m, record.grid_policy.numerical_absolute_tolerance, record.grid_policy.numerical_relative_tolerance) ||
                 !close(counts.maximum_bed, record.diagnostics.maximum_elevation_m, record.grid_policy.numerical_absolute_tolerance, record.grid_policy.numerical_relative_tolerance)) {
-                return tsunami::core::failure<SemanticCounts>(read_error("bundle_inconsistent", "conditioned terrain artefact semantics disagree with record diagnostics", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.diagnostics")
+                return tsunami::core::failure<SemanticCounts>(artifact_family_error(diagnostic_family, "bundle_inconsistent", "conditioned terrain artefact semantics disagree with record diagnostics", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.diagnostics")
                     .add_context("expected", "record diagnostics")
                     .add_context("actual", "reconstructed artefact diagnostics"));
             }
@@ -871,7 +962,8 @@ namespace tsunami::geo_gdal
                 terrain.value().payload.mask,
                 coverage.value().payload.values,
                 lineage,
-                record);
+                record,
+                DiagnosticFamily::read);
             if (!counts) {
                 return tsunami::core::failure<ConditionedTerrainArtifactReadResult>(counts.error());
             }
@@ -933,10 +1025,18 @@ namespace tsunami::geo_gdal
             options = CSLSetNameValue(options, "COMPRESS", "DEFLATE");
             options = CSLSetNameValue(options, "PREDICTOR", role_type(role) == GDT_Float64 ? "3" : "2");
             options = CSLSetNameValue(options, "BIGTIFF", "IF_SAFER");
+            if (record.grid.width() > static_cast<std::uint64_t>(std::numeric_limits<int>::max()) ||
+                record.grid.height() > static_cast<std::uint64_t>(std::numeric_limits<int>::max())) {
+                CSLDestroy(options);
+                return tsunami::core::failure(write_error("request_invalid", "conditioned terrain artefact dimensions exceed GDAL integer limits", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.dimension_narrowing")
+                    .add_context("path", path.generic_string()));
+            }
+            const auto width = static_cast<int>(record.grid.width());
+            const auto height = static_cast<int>(record.grid.height());
             auto dataset = detail::DatasetHandle{driver->Create(
                 path.string().c_str(),
-                static_cast<int>(record.grid.width()),
-                static_cast<int>(record.grid.height()),
+                width,
+                height,
                 1,
                 role_type(role),
                 options)};
@@ -973,14 +1073,21 @@ namespace tsunami::geo_gdal
                 return tsunami::core::failure(write_error("temporary_validation_failed", "failed to access conditioned terrain artefact band", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.band"));
             }
             band->SetDescription(std::string{role_description(role)}.c_str());
-            band->SetUnitType(std::string{role_unit(role)}.c_str());
-            const auto width = static_cast<int>(grid.width());
-            const auto height = static_cast<int>(grid.height());
+            if (band->SetUnitType(std::string{role_unit(role)}.c_str()) != CE_None) {
+                return tsunami::core::failure(write_error("temporary_validation_failed", "failed to set conditioned terrain artefact band unit", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.band_unit")
+                    .add_context("path", path.generic_string()));
+            }
             if (role == ArtifactRole::lineage) {
                 auto codes = std::vector<std::uint16_t>{};
                 codes.reserve(terrain.cell_lineage().size());
-                for (const auto lineage : terrain.cell_lineage()) {
-                    codes.push_back(tsunami::geo::terrain_lineage_code(lineage));
+                for (std::size_t i = 0U; i < terrain.cell_lineage().size(); ++i) {
+                    const auto code = tsunami::geo::terrain_lineage_code(terrain.cell_lineage()[i]);
+                    if (code == 0U) {
+                        return tsunami::core::failure(write_error("lineage_code_invalid", "conditioned terrain contains an unrecognised lineage value that cannot be persisted", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.lineage_code")
+                            .add_context("path", path.generic_string())
+                            .add_context("raster_index", std::to_string(i)));
+                    }
+                    codes.push_back(code);
                 }
                 if (band->RasterIO(GF_Write, 0, 0, width, height, codes.data(), width, height, GDT_UInt16, 0, 0) != CE_None) {
                     return tsunami::core::failure(write_error("temporary_validation_failed", "failed to write conditioned terrain lineage artefact", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.write")
@@ -1008,7 +1115,10 @@ namespace tsunami::geo_gdal
                         .add_context("path", path.generic_string()));
                 }
             }
-            dataset->FlushCache();
+            if (dataset->FlushCache() != CE_None) {
+                return tsunami::core::failure(write_error("temporary_validation_failed", "failed to flush conditioned terrain artefact GeoTIFF", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.flush")
+                    .add_context("path", path.generic_string()));
+            }
             return tsunami::core::success();
         }
 
@@ -1022,90 +1132,376 @@ namespace tsunami::geo_gdal
                 !close(terrain.maximum_elevation_m(), record.diagnostics.maximum_elevation_m, record.grid_policy.numerical_absolute_tolerance, record.grid_policy.numerical_relative_tolerance)) {
                 return tsunami::core::failure(write_error("request_invalid", "conditioned terrain raster disagrees with the accepted terrain record", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.request_terrain"));
             }
-            auto semantic = validate_semantics(terrain.values(), terrain.valid_mask(), terrain.corridor_coverage_fraction(), terrain.cell_lineage(), record);
+            auto semantic = validate_semantics(terrain.values(), terrain.valid_mask(), terrain.corridor_coverage_fraction(), terrain.cell_lineage(), record, DiagnosticFamily::write);
             if (!semantic) {
                 return tsunami::core::failure(semantic.error());
             }
             return tsunami::core::success();
         }
 
-        [[nodiscard]] auto temporary_paths(const ConditionedTerrainArtifactPaths &paths) -> ConditionedTerrainArtifactPaths
+        [[nodiscard]] auto parent_or_current(const std::filesystem::path &path) -> std::filesystem::path
         {
-            return {
-                std::filesystem::path{paths.terrain_path.string() + ".tmp.tif"},
-                std::filesystem::path{paths.coverage_path.string() + ".tmp.tif"},
-                std::filesystem::path{paths.lineage_path.string() + ".tmp.tif"}};
+            return path.parent_path().empty() ? std::filesystem::path{"."} : path.parent_path();
         }
 
-        [[nodiscard]] auto backup_paths(const ConditionedTerrainArtifactPaths &paths) -> ConditionedTerrainArtifactPaths
+        [[nodiscard]] auto path_with_suffix(const std::filesystem::path &path, std::string_view suffix) -> std::filesystem::path
         {
-            return {
-                std::filesystem::path{paths.terrain_path.string() + ".bak"},
-                std::filesystem::path{paths.coverage_path.string() + ".bak"},
-                std::filesystem::path{paths.lineage_path.string() + ".bak"}};
+            return std::filesystem::path{path.string() + std::string{suffix}};
         }
 
-        auto remove_quietly(const std::filesystem::path &path) -> void
+        [[nodiscard]] auto filesystem_items_for_artifact(const std::filesystem::path &path) -> std::array<std::filesystem::path, 3U>
+        {
+            return {path, path_with_suffix(path, ".msk"), path_with_suffix(path, ".aux.xml")};
+        }
+
+        [[nodiscard]] auto unique_token() -> std::string
+        {
+            static auto counter = std::atomic<std::uint64_t>{0U};
+            auto random = std::random_device{}();
+            const auto ticks = std::chrono::steady_clock::now().time_since_epoch().count();
+            const auto thread_hash = std::hash<std::thread::id>{}(std::this_thread::get_id());
+            return std::to_string(ticks) + "-" + std::to_string(thread_hash) + "-" + std::to_string(random) + "-" + std::to_string(counter.fetch_add(1U));
+        }
+
+        [[nodiscard]] auto create_transaction_directory(const std::filesystem::path &parent) -> tsunami::core::Result<std::filesystem::path>
         {
             std::error_code ec;
-            std::filesystem::remove(path, ec);
-            std::filesystem::remove(std::filesystem::path{path.string() + ".msk"}, ec);
-            std::filesystem::remove(std::filesystem::path{path.string() + ".aux.xml"}, ec);
+            std::filesystem::create_directories(parent, ec);
+            if (ec) {
+                return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "failed to create conditioned terrain artefact transaction parent directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_parent")
+                    .add_context("path", parent.generic_string()));
+            }
+            for (auto attempt = 0U; attempt < 64U; ++attempt) {
+                const auto candidate = parent / (".tsunami-terrain-artifact-txn-" + unique_token() + "-" + std::to_string(attempt));
+                ec.clear();
+                if (std::filesystem::create_directory(candidate, ec)) {
+                    return tsunami::core::success(candidate);
+                }
+                if (ec && !std::filesystem::exists(candidate)) {
+                    return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "failed to claim conditioned terrain artefact transaction directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_claim")
+                        .add_context("path", candidate.generic_string()));
+                }
+            }
+            return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "could not allocate a unique conditioned terrain artefact transaction directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_unique")
+                .add_context("path", parent.generic_string()));
         }
 
-        auto cleanup_bundle(const ConditionedTerrainArtifactPaths &paths) -> void
+        struct TransactionItem
         {
-            remove_quietly(paths.terrain_path);
-            remove_quietly(paths.coverage_path);
-            remove_quietly(paths.lineage_path);
+            std::filesystem::path original;
+            std::filesystem::path backup;
+            bool moved{};
+        };
+
+        struct InstalledItem
+        {
+            std::filesystem::path target;
+        };
+
+        struct BundleTransaction
+        {
+            ConditionedTerrainArtifactPaths staging_paths;
+            std::vector<std::filesystem::path> directories;
+            std::vector<TransactionItem> backup_items;
+        };
+
+        [[nodiscard]] auto directory_for_parent(
+            BundleTransaction &transaction,
+            std::vector<std::pair<std::filesystem::path, std::filesystem::path>> &mapped_directories,
+            const std::filesystem::path &parent) -> tsunami::core::Result<std::filesystem::path>
+        {
+            for (const auto &[mapped_parent, directory] : mapped_directories) {
+                if (mapped_parent == parent) {
+                    return tsunami::core::success(directory);
+                }
+            }
+            auto directory = create_transaction_directory(parent);
+            if (!directory) {
+                return directory;
+            }
+            mapped_directories.push_back({parent, directory.value()});
+            transaction.directories.push_back(directory.value());
+            return directory;
+        }
+
+        [[nodiscard]] auto make_transaction_paths(const ConditionedTerrainArtifactPaths &targets) -> tsunami::core::Result<BundleTransaction>
+        {
+            auto transaction = BundleTransaction{};
+            auto mapped_directories = std::vector<std::pair<std::filesystem::path, std::filesystem::path>>{};
+            const auto terrain_dir = directory_for_parent(transaction, mapped_directories, parent_or_current(targets.terrain_path));
+            if (!terrain_dir) {
+                return tsunami::core::failure<BundleTransaction>(terrain_dir.error());
+            }
+            const auto coverage_dir = directory_for_parent(transaction, mapped_directories, parent_or_current(targets.coverage_path));
+            if (!coverage_dir) {
+                return tsunami::core::failure<BundleTransaction>(coverage_dir.error());
+            }
+            const auto lineage_dir = directory_for_parent(transaction, mapped_directories, parent_or_current(targets.lineage_path));
+            if (!lineage_dir) {
+                return tsunami::core::failure<BundleTransaction>(lineage_dir.error());
+            }
+            transaction.staging_paths = ConditionedTerrainArtifactPaths{
+                terrain_dir.value() / ("staging-terrain" + targets.terrain_path.extension().generic_string()),
+                coverage_dir.value() / ("staging-coverage" + targets.coverage_path.extension().generic_string()),
+                lineage_dir.value() / ("staging-lineage" + targets.lineage_path.extension().generic_string())};
+            const auto add_backup_items = [&](const std::filesystem::path &target, std::string_view role) -> void {
+                const auto parent = parent_or_current(target);
+                auto directory = std::filesystem::path{};
+                for (const auto &[mapped_parent, mapped_directory] : mapped_directories) {
+                    if (mapped_parent == parent) {
+                        directory = mapped_directory;
+                        break;
+                    }
+                }
+                const auto items = filesystem_items_for_artifact(target);
+                transaction.backup_items.push_back(TransactionItem{items[0], directory / ("backup-" + std::string{role} + target.extension().generic_string()), false});
+                transaction.backup_items.push_back(TransactionItem{items[1], directory / ("backup-" + std::string{role} + ".msk"), false});
+                transaction.backup_items.push_back(TransactionItem{items[2], directory / ("backup-" + std::string{role} + ".aux.xml"), false});
+            };
+            add_backup_items(targets.terrain_path, "terrain");
+            add_backup_items(targets.coverage_path, "coverage");
+            add_backup_items(targets.lineage_path, "lineage");
+            auto all_paths = std::vector<std::filesystem::path>{
+                targets.terrain_path,
+                targets.coverage_path,
+                targets.lineage_path,
+                transaction.staging_paths.terrain_path,
+                transaction.staging_paths.coverage_path,
+                transaction.staging_paths.lineage_path};
+            for (const auto &item : transaction.backup_items) {
+                all_paths.push_back(item.backup);
+            }
+            for (std::size_t i = 0U; i < all_paths.size(); ++i) {
+                for (std::size_t j = i + 1U; j < all_paths.size(); ++j) {
+                    if (all_paths[i] == all_paths[j]) {
+                        return tsunami::core::failure<BundleTransaction>(write_error("path_invalid", "conditioned terrain transaction paths collide", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.transaction_paths")
+                            .add_context("path", all_paths[i].generic_string()));
+                    }
+                }
+            }
+            return tsunami::core::success(std::move(transaction));
+        }
+
+        [[nodiscard]] auto remove_owned_tree(const std::filesystem::path &path) -> bool
+        {
+            std::error_code ec;
+            if (!std::filesystem::exists(path, ec)) {
+                return true;
+            }
+            std::filesystem::remove_all(path, ec);
+            return !ec;
+        }
+
+        [[nodiscard]] auto cleanup_staging(BundleTransaction &transaction) -> bool
+        {
+            auto ok = true;
+            for (const auto &path : {
+                     transaction.staging_paths.terrain_path,
+                     transaction.staging_paths.coverage_path,
+                     transaction.staging_paths.lineage_path}) {
+                for (const auto &item : filesystem_items_for_artifact(path)) {
+                    ok = remove_owned_tree(item) && ok;
+                }
+            }
+            return ok;
+        }
+
+        [[nodiscard]] auto cleanup_transaction_directories(const BundleTransaction &transaction) -> bool
+        {
+            auto ok = true;
+            for (auto it = transaction.directories.rbegin(); it != transaction.directories.rend(); ++it) {
+                ok = remove_owned_tree(*it) && ok;
+            }
+            return ok;
+        }
+
+        auto ignore_cleanup(bool value) noexcept -> void
+        {
+            (void)value;
+        }
+
+        [[nodiscard]] auto restore_backups(std::vector<TransactionItem> &items) -> bool
+        {
+            auto ok = true;
+            for (auto it = items.rbegin(); it != items.rend(); ++it) {
+                if (!it->moved) {
+                    continue;
+                }
+                std::error_code ec;
+                std::filesystem::rename(it->backup, it->original, ec);
+                ok = !ec && ok;
+                if (!ec) {
+                    it->moved = false;
+                }
+            }
+            return ok;
+        }
+
+        [[nodiscard]] auto backup_existing_targets(BundleTransaction &transaction) -> tsunami::core::Result<void>
+        {
+            const auto fail_after_moved = test_config_count("TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_BACKUP_AFTER_MOVED");
+            auto moved_count = std::size_t{};
+            for (auto &item : transaction.backup_items) {
+                std::error_code ec;
+                if (!std::filesystem::exists(item.original, ec)) {
+                    continue;
+                }
+                if (fail_after_moved && moved_count >= *fail_after_moved) {
+                    const auto rollback_ok = restore_backups(transaction.backup_items);
+                    ignore_cleanup(cleanup_staging(transaction));
+                    if (rollback_ok) {
+                        ignore_cleanup(cleanup_transaction_directories(transaction));
+                    }
+                    return tsunami::core::failure(write_error(rollback_ok ? "replacement_failed" : "rollback_failed", rollback_ok ? "failed to prepare conditioned terrain artefact backups" : "failed to restore conditioned terrain artefact bundle after backup preparation failure", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.backup_prepare")
+                        .add_context("path", item.original.generic_string())
+                        .add_context("recovery_path", item.backup.generic_string()));
+                }
+                ec.clear();
+                std::filesystem::rename(item.original, item.backup, ec);
+                if (ec) {
+                    const auto rollback_ok = restore_backups(transaction.backup_items);
+                    ignore_cleanup(cleanup_staging(transaction));
+                    if (rollback_ok) {
+                        ignore_cleanup(cleanup_transaction_directories(transaction));
+                    }
+                    return tsunami::core::failure(write_error(rollback_ok ? "replacement_failed" : "rollback_failed", rollback_ok ? "failed to prepare conditioned terrain artefact backups" : "failed to restore conditioned terrain artefact bundle after backup preparation failure", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.backup_prepare")
+                        .add_context("path", item.original.generic_string())
+                        .add_context("recovery_path", item.backup.generic_string()));
+                }
+                item.moved = true;
+                ++moved_count;
+            }
+            return tsunami::core::success();
+        }
+
+        [[nodiscard]] auto install_staging_item(
+            const std::filesystem::path &source,
+            const std::filesystem::path &target,
+            std::vector<InstalledItem> &installed) -> tsunami::core::Result<void>
+        {
+            std::error_code ec;
+            if (!std::filesystem::exists(source, ec)) {
+                return tsunami::core::success();
+            }
+            std::filesystem::rename(source, target, ec);
+            if (ec) {
+                return tsunami::core::failure(write_error("replacement_failed", "failed to install conditioned terrain artefact transaction item", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.install")
+                    .add_context("path", target.generic_string())
+                    .add_context("recovery_path", source.generic_string()));
+            }
+            installed.push_back(InstalledItem{target});
+            return tsunami::core::success();
+        }
+
+        auto remove_installed_items(std::vector<InstalledItem> &installed) -> bool
+        {
+            auto ok = true;
+            for (auto it = installed.rbegin(); it != installed.rend(); ++it) {
+                ok = remove_owned_tree(it->target) && ok;
+            }
+            installed.clear();
+            return ok;
+        }
+
+        [[nodiscard]] auto install_staging_bundle(
+            const ConditionedTerrainArtifactPaths &staging,
+            const ConditionedTerrainArtifactPaths &targets,
+            std::vector<InstalledItem> &installed) -> tsunami::core::Result<void>
+        {
+            const auto install_artifact = [&](const std::filesystem::path &source, const std::filesystem::path &target) -> tsunami::core::Result<void> {
+                for (std::size_t i = 0U; i < filesystem_items_for_artifact(source).size(); ++i) {
+                    const auto source_items = filesystem_items_for_artifact(source);
+                    const auto target_items = filesystem_items_for_artifact(target);
+                    if (auto installed_item = install_staging_item(source_items[i], target_items[i], installed); !installed_item) {
+                        return installed_item;
+                    }
+                }
+                return tsunami::core::success();
+            };
+            if (auto installed_artifact = install_artifact(staging.terrain_path, targets.terrain_path); !installed_artifact) {
+                return installed_artifact;
+            }
+            if (auto installed_artifact = install_artifact(staging.coverage_path, targets.coverage_path); !installed_artifact) {
+                return installed_artifact;
+            }
+            if (auto installed_artifact = install_artifact(staging.lineage_path, targets.lineage_path); !installed_artifact) {
+                return installed_artifact;
+            }
+            return tsunami::core::success();
+        }
+
+        [[nodiscard]] auto diagnostics_equivalent_except_paths(
+            const ConditionedTerrainArtifactReadDiagnostics &left,
+            const ConditionedTerrainArtifactReadDiagnostics &right) -> bool
+        {
+            return left.artefact_contract_version == right.artefact_contract_version &&
+                left.gdal_runtime_version == right.gdal_runtime_version &&
+                left.terrain_id == right.terrain_id &&
+                left.terrain_revision == right.terrain_revision &&
+                left.width == right.width &&
+                left.height == right.height &&
+                left.cell_count == right.cell_count &&
+                left.valid_terrain_cell_count == right.valid_terrain_cell_count &&
+                left.invalid_terrain_cell_count == right.invalid_terrain_cell_count &&
+                left.minimum_bed_elevation_m == right.minimum_bed_elevation_m &&
+                left.maximum_bed_elevation_m == right.maximum_bed_elevation_m &&
+                left.minimum_coverage_fraction == right.minimum_coverage_fraction &&
+                left.maximum_coverage_fraction == right.maximum_coverage_fraction &&
+                left.lineage_counts == right.lineage_counts &&
+                left.validation_status == right.validation_status;
         }
 
         auto replace_bundle(
-            const ConditionedTerrainArtifactPaths &temps,
-            const ConditionedTerrainArtifactPaths &targets) -> tsunami::core::Result<void>
+            BundleTransaction &transaction,
+            const ConditionedTerrainArtifactPaths &targets,
+            const tsunami::geo::ConditionedTerrainRaster &terrain,
+            const tsunami::geo::TerrainConditioningRecord &record,
+            const ConditionedTerrainArtifactReadResult &temporary_validation) -> tsunami::core::Result<void>
         {
-            const auto backups = backup_paths(targets);
-            cleanup_bundle(backups);
-            const auto target_array = std::array{
-                std::pair{targets.terrain_path, backups.terrain_path},
-                std::pair{targets.coverage_path, backups.coverage_path},
-                std::pair{targets.lineage_path, backups.lineage_path}};
-            auto backed_up = std::vector<std::pair<std::filesystem::path, std::filesystem::path>>{};
-            for (const auto &[target, backup] : target_array) {
-                std::error_code ec;
-                if (std::filesystem::exists(target, ec)) {
-                    std::filesystem::rename(target, backup, ec);
-                    if (ec) {
-                        return tsunami::core::failure(write_error("replacement_failed", "failed to prepare backup before replacing conditioned terrain artefact bundle", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.replace")
-                            .add_context("path", target.generic_string()));
-                    }
-                    backed_up.push_back({target, backup});
-                }
+            if (auto backed_up = backup_existing_targets(transaction); !backed_up) {
+                return backed_up;
             }
-            const auto replacements = std::array{
-                std::pair{temps.terrain_path, targets.terrain_path},
-                std::pair{temps.coverage_path, targets.coverage_path},
-                std::pair{temps.lineage_path, targets.lineage_path}};
-            auto replaced = std::vector<std::pair<std::filesystem::path, std::filesystem::path>>{};
-            for (const auto &[temp, target] : replacements) {
-                std::error_code ec;
-                std::filesystem::rename(temp, target, ec);
-                if (ec) {
-                    for (auto it = replaced.rbegin(); it != replaced.rend(); ++it) {
-                        remove_quietly(it->second);
-                    }
-                    auto rollback_ok = true;
-                    for (auto it = backed_up.rbegin(); it != backed_up.rend(); ++it) {
-                        std::error_code rollback_ec;
-                        std::filesystem::rename(it->second, it->first, rollback_ec);
-                        rollback_ok = rollback_ok && !rollback_ec;
-                    }
-                    return tsunami::core::failure(write_error(rollback_ok ? "replacement_failed" : "rollback_failed", rollback_ok ? "failed to replace conditioned terrain artefact bundle" : "failed to restore conditioned terrain artefact bundle after replacement failure", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.replace")
-                        .add_context("path", target.generic_string()));
+            auto installed = std::vector<InstalledItem>{};
+            auto installed_ok = install_staging_bundle(transaction.staging_paths, targets, installed);
+            if (!installed_ok) {
+                const auto cleanup_ok = remove_installed_items(installed);
+                const auto rollback_ok = restore_backups(transaction.backup_items);
+                ignore_cleanup(cleanup_staging(transaction));
+                if (rollback_ok && cleanup_ok) {
+                    ignore_cleanup(cleanup_transaction_directories(transaction));
                 }
-                replaced.push_back({temp, target});
+                return tsunami::core::failure(write_error((rollback_ok && cleanup_ok) ? "replacement_failed" : "rollback_failed", (rollback_ok && cleanup_ok) ? "failed to replace conditioned terrain artefact bundle" : "failed to restore conditioned terrain artefact bundle after replacement failure", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.replace")
+                    .with_cause_code(installed_ok.error().code()));
             }
-            cleanup_bundle(backups);
+            if (test_config_enabled("TSUNAMI_TEST_TERRAIN_ARTIFACT_FORCE_FINAL_READBACK_FAILURE")) {
+                const auto cleanup_ok = remove_installed_items(installed);
+                const auto rollback_ok = restore_backups(transaction.backup_items);
+                ignore_cleanup(cleanup_staging(transaction));
+                if (rollback_ok && cleanup_ok) {
+                    ignore_cleanup(cleanup_transaction_directories(transaction));
+                }
+                return tsunami::core::failure(write_error((rollback_ok && cleanup_ok) ? "replacement_failed" : "rollback_failed", (rollback_ok && cleanup_ok) ? "final conditioned terrain artefact bundle failed strict validation" : "failed to restore conditioned terrain artefact bundle after final validation failure", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.final_readback"));
+            }
+            auto final_validation = read_impl(targets, record, ConditionedTerrainArtifactReadPolicy{record.grid_policy.maximum_output_cells}, true);
+            if (!final_validation ||
+                !(final_validation.value().terrain == terrain) ||
+                !diagnostics_equivalent_except_paths(final_validation.value().diagnostics, temporary_validation.diagnostics)) {
+                const auto cleanup_ok = remove_installed_items(installed);
+                const auto rollback_ok = restore_backups(transaction.backup_items);
+                ignore_cleanup(cleanup_staging(transaction));
+                if (rollback_ok && cleanup_ok) {
+                    ignore_cleanup(cleanup_transaction_directories(transaction));
+                }
+                auto error = write_error((rollback_ok && cleanup_ok) ? "replacement_failed" : "rollback_failed", (rollback_ok && cleanup_ok) ? "final conditioned terrain artefact bundle failed strict validation" : "failed to restore conditioned terrain artefact bundle after final validation failure", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.final_readback");
+                if (!final_validation) {
+                    error.with_cause_code(final_validation.error().code());
+                }
+                return tsunami::core::failure(error);
+            }
+            ignore_cleanup(cleanup_staging(transaction));
+            if (!cleanup_transaction_directories(transaction)) {
+                return tsunami::core::failure(write_error("replacement_failed", "failed to remove conditioned terrain artefact transaction-owned backup files after successful replacement", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_cleanup"));
+            }
             return tsunami::core::success();
         }
     }
@@ -1124,10 +1520,12 @@ namespace tsunami::geo_gdal
         }
         const auto root = case_root.lexically_normal();
         const auto primary_relative = record.output_path.lexically_normal();
-        const auto primary = (root / primary_relative).lexically_normal();
-        if (!lexically_under_root(root, primary) || primary_relative.generic_string().starts_with("../") ||
-            primary_relative.generic_string() == ".." || !extension_supported(primary) ||
-            primary_relative.begin()->generic_string() != "outputs") {
+        if (contains_parent_component(primary_relative) ||
+            primary_relative.empty() ||
+            !extension_supported(primary_relative) ||
+            primary_relative.begin()->generic_string() != "outputs" ||
+            existing_symlink_escapes_root(root, primary_relative)) {
+            const auto primary = (root == "." ? primary_relative : (root / primary_relative)).lexically_normal();
             return tsunami::core::failure<ConditionedTerrainArtifactPaths>(read_error("path_invalid", "conditioned terrain primary artefact path is outside the case root or unsupported", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.path_bundle")
                 .add_context("path", primary.generic_string()));
         }
@@ -1139,6 +1537,7 @@ namespace tsunami::geo_gdal
         if (rel_it == primary_relative.end() || rel_it->generic_string() != "terrain") {
             return tsunami::core::failure<ConditionedTerrainArtifactPaths>(read_error("path_invalid", "conditioned terrain primary artefact must be under outputs/terrain", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.path_bundle"));
         }
+        const auto primary = (root == "." ? primary_relative : (root / primary_relative)).lexically_normal();
         const auto stem = primary.stem().generic_string();
         const auto ext = primary.extension().generic_string();
         auto paths = ConditionedTerrainArtifactPaths{
@@ -1147,8 +1546,11 @@ namespace tsunami::geo_gdal
             primary.parent_path() / (stem + ".lineage" + ext)};
         paths.coverage_path = paths.coverage_path.lexically_normal();
         paths.lineage_path = paths.lineage_path.lexically_normal();
-        if (!paths_distinct(paths) || !lexically_under_root(root, paths.coverage_path) ||
-            !lexically_under_root(root, paths.lineage_path)) {
+        const auto under_root = root == "." ||
+            (lexically_under_root(root, paths.terrain_path) &&
+                lexically_under_root(root, paths.coverage_path) &&
+                lexically_under_root(root, paths.lineage_path));
+        if (!paths_distinct(paths) || !under_root) {
             return tsunami::core::failure<ConditionedTerrainArtifactPaths>(read_error("path_invalid", "conditioned terrain artefact sibling paths are invalid", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.path_bundle"));
         }
         return tsunami::core::success(std::move(paths));
@@ -1188,33 +1590,51 @@ namespace tsunami::geo_gdal
             if (auto valid = validate_terrain_against_record(terrain, record); !valid) {
                 return valid;
             }
-            const auto temps = temporary_paths(paths);
-            cleanup_bundle(temps);
-            if (auto written = create_geotiff(temps.terrain_path, terrain, record, ArtifactRole::terrain); !written) {
-                cleanup_bundle(temps);
+            auto transaction = make_transaction_paths(paths);
+            if (!transaction) {
+                return tsunami::core::failure(transaction.error());
+            }
+            if (auto written = create_geotiff(transaction.value().staging_paths.terrain_path, terrain, record, ArtifactRole::terrain); !written) {
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
                 return written;
             }
-            if (auto written = create_geotiff(temps.coverage_path, terrain, record, ArtifactRole::coverage); !written) {
-                cleanup_bundle(temps);
+            if (test_config_enabled("TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_AFTER_TERRAIN_STAGING")) {
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
+                return tsunami::core::failure(write_error("temporary_validation_failed", "test seam forced failure after terrain staging", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.test_seam"));
+            }
+            if (auto written = create_geotiff(transaction.value().staging_paths.coverage_path, terrain, record, ArtifactRole::coverage); !written) {
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
                 return written;
             }
-            if (auto written = create_geotiff(temps.lineage_path, terrain, record, ArtifactRole::lineage); !written) {
-                cleanup_bundle(temps);
+            if (test_config_enabled("TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_AFTER_COVERAGE_STAGING")) {
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
+                return tsunami::core::failure(write_error("temporary_validation_failed", "test seam forced failure after coverage staging", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.test_seam"));
+            }
+            if (auto written = create_geotiff(transaction.value().staging_paths.lineage_path, terrain, record, ArtifactRole::lineage); !written) {
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
                 return written;
             }
-            auto validation = read_impl(temps, record, ConditionedTerrainArtifactReadPolicy{record.grid_policy.maximum_output_cells}, true);
+            auto validation = read_impl(transaction.value().staging_paths, record, ConditionedTerrainArtifactReadPolicy{record.grid_policy.maximum_output_cells}, true);
             if (!validation || !(validation.value().terrain == terrain) ||
                 validation.value().diagnostics.valid_terrain_cell_count != record.diagnostics.active_cell_count) {
-                cleanup_bundle(temps);
-                return tsunami::core::failure(write_error("temporary_validation_failed", "temporary conditioned terrain artefact bundle failed strict read-back validation", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.temporary_readback")
-                    .with_cause_code(validation ? std::string{} : validation.error().code()));
+                ignore_cleanup(cleanup_staging(transaction.value()));
+                ignore_cleanup(cleanup_transaction_directories(transaction.value()));
+                auto error = write_error("temporary_validation_failed", "temporary conditioned terrain artefact bundle failed strict read-back validation", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.temporary_readback");
+                if (!validation) {
+                    error.with_cause_code(validation.error().code());
+                }
+                return tsunami::core::failure(error);
             }
-            auto replaced = replace_bundle(temps, paths);
+            auto replaced = replace_bundle(transaction.value(), paths, terrain, record, validation.value());
             if (!replaced) {
-                cleanup_bundle(temps);
+                ignore_cleanup(cleanup_staging(transaction.value()));
                 return replaced;
             }
-            cleanup_bundle(temps);
             return tsunami::core::success();
         } catch (const std::exception &ex) {
             return tsunami::core::failure(write_error("temporary_validation_failed", ex.what(), tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.no_throw"));

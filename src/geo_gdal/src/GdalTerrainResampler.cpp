@@ -2,12 +2,17 @@
 
 #include <algorithm>
 #include <array>
+#include <atomic>
+#include <chrono>
 #include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <limits>
 #include <memory>
 #include <optional>
+#include <random>
 #include <string>
+#include <thread>
 #include <vector>
 
 #include <cpl_conv.h>
@@ -77,6 +82,52 @@ namespace tsunami::geo_gdal
         [[nodiscard]] auto finite(double value) noexcept -> bool
         {
             return std::isfinite(value);
+        }
+
+        [[nodiscard]] auto parent_or_current(const std::filesystem::path &path) -> std::filesystem::path
+        {
+            return path.parent_path().empty() ? std::filesystem::path{"."} : path.parent_path();
+        }
+
+        [[nodiscard]] auto unique_token() -> std::string
+        {
+            static auto counter = std::atomic<std::uint64_t>{0U};
+            auto random = std::random_device{}();
+            const auto ticks = std::chrono::steady_clock::now().time_since_epoch().count();
+            const auto thread_hash = std::hash<std::thread::id>{}(std::this_thread::get_id());
+            return std::to_string(ticks) + "-" + std::to_string(thread_hash) + "-" + std::to_string(random) + "-" + std::to_string(counter.fetch_add(1U));
+        }
+
+        [[nodiscard]] auto create_single_writer_companion_directory(const std::filesystem::path &terrain_path)
+            -> tsunami::core::Result<std::filesystem::path>
+        {
+            const auto parent = parent_or_current(terrain_path);
+            std::error_code ec;
+            std::filesystem::create_directories(parent, ec);
+            if (ec) {
+                return tsunami::core::failure<std::filesystem::path>(gdal_error("geo.terrain.artifact_write.replacement_failed", "failed to create conditioned terrain companion transaction parent directory", "geo.terrain.artifact.single_writer_companion"));
+            }
+            for (auto attempt = 0U; attempt < 64U; ++attempt) {
+                const auto candidate = parent / (".tsunami-terrain-single-artifact-txn-" + unique_token() + "-" + std::to_string(attempt));
+                ec.clear();
+                if (std::filesystem::create_directory(candidate, ec)) {
+                    return tsunami::core::success(candidate);
+                }
+                if (ec && !std::filesystem::exists(candidate)) {
+                    return tsunami::core::failure<std::filesystem::path>(gdal_error("geo.terrain.artifact_write.replacement_failed", "failed to claim conditioned terrain companion transaction directory", "geo.terrain.artifact.single_writer_companion"));
+                }
+            }
+            return tsunami::core::failure<std::filesystem::path>(gdal_error("geo.terrain.artifact_write.replacement_failed", "could not allocate a unique conditioned terrain companion transaction directory", "geo.terrain.artifact.single_writer_companion"));
+        }
+
+        [[nodiscard]] auto cleanup_single_writer_companion_directory(const std::filesystem::path &directory) -> bool
+        {
+            std::error_code ec;
+            if (!std::filesystem::exists(directory, ec)) {
+                return true;
+            }
+            std::filesystem::remove_all(directory, ec);
+            return !ec;
         }
 
         [[nodiscard]] auto inverse_pixel(
@@ -358,14 +409,22 @@ namespace tsunami::geo_gdal
         const tsunami::geo::TerrainConditioningRecord &record)
         -> tsunami::core::Result<void>
     {
+        const auto companion_directory = create_single_writer_companion_directory(path);
+        if (!companion_directory) {
+            return tsunami::core::failure(companion_directory.error());
+        }
         auto paths = ConditionedTerrainArtifactPaths{
             path.lexically_normal(),
-            std::filesystem::path{path.string() + ".coverage.tmp.tif"}.lexically_normal(),
-            std::filesystem::path{path.string() + ".lineage.tmp.tif"}.lexically_normal()};
+            (companion_directory.value() / "coverage.tif").lexically_normal(),
+            (companion_directory.value() / "lineage.tif").lexically_normal()};
         auto result = write_conditioned_terrain_artifacts_with_gdal(paths, terrain, record);
-        std::error_code ignored;
-        std::filesystem::remove(paths.coverage_path, ignored);
-        std::filesystem::remove(paths.lineage_path, ignored);
+        const auto cleanup_ok = cleanup_single_writer_companion_directory(companion_directory.value());
+        if (!result) {
+            return result;
+        }
+        if (!cleanup_ok) {
+            return tsunami::core::failure(gdal_error("geo.terrain.artifact_write.replacement_failed", "failed to remove transaction-owned conditioned terrain companion artefacts", "geo.terrain.artifact.single_writer_companion"));
+        }
         return result;
     }
 
