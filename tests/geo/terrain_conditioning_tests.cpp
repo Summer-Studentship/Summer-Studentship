@@ -733,6 +733,13 @@ namespace
         std::optional<std::string> previous_;
     };
 
+    [[nodiscard]] auto context_value(const tsunami::core::Error &error, std::string_view key) -> std::string
+    {
+        auto value = error.context_value(key);
+        REQUIRE(value.has_value());
+        return *value;
+    }
+
     [[nodiscard]] auto conditioned_artifact_fixture(
         tsunami::data::CorridorRequest corridor = tsunami::data::CorridorRequest{
             "terrain-axis",
@@ -1346,6 +1353,99 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         CHECK(absolute_paths.value().lineage_path.parent_path() == absolute_paths.value().terrain_path.parent_path());
     }
 
+    SECTION("malformed raster storage cardinality is rejected before filesystem mutation")
+    {
+        struct Case
+        {
+            std::string name;
+            std::string field;
+            tsunami::geo::ConditionedTerrainRaster terrain;
+            std::string actual;
+        };
+
+        const auto make_raster = [&](std::vector<double> values,
+                                     std::vector<std::uint8_t> mask,
+                                     std::vector<double> coverage,
+                                     std::vector<tsunami::geo::TerrainCellLineage> lineage) {
+            return tsunami::geo::ConditionedTerrainRaster{
+                produced.terrain.grid(),
+                std::move(values),
+                std::move(mask),
+                std::move(coverage),
+                std::move(lineage),
+                produced.terrain.minimum_elevation_m(),
+                produced.terrain.maximum_elevation_m()};
+        };
+
+        auto long_values = produced.terrain.values();
+        long_values.push_back(123.0);
+        auto cases = std::vector<Case>{};
+        cases.push_back(Case{
+            "short-values",
+            "values",
+            make_raster(
+                std::vector<double>{produced.terrain.values().begin(), produced.terrain.values().end() - 1},
+                produced.terrain.valid_mask(),
+                produced.terrain.corridor_coverage_fraction(),
+                produced.terrain.cell_lineage()),
+            std::to_string(produced.terrain.values().size() - 1U)});
+        cases.push_back(Case{
+            "short-mask",
+            "valid_mask",
+            make_raster(
+                produced.terrain.values(),
+                std::vector<std::uint8_t>{produced.terrain.valid_mask().begin(), produced.terrain.valid_mask().end() - 1},
+                produced.terrain.corridor_coverage_fraction(),
+                produced.terrain.cell_lineage()),
+            std::to_string(produced.terrain.valid_mask().size() - 1U)});
+        cases.push_back(Case{
+            "short-coverage",
+            "corridor_coverage_fraction",
+            make_raster(
+                produced.terrain.values(),
+                produced.terrain.valid_mask(),
+                std::vector<double>{produced.terrain.corridor_coverage_fraction().begin(), produced.terrain.corridor_coverage_fraction().end() - 1},
+                produced.terrain.cell_lineage()),
+            std::to_string(produced.terrain.corridor_coverage_fraction().size() - 1U)});
+        cases.push_back(Case{
+            "short-lineage",
+            "cell_lineage",
+            make_raster(
+                produced.terrain.values(),
+                produced.terrain.valid_mask(),
+                produced.terrain.corridor_coverage_fraction(),
+                std::vector<tsunami::geo::TerrainCellLineage>{produced.terrain.cell_lineage().begin(), produced.terrain.cell_lineage().end() - 1}),
+            std::to_string(produced.terrain.cell_lineage().size() - 1U)});
+        cases.push_back(Case{
+            "long-values",
+            "values",
+            make_raster(
+                std::move(long_values),
+                produced.terrain.valid_mask(),
+                produced.terrain.corridor_coverage_fraction(),
+                produced.terrain.cell_lineage()),
+            std::to_string(produced.terrain.values().size() + 1U)});
+
+        for (const auto &test_case : cases) {
+            const auto [root, paths] = make_paths(test_case.name);
+            write_bytes(paths.terrain_path, "existing terrain");
+            write_bytes(paths.coverage_path, "existing coverage");
+            write_bytes(paths.lineage_path, "existing lineage");
+            write_bytes(path_with_suffix(paths.terrain_path, ".aux.xml"), "existing sidecar");
+            const auto snapshot = snapshot_files(artifact_files(paths));
+
+            auto written = tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths, test_case.terrain, produced.record);
+            REQUIRE_FALSE(written.has_value());
+            CHECK(written.error().code() == "geo.terrain.artifact_write.request_invalid");
+            CHECK(context_value(written.error(), "state_changed") == "false");
+            CHECK(context_value(written.error(), "field") == test_case.field);
+            CHECK(context_value(written.error(), "expected") == std::to_string(produced.terrain.cell_count()));
+            CHECK(context_value(written.error(), "actual") == test_case.actual);
+            check_snapshot_restored(snapshot);
+            CHECK_FALSE(contains_transaction_directory(root));
+        }
+    }
+
     SECTION("backup preparation failure restores all prior targets and sidecars byte-for-byte")
     {
         const auto [root, paths] = make_paths("backup-rollback");
@@ -1380,6 +1480,51 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         auto readback = tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy);
         REQUIRE(readback.has_value());
         CHECK(readback.value().terrain == produced.terrain);
+        CHECK_FALSE(contains_transaction_directory(root));
+    }
+
+    SECTION("post-commit transaction backup cleanup failure reports committed state")
+    {
+        const auto [root, paths] = make_paths("post-commit-cleanup");
+        const auto unrelated = root / "outputs/terrain/unrelated.keep";
+        write_bytes(unrelated, "preserve me");
+        const auto unrelated_snapshot = read_bytes(unrelated);
+
+        const auto fail_cleanup = ScopedGdalConfig{"TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_TRANSACTION_CLEANUP", "YES"};
+        auto written = tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths, produced.terrain, produced.record);
+        REQUIRE_FALSE(written.has_value());
+        CHECK(written.error().code() == "geo.terrain.artifact_write.cleanup_failed");
+        CHECK(context_value(written.error(), "state_changed") == "true");
+        CHECK(context_value(written.error(), "recovery_directory_count") != "0");
+        CHECK(written.error().context_value("recovery_directory_0").has_value());
+        auto readback = tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy);
+        REQUIRE(readback.has_value());
+        CHECK(readback.value().terrain == produced.terrain);
+        CHECK(read_bytes(unrelated) == unrelated_snapshot);
+    }
+
+    SECTION("partial multi-parent transaction allocation cleans already-owned directories")
+    {
+        const auto root = readback_case_root("partial-allocation");
+        const auto paths = tsunami::geo_gdal::ConditionedTerrainArtifactPaths{
+            root / "outputs/terrain/terrain/conditioned.tif",
+            root / "outputs/terrain/coverage/conditioned.coverage.tif",
+            root / "outputs/terrain/lineage/conditioned.lineage.tif"};
+        write_bytes(paths.terrain_path, "existing terrain");
+        write_bytes(paths.coverage_path, "existing coverage");
+        write_bytes(paths.lineage_path, "existing lineage");
+        write_bytes(path_with_suffix(paths.coverage_path, ".aux.xml"), "existing coverage aux");
+        const auto snapshot = snapshot_files(artifact_files(paths));
+
+        const auto failed_parent = paths.coverage_path.parent_path().generic_string();
+        const auto fail_coverage_parent = ScopedGdalConfig{
+            "TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_TRANSACTION_PARENT",
+            failed_parent.c_str()};
+        auto written = tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths, produced.terrain, produced.record);
+        REQUIRE_FALSE(written.has_value());
+        CHECK(written.error().code() == "geo.terrain.artifact_write.replacement_failed");
+        CHECK(context_value(written.error(), "state_changed") == "false");
+        check_snapshot_restored(snapshot);
         CHECK_FALSE(contains_transaction_directory(root));
     }
 
