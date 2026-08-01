@@ -36,34 +36,15 @@ namespace tsunami::geo
                 detail::string_value(json, "executed_at_utc", pointer, source, kind)};
         }
 
-        [[nodiscard]] auto extent_from_transform(std::uint64_t width, std::uint64_t height, const RasterAffineTransform &transform) -> BoundingBox2D
-        {
-            const auto point = [&transform](double column, double row) {
-                return Point2D{
-                    transform.origin_x + (column * transform.pixel_width) + (row * transform.row_rotation),
-                    transform.origin_y + (column * transform.column_rotation) + (row * transform.pixel_height)};
-            };
-            const auto w = static_cast<double>(width);
-            const auto h = static_cast<double>(height);
-            const auto corners = std::vector<Point2D>{point(0.0, 0.0), point(w, 0.0), point(0.0, h), point(w, h)};
-            auto box = BoundingBox2D{corners.front().x, corners.front().y, corners.front().x, corners.front().y};
-            for (const auto corner : corners) {
-                box.minimum_x = std::min(box.minimum_x, corner.x);
-                box.minimum_y = std::min(box.minimum_y, corner.y);
-                box.maximum_x = std::max(box.maximum_x, corner.x);
-                box.maximum_y = std::max(box.maximum_y, corner.y);
-            }
-            return box;
-        }
-
         [[nodiscard]] auto parse_grid(
             const detail::Json &json,
             const std::string &pointer,
-            const std::string &source) -> TerrainTargetGrid
+            const std::string &source,
+            const ComputationalTargetReference &target_reference) -> TerrainTargetGrid
         {
             detail::reject_unknown(
                 json,
-                {"width", "height", "spacing_m", "registration", "xi_min_m", "xi_max_m", "eta_bottom_m", "eta_top_m", "longitudinal_padding_m", "transverse_padding_m", "affine"},
+                {"width", "height", "spacing_m", "registration", "xi_min_m", "xi_max_m", "eta_bottom_m", "eta_top_m", "longitudinal_padding_m", "transverse_padding_m", "affine", "extent"},
                 pointer,
                 source,
                 kind);
@@ -94,8 +75,8 @@ namespace tsunami::geo
                 height,
                 detail::number_value(json, "spacing_m", pointer, source, kind),
                 transform,
-                extent_from_transform(width, height, transform),
-                ComputationalTargetReference{},
+                detail::parse_box(detail::child(json, "extent", pointer, source, kind), detail::pointer_for(pointer, "extent"), source, kind),
+                target_reference,
                 detail::number_value(json, "xi_min_m", pointer, source, kind),
                 detail::number_value(json, "xi_max_m", pointer, source, kind),
                 detail::number_value(json, "eta_bottom_m", pointer, source, kind),
@@ -132,19 +113,23 @@ namespace tsunami::geo
         {
             detail::reject_unknown(
                 json,
-                {"dataset_id", "asset_id", "import_id", "transformation_id", "role", "kernel", "source_registration", "target_registration", "source_scale", "source_offset", "minimum_source_spacing_m", "maximum_source_spacing_m", "nominal_source_spacing_m", "target_spacing_m", "maximum_upsampling_factor", "source_valid_cell_count", "output_valid_cell_count", "source_nodata_cell_count", "outside_coverage_cell_count", "operation_name", "adapter_name", "adapter_version"},
+                {"dataset_id", "asset_id", "import_id", "import_identity", "transformation_id", "transformation_identity", "role", "kernel", "source_registration", "target_registration", "source_scale", "source_offset", "minimum_source_spacing_m", "maximum_source_spacing_m", "nominal_source_spacing_m", "target_spacing_m", "maximum_upsampling_factor", "source_valid_cell_count", "output_valid_cell_count", "source_nodata_cell_count", "outside_coverage_cell_count", "operation_name", "operation", "vertical_operation", "adapter_name", "adapter_version"},
                 pointer,
                 source,
                 kind);
             auto record = RasterResamplingRecord{};
             record.dataset_id = detail::string_value(json, "dataset_id", pointer, source, kind);
             record.asset_id = detail::string_value(json, "asset_id", pointer, source, kind);
-            record.import_identity.import_id = detail::string_value(json, "import_id", pointer, source, kind);
-            record.import_identity.dataset_id = record.dataset_id;
-            record.import_identity.asset_id = record.asset_id;
-            record.transformation_identity.transformation_id = detail::string_value(json, "transformation_id", pointer, source, kind);
-            record.transformation_identity.source_dataset_id = record.dataset_id;
-            record.transformation_identity.source_asset_id = record.asset_id;
+            const auto import_id = detail::string_value(json, "import_id", pointer, source, kind);
+            record.import_identity = detail::parse_import_identity(detail::child(json, "import_identity", pointer, source, kind), detail::pointer_for(pointer, "import_identity"), source, kind);
+            if (record.import_identity.import_id != import_id) {
+                detail::fail(kind, "validation_failed", "resampling import_id disagrees with import_identity", source, detail::pointer_for(pointer, "import_id"), "matching import identity", "string", "import_id");
+            }
+            const auto transformation_id = detail::string_value(json, "transformation_id", pointer, source, kind);
+            record.transformation_identity = detail::parse_transformation_identity(detail::child(json, "transformation_identity", pointer, source, kind), detail::pointer_for(pointer, "transformation_identity"), source, kind);
+            if (record.transformation_identity.transformation_id != transformation_id) {
+                detail::fail(kind, "validation_failed", "resampling transformation_id disagrees with transformation_identity", source, detail::pointer_for(pointer, "transformation_id"), "matching transformation identity", "string", "transformation_id");
+            }
             record.role = detail::enum_value<TerrainSourceRole>(
                 json,
                 "role",
@@ -184,7 +169,12 @@ namespace tsunami::geo
             record.output_valid_cell_count = detail::uint_value(json, "output_valid_cell_count", pointer, source, kind);
             record.source_nodata_cell_count = detail::uint_value(json, "source_nodata_cell_count", pointer, source, kind);
             record.outside_coverage_cell_count = detail::uint_value(json, "outside_coverage_cell_count", pointer, source, kind);
-            record.operation.operation_name = detail::string_value(json, "operation_name", pointer, source, kind);
+            const auto operation_name = detail::string_value(json, "operation_name", pointer, source, kind);
+            record.operation = detail::parse_coordinate_operation(detail::child(json, "operation", pointer, source, kind), detail::pointer_for(pointer, "operation"), source, kind);
+            if (record.operation.operation_name != operation_name) {
+                detail::fail(kind, "validation_failed", "resampling operation_name disagrees with operation", source, detail::pointer_for(pointer, "operation_name"), "matching operation name", "string", "operation_name");
+            }
+            record.vertical_steps = detail::parse_vertical_operation(detail::child(json, "vertical_operation", pointer, source, kind), detail::pointer_for(pointer, "vertical_operation"), source, kind);
             record.adapter_name = detail::string_value(json, "adapter_name", pointer, source, kind);
             record.adapter_version = detail::string_value(json, "adapter_version", pointer, source, kind);
             return record;
@@ -240,7 +230,7 @@ namespace tsunami::geo
         {
             detail::reject_unknown(
                 json,
-                {"total_cell_count", "active_cell_count", "outside_corridor_cell_count", "excluded_boundary_cell_count", "bathymetry_selected_cell_count", "topography_selected_cell_count", "overlap_cell_count", "overlap_conflict_cell_count", "initially_unresolved_cell_count", "filled_cell_count", "unresolved_cell_count", "overlap", "minimum_elevation_m", "maximum_elevation_m"},
+                {"total_cell_count", "active_cell_count", "outside_corridor_cell_count", "excluded_boundary_cell_count", "bathymetry_selected_cell_count", "topography_selected_cell_count", "overlap_cell_count", "overlap_conflict_cell_count", "initially_unresolved_cell_count", "filled_cell_count", "unresolved_cell_count", "overlap", "minimum_elevation_m", "maximum_elevation_m", "warnings"},
                 pointer,
                 source,
                 kind);
@@ -267,21 +257,20 @@ namespace tsunami::geo
                 detail::number_value(overlap_json, "maximum_absolute_difference_m", overlap_pointer, source, kind)};
             diagnostics.minimum_elevation_m = detail::number_value(json, "minimum_elevation_m", pointer, source, kind);
             diagnostics.maximum_elevation_m = detail::number_value(json, "maximum_elevation_m", pointer, source, kind);
+            diagnostics.warnings = detail::string_array(json, "warnings", pointer, source, kind);
             return diagnostics;
         }
 
-        [[nodiscard]] auto uncertainty_status_from_string(
-            const detail::Json &json,
-            const std::string &pointer,
-            const std::string &source) -> tsunami::data::UncertaintyStatus
+        [[nodiscard]] auto migration_required_error(const std::string &source) -> tsunami::core::Error
         {
-            return detail::enum_value<tsunami::data::UncertaintyStatus>(
-                json,
-                "output_uncertainty_status",
-                pointer,
-                source,
+            return detail::parse_error(
                 kind,
-                {{"reported", tsunami::data::UncertaintyStatus::reported}, {"estimated", tsunami::data::UncertaintyStatus::estimated}, {"not_reported", tsunami::data::UncertaintyStatus::not_reported}, {"not_applicable", tsunami::data::UncertaintyStatus::not_applicable}});
+                "migration_required",
+                "terrain conditioning record v1 lacks sufficient provenance for lossless reconstruction; v2 read-back is required",
+                source,
+                "/schema/version",
+                "tsunami.terrain_conditioning_record 2.0.0",
+                "tsunami.terrain_conditioning_record 1.0.0");
         }
 
         [[nodiscard]] auto validation_error(
@@ -301,14 +290,19 @@ namespace tsunami::geo
         try {
             auto root = detail::parse_json_document(document, source_name, kind);
             detail::require_object(root, "/", source_name, kind);
+            const auto schema = detail::parse_schema(detail::child(root, "schema", "/", source_name, kind), "/schema", source_name, kind);
+            if (schema.schema_name == terrain_conditioning_record_schema_name &&
+                schema.version == tsunami::core::SemanticVersion{1U, 0U, 0U}) {
+                return tsunami::core::failure<TerrainConditioningRecord>(migration_required_error(source_name));
+            }
             detail::reject_unknown(
                 root,
-                {"schema", "policy_version", "formula_version", "identity", "scenario_id", "target_site", "bathymetry_dataset_id", "bathymetry_asset_id", "topography_dataset_id", "topography_asset_id", "corridor_id", "grid", "grid_policy", "bathymetry_resampling", "topography_resampling", "merge_policy", "gap_policy", "diagnostics", "output_uncertainty_status", "output_media_type", "output_path", "digest_status", "warnings"},
+                {"schema", "policy_version", "formula_version", "identity", "scenario_id", "target_site", "bathymetry_dataset_id", "bathymetry_asset_id", "bathymetry_import_identity", "bathymetry_transformation_identity", "topography_dataset_id", "topography_asset_id", "topography_import_identity", "topography_transformation_identity", "corridor_id", "corridor_identity", "target_reference", "grid", "grid_policy", "bathymetry_resampling", "topography_resampling", "merge_policy", "gap_policy", "diagnostics", "output_uncertainty_status", "output_uncertainty", "output_media_type", "output_path", "digest_status", "warnings"},
                 "/",
                 source_name,
                 kind);
             auto record = TerrainConditioningRecord{};
-            record.schema = detail::parse_schema(detail::child(root, "schema", "/", source_name, kind), "/schema", source_name, kind);
+            record.schema = schema;
             record.policy_version = detail::string_value(root, "policy_version", "/", source_name, kind);
             record.formula_version = detail::string_value(root, "formula_version", "/", source_name, kind);
             record.identity = parse_identity(detail::child(root, "identity", "/", source_name, kind), "/identity", source_name);
@@ -316,23 +310,34 @@ namespace tsunami::geo
             record.target_site = detail::string_value(root, "target_site", "/", source_name, kind);
             record.bathymetry_dataset_id = detail::string_value(root, "bathymetry_dataset_id", "/", source_name, kind);
             record.bathymetry_asset_id = detail::string_value(root, "bathymetry_asset_id", "/", source_name, kind);
+            record.bathymetry_import_identity = detail::parse_import_identity(detail::child(root, "bathymetry_import_identity", "/", source_name, kind), "/bathymetry_import_identity", source_name, kind);
+            record.bathymetry_transformation_identity = detail::parse_transformation_identity(detail::child(root, "bathymetry_transformation_identity", "/", source_name, kind), "/bathymetry_transformation_identity", source_name, kind);
             record.topography_dataset_id = detail::string_value(root, "topography_dataset_id", "/", source_name, kind);
             record.topography_asset_id = detail::string_value(root, "topography_asset_id", "/", source_name, kind);
-            record.corridor_identity.corridor_id = detail::string_value(root, "corridor_id", "/", source_name, kind);
-            record.corridor_identity.case_revision = record.identity.case_revision;
-            record.grid = parse_grid(detail::child(root, "grid", "/", source_name, kind), "/grid", source_name);
-            record.target_reference = record.grid.target_reference();
+            record.topography_import_identity = detail::parse_import_identity(detail::child(root, "topography_import_identity", "/", source_name, kind), "/topography_import_identity", source_name, kind);
+            record.topography_transformation_identity = detail::parse_transformation_identity(detail::child(root, "topography_transformation_identity", "/", source_name, kind), "/topography_transformation_identity", source_name, kind);
+            const auto corridor_id = detail::string_value(root, "corridor_id", "/", source_name, kind);
+            record.corridor_identity = detail::parse_corridor_identity(detail::child(root, "corridor_identity", "/", source_name, kind), "/corridor_identity", source_name, kind);
+            if (record.corridor_identity.corridor_id != corridor_id) {
+                return tsunami::core::failure<TerrainConditioningRecord>(
+                    detail::parse_error(kind, "validation_failed", "corridor_id disagrees with corridor_identity", source_name, "/corridor_id", "matching corridor identity", "string")
+                        .with_cause_code("geo.terrain.record_invalid"));
+            }
+            record.target_reference = detail::parse_target(detail::child(root, "target_reference", "/", source_name, kind), "/target_reference", source_name, kind);
+            record.grid = parse_grid(detail::child(root, "grid", "/", source_name, kind), "/grid", source_name, record.target_reference);
             record.grid_policy = parse_grid_policy(detail::child(root, "grid_policy", "/", source_name, kind), "/grid_policy", source_name);
             record.bathymetry_resampling = parse_resampling(detail::child(root, "bathymetry_resampling", "/", source_name, kind), "/bathymetry_resampling", source_name);
             record.topography_resampling = parse_resampling(detail::child(root, "topography_resampling", "/", source_name, kind), "/topography_resampling", source_name);
-            record.bathymetry_import_identity = record.bathymetry_resampling.import_identity;
-            record.bathymetry_transformation_identity = record.bathymetry_resampling.transformation_identity;
-            record.topography_import_identity = record.topography_resampling.import_identity;
-            record.topography_transformation_identity = record.topography_resampling.transformation_identity;
             record.merge_policy = parse_merge_policy(detail::child(root, "merge_policy", "/", source_name, kind), "/merge_policy", source_name);
             record.gap_policy = parse_gap_policy(detail::child(root, "gap_policy", "/", source_name, kind), "/gap_policy", source_name);
             record.diagnostics = parse_diagnostics(detail::child(root, "diagnostics", "/", source_name, kind), "/diagnostics", source_name);
-            record.output_uncertainty = tsunami::data::DatasetUncertainty{uncertainty_status_from_string(root, "/", source_name), {}, std::nullopt};
+            const auto status = detail::parse_uncertainty_status(root, "output_uncertainty_status", "/", source_name, kind);
+            record.output_uncertainty = detail::parse_uncertainty(detail::child(root, "output_uncertainty", "/", source_name, kind), "/output_uncertainty", source_name, kind);
+            if (record.output_uncertainty.status != status) {
+                return tsunami::core::failure<TerrainConditioningRecord>(
+                    detail::parse_error(kind, "validation_failed", "output uncertainty status disagrees with output_uncertainty", source_name, "/output_uncertainty_status", "matching uncertainty status", "string")
+                        .with_cause_code("geo.terrain.record_invalid"));
+            }
             record.output_media_type = detail::string_value(root, "output_media_type", "/", source_name, kind);
             record.output_path = std::filesystem::path{detail::string_value(root, "output_path", "/", source_name, kind)};
             record.digest_status = detail::string_value(root, "digest_status", "/", source_name, kind);

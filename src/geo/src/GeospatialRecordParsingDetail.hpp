@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <cstddef>
 #include <cstdint>
@@ -8,6 +9,7 @@
 #include <fstream>
 #include <iterator>
 #include <limits>
+#include <optional>
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -21,6 +23,7 @@
 #include <tsunami/core/Result.hpp>
 #include <tsunami/data/DatasetManifest.hpp>
 #include <tsunami/geo/CoordinateTransformation.hpp>
+#include <tsunami/geo/CorridorConstructionRecord.hpp>
 #include <tsunami/geo/ImportedRaster.hpp>
 #include <tsunami/geo/ImportedVector.hpp>
 
@@ -324,6 +327,20 @@ namespace tsunami::geo::detail
         return static_cast<std::size_t>(out);
     }
 
+    [[nodiscard]] inline auto uint32_value(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> std::uint32_t
+    {
+        const auto out = uint_value(value, key, pointer, source, kind);
+        if (out > std::numeric_limits<std::uint32_t>::max()) {
+            fail(kind, "type_invalid", "unsigned integer exceeds uint32_t", source, pointer_for(pointer, key), "uint32", "unsigned integer", std::string{key});
+        }
+        return static_cast<std::uint32_t>(out);
+    }
+
     template <class Enum>
     [[nodiscard]] auto enum_value(
         const Json &value,
@@ -384,9 +401,9 @@ namespace tsunami::geo::detail
         return tsunami::data::SchemaIdentity{
             string_value(value, "schema_name", pointer, source, kind),
             tsunami::core::SemanticVersion{
-                static_cast<std::uint32_t>(uint_value(version, "major", version_pointer, source, kind)),
-                static_cast<std::uint32_t>(uint_value(version, "minor", version_pointer, source, kind)),
-                static_cast<std::uint32_t>(uint_value(version, "patch", version_pointer, source, kind))}};
+                uint32_value(version, "major", version_pointer, source, kind),
+                uint32_value(version, "minor", version_pointer, source, kind),
+                uint32_value(version, "patch", version_pointer, source, kind)}};
     }
 
     [[nodiscard]] inline auto parse_case_revision(
@@ -519,6 +536,304 @@ namespace tsunami::geo::detail
             string_value(value, "executed_at_utc", pointer, source, kind)};
     }
 
+    [[nodiscard]] inline auto parse_import_identity(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> GeospatialImportIdentity
+    {
+        reject_unknown(
+            value,
+            {"import_id", "import_revision", "case_id", "case_revision", "manifest_id", "manifest_revision", "dataset_id", "asset_id", "executed_at_utc"},
+            pointer,
+            source,
+            kind);
+        return GeospatialImportIdentity{
+            string_value(value, "import_id", pointer, source, kind),
+            uint_value(value, "import_revision", pointer, source, kind),
+            parse_case_revision(value, pointer, source, kind),
+            string_value(value, "manifest_id", pointer, source, kind),
+            uint_value(value, "manifest_revision", pointer, source, kind),
+            string_value(value, "dataset_id", pointer, source, kind),
+            string_value(value, "asset_id", pointer, source, kind),
+            string_value(value, "executed_at_utc", pointer, source, kind)};
+    }
+
+    [[nodiscard]] inline auto parse_corridor_identity(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> CorridorConstructionIdentity
+    {
+        reject_unknown(
+            value,
+            {"corridor_id", "corridor_revision", "case_id", "case_revision", "trajectory_id", "output_dataset_id", "output_process_id", "executed_at_utc"},
+            pointer,
+            source,
+            kind);
+        return CorridorConstructionIdentity{
+            string_value(value, "corridor_id", pointer, source, kind),
+            uint_value(value, "corridor_revision", pointer, source, kind),
+            parse_case_revision(value, pointer, source, kind),
+            string_value(value, "trajectory_id", pointer, source, kind),
+            string_value(value, "output_dataset_id", pointer, source, kind),
+            string_value(value, "output_process_id", pointer, source, kind),
+            string_value(value, "executed_at_utc", pointer, source, kind)};
+    }
+
+    [[nodiscard]] inline auto parse_area(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> GeographicAreaOfInterest
+    {
+        reject_unknown(value, {"west_longitude_degrees", "south_latitude_degrees", "east_longitude_degrees", "north_latitude_degrees"}, pointer, source, kind);
+        return GeographicAreaOfInterest{
+            number_value(value, "west_longitude_degrees", pointer, source, kind),
+            number_value(value, "south_latitude_degrees", pointer, source, kind),
+            number_value(value, "east_longitude_degrees", pointer, source, kind),
+            number_value(value, "north_latitude_degrees", pointer, source, kind)};
+    }
+
+    [[nodiscard]] inline auto parse_digest(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> tsunami::data::ContentDigest
+    {
+        reject_unknown(value, {"algorithm", "value", "origin"}, pointer, source, kind);
+        return tsunami::data::ContentDigest{
+            enum_value<tsunami::data::DigestAlgorithm>(
+                value,
+                "algorithm",
+                pointer,
+                source,
+                kind,
+                {{"sha256", tsunami::data::DigestAlgorithm::sha256}}),
+            string_value(value, "value", pointer, source, kind),
+            enum_value<tsunami::data::DigestOrigin>(
+                value,
+                "origin",
+                pointer,
+                source,
+                kind,
+                {{"provider_declared", tsunami::data::DigestOrigin::provider_declared}, {"project_computed", tsunami::data::DigestOrigin::project_computed}})};
+    }
+
+    [[nodiscard]] inline auto parse_nullable_digest(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> std::optional<tsunami::data::ContentDigest>
+    {
+        const auto &field = child(value, key, pointer, source, kind);
+        if (field.is_null()) {
+            return std::nullopt;
+        }
+        return parse_digest(field, pointer_for(pointer, key), source, kind);
+    }
+
+    [[nodiscard]] inline auto parse_grid_resource_status(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> GeodeticResourceVerificationStatus
+    {
+        return enum_value<GeodeticResourceVerificationStatus>(
+            value,
+            key,
+            pointer,
+            source,
+            kind,
+            {{"externally_verified", GeodeticResourceVerificationStatus::externally_verified},
+             {"declared_not_verified", GeodeticResourceVerificationStatus::declared_not_verified},
+             {"unavailable", GeodeticResourceVerificationStatus::unavailable}});
+    }
+
+    [[nodiscard]] inline auto parse_operation_grid(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> CoordinateOperationGrid
+    {
+        reject_unknown(value, {"short_name", "full_path", "package_name", "source_uri", "available", "open_licence", "declared_digest", "verification_status"}, pointer, source, kind);
+        auto full_path = std::optional<std::filesystem::path>{};
+        if (auto text = nullable_string(value, "full_path", pointer, source, kind)) {
+            full_path = std::filesystem::path{*text};
+        }
+        return CoordinateOperationGrid{
+            string_value(value, "short_name", pointer, source, kind),
+            std::move(full_path),
+            nullable_string(value, "package_name", pointer, source, kind),
+            nullable_string(value, "source_uri", pointer, source, kind),
+            bool_value(value, "available", pointer, source, kind),
+            bool_value(value, "open_licence", pointer, source, kind),
+            parse_nullable_digest(value, "declared_digest", pointer, source, kind),
+            parse_grid_resource_status(value, "verification_status", pointer, source, kind)};
+    }
+
+    [[nodiscard]] inline auto parse_operation_grids(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> std::vector<CoordinateOperationGrid>
+    {
+        const auto &field = child(value, key, pointer, source, kind);
+        const auto array_pointer = pointer_for(pointer, key);
+        if (!field.is_array()) {
+            fail(kind, "type_invalid", "field has the wrong JSON type", source, array_pointer, "array", actual_type(field), std::string{key});
+        }
+        auto out = std::vector<CoordinateOperationGrid>{};
+        out.reserve(field.size());
+        for (std::size_t i = 0U; i < field.size(); ++i) {
+            out.push_back(parse_operation_grid(field[i], array_pointer + "/" + std::to_string(i), source, kind));
+        }
+        return out;
+    }
+
+    [[nodiscard]] inline auto parse_coordinate_operation(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> CoordinateOperationRecord
+    {
+        reject_unknown(
+            value,
+            {"operation_name", "operation_authority", "operation_code", "operation_method", "operation_accuracy_m", "scope", "area_of_use", "canonical_wkt2", "canonical_projjson", "canonical_pipeline", "ballpark", "source_crs", "target_crs", "grids", "engine_name", "engine_version", "database_version"},
+            pointer,
+            source,
+            kind);
+        const auto &area = child(value, "area_of_use", pointer, source, kind);
+        auto parsed_area = std::optional<GeographicAreaOfInterest>{};
+        if (area.is_null()) {
+            parsed_area = std::nullopt;
+        } else {
+            parsed_area = parse_area(area, pointer_for(pointer, "area_of_use"), source, kind);
+        }
+        return CoordinateOperationRecord{
+            string_value(value, "operation_name", pointer, source, kind),
+            nullable_string(value, "operation_authority", pointer, source, kind),
+            nullable_string(value, "operation_code", pointer, source, kind),
+            nullable_string(value, "operation_method", pointer, source, kind),
+            nullable_number(value, "operation_accuracy_m", pointer, source, kind),
+            nullable_string(value, "scope", pointer, source, kind),
+            std::move(parsed_area),
+            nullable_string(value, "canonical_wkt2", pointer, source, kind),
+            nullable_string(value, "canonical_projjson", pointer, source, kind),
+            nullable_string(value, "canonical_pipeline", pointer, source, kind),
+            bool_value(value, "ballpark", pointer, source, kind),
+            parse_reference(child(value, "source_crs", pointer, source, kind), pointer_for(pointer, "source_crs"), source, kind),
+            parse_reference(child(value, "target_crs", pointer, source, kind), pointer_for(pointer, "target_crs"), source, kind),
+            parse_operation_grids(value, "grids", pointer, source, kind),
+            string_value(value, "engine_name", pointer, source, kind),
+            string_value(value, "engine_version", pointer, source, kind),
+            nullable_string(value, "database_version", pointer, source, kind)};
+    }
+
+    [[nodiscard]] inline auto parse_vertical_step_kind(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> VerticalTransformationStepKind
+    {
+        return enum_value<VerticalTransformationStepKind>(
+            value,
+            key,
+            pointer,
+            source,
+            kind,
+            {{"identity", VerticalTransformationStepKind::identity},
+             {"unit_scale", VerticalTransformationStepKind::unit_scale},
+             {"sign_inversion", VerticalTransformationStepKind::sign_inversion},
+             {"constant_offset", VerticalTransformationStepKind::constant_offset},
+             {"geodetic_grid_operation", VerticalTransformationStepKind::geodetic_grid_operation}});
+    }
+
+    [[nodiscard]] inline auto parse_vertical_operation(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> VerticalTransformationSpecification
+    {
+        reject_unknown(value, {"enabled", "steps"}, pointer, source, kind);
+        const auto &steps = child(value, "steps", pointer, source, kind);
+        const auto steps_pointer = pointer_for(pointer, "steps");
+        if (!steps.is_array()) {
+            fail(kind, "type_invalid", "vertical steps must be an array", source, steps_pointer, "array", actual_type(steps), "steps");
+        }
+        auto parsed_steps = std::vector<VerticalTransformationStep>{};
+        parsed_steps.reserve(steps.size());
+        for (std::size_t i = 0U; i < steps.size(); ++i) {
+            const auto step_pointer = steps_pointer + "/" + std::to_string(i);
+            const auto &step = steps[i];
+            reject_unknown(step, {"kind", "scale_factor", "offset_m", "operation_authority", "operation_code", "required_resource_name", "source_reference", "target_reference"}, step_pointer, source, kind);
+            parsed_steps.push_back(VerticalTransformationStep{
+                parse_vertical_step_kind(step, "kind", step_pointer, source, kind),
+                nullable_number(step, "scale_factor", step_pointer, source, kind),
+                nullable_number(step, "offset_m", step_pointer, source, kind),
+                nullable_string(step, "operation_authority", step_pointer, source, kind),
+                nullable_string(step, "operation_code", step_pointer, source, kind),
+                nullable_string(step, "required_resource_name", step_pointer, source, kind),
+                string_value(step, "source_reference", step_pointer, source, kind),
+                string_value(step, "target_reference", step_pointer, source, kind)});
+        }
+        return VerticalTransformationSpecification{bool_value(value, "enabled", pointer, source, kind), std::move(parsed_steps)};
+    }
+
+    [[nodiscard]] inline auto parse_uncertainty_status(
+        const Json &value,
+        std::string_view key,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> tsunami::data::UncertaintyStatus
+    {
+        return enum_value<tsunami::data::UncertaintyStatus>(
+            value,
+            key,
+            pointer,
+            source,
+            kind,
+            {{"reported", tsunami::data::UncertaintyStatus::reported},
+             {"estimated", tsunami::data::UncertaintyStatus::estimated},
+             {"not_reported", tsunami::data::UncertaintyStatus::not_reported},
+             {"not_applicable", tsunami::data::UncertaintyStatus::not_applicable}});
+    }
+
+    [[nodiscard]] inline auto parse_uncertainty(
+        const Json &value,
+        const std::string &pointer,
+        const std::string &source,
+        RecordKind kind) -> tsunami::data::DatasetUncertainty
+    {
+        reject_unknown(value, {"status", "measures", "description"}, pointer, source, kind);
+        const auto &measures = child(value, "measures", pointer, source, kind);
+        const auto measures_pointer = pointer_for(pointer, "measures");
+        if (!measures.is_array()) {
+            fail(kind, "type_invalid", "uncertainty measures must be an array", source, measures_pointer, "array", actual_type(measures), "measures");
+        }
+        auto parsed = std::vector<tsunami::data::UncertaintyMeasure>{};
+        parsed.reserve(measures.size());
+        for (std::size_t i = 0U; i < measures.size(); ++i) {
+            const auto measure_pointer = measures_pointer + "/" + std::to_string(i);
+            const auto &measure = measures[i];
+            reject_unknown(measure, {"quantity", "value", "unit", "confidence_level", "method"}, measure_pointer, source, kind);
+            parsed.push_back(tsunami::data::UncertaintyMeasure{
+                string_value(measure, "quantity", measure_pointer, source, kind),
+                number_value(measure, "value", measure_pointer, source, kind),
+                string_value(measure, "unit", measure_pointer, source, kind),
+                nullable_number(measure, "confidence_level", measure_pointer, source, kind),
+                nullable_string(measure, "method", measure_pointer, source, kind)});
+        }
+        return tsunami::data::DatasetUncertainty{
+            parse_uncertainty_status(value, "status", pointer, source, kind),
+            std::move(parsed),
+            nullable_string(value, "description", pointer, source, kind)};
+    }
+
     [[nodiscard]] inline auto parse_json_document(
         std::string_view document,
         const std::string &source,
@@ -532,17 +847,34 @@ namespace tsunami::geo::detail
             std::set<std::string> keys;
             std::string pointer;
             std::string pending_child_pointer;
+            std::size_t next_index{};
+            bool array{};
         };
         auto frames = std::vector<Frame>{};
+        const auto begin_value_pointer = [&frames]() -> std::string {
+            if (frames.empty()) {
+                return "/";
+            }
+            auto &parent = frames.back();
+            if (parent.array) {
+                const auto pointer = parent.pointer == "/" ? "/" + std::to_string(parent.next_index) : parent.pointer + "/" + std::to_string(parent.next_index);
+                ++parent.next_index;
+                return pointer;
+            }
+            auto pointer = parent.pending_child_pointer.empty() ? parent.pointer : parent.pending_child_pointer;
+            parent.pending_child_pointer.clear();
+            return pointer;
+        };
         const auto callback = [&](int, nlohmann::json::parse_event_t event, Json &parsed) -> bool {
             if (event == nlohmann::json::parse_event_t::object_start) {
-                auto pointer = std::string{"/"};
-                if (!frames.empty() && !frames.back().pending_child_pointer.empty()) {
-                    pointer = frames.back().pending_child_pointer;
-                    frames.back().pending_child_pointer.clear();
-                }
-                frames.push_back(Frame{{}, std::move(pointer), {}});
+                frames.push_back(Frame{{}, begin_value_pointer(), {}, 0U, false});
             } else if (event == nlohmann::json::parse_event_t::object_end) {
+                if (!frames.empty()) {
+                    frames.pop_back();
+                }
+            } else if (event == nlohmann::json::parse_event_t::array_start) {
+                frames.push_back(Frame{{}, begin_value_pointer(), {}, 0U, true});
+            } else if (event == nlohmann::json::parse_event_t::array_end) {
                 if (!frames.empty()) {
                     frames.pop_back();
                 }
@@ -559,6 +891,8 @@ namespace tsunami::geo::detail
                         throw ParseFailure{parse_error(kind, "duplicate_key", "duplicate object key is not permitted", source, pointer, "unique object key", "duplicate key", key)};
                     }
                 }
+            } else if (event == nlohmann::json::parse_event_t::value) {
+                static_cast<void>(begin_value_pointer());
             }
             return true;
         };
@@ -597,8 +931,23 @@ namespace tsunami::geo::detail
             return tsunami::core::failure<std::string>(read_error(kind, "failed", "could not open record file", path));
         }
         auto bytes = std::string{};
-        bytes.reserve(static_cast<std::size_t>(size));
-        bytes.assign(std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{});
+        bytes.reserve(static_cast<std::size_t>(std::min<std::uintmax_t>(size, maximum_size)));
+        auto buffer = std::array<char, 4096U>{};
+        while (file && bytes.size() <= maximum_size) {
+            const auto remaining = (maximum_size + 1U) - bytes.size();
+            const auto request = std::min<std::size_t>(buffer.size(), remaining);
+            file.read(buffer.data(), static_cast<std::streamsize>(request));
+            const auto count = file.gcount();
+            if (count > 0) {
+                bytes.append(buffer.data(), static_cast<std::size_t>(count));
+            }
+            if (static_cast<std::size_t>(count) < request) {
+                break;
+            }
+        }
+        if (bytes.size() > maximum_size) {
+            return tsunami::core::failure<std::string>(read_error(kind, "too_large", "record file exceeds maximum supported size", path));
+        }
         if (file.bad() || bytes.size() != static_cast<std::size_t>(size)) {
             return tsunami::core::failure<std::string>(read_error(kind, "failed", "could not completely read record file", path));
         }

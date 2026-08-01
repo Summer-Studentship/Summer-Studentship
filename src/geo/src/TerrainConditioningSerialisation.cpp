@@ -1,11 +1,12 @@
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 
-#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
+#include <optional>
 #include <sstream>
 #include <string>
+#include <vector>
 
 namespace tsunami::geo
 {
@@ -80,6 +81,15 @@ namespace tsunami::geo
             out << '\n';
         }
 
+        auto bool_line(std::ostringstream &out, int indent, std::string_view key, bool value, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": " << (value ? "true" : "false");
+            if (comma) {
+                out << ',';
+            }
+            out << '\n';
+        }
+
         auto number_line(std::ostringstream &out, int indent, std::string_view key, double value, bool comma = true) -> void
         {
             const auto canonical = value == 0.0 ? 0.0 : value;
@@ -105,6 +115,34 @@ namespace tsunami::geo
             out << '\n';
         }
 
+        auto optional_string_line(std::ostringstream &out, int indent, std::string_view key, const std::optional<std::string> &value, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": ";
+            if (value) {
+                out << '"' << escape(*value) << '"';
+            } else {
+                out << "null";
+            }
+            if (comma) {
+                out << ',';
+            }
+            out << '\n';
+        }
+
+        auto optional_path_line(std::ostringstream &out, int indent, std::string_view key, const std::optional<std::filesystem::path> &value, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": ";
+            if (value) {
+                out << '"' << escape(value->generic_string()) << '"';
+            } else {
+                out << "null";
+            }
+            if (comma) {
+                out << ',';
+            }
+            out << '\n';
+        }
+
         auto open_object(std::ostringstream &out, int indent, std::string_view key) -> void
         {
             out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": {\n";
@@ -113,6 +151,19 @@ namespace tsunami::geo
         auto close_object(std::ostringstream &out, int indent, bool comma = true) -> void
         {
             out << std::string(static_cast<std::size_t>(indent), ' ') << '}';
+            if (comma) {
+                out << ',';
+            }
+            out << '\n';
+        }
+
+        auto write_string_array(std::ostringstream &out, int indent, std::string_view key, const std::vector<std::string> &values, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": [";
+            for (std::size_t i = 0U; i < values.size(); ++i) {
+                out << (i == 0U ? "" : ", ") << '"' << escape(values[i]) << '"';
+            }
+            out << ']';
             if (comma) {
                 out << ',';
             }
@@ -146,6 +197,100 @@ namespace tsunami::geo
             close_object(out, 2);
         }
 
+        auto write_case_revision_fields(std::ostringstream &out, int indent, const tsunami::data::CaseRevisionRef &case_revision) -> void
+        {
+            line(out, indent, "case_id", case_revision.case_id.str());
+            uint_line(out, indent, "case_revision", case_revision.revision);
+        }
+
+        auto write_import_identity(std::ostringstream &out, int indent, std::string_view key, const GeospatialImportIdentity &identity) -> void
+        {
+            open_object(out, indent, key);
+            line(out, indent + 2, "import_id", identity.import_id);
+            uint_line(out, indent + 2, "import_revision", identity.import_revision);
+            write_case_revision_fields(out, indent + 2, identity.case_revision);
+            line(out, indent + 2, "manifest_id", identity.manifest_id);
+            uint_line(out, indent + 2, "manifest_revision", identity.manifest_revision);
+            line(out, indent + 2, "dataset_id", identity.dataset_id);
+            line(out, indent + 2, "asset_id", identity.asset_id);
+            line(out, indent + 2, "executed_at_utc", identity.executed_at_utc, false);
+            close_object(out, indent);
+        }
+
+        auto write_transformation_identity(std::ostringstream &out, int indent, std::string_view key, const CoordinateTransformationIdentity &identity) -> void
+        {
+            open_object(out, indent, key);
+            line(out, indent + 2, "transformation_id", identity.transformation_id);
+            uint_line(out, indent + 2, "transformation_revision", identity.transformation_revision);
+            write_case_revision_fields(out, indent + 2, identity.case_revision);
+            line(out, indent + 2, "manifest_id", identity.manifest_id);
+            uint_line(out, indent + 2, "manifest_revision", identity.manifest_revision);
+            line(out, indent + 2, "source_import_id", identity.source_import_id);
+            uint_line(out, indent + 2, "source_import_revision", identity.source_import_revision);
+            line(out, indent + 2, "source_dataset_id", identity.source_dataset_id);
+            line(out, indent + 2, "source_asset_id", identity.source_asset_id);
+            line(out, indent + 2, "output_dataset_id", identity.output_dataset_id);
+            line(out, indent + 2, "output_process_id", identity.output_process_id);
+            line(out, indent + 2, "executed_at_utc", identity.executed_at_utc, false);
+            close_object(out, indent);
+        }
+
+        auto write_corridor_identity(std::ostringstream &out, int indent, const CorridorConstructionIdentity &identity) -> void
+        {
+            open_object(out, indent, "corridor_identity");
+            line(out, indent + 2, "corridor_id", identity.corridor_id);
+            uint_line(out, indent + 2, "corridor_revision", identity.corridor_revision);
+            write_case_revision_fields(out, indent + 2, identity.case_revision);
+            line(out, indent + 2, "trajectory_id", identity.trajectory_id);
+            line(out, indent + 2, "output_dataset_id", identity.output_dataset_id);
+            line(out, indent + 2, "output_process_id", identity.output_process_id);
+            line(out, indent + 2, "executed_at_utc", identity.executed_at_utc, false);
+            close_object(out, indent);
+        }
+
+        auto write_reference(std::ostringstream &out, int indent, std::string_view key, const CoordinateReferenceDescriptor &reference, bool comma = true) -> void
+        {
+            open_object(out, indent, key);
+            optional_string_line(out, indent + 2, "authority_name", reference.authority_name);
+            optional_string_line(out, indent + 2, "authority_code", reference.authority_code);
+            line(out, indent + 2, "name", reference.name);
+            optional_string_line(out, indent + 2, "canonical_wkt2", reference.canonical_wkt2);
+            optional_string_line(out, indent + 2, "canonical_projjson", reference.canonical_projjson);
+            optional_string_line(out, indent + 2, "datum_name", reference.datum_name);
+            optional_string_line(out, indent + 2, "datum_realisation", reference.datum_realisation);
+            optional_number_line(out, indent + 2, "coordinate_epoch_decimal_year", reference.coordinate_epoch_decimal_year);
+            write_string_array(out, indent + 2, "axis_names", reference.axis_names);
+            write_string_array(out, indent + 2, "axis_directions", reference.axis_directions);
+            write_string_array(out, indent + 2, "axis_units", reference.axis_units, false);
+            close_object(out, indent, comma);
+        }
+
+        auto write_target(std::ostringstream &out, int indent, std::string_view key, const ComputationalTargetReference &target, bool comma = true) -> void
+        {
+            open_object(out, indent, key);
+            write_reference(out, indent + 2, "horizontal", target.horizontal);
+            if (target.vertical) {
+                write_reference(out, indent + 2, "vertical", *target.vertical);
+            } else {
+                out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "\"vertical\": null,\n";
+            }
+            line(out, indent + 2, "storage_axes", to_string(target.storage_axes));
+            line(out, indent + 2, "horizontal_unit", target.horizontal_unit);
+            optional_string_line(out, indent + 2, "vertical_unit", target.vertical_unit);
+            optional_string_line(out, indent + 2, "vertical_positive", target.vertical_positive, false);
+            close_object(out, indent, comma);
+        }
+
+        auto write_box(std::ostringstream &out, int indent, std::string_view key, const BoundingBox2D &box, bool comma = true) -> void
+        {
+            open_object(out, indent, key);
+            number_line(out, indent + 2, "minimum_x", box.minimum_x);
+            number_line(out, indent + 2, "minimum_y", box.minimum_y);
+            number_line(out, indent + 2, "maximum_x", box.maximum_x);
+            number_line(out, indent + 2, "maximum_y", box.maximum_y, false);
+            close_object(out, indent, comma);
+        }
+
         auto write_grid(std::ostringstream &out, const TerrainTargetGrid &grid) -> void
         {
             open_object(out, 2, "grid");
@@ -166,7 +311,8 @@ namespace tsunami::geo
             number_line(out, 6, "origin_y", grid.transform().origin_y);
             number_line(out, 6, "column_rotation", grid.transform().column_rotation);
             number_line(out, 6, "pixel_height", grid.transform().pixel_height, false);
-            close_object(out, 4, false);
+            close_object(out, 4);
+            write_box(out, 4, "extent", grid.extent(), false);
             close_object(out, 2);
         }
 
@@ -183,13 +329,137 @@ namespace tsunami::geo
             close_object(out, 2);
         }
 
+        auto write_area(std::ostringstream &out, int indent, std::string_view key, const GeographicAreaOfInterest &area, bool comma = true) -> void
+        {
+            open_object(out, indent, key);
+            number_line(out, indent + 2, "west_longitude_degrees", area.west_longitude_degrees);
+            number_line(out, indent + 2, "south_latitude_degrees", area.south_latitude_degrees);
+            number_line(out, indent + 2, "east_longitude_degrees", area.east_longitude_degrees);
+            number_line(out, indent + 2, "north_latitude_degrees", area.north_latitude_degrees, false);
+            close_object(out, indent, comma);
+        }
+
+        auto write_digest(std::ostringstream &out, int indent, const std::optional<tsunami::data::ContentDigest> &digest, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << "\"declared_digest\": ";
+            if (!digest) {
+                out << "null";
+                if (comma) {
+                    out << ',';
+                }
+                out << '\n';
+                return;
+            }
+            out << "{\n";
+            line(out, indent + 2, "algorithm", tsunami::data::to_string(digest->algorithm));
+            line(out, indent + 2, "value", digest->value);
+            line(out, indent + 2, "origin", tsunami::data::to_string(digest->origin), false);
+            close_object(out, indent, comma);
+        }
+
+        auto write_grids(std::ostringstream &out, int indent, std::string_view key, const std::vector<CoordinateOperationGrid> &grids, bool comma = true) -> void
+        {
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": [";
+            if (grids.empty()) {
+                out << ']';
+                if (comma) {
+                    out << ',';
+                }
+                out << '\n';
+                return;
+            }
+            out << '\n';
+            for (std::size_t i = 0U; i < grids.size(); ++i) {
+                out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "{\n";
+                line(out, indent + 4, "short_name", grids[i].short_name);
+                optional_path_line(out, indent + 4, "full_path", grids[i].full_path);
+                optional_string_line(out, indent + 4, "package_name", grids[i].package_name);
+                optional_string_line(out, indent + 4, "source_uri", grids[i].source_uri);
+                bool_line(out, indent + 4, "available", grids[i].available);
+                bool_line(out, indent + 4, "open_licence", grids[i].open_licence);
+                write_digest(out, indent + 4, grids[i].declared_digest);
+                line(out, indent + 4, "verification_status", to_string(grids[i].verification_status), false);
+                out << std::string(static_cast<std::size_t>(indent + 2), ' ') << '}';
+                if (i + 1U != grids.size()) {
+                    out << ',';
+                }
+                out << '\n';
+            }
+            out << std::string(static_cast<std::size_t>(indent), ' ') << ']';
+            if (comma) {
+                out << ',';
+            }
+            out << '\n';
+        }
+
+        auto write_operation(std::ostringstream &out, int indent, const CoordinateOperationRecord &operation) -> void
+        {
+            open_object(out, indent, "operation");
+            line(out, indent + 2, "operation_name", operation.operation_name);
+            optional_string_line(out, indent + 2, "operation_authority", operation.operation_authority);
+            optional_string_line(out, indent + 2, "operation_code", operation.operation_code);
+            optional_string_line(out, indent + 2, "operation_method", operation.operation_method);
+            optional_number_line(out, indent + 2, "operation_accuracy_m", operation.operation_accuracy_m);
+            optional_string_line(out, indent + 2, "scope", operation.scope);
+            if (operation.area_of_use) {
+                write_area(out, indent + 2, "area_of_use", *operation.area_of_use);
+            } else {
+                out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "\"area_of_use\": null,\n";
+            }
+            optional_string_line(out, indent + 2, "canonical_wkt2", operation.canonical_wkt2);
+            optional_string_line(out, indent + 2, "canonical_projjson", operation.canonical_projjson);
+            optional_string_line(out, indent + 2, "canonical_pipeline", operation.canonical_pipeline);
+            bool_line(out, indent + 2, "ballpark", operation.ballpark);
+            write_reference(out, indent + 2, "source_crs", operation.source_crs);
+            write_reference(out, indent + 2, "target_crs", operation.target_crs);
+            write_grids(out, indent + 2, "grids", operation.grids);
+            line(out, indent + 2, "engine_name", operation.engine_name);
+            line(out, indent + 2, "engine_version", operation.engine_version);
+            optional_string_line(out, indent + 2, "database_version", operation.database_version, false);
+            close_object(out, indent);
+        }
+
+        auto write_vertical(std::ostringstream &out, int indent, const VerticalTransformationSpecification &vertical) -> void
+        {
+            open_object(out, indent, "vertical_operation");
+            bool_line(out, indent + 2, "enabled", vertical.enabled);
+            out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "\"steps\": [";
+            if (vertical.steps.empty()) {
+                out << "]\n";
+                close_object(out, indent);
+                return;
+            }
+            out << '\n';
+            for (std::size_t i = 0U; i < vertical.steps.size(); ++i) {
+                const auto &step = vertical.steps[i];
+                out << std::string(static_cast<std::size_t>(indent + 4), ' ') << "{\n";
+                line(out, indent + 6, "kind", to_string(step.kind));
+                optional_number_line(out, indent + 6, "scale_factor", step.scale_factor);
+                optional_number_line(out, indent + 6, "offset_m", step.offset_m);
+                optional_string_line(out, indent + 6, "operation_authority", step.operation_authority);
+                optional_string_line(out, indent + 6, "operation_code", step.operation_code);
+                optional_string_line(out, indent + 6, "required_resource_name", step.required_resource_name);
+                line(out, indent + 6, "source_reference", step.source_reference);
+                line(out, indent + 6, "target_reference", step.target_reference, false);
+                out << std::string(static_cast<std::size_t>(indent + 4), ' ') << '}';
+                if (i + 1U != vertical.steps.size()) {
+                    out << ',';
+                }
+                out << '\n';
+            }
+            out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "]\n";
+            close_object(out, indent);
+        }
+
         auto write_resampling(std::ostringstream &out, std::string_view key, const RasterResamplingRecord &record) -> void
         {
             open_object(out, 2, key);
             line(out, 4, "dataset_id", record.dataset_id);
             line(out, 4, "asset_id", record.asset_id);
             line(out, 4, "import_id", record.import_identity.import_id);
+            write_import_identity(out, 4, "import_identity", record.import_identity);
             line(out, 4, "transformation_id", record.transformation_identity.transformation_id);
+            write_transformation_identity(out, 4, "transformation_identity", record.transformation_identity);
             line(out, 4, "role", to_string(record.role));
             line(out, 4, "kernel", to_string(record.kernel));
             line(out, 4, "source_registration", to_string(record.source_registration));
@@ -206,6 +476,8 @@ namespace tsunami::geo
             uint_line(out, 4, "source_nodata_cell_count", record.source_nodata_cell_count);
             uint_line(out, 4, "outside_coverage_cell_count", record.outside_coverage_cell_count);
             line(out, 4, "operation_name", record.operation.operation_name);
+            write_operation(out, 4, record.operation);
+            write_vertical(out, 4, record.vertical_steps);
             line(out, 4, "adapter_name", record.adapter_name);
             line(out, 4, "adapter_version", record.adapter_version, false);
             close_object(out, 2);
@@ -258,7 +530,37 @@ namespace tsunami::geo
             number_line(out, 6, "maximum_absolute_difference_m", diagnostics.overlap.maximum_absolute_difference_m, false);
             close_object(out, 4);
             number_line(out, 4, "minimum_elevation_m", diagnostics.minimum_elevation_m);
-            number_line(out, 4, "maximum_elevation_m", diagnostics.maximum_elevation_m, false);
+            number_line(out, 4, "maximum_elevation_m", diagnostics.maximum_elevation_m);
+            write_string_array(out, 4, "warnings", diagnostics.warnings, false);
+            close_object(out, 2);
+        }
+
+        auto write_uncertainty(std::ostringstream &out, const tsunami::data::DatasetUncertainty &uncertainty) -> void
+        {
+            open_object(out, 2, "output_uncertainty");
+            line(out, 4, "status", tsunami::data::to_string(uncertainty.status));
+            out << "    \"measures\": [";
+            if (uncertainty.measures.empty()) {
+                out << "],\n";
+            } else {
+                out << '\n';
+                for (std::size_t i = 0U; i < uncertainty.measures.size(); ++i) {
+                    const auto &measure = uncertainty.measures[i];
+                    out << "      {\n";
+                    line(out, 8, "quantity", measure.quantity);
+                    number_line(out, 8, "value", measure.value);
+                    line(out, 8, "unit", measure.unit);
+                    optional_number_line(out, 8, "confidence_level", measure.confidence_level);
+                    optional_string_line(out, 8, "method", measure.method, false);
+                    out << "      }";
+                    if (i + 1U != uncertainty.measures.size()) {
+                        out << ',';
+                    }
+                    out << '\n';
+                }
+                out << "    ],\n";
+            }
+            optional_string_line(out, 4, "description", uncertainty.description, false);
             close_object(out, 2);
         }
     }
@@ -279,9 +581,15 @@ namespace tsunami::geo
         line(out, 2, "target_site", record.target_site);
         line(out, 2, "bathymetry_dataset_id", record.bathymetry_dataset_id);
         line(out, 2, "bathymetry_asset_id", record.bathymetry_asset_id);
+        write_import_identity(out, 2, "bathymetry_import_identity", record.bathymetry_import_identity);
+        write_transformation_identity(out, 2, "bathymetry_transformation_identity", record.bathymetry_transformation_identity);
         line(out, 2, "topography_dataset_id", record.topography_dataset_id);
         line(out, 2, "topography_asset_id", record.topography_asset_id);
+        write_import_identity(out, 2, "topography_import_identity", record.topography_import_identity);
+        write_transformation_identity(out, 2, "topography_transformation_identity", record.topography_transformation_identity);
         line(out, 2, "corridor_id", record.corridor_identity.corridor_id);
+        write_corridor_identity(out, 2, record.corridor_identity);
+        write_target(out, 2, "target_reference", record.target_reference);
         write_grid(out, record.grid);
         write_grid_policy(out, record.grid_policy);
         write_resampling(out, "bathymetry_resampling", record.bathymetry_resampling);
@@ -290,14 +598,13 @@ namespace tsunami::geo
         write_gap_policy(out, record.gap_policy);
         write_diagnostics(out, record.diagnostics);
         line(out, 2, "output_uncertainty_status", tsunami::data::to_string(record.output_uncertainty.status));
+        write_uncertainty(out, record.output_uncertainty);
         line(out, 2, "output_media_type", record.output_media_type);
         line(out, 2, "output_path", record.output_path.generic_string());
         line(out, 2, "digest_status", record.digest_status);
-        auto warnings = record.warnings;
-        std::sort(warnings.begin(), warnings.end());
         out << "  \"warnings\": [";
-        for (std::size_t i = 0U; i < warnings.size(); ++i) {
-            out << (i == 0U ? "" : ", ") << '"' << escape(warnings[i]) << '"';
+        for (std::size_t i = 0U; i < record.warnings.size(); ++i) {
+            out << (i == 0U ? "" : ", ") << '"' << escape(record.warnings[i]) << '"';
         }
         out << "]\n";
         out << "}\n";

@@ -15,7 +15,7 @@
 namespace tsunami::geo
 {
     inline constexpr std::string_view terrain_conditioning_record_schema_name{"tsunami.terrain_conditioning_record"};
-    inline constexpr tsunami::core::SemanticVersion supported_terrain_conditioning_record_version{1U, 0U, 0U};
+    inline constexpr tsunami::core::SemanticVersion supported_terrain_conditioning_record_version{2U, 0U, 0U};
     inline constexpr std::string_view supported_terrain_conditioning_record_policy_version{"0.1"};
     inline constexpr std::string_view terrain_conditioning_formula_version{"corridor-grid-priority-merge-v1"};
 

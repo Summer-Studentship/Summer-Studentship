@@ -1,0 +1,285 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://summer-studentship.example/schemas/terrain_conditioning_record/2.0.0/terrain_conditioning_record.schema.json",
+  "title": "tsunami.terrain_conditioning_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "policy_version",
+    "formula_version",
+    "identity",
+    "scenario_id",
+    "target_site",
+    "bathymetry_dataset_id",
+    "bathymetry_asset_id",
+    "bathymetry_import_identity",
+    "bathymetry_transformation_identity",
+    "topography_dataset_id",
+    "topography_asset_id",
+    "topography_import_identity",
+    "topography_transformation_identity",
+    "corridor_id",
+    "corridor_identity",
+    "target_reference",
+    "grid",
+    "grid_policy",
+    "bathymetry_resampling",
+    "topography_resampling",
+    "merge_policy",
+    "gap_policy",
+    "diagnostics",
+    "output_uncertainty_status",
+    "output_uncertainty",
+    "output_media_type",
+    "output_path",
+    "digest_status",
+    "warnings"
+  ],
+  "properties": {
+    "schema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["schema_name", "version"],
+      "properties": {
+        "schema_name": { "const": "tsunami.terrain_conditioning_record" },
+        "version": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["major", "minor", "patch"],
+          "properties": {
+            "major": { "const": 2 },
+            "minor": { "const": 0 },
+            "patch": { "const": 0 }
+          }
+        }
+      }
+    },
+    "policy_version": { "const": "0.1" },
+    "formula_version": { "const": "corridor-grid-priority-merge-v1" },
+    "identity": { "$ref": "#/$defs/terrain_identity" },
+    "scenario_id": { "type": "string", "minLength": 1 },
+    "target_site": { "type": "string", "minLength": 1 },
+    "bathymetry_dataset_id": { "type": "string", "minLength": 1 },
+    "bathymetry_asset_id": { "type": "string", "minLength": 1 },
+    "bathymetry_import_identity": { "$ref": "#/$defs/import_identity" },
+    "bathymetry_transformation_identity": { "$ref": "#/$defs/transformation_identity" },
+    "topography_dataset_id": { "type": "string", "minLength": 1 },
+    "topography_asset_id": { "type": "string", "minLength": 1 },
+    "topography_import_identity": { "$ref": "#/$defs/import_identity" },
+    "topography_transformation_identity": { "$ref": "#/$defs/transformation_identity" },
+    "corridor_id": { "type": "string", "minLength": 1 },
+    "corridor_identity": { "$ref": "#/$defs/corridor_identity" },
+    "target_reference": { "$ref": "#/$defs/target_reference" },
+    "grid": { "$ref": "#/$defs/grid" },
+    "grid_policy": { "$ref": "#/$defs/grid_policy" },
+    "bathymetry_resampling": { "$ref": "#/$defs/resampling" },
+    "topography_resampling": { "$ref": "#/$defs/resampling" },
+    "merge_policy": { "$ref": "#/$defs/merge_policy" },
+    "gap_policy": { "$ref": "#/$defs/gap_policy" },
+    "diagnostics": { "$ref": "#/$defs/diagnostics" },
+    "output_uncertainty_status": { "$ref": "#/$defs/uncertainty_status" },
+    "output_uncertainty": { "$ref": "#/$defs/uncertainty" },
+    "output_media_type": { "const": "image/tiff" },
+    "output_path": { "type": "string", "minLength": 1 },
+    "digest_status": { "const": "not_computed_by_terrain_conditioning" },
+    "warnings": { "type": "array", "items": { "type": "string" } }
+  },
+  "$defs": {
+    "uint": { "type": "integer", "minimum": 0 },
+    "positive_uint": { "type": "integer", "minimum": 1 },
+    "number": { "type": "number" },
+    "nullable_string": { "type": ["string", "null"] },
+    "nullable_number": { "type": ["number", "null"] },
+    "case_fields": {
+      "type": "object",
+      "required": ["case_id", "case_revision"],
+      "properties": {
+        "case_id": { "type": "string", "minLength": 1 },
+        "case_revision": { "$ref": "#/$defs/positive_uint" }
+      }
+    },
+    "terrain_identity": {
+      "allOf": [{ "$ref": "#/$defs/case_fields" }],
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["terrain_id", "terrain_revision", "case_id", "case_revision", "manifest_id", "manifest_revision", "output_dataset_id", "output_process_id", "executed_at_utc"],
+      "properties": {
+        "terrain_id": { "type": "string" },
+        "terrain_revision": { "$ref": "#/$defs/positive_uint" },
+        "case_id": { "type": "string" },
+        "case_revision": { "$ref": "#/$defs/positive_uint" },
+        "manifest_id": { "type": "string" },
+        "manifest_revision": { "$ref": "#/$defs/positive_uint" },
+        "output_dataset_id": { "type": "string" },
+        "output_process_id": { "type": "string" },
+        "executed_at_utc": { "type": "string" }
+      }
+    },
+    "import_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["import_id", "import_revision", "case_id", "case_revision", "manifest_id", "manifest_revision", "dataset_id", "asset_id", "executed_at_utc"],
+      "properties": {
+        "import_id": { "type": "string" },
+        "import_revision": { "$ref": "#/$defs/positive_uint" },
+        "case_id": { "type": "string" },
+        "case_revision": { "$ref": "#/$defs/positive_uint" },
+        "manifest_id": { "type": "string" },
+        "manifest_revision": { "$ref": "#/$defs/positive_uint" },
+        "dataset_id": { "type": "string" },
+        "asset_id": { "type": "string" },
+        "executed_at_utc": { "type": "string" }
+      }
+    },
+    "transformation_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["transformation_id", "transformation_revision", "case_id", "case_revision", "manifest_id", "manifest_revision", "source_import_id", "source_import_revision", "source_dataset_id", "source_asset_id", "output_dataset_id", "output_process_id", "executed_at_utc"],
+      "properties": {
+        "transformation_id": { "type": "string" },
+        "transformation_revision": { "$ref": "#/$defs/positive_uint" },
+        "case_id": { "type": "string" },
+        "case_revision": { "$ref": "#/$defs/positive_uint" },
+        "manifest_id": { "type": "string" },
+        "manifest_revision": { "$ref": "#/$defs/positive_uint" },
+        "source_import_id": { "type": "string" },
+        "source_import_revision": { "$ref": "#/$defs/positive_uint" },
+        "source_dataset_id": { "type": "string" },
+        "source_asset_id": { "type": "string" },
+        "output_dataset_id": { "type": "string" },
+        "output_process_id": { "type": "string" },
+        "executed_at_utc": { "type": "string" }
+      }
+    },
+    "corridor_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["corridor_id", "corridor_revision", "case_id", "case_revision", "trajectory_id", "output_dataset_id", "output_process_id", "executed_at_utc"],
+      "properties": {
+        "corridor_id": { "type": "string" },
+        "corridor_revision": { "$ref": "#/$defs/positive_uint" },
+        "case_id": { "type": "string" },
+        "case_revision": { "$ref": "#/$defs/positive_uint" },
+        "trajectory_id": { "type": "string" },
+        "output_dataset_id": { "type": "string" },
+        "output_process_id": { "type": "string" },
+        "executed_at_utc": { "type": "string" }
+      }
+    },
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authority_name", "authority_code", "name", "canonical_wkt2", "canonical_projjson", "datum_name", "datum_realisation", "coordinate_epoch_decimal_year", "axis_names", "axis_directions", "axis_units"],
+      "properties": {
+        "authority_name": { "$ref": "#/$defs/nullable_string" },
+        "authority_code": { "$ref": "#/$defs/nullable_string" },
+        "name": { "type": "string" },
+        "canonical_wkt2": { "$ref": "#/$defs/nullable_string" },
+        "canonical_projjson": { "$ref": "#/$defs/nullable_string" },
+        "datum_name": { "$ref": "#/$defs/nullable_string" },
+        "datum_realisation": { "$ref": "#/$defs/nullable_string" },
+        "coordinate_epoch_decimal_year": { "$ref": "#/$defs/nullable_number" },
+        "axis_names": { "type": "array", "items": { "type": "string" } },
+        "axis_directions": { "type": "array", "items": { "type": "string" } },
+        "axis_units": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "target_reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["horizontal", "vertical", "storage_axes", "horizontal_unit", "vertical_unit", "vertical_positive"],
+      "properties": {
+        "horizontal": { "$ref": "#/$defs/reference" },
+        "vertical": { "oneOf": [{ "$ref": "#/$defs/reference" }, { "type": "null" }] },
+        "storage_axes": { "enum": ["east_north", "east_north_up"] },
+        "horizontal_unit": { "type": "string" },
+        "vertical_unit": { "$ref": "#/$defs/nullable_string" },
+        "vertical_positive": { "$ref": "#/$defs/nullable_string" }
+      }
+    },
+    "box": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum_x", "minimum_y", "maximum_x", "maximum_y"],
+      "properties": {
+        "minimum_x": { "$ref": "#/$defs/number" },
+        "minimum_y": { "$ref": "#/$defs/number" },
+        "maximum_x": { "$ref": "#/$defs/number" },
+        "maximum_y": { "$ref": "#/$defs/number" }
+      }
+    },
+    "grid": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["width", "height", "spacing_m", "registration", "xi_min_m", "xi_max_m", "eta_bottom_m", "eta_top_m", "longitudinal_padding_m", "transverse_padding_m", "affine", "extent"],
+      "properties": {
+        "width": { "$ref": "#/$defs/positive_uint" },
+        "height": { "$ref": "#/$defs/positive_uint" },
+        "spacing_m": { "$ref": "#/$defs/number" },
+        "registration": { "const": "pixel_is_area" },
+        "xi_min_m": { "$ref": "#/$defs/number" },
+        "xi_max_m": { "$ref": "#/$defs/number" },
+        "eta_bottom_m": { "$ref": "#/$defs/number" },
+        "eta_top_m": { "$ref": "#/$defs/number" },
+        "longitudinal_padding_m": { "$ref": "#/$defs/number" },
+        "transverse_padding_m": { "$ref": "#/$defs/number" },
+        "affine": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["origin_x", "pixel_width", "row_rotation", "origin_y", "column_rotation", "pixel_height"],
+          "properties": {
+            "origin_x": { "$ref": "#/$defs/number" },
+            "pixel_width": { "$ref": "#/$defs/number" },
+            "row_rotation": { "$ref": "#/$defs/number" },
+            "origin_y": { "$ref": "#/$defs/number" },
+            "column_rotation": { "$ref": "#/$defs/number" },
+            "pixel_height": { "$ref": "#/$defs/number" }
+          }
+        },
+        "extent": { "$ref": "#/$defs/box" }
+      }
+    },
+    "grid_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["target_spacing_m", "active_coverage_threshold", "maximum_upsampling_factor", "maximum_output_cells", "numerical_absolute_tolerance", "numerical_relative_tolerance", "policy_basis"]
+    },
+    "operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["operation_name", "operation_authority", "operation_code", "operation_method", "operation_accuracy_m", "scope", "area_of_use", "canonical_wkt2", "canonical_projjson", "canonical_pipeline", "ballpark", "source_crs", "target_crs", "grids", "engine_name", "engine_version", "database_version"]
+    },
+    "vertical_operation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["enabled", "steps"]
+    },
+    "resampling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "asset_id", "import_id", "import_identity", "transformation_id", "transformation_identity", "role", "kernel", "source_registration", "target_registration", "source_scale", "source_offset", "minimum_source_spacing_m", "maximum_source_spacing_m", "nominal_source_spacing_m", "target_spacing_m", "maximum_upsampling_factor", "source_valid_cell_count", "output_valid_cell_count", "source_nodata_cell_count", "outside_coverage_cell_count", "operation_name", "operation", "vertical_operation", "adapter_name", "adapter_version"]
+    },
+    "merge_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["first_priority_dataset_id", "second_priority_dataset_id", "maximum_overlap_disagreement_m", "conflict_policy", "priority_basis"]
+    },
+    "gap_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "maximum_fill_distance_m", "maximum_component_diameter_m", "maximum_component_cells", "minimum_donor_count", "distance_exponent", "maximum_filled_fraction", "policy_basis"]
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["total_cell_count", "active_cell_count", "outside_corridor_cell_count", "excluded_boundary_cell_count", "bathymetry_selected_cell_count", "topography_selected_cell_count", "overlap_cell_count", "overlap_conflict_cell_count", "initially_unresolved_cell_count", "filled_cell_count", "unresolved_cell_count", "overlap", "minimum_elevation_m", "maximum_elevation_m", "warnings"]
+    },
+    "uncertainty_status": { "enum": ["reported", "estimated", "not_reported", "not_applicable"] },
+    "uncertainty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "measures", "description"]
+    }
+  }
+}
