@@ -12,6 +12,7 @@
 
 #include <tsunami/data/CaseConfigurationValidation.hpp>
 #include <tsunami/fvm/BoundarySpecification.hpp>
+#include <tsunami/geo/CoordinateTransformation.hpp>
 
 namespace tsunami::r2d
 {
@@ -86,6 +87,141 @@ namespace tsunami::r2d
             return std::min(delta, 360.0 - delta);
         }
 
+        [[nodiscard]] auto machine_tolerance(tsunami::core::Real scale) noexcept -> tsunami::core::Real
+        {
+            return 128.0 * std::numeric_limits<tsunami::core::Real>::epsilon() * std::max(tsunami::core::Real{1.0}, std::abs(scale));
+        }
+
+        [[nodiscard]] auto elevation_close(
+            tsunami::core::Real left,
+            tsunami::core::Real right,
+            tsunami::core::Real depth_tolerance) noexcept -> bool
+        {
+            return std::abs(left - right) <= depth_tolerance + machine_tolerance(std::max(std::abs(left), std::abs(right)));
+        }
+
+        struct BathymetryEvidence
+        {
+            tsunami::core::Real minimum_bed{};
+            tsunami::core::Real maximum_bed{};
+            tsunami::core::Real total_mesh_area{};
+        };
+
+        [[nodiscard]] auto actual_bathymetry_evidence(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalBathymetry &bathymetry) -> tsunami::core::Result<BathymetryEvidence>
+        {
+            auto evidence = BathymetryEvidence{
+                std::numeric_limits<tsunami::core::Real>::infinity(),
+                -std::numeric_limits<tsunami::core::Real>::infinity(),
+                0.0};
+            for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                const auto bed = bathymetry.local_bed_elevation(cell_id);
+                const auto area = mesh.cell_geometry(cell_id).measure;
+                if (!finite(bed) || !finite(area) || area <= 0.0) {
+                    return tsunami::core::failure<BathymetryEvidence>(prep_error(
+                        "r2d.case_preparation.bathymetry_invalid",
+                        "pre-event bathymetry and mesh cell areas must be finite",
+                        prepare_operation,
+                        &mesh));
+                }
+                evidence.minimum_bed = std::min(evidence.minimum_bed, bed);
+                evidence.maximum_bed = std::max(evidence.maximum_bed, bed);
+                evidence.total_mesh_area += area;
+            }
+            if (!finite(evidence.total_mesh_area) || evidence.total_mesh_area <= 0.0 ||
+                evidence.minimum_bed > evidence.maximum_bed) {
+                return tsunami::core::failure<BathymetryEvidence>(prep_error(
+                    "r2d.case_preparation.bathymetry_invalid",
+                    "pre-event bathymetry evidence is invalid",
+                    prepare_operation,
+                    &mesh));
+            }
+            return tsunami::core::success(evidence);
+        }
+
+        [[nodiscard]] auto validate_terrain_transfer_evidence(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalBathymetry &bathymetry,
+            const RegionalTerrainTransferDiagnostics &transfer,
+            const RegionalCasePreparationPolicy &preparation_policy) -> tsunami::core::Result<void>
+        {
+            auto actual = actual_bathymetry_evidence(mesh, bathymetry);
+            if (!actual) {
+                return tsunami::core::failure(actual.error());
+            }
+            const auto cell_count = mesh.summary().cell_count;
+            if (transfer.cell_count != cell_count ||
+                transfer.total_contributor_count < cell_count ||
+                transfer.minimum_contributors_per_cell == 0U ||
+                transfer.minimum_contributors_per_cell > transfer.maximum_contributors_per_cell ||
+                !finite(transfer.total_mesh_area_m2) || transfer.total_mesh_area_m2 <= 0.0 ||
+                !finite(transfer.total_mapped_terrain_area_m2) || transfer.total_mapped_terrain_area_m2 <= 0.0 ||
+                !finite(transfer.maximum_cell_area_residual_m2) || transfer.maximum_cell_area_residual_m2 < 0.0 ||
+                !finite(transfer.minimum_bed_elevation_m) || !finite(transfer.maximum_bed_elevation_m) ||
+                transfer.minimum_bed_elevation_m > transfer.maximum_bed_elevation_m) {
+                return tsunami::core::failure(prep_error(
+                    "r2d.case_preparation.terrain_transfer_mismatch",
+                    "terrain transfer diagnostics are internally invalid",
+                    prepare_operation,
+                    &mesh));
+            }
+            if (!elevation_close(actual.value().minimum_bed, transfer.minimum_bed_elevation_m, preparation_policy.depth_tolerance_m) ||
+                !elevation_close(actual.value().maximum_bed, transfer.maximum_bed_elevation_m, preparation_policy.depth_tolerance_m) ||
+                !close(actual.value().total_mesh_area, transfer.total_mesh_area_m2, machine_tolerance(actual.value().total_mesh_area), 0.0)) {
+                return tsunami::core::failure(prep_error(
+                    "r2d.case_preparation.terrain_transfer_mismatch",
+                    "terrain transfer diagnostics do not match the supplied bathymetry",
+                    prepare_operation,
+                    &mesh));
+            }
+            const auto mapped_discrepancy = std::abs(transfer.total_mapped_terrain_area_m2 - transfer.total_mesh_area_m2);
+            const auto mapped_allowance = machine_tolerance(std::max(transfer.total_mapped_terrain_area_m2, transfer.total_mesh_area_m2)) +
+                static_cast<tsunami::core::Real>(cell_count) * transfer.maximum_cell_area_residual_m2;
+            if (mapped_discrepancy > mapped_allowance) {
+                return tsunami::core::failure(prep_error(
+                    "r2d.case_preparation.terrain_transfer_mismatch",
+                    "terrain transfer mapped area evidence is inconsistent",
+                    prepare_operation,
+                    &mesh));
+            }
+            return tsunami::core::success();
+        }
+
+        auto calculate_canonical_still_water_diagnostics(
+            RegionalCasePreparationDiagnostics &diagnostics,
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalConservedState &state,
+            const ShallowWaterStatePolicy &policy) -> void
+        {
+            diagnostics.wet_cell_count = 0U;
+            diagnostics.dry_cell_count = 0U;
+            diagnostics.minimum_depth_m = std::numeric_limits<tsunami::core::Real>::infinity();
+            diagnostics.maximum_depth_m = -std::numeric_limits<tsunami::core::Real>::infinity();
+            diagnostics.total_water_volume_m3 = 0.0;
+            diagnostics.maximum_initial_momentum_m2_per_s = 0.0;
+            for (std::size_t index = 0; index < state.size(); ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                const auto local = state.local_state(cell_id);
+                if (is_dry(local, policy)) {
+                    ++diagnostics.dry_cell_count;
+                } else {
+                    ++diagnostics.wet_cell_count;
+                }
+                diagnostics.minimum_depth_m = std::min(diagnostics.minimum_depth_m, local.depth);
+                diagnostics.maximum_depth_m = std::max(diagnostics.maximum_depth_m, local.depth);
+                diagnostics.total_water_volume_m3 += local.depth * mesh.cell_geometry(cell_id).measure;
+                diagnostics.maximum_initial_momentum_m2_per_s = std::max(
+                    diagnostics.maximum_initial_momentum_m2_per_s,
+                    std::hypot(local.momentum_x, local.momentum_y));
+            }
+            if (state.size() == 0U) {
+                diagnostics.minimum_depth_m = 0.0;
+                diagnostics.maximum_depth_m = 0.0;
+            }
+        }
+
         [[nodiscard]] auto validate_cross_contracts(const RegionalCasePreparationRequest &request)
             -> tsunami::core::Result<void>
         {
@@ -130,6 +266,22 @@ namespace tsunami::r2d
                     prepare_operation,
                     &mesh));
             }
+            if (auto target = tsunami::geo::validate_transformation_target_for_case(corridor_record.target_reference, configuration); !target) {
+                return tsunami::core::failure(wrap_failure(
+                    "r2d.case_preparation.coordinate_frame_mismatch",
+                    "case coordinate frame must match the accepted corridor target reference",
+                    prepare_operation,
+                    target.error(),
+                    &mesh));
+            }
+            if (corridor_record.epicentre.target_reference != corridor_record.target_reference ||
+                corridor_record.target.target_reference != corridor_record.target_reference) {
+                return tsunami::core::failure(prep_error(
+                    "r2d.case_preparation.coordinate_frame_mismatch",
+                    "corridor reference-point evidence must use the accepted corridor target reference",
+                    prepare_operation,
+                    &mesh));
+            }
 
             const auto &case_id = configuration.identity().case_id;
             const auto &record_case = corridor_record.identity.case_revision;
@@ -153,13 +305,19 @@ namespace tsunami::r2d
                 ? *corridor.narrowing.inland_width_m
                 : corridor.width_m;
             const auto &policy = corridor_record.policy;
+            const auto recorded_offshore_sponge_width = corridor_record.sponge_limits.offshore_end_xi_m -
+                corridor_record.sponge_limits.offshore_start_xi_m;
             if (origin_residual > policy.origin_tolerance_m ||
                 bearing_delta(corridor.bearing_degrees_clockwise_from_north, corridor_record.configured_bearing_degrees) >
                     policy.bearing_tolerance_degrees ||
+                corridor.narrowing.enabled != corridor_record.narrowing_enabled ||
                 !close(corridor.width_m, corridor_record.offshore_width_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
                 !close(expected_inland_width, corridor_record.inland_width_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
                 !close(corridor.offshore_extent_m, corridor_record.offshore_extent_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
-                !close(corridor.inland_extent_m, corridor_record.inland_extent_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance)) {
+                !close(corridor.inland_extent_m, corridor_record.inland_extent_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
+                !close(recorded_offshore_sponge_width, corridor.sponge.offshore_width_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
+                !close(corridor_record.sponge_limits.offshore_start_xi_m, corridor_record.stations.offshore_xi_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance) ||
+                !close(corridor.sponge.side_width_m, corridor_record.sponge_limits.side_width_m, policy.geometry_absolute_tolerance_m, policy.geometry_relative_tolerance)) {
                 return tsunami::core::failure(prep_error(
                     "r2d.case_preparation.corridor_mismatch",
                     "case corridor request and construction record geometry must agree within accepted tolerances",
@@ -190,6 +348,9 @@ namespace tsunami::r2d
                     "terrain transfer diagnostics and pre-event bathymetry must match the accepted preflight",
                     prepare_operation,
                     &mesh));
+            }
+            if (auto evidence = validate_terrain_transfer_evidence(mesh, *request.pre_event_bathymetry, transfer, request.policy); !evidence) {
+                return tsunami::core::failure(evidence.error());
             }
             if ((request.seabed_displacement != nullptr && !request.seabed_displacement->is_bound_to(mesh)) ||
                 (request.prescribed_surface_perturbation != nullptr &&
@@ -342,6 +503,14 @@ namespace tsunami::r2d
             auto coriolis = std::optional<std::vector<tsunami::core::Real>>{};
             const auto cell_count = mesh.summary().cell_count;
             const auto &physics = configuration.regional_2d().physics;
+            if ((request.manning_values && physics.manning.kind != tsunami::data::ManningConfigurationKind::dataset) ||
+                (request.coriolis_values && physics.coriolis.kind != tsunami::data::CoriolisConfigurationKind::dataset)) {
+                return tsunami::core::failure<RegionalSourceTermSet>(prep_error(
+                    "r2d.case_preparation.source_input_invalid",
+                    "source dataset spans are only accepted for dataset-configured sources",
+                    prepare_operation,
+                    &mesh));
+            }
             if (physics.manning.kind == tsunami::data::ManningConfigurationKind::uniform) {
                 manning = std::vector<tsunami::core::Real>(cell_count, *physics.manning.value_s_per_m_one_third);
             } else if (physics.manning.kind == tsunami::data::ManningConfigurationKind::dataset) {
@@ -508,8 +677,6 @@ namespace tsunami::r2d
         diagnostics.mesh_id = summary.id.value;
         diagnostics.terrain_id = request.terrain_transfer->terrain_id;
         diagnostics.cell_count = summary.cell_count;
-        diagnostics.minimum_depth_m = std::numeric_limits<tsunami::core::Real>::infinity();
-        diagnostics.maximum_depth_m = -std::numeric_limits<tsunami::core::Real>::infinity();
         for (std::size_t index = 0; index < summary.cell_count; ++index) {
             const auto cell_id = tsunami::fvm::CellId{index};
             const auto bed = request.pre_event_bathymetry->local_bed_elevation(cell_id);
@@ -522,14 +689,6 @@ namespace tsunami::r2d
             }
             const auto h = std::max(tsunami::core::Real{0.0}, request.policy.pre_event_free_surface_elevation_m - bed);
             depth.push_back(h);
-            if (is_dry(ConservedVariables2D{h, 0.0, 0.0}, state_policy.value())) {
-                ++diagnostics.dry_cell_count;
-            } else {
-                ++diagnostics.wet_cell_count;
-            }
-            diagnostics.minimum_depth_m = std::min(diagnostics.minimum_depth_m, h);
-            diagnostics.maximum_depth_m = std::max(diagnostics.maximum_depth_m, h);
-            diagnostics.total_water_volume_m3 += h * mesh.cell_geometry(cell_id).measure;
         }
 
         auto conserved = make_regional_conserved_state(
@@ -550,6 +709,11 @@ namespace tsunami::r2d
                 &mesh));
         }
         auto simulation_state = RegionalSimulationState{std::move(conserved).value(), 0.0, 0U};
+        calculate_canonical_still_water_diagnostics(
+            diagnostics,
+            mesh,
+            simulation_state.conserved_state(),
+            state_policy.value());
 
         auto depth_boundaries = make_scalar_boundary_set(mesh, "m");
         auto qx_boundaries = make_scalar_boundary_set(mesh, "m2/s");

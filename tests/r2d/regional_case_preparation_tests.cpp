@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <cmath>
 #include <filesystem>
+#include <limits>
 #include <optional>
 #include <span>
 #include <string>
@@ -26,18 +27,42 @@ namespace
         return *id;
     }
 
-    [[nodiscard]] auto reference_descriptor(std::string name) -> tsunami::geo::CoordinateReferenceDescriptor
+    [[nodiscard]] auto horizontal_reference_descriptor() -> tsunami::geo::CoordinateReferenceDescriptor
     {
         auto descriptor = tsunami::geo::CoordinateReferenceDescriptor{};
-        descriptor.name = std::move(name);
+        descriptor.authority_name = "EPSG";
+        descriptor.authority_code = "0000";
+        descriptor.name = "Synthetic horizontal CRS";
+        descriptor.axis_names = {"Easting", "Northing"};
+        descriptor.axis_directions = {"east", "north"};
+        descriptor.axis_units = {"m", "m"};
+        return descriptor;
+    }
+
+    [[nodiscard]] auto vertical_reference_descriptor() -> tsunami::geo::CoordinateReferenceDescriptor
+    {
+        auto descriptor = tsunami::geo::CoordinateReferenceDescriptor{};
+        descriptor.name = "synthetic-datum";
+        descriptor.canonical_wkt2 = "VERTCRS[\"synthetic-datum\"]";
+        descriptor.axis_names = {"Gravity-related height"};
+        descriptor.axis_directions = {"up"};
+        descriptor.axis_units = {"m"};
+        return descriptor;
+    }
+
+    [[nodiscard]] auto source_reference_descriptor() -> tsunami::geo::CoordinateReferenceDescriptor
+    {
+        auto descriptor = tsunami::geo::CoordinateReferenceDescriptor{};
+        descriptor.name = "source";
+        descriptor.canonical_wkt2 = "LOCAL_CS[\"source\"]";
         return descriptor;
     }
 
     [[nodiscard]] auto target_reference() -> tsunami::geo::ComputationalTargetReference
     {
         return tsunami::geo::ComputationalTargetReference{
-            reference_descriptor("synthetic-horizontal"),
-            reference_descriptor("synthetic-vertical"),
+            horizontal_reference_descriptor(),
+            vertical_reference_descriptor(),
             tsunami::geo::ComputationalAxisConvention::east_north_up,
             "m",
             "m",
@@ -189,15 +214,17 @@ namespace
                 identity.transformation_id = "case-prep-transform";
                 return identity;
             }(),
-            reference_descriptor("source"),
+            source_reference_descriptor(),
             target_reference(),
             "synthetic",
             "memory://synthetic",
             "2026-07-31T00:00:00Z"};
     }
 
-    [[nodiscard]] auto corridor_record() -> tsunami::geo::CorridorConstructionRecord
+    [[nodiscard]] auto corridor_record(const tsunami::data::CaseConfiguration &config) -> tsunami::geo::CorridorConstructionRecord
     {
+        const auto &corridor = config.regional_2d().corridor;
+        const auto inland_width = corridor.narrowing.enabled ? *corridor.narrowing.inland_width_m : corridor.width_m;
         auto record = tsunami::geo::CorridorConstructionRecord{};
         record.schema = tsunami::data::SchemaIdentity{
             std::string{tsunami::geo::corridor_construction_record_schema_name},
@@ -220,16 +247,21 @@ namespace
         record.configured_origin = {0.0, 0.0};
         record.configured_bearing_degrees = 90.0;
         record.derived_bearing_degrees = 90.0;
-        record.offshore_extent_m = 1.0;
+        record.offshore_extent_m = corridor.offshore_extent_m;
         record.epicentre_target_distance_m = 2.0;
-        record.inland_extent_m = 1.0;
-        record.total_length_m = 2.0;
-        record.offshore_width_m = 1.0;
-        record.inland_width_m = 1.0;
-        record.narrowing_rule = "none";
+        record.inland_extent_m = corridor.inland_extent_m;
+        record.total_length_m = corridor.offshore_extent_m + corridor.inland_extent_m;
+        record.offshore_width_m = corridor.width_m;
+        record.inland_width_m = inland_width;
+        record.narrowing_enabled = corridor.narrowing.enabled;
+        record.narrowing_rule = corridor.narrowing.enabled ? "configured" : "none";
         record.local_basis = {{1.0, 0.0}, {0.0, 1.0}, 2.0, 90.0};
-        record.stations = {-1.0, 0.0, 1.0, 1.0};
-        record.sponge_limits = {-1.0, -0.75, 0.2, 0.6};
+        record.stations = {-corridor.offshore_extent_m, 0.0, corridor.inland_extent_m, corridor.inland_extent_m};
+        record.sponge_limits = {
+            record.stations.offshore_xi_m,
+            record.stations.offshore_xi_m + corridor.sponge.offshore_width_m,
+            corridor.sponge.side_width_m,
+            std::max(0.0, corridor.width_m - (2.0 * corridor.sponge.side_width_m))};
         record.polygon = {{{-1.0, -0.5}, {1.0, -0.5}, {1.0, 0.5}, {-1.0, 0.5}, {-1.0, -0.5}}, {}};
         record.vertex_order_convention = "counter_clockwise_closed";
         record.extent = {-1.0, -0.5, 1.0, 0.5};
@@ -272,9 +304,20 @@ namespace
             1.0};
     }
 
-    [[nodiscard]] auto transfer(const tsunami::fvm::FiniteVolumeMesh &m) -> tsunami::r2d::RegionalTerrainTransferDiagnostics
+    [[nodiscard]] auto transfer(
+        const tsunami::fvm::FiniteVolumeMesh &m,
+        const tsunami::r2d::RegionalBathymetry &bed) -> tsunami::r2d::RegionalTerrainTransferDiagnostics
     {
         const auto summary = m.summary();
+        auto total_area = 0.0;
+        auto minimum_bed = std::numeric_limits<tsunami::core::Real>::infinity();
+        auto maximum_bed = -std::numeric_limits<tsunami::core::Real>::infinity();
+        for (std::size_t index = 0; index < summary.cell_count; ++index) {
+            const auto cell_id = tsunami::fvm::CellId{index};
+            total_area += m.cell_geometry(cell_id).measure;
+            minimum_bed = std::min(minimum_bed, bed.local_bed_elevation(cell_id));
+            maximum_bed = std::max(maximum_bed, bed.local_bed_elevation(cell_id));
+        }
         return tsunami::r2d::RegionalTerrainTransferDiagnostics{
             std::string{tsunami::r2d::regional_terrain_transfer_method_id},
             summary.id.value,
@@ -283,11 +326,11 @@ namespace
             summary.cell_count,
             1U,
             1U,
-            1.0,
-            1.0,
+            total_area,
+            total_area,
             0.0,
-            -1.0,
-            -1.0,
+            minimum_bed,
+            maximum_bed,
             {{"bathymetry_selected", summary.cell_count}}};
     }
 
@@ -312,9 +355,10 @@ namespace
     {
         auto m = mesh();
         auto report = preflight(m);
-        auto terrain = transfer(m);
         auto bed = bathymetry(m, std::move(bed_values));
-        return Fixture{std::move(m), std::move(config), corridor_record(), std::move(report), std::move(terrain), std::move(bed)};
+        auto terrain = transfer(m, bed);
+        auto corridor = corridor_record(config);
+        return Fixture{std::move(m), std::move(config), std::move(corridor), std::move(report), std::move(terrain), std::move(bed)};
     }
 
     [[nodiscard]] auto request(
@@ -411,6 +455,20 @@ TEST_CASE("Regional case preparation composes still-water runtime objects", "[ca
         CHECK(result.value().diagnostics().dry_cell_count == 1U);
     }
 
+    SECTION("canonical dry-depth diagnostics ignore sub-dry raw water")
+    {
+        auto f = fixture(case_configuration(), {-5.0e-7, -1.0});
+        auto result = prepare(f, policy(0.0));
+        REQUIRE(result.has_value());
+        CHECK(result.value().simulation_state().conserved_state().local_state({0U}).depth == Approx(0.0));
+        CHECK(result.value().simulation_state().conserved_state().local_state({1U}).depth == Approx(1.0));
+        CHECK(result.value().diagnostics().dry_cell_count == 1U);
+        CHECK(result.value().diagnostics().wet_cell_count == 1U);
+        CHECK(result.value().diagnostics().minimum_depth_m == Approx(0.0));
+        CHECK(result.value().diagnostics().maximum_depth_m == Approx(1.0));
+        CHECK(result.value().diagnostics().total_water_volume_m3 == Approx(0.5));
+    }
+
     SECTION("configured patches map to physical kinds and radiation states")
     {
         auto f = fixture();
@@ -496,6 +554,24 @@ TEST_CASE("Regional case preparation maps relaxation and local sources", "[case-
         auto wrong = tsunami::r2d::prepare_regional_case(r);
         REQUIRE_FALSE(wrong.has_value());
         CHECK(wrong.error().code() == "r2d.case_preparation.manning_dataset_invalid");
+    }
+
+    SECTION("extraneous Manning and Coriolis spans fail")
+    {
+        const auto values = std::vector<tsunami::core::Real>{0.02, 0.03};
+        auto manning = fixture(case_configuration(false));
+        auto manning_request = request(manning);
+        manning_request.manning_values = std::span<const tsunami::core::Real>{values};
+        auto manning_result = tsunami::r2d::prepare_regional_case(manning_request);
+        REQUIRE_FALSE(manning_result.has_value());
+        CHECK(manning_result.error().code() == "r2d.case_preparation.source_input_invalid");
+
+        auto coriolis = fixture(case_configuration(false));
+        auto coriolis_request = request(coriolis);
+        coriolis_request.coriolis_values = std::span<const tsunami::core::Real>{values};
+        auto coriolis_result = tsunami::r2d::prepare_regional_case(coriolis_request);
+        REQUIRE_FALSE(coriolis_result.has_value());
+        CHECK(coriolis_result.error().code() == "r2d.case_preparation.source_input_invalid");
     }
 }
 
@@ -601,6 +677,12 @@ TEST_CASE("Regional case preparation rejects stale contracts without mutation", 
         REQUIRE_FALSE(transfer_result.has_value());
         CHECK(transfer_result.error().code() == "r2d.case_preparation.terrain_transfer_mismatch");
 
+        auto stale_evidence = fixture();
+        stale_evidence.terrain.minimum_bed_elevation_m = -2.0;
+        auto evidence_result = prepare(stale_evidence);
+        REQUIRE_FALSE(evidence_result.has_value());
+        CHECK(evidence_result.error().code() == "r2d.case_preparation.terrain_transfer_mismatch");
+
         auto stale_mesh = fixture();
         auto other_mesh = mesh("other-mesh");
         auto stale_request = request(stale_mesh);
@@ -608,6 +690,41 @@ TEST_CASE("Regional case preparation rejects stale contracts without mutation", 
         auto mesh_result = tsunami::r2d::prepare_regional_case(stale_request);
         REQUIRE_FALSE(mesh_result.has_value());
         CHECK(mesh_result.error().code() == "r2d.case_preparation.preflight_mismatch");
+    }
+
+    SECTION("stale coordinate frame, narrowing and sponge evidence fails")
+    {
+        auto frame = fixture();
+        frame.corridor.target_reference.horizontal.authority_code = "9999";
+        auto frame_result = prepare(frame);
+        REQUIRE_FALSE(frame_result.has_value());
+        CHECK(frame_result.error().code() == "r2d.case_preparation.coordinate_frame_mismatch");
+        REQUIRE(frame_result.error().cause_code().has_value());
+        CHECK(*frame_result.error().cause_code() == "geo.crs.case_target_mismatch");
+
+        auto point_target = fixture();
+        point_target.corridor.epicentre.target_reference.vertical_unit = "ft";
+        auto point_result = prepare(point_target);
+        REQUIRE_FALSE(point_result.has_value());
+        CHECK(point_result.error().code() == "r2d.case_preparation.coordinate_frame_mismatch");
+
+        auto narrowing = fixture();
+        narrowing.corridor.narrowing_enabled = true;
+        auto narrowing_result = prepare(narrowing);
+        REQUIRE_FALSE(narrowing_result.has_value());
+        CHECK(narrowing_result.error().code() == "r2d.case_preparation.corridor_mismatch");
+
+        auto offshore = fixture(case_configuration(true));
+        offshore.corridor.sponge_limits.offshore_end_xi_m += 0.1;
+        auto offshore_result = prepare(offshore);
+        REQUIRE_FALSE(offshore_result.has_value());
+        CHECK(offshore_result.error().code() == "r2d.case_preparation.corridor_mismatch");
+
+        auto side = fixture(case_configuration(true));
+        side.corridor.sponge_limits.side_width_m += 0.1;
+        auto side_result = prepare(side);
+        REQUIRE_FALSE(side_result.has_value());
+        CHECK(side_result.error().code() == "r2d.case_preparation.corridor_mismatch");
     }
 
     SECTION("prepared solve request uses physical boundary mode only")
