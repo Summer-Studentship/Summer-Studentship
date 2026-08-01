@@ -74,6 +74,7 @@ tsunami_apply_compiler_warnings(tsunami_data)
 add_library(tsunami_geo STATIC
     geo/src/ConstructedCorridor.cpp
     geo/src/CorridorConstruction.cpp
+    geo/src/CorridorConstructionParsing.cpp
     geo/src/CorridorConstructionRecord.cpp
     geo/src/CorridorConstructionSerialisation.cpp
     geo/src/ConditionedTerrainRaster.cpp
@@ -88,6 +89,7 @@ add_library(tsunami_geo STATIC
     geo/src/ImportedVector.cpp
     geo/src/SpatialReferenceEvidence.cpp
     geo/src/TerrainConditioning.cpp
+    geo/src/TerrainConditioningParsing.cpp
     geo/src/TerrainConditioningRecord.cpp
     geo/src/TerrainConditioningSerialisation.cpp
     geo/src/TerrainResampling.cpp
@@ -105,6 +107,8 @@ target_link_libraries(tsunami_geo
     PUBLIC
         tsunami_core
         tsunami_data
+    PRIVATE
+        nlohmann_json::nlohmann_json
 )
 tsunami_apply_compiler_warnings(tsunami_geo)
 

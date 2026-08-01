@@ -195,6 +195,7 @@
       "public_headers": [
         "src/geo/include/tsunami/geo/ConstructedCorridor.hpp",
         "src/geo/include/tsunami/geo/CorridorConstruction.hpp",
+        "src/geo/include/tsunami/geo/CorridorConstructionParsing.hpp",
         "src/geo/include/tsunami/geo/CorridorConstructionRecord.hpp",
         "src/geo/include/tsunami/geo/CorridorConstructionSerialisation.hpp"
       ],
@@ -220,6 +221,7 @@
       "public_headers": [
         "src/geo/include/tsunami/geo/ConditionedTerrainRaster.hpp",
         "src/geo/include/tsunami/geo/TerrainConditioning.hpp",
+        "src/geo/include/tsunami/geo/TerrainConditioningParsing.hpp",
         "src/geo/include/tsunami/geo/TerrainConditioningRecord.hpp",
         "src/geo/include/tsunami/geo/TerrainConditioningSerialisation.hpp",
         "src/geo/include/tsunami/geo/TerrainResampling.hpp",

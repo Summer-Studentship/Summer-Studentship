@@ -1,6 +1,5 @@
 #include <tsunami/geo/CorridorConstructionSerialisation.hpp>
 
-#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
@@ -82,7 +81,8 @@ namespace tsunami::geo
 
         auto number_line(std::ostringstream &out, int indent, std::string_view key, double value, bool comma = true) -> void
         {
-            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": " << std::setprecision(17) << value;
+            const auto canonical = value == 0.0 ? 0.0 : value;
+            out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": " << std::setprecision(17) << canonical;
             if (comma) {
                 out << ',';
             }
@@ -171,9 +171,8 @@ namespace tsunami::geo
             close_object(out, indent);
         }
 
-        auto write_string_array(std::ostringstream &out, int indent, std::string_view key, std::vector<std::string> values, bool comma = true) -> void
+        auto write_string_array(std::ostringstream &out, int indent, std::string_view key, const std::vector<std::string> &values, bool comma = true) -> void
         {
-            std::sort(values.begin(), values.end());
             out << std::string(static_cast<std::size_t>(indent), ' ') << '"' << key << "\": [";
             for (std::size_t i = 0; i < values.size(); ++i) {
                 out << (i == 0U ? "" : ", ") << '"' << escape(values[i]) << '"';
@@ -197,7 +196,8 @@ namespace tsunami::geo
             nullable_string_line(out, indent + 2, "datum_realisation", reference.datum_realisation);
             out << std::string(static_cast<std::size_t>(indent + 2), ' ') << "\"coordinate_epoch_decimal_year\": ";
             if (reference.coordinate_epoch_decimal_year) {
-                out << std::setprecision(17) << *reference.coordinate_epoch_decimal_year;
+                const auto canonical = *reference.coordinate_epoch_decimal_year == 0.0 ? 0.0 : *reference.coordinate_epoch_decimal_year;
+                out << std::setprecision(17) << canonical;
             } else {
                 out << "null";
             }

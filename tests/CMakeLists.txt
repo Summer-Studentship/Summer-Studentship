@@ -1,4 +1,5 @@
 find_package(Catch2 3 CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 add_executable(tsunami_tests
     application/application_service_tests.cpp
@@ -27,6 +28,7 @@ add_executable(tsunami_tests
     smoke/core_smoke.cpp
     geo/corridor_construction_tests.cpp
     geo/coordinate_transformation_tests.cpp
+    geo/geospatial_record_parsing_tests.cpp
     geo/terrain_conditioning_tests.cpp
 )
 
@@ -45,6 +47,7 @@ target_link_libraries(tsunami_tests
         tsunami_r2d_io
         tsunami_l3d
         tsunami_coupling
+        nlohmann_json::nlohmann_json
         Catch2::Catch2WithMain
 )
 
