@@ -23,8 +23,12 @@ namespace tsunami::geo
         filled_from_topography_neighbourhood
     };
 
+    inline constexpr std::string_view terrain_cell_lineage_encoding_version{"terrain-cell-lineage-code-v1"};
+
     [[nodiscard]] auto to_string(TerrainCellLineage value) noexcept -> std::string_view;
     [[nodiscard]] auto terrain_lineage_code(TerrainCellLineage value) noexcept -> std::uint16_t;
+    [[nodiscard]] auto terrain_cell_lineage_from_code(std::uint16_t code)
+        -> tsunami::core::Result<TerrainCellLineage>;
 
     class ConditionedTerrainRaster
     {

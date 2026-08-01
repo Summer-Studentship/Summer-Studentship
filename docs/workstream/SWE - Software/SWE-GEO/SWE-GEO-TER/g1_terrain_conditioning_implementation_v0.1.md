@@ -51,10 +51,43 @@ datasets and assets, import and transformation identities, corridor identity,
 target grid, policies, resampling records, diagnostics, uncertainty status,
 output path and digest status.
 
-`write_terrain_conditioning_record` is transactional and canonical.
-`write_conditioned_terrain_geotiff_with_gdal` writes Float64 positive-up
-pixel-is-area terrain with affine transform, CRS metadata where available, band
-unit and mask. Inspection helpers write elevation, coverage and lineage TIFFs.
+`write_terrain_conditioning_record` is transactional and canonical. The
+conditioned terrain GeoTIFF handoff is a three-artefact bundle derived from the
+record-owned primary output path: `<stem>.tif`, `<stem>.coverage.tif` and
+`<stem>.lineage.tif` under `outputs/terrain/`. The record remains schema v2; no
+companion paths are added to it.
+
+`tsunami_geo_gdal` writes and strictly reads the bundle under
+`TSUNAMI_ARTIFACT_CONTRACT_VERSION=1`. Every artefact carries role, terrain
+identity/revision, case revision, manifest revision, output dataset/process,
+record schema, formula version and vertical datum/unit/positive metadata. The
+lineage artefact also carries
+`TSUNAMI_LINEAGE_ENCODING_VERSION=terrain-cell-lineage-code-v1`.
+
+The band contract is:
+
+- bed elevation: one `Float64` band, description `bed_elevation`, unit `m`,
+  pixel-is-area and the exact terrain validity mask;
+- corridor coverage: one `Float64` band, description
+  `corridor_coverage_fraction`, dimensionless unit `1`, finite values in
+  `[0, 1]` and no nodata/scale/offset conversion;
+- cell lineage: one `UInt16` band, description `cell_lineage_code`,
+  dimensionless unit `1`, exact domain lineage codes and no floating-point
+  decoding.
+
+Read-back validates the GTiff driver, dimensions, full six-coefficient affine,
+affine-derived extent, pixel-is-area registration, semantic horizontal CRS
+equality through GDAL/OGR and record-authored vertical metadata. It reconstructs
+only through `make_conditioned_terrain_raster` and rejects missing evidence,
+unknown lineage codes, stale metadata, swapped roles, unsafe paths, unexpected
+scale/offset/nodata and mask/coverage/lineage contradictions.
+
+The bundle writer writes all three sibling temporary GeoTIFFs first, then uses
+the strict reader to validate the temporary bundle and compare the terrain
+field-for-field before replacing targets. Because three independent filesystem
+renames cannot be atomic, the operation provides all-or-preserve semantics with
+deterministic backups and rollback failure reporting rather than claiming
+atomicity.
 
 ## Downstream Handoff
 

@@ -72,6 +72,38 @@ namespace tsunami::geo
         return static_cast<std::uint16_t>(value) + 1U;
     }
 
+    auto terrain_cell_lineage_from_code(std::uint16_t code)
+        -> tsunami::core::Result<TerrainCellLineage>
+    {
+        switch (code) {
+        case 1U:
+            return tsunami::core::success(TerrainCellLineage::outside_corridor);
+        case 2U:
+            return tsunami::core::success(TerrainCellLineage::excluded_boundary_fraction);
+        case 3U:
+            return tsunami::core::success(TerrainCellLineage::bathymetry_selected);
+        case 4U:
+            return tsunami::core::success(TerrainCellLineage::topography_selected);
+        case 5U:
+            return tsunami::core::success(TerrainCellLineage::overlap_bathymetry_selected);
+        case 6U:
+            return tsunami::core::success(TerrainCellLineage::overlap_topography_selected);
+        case 7U:
+            return tsunami::core::success(TerrainCellLineage::overlap_bathymetry_selected_with_conflict);
+        case 8U:
+            return tsunami::core::success(TerrainCellLineage::overlap_topography_selected_with_conflict);
+        case 9U:
+            return tsunami::core::success(TerrainCellLineage::filled_from_bathymetry_neighbourhood);
+        case 10U:
+            return tsunami::core::success(TerrainCellLineage::filled_from_topography_neighbourhood);
+        default:
+            return tsunami::core::failure<TerrainCellLineage>(
+                terrain_error("terrain lineage code is not recognised", "geo.terrain.output.lineage_code_known")
+                    .add_context("lineage_encoding_version", std::string{terrain_cell_lineage_encoding_version})
+                    .add_context("actual", std::to_string(code)));
+        }
+    }
+
     auto make_conditioned_terrain_raster(
         TerrainTargetGrid grid,
         std::vector<double> values,

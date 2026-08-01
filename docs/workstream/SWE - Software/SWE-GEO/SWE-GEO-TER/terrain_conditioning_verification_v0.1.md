@@ -73,7 +73,18 @@ Focused tests cover:
 - immutable positive-up conditioned terrain;
 - canonical record byte stability;
 - transactional record writing;
-- transactional GeoTIFF and inspection artefact writing.
+- transactional GeoTIFF and inspection artefact writing;
+- strict conditioned-terrain artefact bundle read-back into Regional2D preflight
+  and conservative terrain transfer.
+
+The focused `[terrain-artifact-readback]` integration tests cover the
+producer-to-consumer handoff: `condition_terrain_with_gdal`, record validation,
+record write/read, canonical bundle-path derivation, transactional bundle write,
+strict GDAL read-back, field-for-field terrain comparison, Regional2D geometry
+preflight, conservative raster-cell stencil construction and mesh-bound
+`RegionalBathymetry` transfer. Negative cases reject stale role/revision and
+lineage-version metadata, duplicate/missing/unsafe paths, out-of-range coverage
+and unknown lineage codes.
 
 ## Illustrative Fixture
 

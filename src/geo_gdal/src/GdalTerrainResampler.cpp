@@ -270,120 +270,6 @@ namespace tsunami::geo_gdal
                 GDALVersionInfo("RELEASE_NAME")};
         }
 
-        [[nodiscard]] auto create_geotiff(
-            const std::filesystem::path &path,
-            const tsunami::geo::TerrainTargetGrid &grid,
-            const std::vector<double> &values,
-            const std::vector<std::uint8_t> &mask,
-            GDALDataType type,
-            std::string_view description,
-            const tsunami::geo::TerrainConditioningRecord &record) -> tsunami::core::Result<void>
-        {
-            initialise_gdal_once();
-            auto *driver = GetGDALDriverManager()->GetDriverByName("GTiff");
-            if (driver == nullptr) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "GTiff driver is unavailable", "geo.terrain.output.positive_up"));
-            }
-            const auto parent = path.parent_path();
-            if (!parent.empty()) {
-                std::error_code ec;
-                std::filesystem::create_directories(parent, ec);
-                if (ec) {
-                    return tsunami::core::failure(gdal_error("geo.terrain.geotiff_write_failed", "failed to create GeoTIFF parent directory", "geo.terrain.output.positive_up"));
-                }
-            }
-            char **options = nullptr;
-            options = CSLSetNameValue(options, "TILED", "YES");
-            options = CSLSetNameValue(options, "COMPRESS", "DEFLATE");
-            options = CSLSetNameValue(options, "PREDICTOR", type == GDT_Float64 ? "3" : "2");
-            options = CSLSetNameValue(options, "BIGTIFF", "IF_SAFER");
-            auto dataset = DatasetPtr{driver->Create(
-                path.string().c_str(),
-                static_cast<int>(grid.width()),
-                static_cast<int>(grid.height()),
-                1,
-                type,
-                options)};
-            CSLDestroy(options);
-            if (!dataset) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to create temporary GeoTIFF", "geo.terrain.output.positive_up"));
-            }
-            auto transform = std::array<double, 6U>{
-                grid.transform().origin_x,
-                grid.transform().pixel_width,
-                grid.transform().row_rotation,
-                grid.transform().origin_y,
-                grid.transform().column_rotation,
-                grid.transform().pixel_height};
-            if (dataset->SetGeoTransform(transform.data()) != CE_None) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to set terrain GeoTIFF geotransform", "geo.terrain.output.positive_up"));
-            }
-            if (grid.target_reference().horizontal.canonical_wkt2) {
-                if (dataset->SetProjection(grid.target_reference().horizontal.canonical_wkt2->c_str()) != CE_None) {
-                    return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to set terrain GeoTIFF projection", "geo.terrain.output.positive_up"));
-                }
-            }
-            dataset->SetMetadataItem("AREA_OR_POINT", "Area");
-            dataset->SetMetadataItem("TSUNAMI_FORMULA_VERSION", record.formula_version.c_str());
-            dataset->SetMetadataItem("TSUNAMI_TERRAIN_ID", record.identity.terrain_id.c_str());
-            auto *band = dataset->GetRasterBand(1);
-            if (band == nullptr) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to get terrain GeoTIFF band", "geo.terrain.output.positive_up"));
-            }
-            band->SetDescription(std::string{description}.c_str());
-            band->SetUnitType("m");
-            if (type == GDT_UInt16) {
-                auto integers = std::vector<std::uint16_t>{};
-                integers.reserve(values.size());
-                for (const auto value : values) {
-                    integers.push_back(static_cast<std::uint16_t>(std::llround(value)));
-                }
-                if (band->RasterIO(GF_Write, 0, 0, static_cast<int>(grid.width()), static_cast<int>(grid.height()),
-                        integers.data(), static_cast<int>(grid.width()), static_cast<int>(grid.height()), GDT_UInt16, 0, 0) != CE_None) {
-                    return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to write integer terrain GeoTIFF band", "geo.terrain.output.positive_up"));
-                }
-            } else {
-                if (band->RasterIO(GF_Write, 0, 0, static_cast<int>(grid.width()), static_cast<int>(grid.height()),
-                        const_cast<double *>(values.data()), static_cast<int>(grid.width()), static_cast<int>(grid.height()), GDT_Float64, 0, 0) != CE_None) {
-                    return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to write terrain GeoTIFF band", "geo.terrain.output.positive_up"));
-                }
-            }
-            if (band->CreateMaskBand(GMF_PER_DATASET) != CE_None) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to create terrain GeoTIFF mask", "geo.terrain.output.no_active_nodata"));
-            }
-            auto mask_bytes = std::vector<std::uint8_t>{};
-            mask_bytes.reserve(mask.size());
-            for (const auto valid : mask) {
-                mask_bytes.push_back(valid == 0U ? 0U : 255U);
-            }
-            if (band->GetMaskBand()->RasterIO(GF_Write, 0, 0, static_cast<int>(grid.width()), static_cast<int>(grid.height()),
-                    mask_bytes.data(), static_cast<int>(grid.width()), static_cast<int>(grid.height()), GDT_Byte, 0, 0) != CE_None) {
-                return tsunami::core::failure(gdal_error("geo.terrain.gdal_output_failed", "failed to write terrain GeoTIFF mask", "geo.terrain.output.no_active_nodata"));
-            }
-            dataset->FlushCache();
-            return tsunami::core::success();
-        }
-
-        [[nodiscard]] auto replace_with_temporary(
-            const std::filesystem::path &temporary,
-            const std::filesystem::path &target) -> tsunami::core::Result<void>
-        {
-            {
-                auto reopened = DatasetPtr{static_cast<GDALDataset *>(GDALOpen(temporary.string().c_str(), GA_ReadOnly))};
-                if (!reopened) {
-                    std::error_code ignored;
-                    std::filesystem::remove(temporary, ignored);
-                    return tsunami::core::failure(gdal_error("geo.terrain.geotiff_write_failed", "temporary terrain GeoTIFF failed reopen verification", "geo.terrain.output.positive_up"));
-                }
-            }
-            std::error_code ec;
-            std::filesystem::rename(temporary, target, ec);
-            if (ec) {
-                std::filesystem::remove(temporary, ec);
-                return tsunami::core::failure(gdal_error("geo.terrain.geotiff_write_failed", "failed to replace terrain GeoTIFF target", "geo.terrain.output.positive_up"));
-            }
-            return tsunami::core::success();
-        }
     }
 
     auto resample_terrain_source_with_gdal(
@@ -472,16 +358,15 @@ namespace tsunami::geo_gdal
         const tsunami::geo::TerrainConditioningRecord &record)
         -> tsunami::core::Result<void>
     {
-        if (auto valid = tsunami::geo::validate_terrain_conditioning_record(record); !valid) {
-            return valid;
-        }
-        const auto temporary = std::filesystem::path{path.string() + ".tmp.tif"};
-        if (auto written = create_geotiff(temporary, terrain.grid(), terrain.values(), terrain.valid_mask(), GDT_Float64, "bed_elevation", record); !written) {
-            std::error_code ignored;
-            std::filesystem::remove(temporary, ignored);
-            return written;
-        }
-        return replace_with_temporary(temporary, path);
+        auto paths = ConditionedTerrainArtifactPaths{
+            path.lexically_normal(),
+            std::filesystem::path{path.string() + ".coverage.tmp.tif"}.lexically_normal(),
+            std::filesystem::path{path.string() + ".lineage.tmp.tif"}.lexically_normal()};
+        auto result = write_conditioned_terrain_artifacts_with_gdal(paths, terrain, record);
+        std::error_code ignored;
+        std::filesystem::remove(paths.coverage_path, ignored);
+        std::filesystem::remove(paths.lineage_path, ignored);
+        return result;
     }
 
     auto write_terrain_inspection_geotiffs_with_gdal(
@@ -492,31 +377,10 @@ namespace tsunami::geo_gdal
         const tsunami::geo::TerrainConditioningRecord &record)
         -> tsunami::core::Result<void>
     {
-        if (auto terrain_result = write_conditioned_terrain_geotiff_with_gdal(terrain_path, terrain, record); !terrain_result) {
-            return terrain_result;
-        }
-        auto coverage_mask = std::vector<std::uint8_t>(terrain.cell_count(), 1U);
-        const auto coverage_tmp = std::filesystem::path{coverage_path.string() + ".tmp.tif"};
-        if (auto written = create_geotiff(coverage_tmp, terrain.grid(), terrain.corridor_coverage_fraction(), coverage_mask, GDT_Float64, "corridor_coverage_fraction", record); !written) {
-            std::error_code ignored;
-            std::filesystem::remove(coverage_tmp, ignored);
-            return written;
-        }
-        if (auto replaced = replace_with_temporary(coverage_tmp, coverage_path); !replaced) {
-            return replaced;
-        }
-        auto lineage_values = std::vector<double>{};
-        lineage_values.reserve(terrain.cell_count());
-        for (const auto lineage : terrain.cell_lineage()) {
-            lineage_values.push_back(static_cast<double>(tsunami::geo::terrain_lineage_code(lineage)));
-        }
-        const auto lineage_tmp = std::filesystem::path{lineage_path.string() + ".tmp.tif"};
-        if (auto written = create_geotiff(lineage_tmp, terrain.grid(), lineage_values, coverage_mask, GDT_UInt16, "cell_lineage_code", record); !written) {
-            std::error_code ignored;
-            std::filesystem::remove(lineage_tmp, ignored);
-            return written;
-        }
-        return replace_with_temporary(lineage_tmp, lineage_path);
+        return write_conditioned_terrain_artifacts_with_gdal(
+            ConditionedTerrainArtifactPaths{terrain_path.lexically_normal(), coverage_path.lexically_normal(), lineage_path.lexically_normal()},
+            terrain,
+            record);
     }
 
 } // namespace tsunami::geo_gdal

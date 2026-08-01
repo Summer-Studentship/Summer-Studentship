@@ -1,12 +1,18 @@
+#include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 #include <catch2/matchers/catch_matchers_string.hpp>
 
 #include <algorithm>
+#include <array>
+#include <chrono>
 #include <cmath>
 #include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
+#include <limits>
+#include <memory>
+#include <optional>
 #include <string>
 #include <vector>
 
@@ -16,8 +22,12 @@
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 
 #ifdef TSUNAMI_ENABLE_GEOSPATIAL
+#include <gdal_priv.h>
+#include <tsunami/fvm/FiniteVolumeMesh.hpp>
 #include <tsunami/geo_gdal/GdalGeospatialImporter.hpp>
 #include <tsunami/geo_gdal/GdalTerrainResampler.hpp>
+#include <tsunami/r2d/RegionalGeometryPreflight.hpp>
+#include <tsunami/r2d/RegionalTerrainTransfer.hpp>
 #endif
 
 namespace
@@ -641,12 +651,166 @@ TEST_CASE("terrain public headers keep domain and adapter boundaries explicit", 
             CHECK(text.find(token) == std::string::npos);
         }
     }
-    const auto adapter = read_text("src/geo_gdal/include/tsunami/geo_gdal/GdalTerrainResampler.hpp");
-    CHECK(adapter.find("GDALDataset") == std::string::npos);
-    CHECK(adapter.find("GDALRasterBand") == std::string::npos);
+    const auto adapter_headers = std::vector<std::filesystem::path>{
+        "src/geo_gdal/include/tsunami/geo_gdal/GdalTerrainResampler.hpp",
+        "src/geo_gdal/include/tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp"};
+    for (const auto &header : adapter_headers) {
+        const auto text = read_text(header);
+        for (const auto &token : {"GDALDataset", "GDALRasterBand", "OGR", "OSR", "CPL", "PJ_CONTEXT", "PROJ", "proj_", "H5", "OpenFOAM", "QObject", "QString", "QVariant"}) {
+            CHECK(text.find(token) == std::string::npos);
+        }
+    }
 }
 
 #ifdef TSUNAMI_ENABLE_GEOSPATIAL
+namespace
+{
+    [[nodiscard]] auto regional_mesh_fixture() -> tsunami::fvm::FiniteVolumeMesh
+    {
+        using namespace tsunami::fvm;
+        auto made = make_finite_volume_mesh(
+            MeshTopologyInput{
+                MeshId{"terrain-artifact-readback-mesh"},
+                2U,
+                {
+                    {{0U}, {0.0, -4.0, 0.0}},
+                    {{1U}, {20.0, -4.0, 0.0}},
+                    {{2U}, {20.0, 4.0, 0.0}},
+                    {{3U}, {0.0, 4.0, 0.0}},
+                },
+                {
+                    {{0U}, {{0U}, {1U}}, {0U}, std::nullopt, BoundaryPatchId{0U}},
+                    {{1U}, {{1U}, {2U}}, {0U}, std::nullopt, BoundaryPatchId{1U}},
+                    {{2U}, {{2U}, {3U}}, {1U}, std::nullopt, BoundaryPatchId{2U}},
+                    {{3U}, {{3U}, {0U}}, {1U}, std::nullopt, BoundaryPatchId{3U}},
+                    {{4U}, {{0U}, {2U}}, {0U}, CellId{1U}, std::nullopt},
+                },
+                {{{0U}, {{0U}, {1U}, {4U}}}, {{1U}, {{2U}, {3U}, {4U}}}},
+                {
+                    {BoundaryPatchId{0U}, "boundary.offshore", {FaceId{0U}}},
+                    {BoundaryPatchId{1U}, "boundary.inland", {FaceId{1U}}},
+                    {BoundaryPatchId{2U}, "boundary.left_side", {FaceId{2U}}},
+                    {BoundaryPatchId{3U}, "boundary.right_side", {FaceId{3U}}},
+                }});
+        REQUIRE(made.has_value());
+        return std::move(made).value();
+    }
+
+    [[nodiscard]] auto readback_case_root(std::string_view name) -> std::filesystem::path
+    {
+        const auto unique = std::chrono::steady_clock::now().time_since_epoch().count();
+        auto root = std::filesystem::temp_directory_path() / ("tsunami-terrain-artifact-readback-" + std::string{name} + "-" + std::to_string(unique));
+        std::filesystem::remove_all(root);
+        std::filesystem::create_directories(root / "outputs/terrain");
+        std::filesystem::create_directories(root / "manifests/terrain");
+        return root;
+    }
+
+    auto set_dataset_metadata(
+        const std::filesystem::path &path,
+        std::string_view key,
+        std::string_view value) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        REQUIRE(dataset->SetMetadataItem(std::string{key}.c_str(), std::string{value}.c_str()) == CE_None);
+    }
+
+    auto overwrite_lineage_code(const std::filesystem::path &path, std::uint16_t value) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        REQUIRE(band->RasterIO(GF_Write, 0, 0, 1, 1, &value, 1, 1, GDT_UInt16, 0, 0) == CE_None);
+    }
+
+    auto overwrite_coverage_value(const std::filesystem::path &path, double value) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        REQUIRE(band->RasterIO(GF_Write, 0, 0, 1, 1, &value, 1, 1, GDT_Float64, 0, 0) == CE_None);
+    }
+
+    auto overwrite_terrain_value(const std::filesystem::path &path, double value) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        REQUIRE(band->RasterIO(GF_Write, 0, 0, 1, 1, &value, 1, 1, GDT_Float64, 0, 0) == CE_None);
+    }
+
+    auto overwrite_mask_value(const std::filesystem::path &path, std::uint8_t value) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        auto *mask = band->GetMaskBand();
+        REQUIRE(mask != nullptr);
+        REQUIRE(mask->RasterIO(GF_Write, 0, 0, 1, 1, &value, 1, 1, GDT_Byte, 0, 0) == CE_None);
+    }
+
+    auto set_band_contract_metadata(
+        const std::filesystem::path &path,
+        std::optional<std::string_view> description,
+        std::optional<std::string_view> unit,
+        std::optional<double> scale,
+        std::optional<double> offset,
+        std::optional<double> nodata) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        if (description) {
+            band->SetDescription(std::string{*description}.c_str());
+        }
+        if (unit) {
+            band->SetUnitType(std::string{*unit}.c_str());
+        }
+        if (scale) {
+            REQUIRE(band->SetScale(*scale) == CE_None);
+        }
+        if (offset) {
+            REQUIRE(band->SetOffset(*offset) == CE_None);
+        }
+        if (nodata) {
+            REQUIRE(band->SetNoDataValue(*nodata) == CE_None);
+        }
+    }
+
+    auto shift_geotransform(const std::filesystem::path &path) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto transform = std::array<double, 6U>{};
+        REQUIRE(dataset->GetGeoTransform(transform.data()) == CE_None);
+        transform[0] += 0.25;
+        REQUIRE(dataset->SetGeoTransform(transform.data()) == CE_None);
+    }
+
+    auto set_dataset_crs(const std::filesystem::path &path, const char *crs) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        auto srs = OGRSpatialReference{};
+        REQUIRE(srs.SetFromUserInput(crs) == OGRERR_NONE);
+        REQUIRE(dataset->SetSpatialRef(&srs) == CE_None);
+    }
+}
+
 TEST_CASE("GDAL terrain adapter resamples sources and writes inspection GeoTIFFs", "[geo][terrain][resampling][warp][GeoTIFF][lineage]")
 {
     REQUIRE(tsunami::geo_gdal::gdal_driver_available("MEM"));
@@ -697,5 +861,257 @@ TEST_CASE("GDAL terrain adapter resamples sources and writes inspection GeoTIFFs
     bad_request.bathymetry.raster = &point_registered;
     bad_request.bathymetry.import_record = &bad_import;
     CHECK_FALSE(tsunami::geo::prepare_terrain_conditioning(bad_request).has_value());
+}
+
+TEST_CASE("conditioned terrain artefact bundle reads back into Regional2D preflight and transfer", "[geo][terrain][gdal][terrain-artifact-readback]")
+{
+    REQUIRE(tsunami::geo_gdal::gdal_driver_available("GTiff"));
+    const auto corridor = corridor_result();
+    const auto config = case_configuration();
+    const auto data = manifest();
+    auto bathy_raster = raster({-5.0, -4.0, -3.0, -2.0, -6.0, -5.0, -4.0, -3.0}, {1U, 1U, 1U, 0U, 1U, 1U, 0U, 0U});
+    auto topo_raster = raster({1.0, 2.0, 3.0, 4.0, 2.0, 3.0, 4.0, 5.0}, {0U, 0U, 1U, 1U, 0U, 1U, 1U, 1U});
+    const auto bathy_import = import_record(bathy_raster, "bathymetry-import", "bathymetry-primary", "bathymetry-asset");
+    const auto topo_import = import_record(topo_raster, "topography-import", "topography-primary", "topography-asset");
+    const auto bathy_record = transformation_record(reference(), "bathymetry-transform", "bathymetry-import", "bathymetry-primary", "bathymetry-asset");
+    const auto topo_record = transformation_record(reference(), "topography-transform", "topography-import", "topography-primary", "topography-asset");
+    const auto bathy_plan = plan(bathy_raster);
+    const auto topo_plan = plan(topo_raster);
+    auto request = tsunami::geo::TerrainConditioningRequest{
+        &config,
+        &data,
+        &corridor.corridor,
+        &corridor.record,
+        tsunami::geo::TerrainSourceRequest{tsunami::geo::TerrainSourceRole::bathymetry, &bathy_raster, &bathy_import, &bathy_plan, &bathy_record, "bathymetry-primary", "bathymetry-asset", tsunami::geo::RasterResamplingKernel::bilinear},
+        tsunami::geo::TerrainSourceRequest{tsunami::geo::TerrainSourceRole::topography, &topo_raster, &topo_import, &topo_plan, &topo_record, "topography-primary", "topography-asset", tsunami::geo::RasterResamplingKernel::bilinear},
+        terrain_identity(),
+        tsunami::geo::TerrainConditioningPolicy{
+            grid_policy(),
+            tsunami::geo::TerrainMergePolicy{"bathymetry-primary", "topography-primary", 20.0, tsunami::geo::TerrainOverlapConflictPolicy::accept_priority_with_warning, "bathymetry priority fixture"},
+            tsunami::geo::TerrainGapResolutionPolicy{tsunami::geo::TerrainGapResolutionKind::reject, 0.0, 0.0, 0U, 0U, 0.0, 0.0, "reject unresolved fixture gaps"},
+            tsunami::geo::TerrainUncertaintyPolicy{tsunami::geo::TerrainUncertaintyCombination::not_computed, std::nullopt, std::nullopt, std::nullopt, "not reported"}},
+        std::filesystem::temp_directory_path()};
+    const auto produced = tsunami::geo_gdal::condition_terrain_with_gdal(request).value();
+    const auto original_terrain = produced.terrain;
+    const auto original_record = produced.record;
+    REQUIRE(tsunami::geo::validate_terrain_conditioning_record(produced.record).has_value());
+
+    const auto case_root = readback_case_root("success");
+    const auto record_path = case_root / tsunami::geo::default_terrain_conditioning_record_path(produced.record.identity.output_dataset_id);
+    REQUIRE(tsunami::geo::write_terrain_conditioning_record(record_path, produced.record).has_value());
+    auto parsed_record = tsunami::geo::read_terrain_conditioning_record(record_path);
+    REQUIRE(parsed_record.has_value());
+    check_record_fields_equal(parsed_record.value(), produced.record);
+
+    auto paths = tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(case_root, parsed_record.value());
+    REQUIRE(paths.has_value());
+    CHECK(paths.value().terrain_path.filename() == "conditioned-terrain.tif");
+    CHECK(paths.value().coverage_path.filename() == "conditioned-terrain.coverage.tif");
+    CHECK(paths.value().lineage_path.filename() == "conditioned-terrain.lineage.tif");
+    REQUIRE(tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths.value(), produced.terrain, parsed_record.value()).has_value());
+    auto readback = tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(
+        paths.value(),
+        parsed_record.value(),
+        tsunami::geo_gdal::ConditionedTerrainArtifactReadPolicy{parsed_record.value().grid_policy.maximum_output_cells});
+    REQUIRE(readback.has_value());
+    CHECK(readback.value().terrain == produced.terrain);
+    CHECK(readback.value().diagnostics.artefact_contract_version == tsunami::geo_gdal::conditioned_terrain_artifact_contract_version);
+    CHECK(readback.value().diagnostics.valid_terrain_cell_count == produced.record.diagnostics.active_cell_count);
+    CHECK(readback.value().diagnostics.minimum_bed_elevation_m == Catch::Approx(produced.terrain.minimum_elevation_m()));
+    CHECK(readback.value().diagnostics.maximum_bed_elevation_m == Catch::Approx(produced.terrain.maximum_elevation_m()));
+
+    const auto mesh = regional_mesh_fixture();
+    auto preflight = tsunami::r2d::validate_regional2d_geometry_preflight(
+        tsunami::r2d::RegionalGeometryPreflightRequest{
+            &corridor.corridor,
+            &corridor.record,
+            &readback.value().terrain,
+            &parsed_record.value(),
+            &mesh,
+            tsunami::r2d::RegionalMeshImportPhysicalGroups{}});
+    const auto preflight_message = preflight.has_value() ? std::string{"accepted"} : preflight.error().code() + ": " + preflight.error().message();
+    INFO(preflight_message);
+    REQUIRE(preflight.has_value());
+    CHECK(preflight.value().validation_status == "accepted");
+    auto stencil = tsunami::r2d::make_regional_raster_cell_transfer_stencil(
+        mesh,
+        readback.value().terrain.grid(),
+        tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-9, 1.0e-12, 16U});
+    REQUIRE(stencil.has_value());
+    auto transferred = tsunami::r2d::transfer_conditioned_terrain_to_regional_bathymetry(
+        mesh,
+        readback.value().terrain,
+        parsed_record.value(),
+        preflight.value(),
+        stencil.value(),
+        tsunami::fvm::FieldId{"terrain-artifact-bed"},
+        "conditioned terrain bed elevation");
+    REQUIRE(transferred.has_value());
+    CHECK(transferred.value().bathymetry.is_bound_to(mesh));
+    CHECK(transferred.value().diagnostics.minimum_bed_elevation_m <= transferred.value().diagnostics.maximum_bed_elevation_m);
+    CHECK(produced.terrain == original_terrain);
+    check_record_fields_equal(produced.record, original_record);
+}
+
+TEST_CASE("conditioned terrain artefact reader rejects stale metadata, unsafe paths and corrupted rasters", "[geo][terrain][gdal][terrain-artifact-readback]")
+{
+    REQUIRE(tsunami::geo_gdal::gdal_driver_available("GTiff"));
+    const auto produced = [&] {
+        const auto corridor = corridor_result();
+        const auto config = case_configuration();
+        const auto data = manifest();
+        auto bathy_raster = raster({-5.0, -4.0, -3.0, -2.0, -6.0, -5.0, -4.0, -3.0}, {1U, 1U, 1U, 0U, 1U, 1U, 0U, 0U});
+        auto topo_raster = raster({1.0, 2.0, 3.0, 4.0, 2.0, 3.0, 4.0, 5.0}, {0U, 0U, 1U, 1U, 0U, 1U, 1U, 1U});
+        const auto bathy_import = import_record(bathy_raster, "bathymetry-import", "bathymetry-primary", "bathymetry-asset");
+        const auto topo_import = import_record(topo_raster, "topography-import", "topography-primary", "topography-asset");
+        const auto bathy_record = transformation_record(reference(), "bathymetry-transform", "bathymetry-import", "bathymetry-primary", "bathymetry-asset");
+        const auto topo_record = transformation_record(reference(), "topography-transform", "topography-import", "topography-primary", "topography-asset");
+        const auto bathy_plan = plan(bathy_raster);
+        const auto topo_plan = plan(topo_raster);
+        auto request = tsunami::geo::TerrainConditioningRequest{
+            &config,
+            &data,
+            &corridor.corridor,
+            &corridor.record,
+            tsunami::geo::TerrainSourceRequest{tsunami::geo::TerrainSourceRole::bathymetry, &bathy_raster, &bathy_import, &bathy_plan, &bathy_record, "bathymetry-primary", "bathymetry-asset", tsunami::geo::RasterResamplingKernel::bilinear},
+            tsunami::geo::TerrainSourceRequest{tsunami::geo::TerrainSourceRole::topography, &topo_raster, &topo_import, &topo_plan, &topo_record, "topography-primary", "topography-asset", tsunami::geo::RasterResamplingKernel::bilinear},
+            terrain_identity(),
+            tsunami::geo::TerrainConditioningPolicy{
+                grid_policy(),
+                tsunami::geo::TerrainMergePolicy{"bathymetry-primary", "topography-primary", 20.0, tsunami::geo::TerrainOverlapConflictPolicy::accept_priority_with_warning, "bathymetry priority fixture"},
+                tsunami::geo::TerrainGapResolutionPolicy{tsunami::geo::TerrainGapResolutionKind::reject, 0.0, 0.0, 0U, 0U, 0.0, 0.0, "reject unresolved fixture gaps"},
+                tsunami::geo::TerrainUncertaintyPolicy{tsunami::geo::TerrainUncertaintyCombination::not_computed, std::nullopt, std::nullopt, std::nullopt, "not reported"}},
+            std::filesystem::temp_directory_path()};
+        return tsunami::geo_gdal::condition_terrain_with_gdal(request).value();
+    }();
+
+    const auto write_bundle = [&](std::string_view name) {
+        const auto root = readback_case_root(name);
+        auto paths = tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(root, produced.record);
+        REQUIRE(paths.has_value());
+        auto written = tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths.value(), produced.terrain, produced.record);
+        const auto written_message = written.has_value() ? std::string{"written"} : written.error().code() + ": " + written.error().message();
+        INFO(written_message);
+        REQUIRE(written.has_value());
+        return paths.value();
+    };
+    const auto policy = tsunami::geo_gdal::ConditionedTerrainArtifactReadPolicy{produced.record.grid_policy.maximum_output_cells};
+
+    SECTION("metadata identity and role mismatches are rejected")
+    {
+        auto paths = write_bundle("metadata");
+        set_dataset_metadata(paths.coverage_path, "TSUNAMI_ARTIFACT_ROLE", "conditioned_terrain");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.role_mismatch");
+
+        paths = write_bundle("lineage-version");
+        set_dataset_metadata(paths.lineage_path, "TSUNAMI_LINEAGE_ENCODING_VERSION", "terrain-cell-lineage-code-v9");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+
+        paths = write_bundle("terrain-revision");
+        set_dataset_metadata(paths.terrain_path, "TSUNAMI_TERRAIN_REVISION", "99");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.identity_mismatch");
+
+        paths = write_bundle("case-revision");
+        set_dataset_metadata(paths.terrain_path, "TSUNAMI_CASE_REVISION", "99");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.identity_mismatch");
+
+        paths = write_bundle("manifest-revision");
+        set_dataset_metadata(paths.coverage_path, "TSUNAMI_MANIFEST_REVISION", "99");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.identity_mismatch");
+
+        paths = write_bundle("formula-version");
+        set_dataset_metadata(paths.lineage_path, "TSUNAMI_FORMULA_VERSION", "terrain-conditioning-formula-v9");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+    }
+
+    SECTION("resource and path safety is enforced before read")
+    {
+        auto paths = write_bundle("paths");
+        std::filesystem::remove(paths.coverage_path);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.file_missing");
+
+        paths = write_bundle("directory-path");
+        std::filesystem::remove(paths.coverage_path);
+        std::filesystem::create_directory(paths.coverage_path);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.file_missing");
+
+        paths.coverage_path = paths.terrain_path;
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.path_invalid");
+        auto unsafe = produced.record;
+        unsafe.output_path = std::filesystem::path{"outputs/terrain/../escape.tif"};
+        CHECK_FALSE(tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(readback_case_root("unsafe"), unsafe).has_value());
+
+        paths = write_bundle("policy-limit");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, tsunami::geo_gdal::ConditionedTerrainArtifactReadPolicy{1U}).error().code() == "geo.terrain.artifact_read.grid_mismatch");
+    }
+
+    SECTION("grid and CRS evidence must match semantically")
+    {
+        auto paths = write_bundle("pixel-point");
+        set_dataset_metadata(paths.terrain_path, "AREA_OR_POINT", "Point");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.grid_mismatch");
+
+        paths = write_bundle("affine");
+        shift_geotransform(paths.coverage_path);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.grid_mismatch");
+
+        paths = write_bundle("crs");
+        set_dataset_crs(paths.lineage_path, "EPSG:4326");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.crs_mismatch");
+
+        paths = write_bundle("same-crs-wkt");
+        set_dataset_crs(paths.terrain_path, "LOCAL_CS[\"Synthetic metric\"]");
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).has_value());
+    }
+
+    SECTION("band contract metadata is strict")
+    {
+        auto paths = write_bundle("description");
+        set_band_contract_metadata(paths.terrain_path, std::string_view{"wrong_description"}, std::nullopt, std::nullopt, std::nullopt, std::nullopt);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+
+        paths = write_bundle("unit");
+        set_band_contract_metadata(paths.coverage_path, std::nullopt, std::string_view{"m"}, std::nullopt, std::nullopt, std::nullopt);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+
+        paths = write_bundle("scale");
+        set_band_contract_metadata(paths.lineage_path, std::nullopt, std::nullopt, 2.0, std::nullopt, std::nullopt);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+
+        paths = write_bundle("offset");
+        set_band_contract_metadata(paths.coverage_path, std::nullopt, std::nullopt, std::nullopt, 1.0, std::nullopt);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+
+        paths = write_bundle("nodata");
+        set_band_contract_metadata(paths.terrain_path, std::nullopt, std::nullopt, std::nullopt, std::nullopt, -9999.0);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.band_metadata_mismatch");
+    }
+
+    SECTION("coverage and lineage corruptions are rejected")
+    {
+        auto paths = write_bundle("coverage-range");
+        overwrite_coverage_value(paths.coverage_path, 1.25);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.coverage_invalid");
+
+        paths = write_bundle("coverage-negative");
+        overwrite_coverage_value(paths.coverage_path, -0.25);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.coverage_invalid");
+
+        paths = write_bundle("lineage-code");
+        overwrite_lineage_code(paths.lineage_path, 0U);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.lineage_code_invalid");
+
+        paths = write_bundle("active-invalid-mask");
+        overwrite_mask_value(paths.terrain_path, 0U);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.bundle_inconsistent");
+
+        paths = write_bundle("nonfinite-bed");
+        overwrite_terrain_value(paths.terrain_path, std::numeric_limits<double>::quiet_NaN());
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.bundle_inconsistent");
+
+        paths = write_bundle("coverage-class");
+        overwrite_coverage_value(paths.coverage_path, 0.0);
+        CHECK(tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(paths, produced.record, policy).error().code() == "geo.terrain.artifact_read.bundle_inconsistent");
+    }
 }
 #endif

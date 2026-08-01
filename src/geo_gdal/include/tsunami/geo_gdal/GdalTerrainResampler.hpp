@@ -2,6 +2,7 @@
 
 #include <filesystem>
 
+#include <tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp>
 #include <tsunami/geo/TerrainConditioning.hpp>
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 
