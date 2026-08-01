@@ -16,6 +16,8 @@
 #include <tsunami/fvm/MeshField.hpp>
 #include <tsunami/r2d/RegionalCasePreparation.hpp>
 
+#include "geospatial_record_fixtures.hpp"
+
 using Catch::Approx;
 
 namespace
@@ -202,6 +204,9 @@ namespace
         std::string id,
         double x) -> tsunami::geo::CorridorReferencePointEvidence
     {
+        const auto point_id = id;
+        const auto dataset_id = point_id + "-source-dataset";
+        const auto asset_id = point_id + "-source-asset";
         return tsunami::geo::CorridorReferencePointEvidence{
             role,
             std::move(id),
@@ -209,11 +214,16 @@ namespace
             {x, 0.0, 0.0},
             0U,
             std::nullopt,
-            [] {
-                auto identity = tsunami::geo::CoordinateTransformationIdentity{};
-                identity.transformation_id = "case-prep-transform";
-                return identity;
-            }(),
+            tsunami::tests::r2d_fixtures::transformation_identity(
+                point_id + "-case-prep-transform",
+                point_id + "-source-import",
+                dataset_id,
+                asset_id,
+                tsunami::data::CaseRevisionRef{case_id(), 1U},
+                "case-preparation-manifest",
+                1U,
+                point_id + "-target-dataset",
+                point_id + "-transform-process"),
             source_reference_descriptor(),
             target_reference(),
             "synthetic",

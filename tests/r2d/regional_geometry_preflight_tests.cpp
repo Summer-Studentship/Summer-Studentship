@@ -13,7 +13,12 @@
 #include <tsunami/adapters/gmsh/GmshMeshImporter.hpp>
 #include <tsunami/fvm/FiniteVolumeMesh.hpp>
 #include <tsunami/geo/ConditionedTerrainRaster.hpp>
+#include <tsunami/geo/TerrainConditioning.hpp>
+#include <tsunami/geo/TerrainConditioningParsing.hpp>
+#include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 #include <tsunami/r2d/RegionalGeometryPreflight.hpp>
+
+#include "geospatial_record_fixtures.hpp"
 
 using Catch::Approx;
 
@@ -58,13 +63,7 @@ namespace
     [[nodiscard]] auto target_reference(std::string code = "EN-METRIC-1")
         -> tsunami::geo::ComputationalTargetReference
     {
-        return tsunami::geo::ComputationalTargetReference{
-            reference(std::move(code)),
-            std::nullopt,
-            tsunami::geo::ComputationalAxisConvention::east_north,
-            "m",
-            std::string{"m"},
-            std::string{"up"}};
+        return tsunami::tests::r2d_fixtures::target_reference(std::move(code));
     }
 
     [[nodiscard]] auto case_revision() -> tsunami::data::CaseRevisionRef
@@ -77,19 +76,17 @@ namespace
     [[nodiscard]] auto transformation_identity(std::string id)
         -> tsunami::geo::CoordinateTransformationIdentity
     {
-        return tsunami::geo::CoordinateTransformationIdentity{
+        const auto prefix = id;
+        return tsunami::tests::r2d_fixtures::transformation_identity(
             std::move(id),
-            1U,
+            prefix + "-import",
+            prefix + "-source-dataset",
+            prefix + "-source-asset",
             case_revision(),
             "preflight-manifest",
             1U,
-            "source-import",
-            1U,
-            "source-dataset",
-            "source-asset",
-            "transformed-dataset",
-            "transform-process",
-            "2026-07-31T00:00:00Z"};
+            prefix + "-transformed-dataset",
+            prefix + "-transform-process");
     }
 
     [[nodiscard]] auto corridor_policy() -> tsunami::geo::CorridorConstructionPolicy
@@ -243,21 +240,35 @@ namespace
     {
         auto grid = terrain_grid(target);
         auto values = std::vector<double>(8U, -3.0);
-        auto terrain = tsunami::geo::make_conditioned_terrain_raster(
+        auto input = tsunami::tests::r2d_fixtures::valid_terrain_record(
             grid,
-            values,
+            std::move(values),
             std::move(mask),
             std::move(coverage),
-            std::move(lineage));
-        REQUIRE(terrain.has_value());
+            std::move(lineage),
+            corridor_record.identity,
+            "terrain-preflight",
+            "preflight-case",
+            "preflight-manifest");
+        input.record.scenario_id = "preflight-scenario";
+        input.record.target_site = "kamaishi";
+        return TerrainFixture{std::move(input.terrain), std::move(input.record)};
+    }
 
-        auto record = tsunami::geo::TerrainConditioningRecord{};
-        record.schema = tsunami::data::SchemaIdentity{
-            std::string{tsunami::geo::terrain_conditioning_record_schema_name},
-            tsunami::geo::supported_terrain_conditioning_record_version};
-        record.policy_version = tsunami::geo::supported_terrain_conditioning_record_policy_version;
-        record.formula_version = tsunami::geo::terrain_conditioning_formula_version;
-        record.identity = tsunami::geo::TerrainConditioningIdentity{
+    [[nodiscard]] auto producer_terrain_fixture(
+        const tsunami::geo::CorridorConstructionRecord &corridor_record) -> TerrainFixture
+    {
+        auto grid = terrain_grid();
+        auto preparation = tsunami::geo::TerrainConditioningPreparation{};
+        preparation.grid = grid;
+        preparation.coverage = tsunami::geo::TerrainCorridorCoverage{
+            grid,
+            std::vector<double>(8U, 1.0),
+            std::vector<tsunami::geo::TerrainCorridorCellClass>(8U, tsunami::geo::TerrainCorridorCellClass::active),
+            8U,
+            0U,
+            0U};
+        preparation.identity = tsunami::geo::TerrainConditioningIdentity{
             "terrain-preflight",
             1U,
             case_revision(),
@@ -266,30 +277,55 @@ namespace
             "conditioned-terrain",
             "terrain-conditioning-process",
             "2026-07-31T00:00:00Z"};
-        record.scenario_id = "preflight-scenario";
-        record.target_site = "kamaishi";
-        record.bathymetry_dataset_id = "bathymetry-primary";
-        record.bathymetry_asset_id = "bathymetry-asset";
-        record.bathymetry_transformation_identity = transformation_identity("bathymetry-transform");
-        record.topography_dataset_id = "topography-primary";
-        record.topography_asset_id = "topography-asset";
-        record.topography_transformation_identity = transformation_identity("topography-transform");
-        record.corridor_identity = corridor_record.identity;
-        record.target_reference = grid.target_reference();
-        record.grid = grid;
-        record.grid_policy = grid_policy();
-        record.diagnostics.total_cell_count = grid.cell_count();
-        record.diagnostics.active_cell_count = grid.cell_count();
-        record.diagnostics.minimum_elevation_m = -3.0;
-        record.diagnostics.maximum_elevation_m = -3.0;
-        record.output_uncertainty = tsunami::data::DatasetUncertainty{
+        preparation.policy.grid = grid_policy();
+        preparation.policy.merge = tsunami::geo::TerrainMergePolicy{
+            "bathymetry-primary",
+            "topography-primary",
+            100.0,
+            tsunami::geo::TerrainOverlapConflictPolicy::accept_priority_with_warning,
+            "bathymetry priority synthetic preflight proof"};
+        preparation.policy.gaps = tsunami::geo::TerrainGapResolutionPolicy{
+            tsunami::geo::TerrainGapResolutionKind::reject,
+            0.0,
+            0.0,
+            0U,
+            0U,
+            0.0,
+            0.0,
+            "reject unresolved synthetic fixture gaps"};
+        preparation.corridor_identity = corridor_record.identity;
+        preparation.scenario_id = "preflight-scenario";
+        preparation.target_site = "kamaishi";
+        preparation.output_uncertainty = tsunami::data::DatasetUncertainty{
             tsunami::data::UncertaintyStatus::not_reported,
             {},
             std::string{"not_reported"}};
-        record.output_media_type = "image/tiff";
-        record.output_path = std::filesystem::path{"outputs/terrain/preflight.tif"};
-        record.digest_status = "not_computed_by_terrain_conditioning";
-        return TerrainFixture{std::move(terrain).value(), std::move(record)};
+        preparation.output_path = tsunami::geo::default_conditioned_terrain_path("conditioned-terrain");
+
+        auto bathymetry = tsunami::tests::r2d_fixtures::resampled_source(
+            grid,
+            preparation.policy.grid,
+            preparation.identity.case_revision,
+            preparation.identity.manifest_id,
+            preparation.identity.manifest_revision,
+            "bathymetry-primary",
+            tsunami::geo::TerrainSourceRole::bathymetry,
+            std::vector<double>(8U, -3.0),
+            std::vector<std::uint8_t>(8U, 1U));
+        auto topography = tsunami::tests::r2d_fixtures::resampled_source(
+            grid,
+            preparation.policy.grid,
+            preparation.identity.case_revision,
+            preparation.identity.manifest_id,
+            preparation.identity.manifest_revision,
+            "topography-primary",
+            tsunami::geo::TerrainSourceRole::topography,
+            std::vector<double>(8U, 2.0),
+            std::vector<std::uint8_t>(8U, 0U));
+        auto result = tsunami::geo::condition_terrain_from_resampled_sources(preparation, bathymetry, topography);
+        REQUIRE(result.has_value());
+        auto produced = std::move(result).value();
+        return TerrainFixture{std::move(produced.terrain), std::move(produced.record)};
     }
 
     [[nodiscard]] auto gmsh_text() -> std::string
@@ -481,6 +517,37 @@ TEST_CASE("Regional2D geometry preflight accepts a corridor terrain and imported
     CHECK(result.value().mesh_bounds.minimum_x == Approx(0.0));
     CHECK(result.value().mesh_bounds.maximum_y == Approx(4.0));
     CHECK(result.value().terrain_support_bounds.maximum_x == Approx(30.0));
+}
+
+TEST_CASE("Regional2D geometry preflight accepts an actual producer terrain record after readback", "[r2d][preflight][readback]")
+{
+    auto data = fixture();
+    auto produced = producer_terrain_fixture(data.corridor.record);
+    REQUIRE(tsunami::geo::validate_terrain_conditioning_record(produced.record).has_value());
+
+    const auto serialised = tsunami::geo::serialise_terrain_conditioning_record(produced.record);
+    REQUIRE(serialised.has_value());
+    const auto parsed = tsunami::geo::parse_terrain_conditioning_record(serialised.value(), "preflight-producer-terrain");
+    REQUIRE(parsed.has_value());
+    CHECK(parsed.value().identity == produced.record.identity);
+    CHECK(parsed.value().corridor_identity == produced.record.corridor_identity);
+    CHECK(parsed.value().target_reference == produced.record.target_reference);
+    CHECK(parsed.value().grid == produced.record.grid);
+    CHECK(parsed.value().bathymetry_import_identity == produced.record.bathymetry_import_identity);
+    CHECK(parsed.value().bathymetry_transformation_identity == produced.record.bathymetry_transformation_identity);
+    CHECK(parsed.value().topography_import_identity == produced.record.topography_import_identity);
+    CHECK(parsed.value().topography_transformation_identity == produced.record.topography_transformation_identity);
+    const auto reserialised = tsunami::geo::serialise_terrain_conditioning_record(parsed.value());
+    REQUIRE(reserialised.has_value());
+    CHECK(reserialised.value() == serialised.value());
+
+    auto request = request_for(data);
+    request.terrain = &produced.terrain;
+    request.terrain_record = &parsed.value();
+    const auto preflight = tsunami::r2d::validate_regional2d_geometry_preflight(request);
+    REQUIRE(preflight.has_value());
+    CHECK(preflight.value().validation_status == "accepted");
+    CHECK(preflight.value().terrain_id == produced.record.identity.terrain_id);
 }
 
 TEST_CASE("Regional2D geometry preflight rejects mesh vertex outside corridor", "[r2d][preflight]")

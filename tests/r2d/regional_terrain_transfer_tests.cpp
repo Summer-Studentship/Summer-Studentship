@@ -3,6 +3,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <filesystem>
 #include <limits>
@@ -15,6 +16,8 @@
 
 #include <tsunami/fvm/FiniteVolumeMesh.hpp>
 #include <tsunami/r2d/RegionalTerrainTransfer.hpp>
+
+#include "geospatial_record_fixtures.hpp"
 
 using Catch::Approx;
 
@@ -82,13 +85,29 @@ namespace
         std::uint64_t width = 2U,
         std::uint64_t height = 1U) -> tsunami::geo::TerrainTargetGrid
     {
+        const auto corner = [&](double column, double row) {
+            return tsunami::geo::Point2D{
+                transform.origin_x + (column * transform.pixel_width) + (row * transform.row_rotation),
+                transform.origin_y + (column * transform.column_rotation) + (row * transform.pixel_height)};
+        };
+        const auto corners = std::array{
+            corner(0.0, 0.0),
+            corner(static_cast<double>(width), 0.0),
+            corner(0.0, static_cast<double>(height)),
+            corner(static_cast<double>(width), static_cast<double>(height))};
+        const auto minmax_x = std::minmax_element(corners.begin(), corners.end(), [](const auto &left, const auto &right) {
+            return left.x < right.x;
+        });
+        const auto minmax_y = std::minmax_element(corners.begin(), corners.end(), [](const auto &left, const auto &right) {
+            return left.y < right.y;
+        });
         return tsunami::geo::TerrainTargetGrid{
             width,
             height,
             1.0,
             transform,
-            {-1.0, -1.0, 3.0, 2.0},
-            {},
+            {minmax_x.first->x, minmax_y.first->y, minmax_x.second->x, minmax_y.second->y},
+            tsunami::tests::r2d_fixtures::target_reference(),
             0.0,
             static_cast<double>(width),
             0.0,
@@ -116,58 +135,24 @@ namespace
         if (lineage.empty()) {
             lineage.assign(count, tsunami::geo::TerrainCellLineage::bathymetry_selected);
         }
-        auto record = tsunami::geo::TerrainConditioningRecord{};
-        record.schema = tsunami::data::SchemaIdentity{
-            std::string{tsunami::geo::terrain_conditioning_record_schema_name},
-            tsunami::geo::supported_terrain_conditioning_record_version};
-        record.policy_version = tsunami::geo::supported_terrain_conditioning_record_policy_version;
-        record.formula_version = tsunami::geo::terrain_conditioning_formula_version;
-        record.identity.terrain_id = "conditioned-terrain-1";
-        record.identity.terrain_revision = 1U;
-        record.identity.manifest_id = "conditioned-terrain-manifest";
-        record.identity.manifest_revision = 1U;
-        record.identity.output_dataset_id = "conditioned-terrain-output";
-        record.identity.output_process_id = "terrain-conditioning-process";
-        record.identity.executed_at_utc = "2026-07-31T00:00:00Z";
-        record.grid = target_grid;
-        record.target_reference = target_grid.target_reference();
-        record.grid_policy = tsunami::geo::TerrainTargetGridPolicy{
-            1.0,
-            0.5,
-            1.0,
-            static_cast<std::uint64_t>(count),
-            1.0e-12,
-            1.0e-12,
-            "terrain-transfer-test"};
-        record.diagnostics.total_cell_count = static_cast<std::uint64_t>(count);
-        record.diagnostics.active_cell_count = static_cast<std::uint64_t>(count);
-        record.output_media_type = "image/tiff";
-        record.output_path = std::filesystem::path{"outputs/terrain/conditioned-terrain-output.tif"};
-        record.digest_status = "not_computed_by_terrain_conditioning";
-        auto minimum = std::numeric_limits<double>::infinity();
-        auto maximum = -std::numeric_limits<double>::infinity();
-        for (const auto value : values) {
-            if (std::isfinite(value)) {
-                minimum = std::min(minimum, value);
-                maximum = std::max(maximum, value);
-            }
-        }
-        if (!std::isfinite(minimum)) {
-            minimum = 0.0;
-            maximum = 0.0;
-        }
-        record.diagnostics.minimum_elevation_m = minimum;
-        record.diagnostics.maximum_elevation_m = maximum;
-        return TerrainInput{
-            tsunami::geo::ConditionedTerrainRaster{
-                target_grid,
-                std::move(values),
-                std::move(mask),
-                std::vector<double>(count, 1.0),
-                std::move(lineage),
-                minimum,
-                maximum},
-            std::move(record)};
+        auto input = tsunami::tests::r2d_fixtures::valid_terrain_record(
+            target_grid,
+            std::move(values),
+            std::move(mask),
+            std::vector<double>(count, 1.0),
+            std::move(lineage),
+            tsunami::geo::CorridorConstructionIdentity{
+                "corridor-transfer",
+                1U,
+                tsunami::tests::r2d_fixtures::case_revision("terrain-transfer-case"),
+                "corridor-transfer-axis",
+                "corridor-transfer-output",
+                "corridor-transfer-process",
+                "2026-07-31T00:00:00Z"},
+            "conditioned-terrain-1",
+            "terrain-transfer-case",
+            "conditioned-terrain-manifest");
+        return TerrainInput{std::move(input.terrain), std::move(input.record)};
     }
 
     [[nodiscard]] auto preflight(
@@ -398,7 +383,9 @@ TEST_CASE("Regional terrain transfer rejects stale and unacceptable sources with
         input.record.grid_policy.active_coverage_threshold = 0.0;
         const auto result = apply(mesh, input, stencil);
         REQUIRE_FALSE(result.has_value());
-        CHECK(result.error().code() == "r2d.terrain_transfer.request_invalid");
+        CHECK(result.error().code() == "r2d.terrain_transfer.record_invalid");
+        REQUIRE(result.error().cause_code().has_value());
+        CHECK(*result.error().cause_code() == "geo.terrain.record_invalid");
     }
 
     SECTION("nonfinite contributing value")
