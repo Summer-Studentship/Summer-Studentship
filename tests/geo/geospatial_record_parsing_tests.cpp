@@ -346,6 +346,15 @@ namespace
         }
     }
 
+    auto require_corridor_record_invalid(const tsunami::geo::CorridorConstructionRecord &record) -> void
+    {
+        const auto serialised = tsunami::geo::serialise_corridor_construction_record(record);
+        CHECK_FALSE(serialised.has_value());
+        if (!serialised) {
+            CHECK(serialised.error().code() == "geo.corridor.record_invalid");
+        }
+    }
+
     auto check_reference_equal(const tsunami::geo::CoordinateReferenceDescriptor &left, const tsunami::geo::CoordinateReferenceDescriptor &right) -> void
     {
         CHECK(left.authority_name == right.authority_name);
@@ -726,6 +735,56 @@ TEST_CASE("terrain record validation hardens output paths and persisted strings"
 
         record = terrain_record();
         record.warnings.push_back(std::string{"bad\0warning", 11U});
+        require_terrain_record_invalid(record);
+    }
+}
+
+TEST_CASE("corridor record validation rejects embedded NUL persisted text before serialisation", "[geo-record-parsing]")
+{
+    SECTION("top-level warning NUL is rejected")
+    {
+        auto record = corridor_record();
+        record.warnings.push_back(std::string{"bad\0warning", 11U});
+        require_corridor_record_invalid(record);
+    }
+
+    SECTION("diagnostic warning NUL is rejected")
+    {
+        auto record = corridor_record();
+        record.diagnostics.warnings.push_back(std::string{"bad\0diagnostic", 14U});
+        require_corridor_record_invalid(record);
+    }
+
+    SECTION("optional evidence text NUL is rejected")
+    {
+        auto record = corridor_record();
+        record.epicentre.source_feature_id = std::string{"feature\0id", 10U};
+        require_corridor_record_invalid(record);
+    }
+}
+
+TEST_CASE("terrain record validation rejects vertical metadata and digest text mismatches", "[geo-record-parsing]")
+{
+    SECTION("vertical-step optional NUL text is rejected")
+    {
+        auto record = terrain_record();
+        record.bathymetry_resampling.vertical_steps.steps.front().operation_authority = std::string{"AUTH\0ORITY", 9U};
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("declared digest with embedded NUL is rejected")
+    {
+        auto record = terrain_record();
+        REQUIRE(record.bathymetry_resampling.operation.grids.front().declared_digest.has_value());
+        record.bathymetry_resampling.operation.grids.front().declared_digest->value = std::string{"0123456789abcdef\0", 17U};
+        require_terrain_record_invalid(record);
+    }
+
+    SECTION("malformed SHA-256 digest is rejected")
+    {
+        auto record = terrain_record();
+        REQUIRE(record.bathymetry_resampling.operation.grids.front().declared_digest.has_value());
+        record.bathymetry_resampling.operation.grids.front().declared_digest->value = "not-a-sha256";
         require_terrain_record_invalid(record);
     }
 }

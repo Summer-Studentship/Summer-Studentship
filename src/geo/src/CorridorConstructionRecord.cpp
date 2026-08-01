@@ -2,8 +2,10 @@
 
 #include <algorithm>
 #include <cmath>
+#include <optional>
 #include <regex>
 #include <string>
+#include <vector>
 
 namespace tsunami::geo
 {
@@ -26,6 +28,16 @@ namespace tsunami::geo
         [[nodiscard]] auto text_present(const std::string &text) -> bool
         {
             return !text.empty() && text.find('\0') == std::string::npos;
+        }
+
+        [[nodiscard]] auto optional_text_present(const std::optional<std::string> &text) -> bool
+        {
+            return !text || text_present(*text);
+        }
+
+        [[nodiscard]] auto text_array_valid(const std::vector<std::string> &values) -> bool
+        {
+            return std::all_of(values.begin(), values.end(), text_present);
         }
 
         [[nodiscard]] auto logical_id_valid(const std::string &text) -> bool
@@ -70,12 +82,41 @@ namespace tsunami::geo
                 });
         }
 
+        [[nodiscard]] auto transformation_identity_valid(const CoordinateTransformationIdentity &identity) -> bool
+        {
+            return logical_id_valid(identity.transformation_id) && identity.transformation_revision > 0U &&
+                logical_id_valid(identity.case_revision.case_id.str()) && identity.case_revision.revision > 0U &&
+                logical_id_valid(identity.manifest_id) && identity.manifest_revision > 0U &&
+                logical_id_valid(identity.source_import_id) && identity.source_import_revision > 0U &&
+                logical_id_valid(identity.source_dataset_id) && logical_id_valid(identity.source_asset_id) &&
+                logical_id_valid(identity.output_dataset_id) && logical_id_valid(identity.output_process_id) &&
+                timestamp_valid(identity.executed_at_utc);
+        }
+
+        [[nodiscard]] auto target_reference_valid(const ComputationalTargetReference &target) -> bool
+        {
+            if (auto horizontal = validate_coordinate_reference_descriptor(target.horizontal); !horizontal) {
+                return false;
+            }
+            if (target.vertical) {
+                if (auto vertical = validate_coordinate_reference_descriptor(*target.vertical); !vertical) {
+                    return false;
+                }
+            }
+            return text_present(target.horizontal_unit) &&
+                optional_text_present(target.vertical_unit) &&
+                optional_text_present(target.vertical_positive);
+        }
+
         [[nodiscard]] auto evidence_valid(const CorridorReferencePointEvidence &evidence) -> bool
         {
             return logical_id_valid(evidence.point_id) && text_present(evidence.definition) &&
+                optional_text_present(evidence.source_feature_id) &&
                 finite(evidence.coordinate) && text_present(evidence.source_document_title) &&
                 text_present(evidence.source_document_uri) && timestamp_valid(evidence.accessed_at_utc) &&
-                logical_id_valid(evidence.transformation_identity.transformation_id);
+                transformation_identity_valid(evidence.transformation_identity) &&
+                validate_coordinate_reference_descriptor(evidence.source_reference).has_value() &&
+                target_reference_valid(evidence.target_reference);
         }
 
         [[nodiscard]] auto policy_valid(const CorridorConstructionPolicy &policy) -> bool
@@ -136,11 +177,14 @@ namespace tsunami::geo
             !finite(record.total_length_m) || !finite(record.offshore_width_m) ||
             !finite(record.inland_width_m) || !text_present(record.narrowing_rule) ||
             !text_present(record.vertex_order_convention) || !finite_polygon(record.polygon) ||
-            !finite_box(record.extent) || !finite(record.area_m2) || !finite(record.perimeter_m)) {
+            !finite_box(record.extent) || !finite(record.area_m2) || !finite(record.perimeter_m) ||
+            !target_reference_valid(record.target_reference) ||
+            !text_array_valid(record.diagnostics.warnings) ||
+            !text_array_valid(record.warnings)) {
             return tsunami::core::failure(corridor_error("geo.corridor.record_invalid", "corridor construction record fields are invalid", "geo.corridor.record.fields"));
         }
         auto paths = record.configured_field_paths;
-        if (paths.empty() || !std::all_of(paths.begin(), paths.end(), text_present)) {
+        if (paths.empty() || !text_array_valid(paths)) {
             return tsunami::core::failure(corridor_error("geo.corridor.record_invalid", "configured field paths are incomplete", "geo.corridor.record.fields"));
         }
         return tsunami::core::success();

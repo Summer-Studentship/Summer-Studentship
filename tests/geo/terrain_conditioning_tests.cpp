@@ -3,6 +3,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <cstdint>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
@@ -11,6 +12,7 @@
 
 #include <tsunami/geo/CorridorConstruction.hpp>
 #include <tsunami/geo/TerrainConditioning.hpp>
+#include <tsunami/geo/TerrainConditioningParsing.hpp>
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 
 #ifdef TSUNAMI_ENABLE_GEOSPATIAL
@@ -40,7 +42,18 @@ namespace
     {
         return tsunami::geo::ComputationalTargetReference{
             reference(),
-            std::nullopt,
+            tsunami::geo::CoordinateReferenceDescriptor{
+                std::nullopt,
+                std::nullopt,
+                "synthetic-positive-up",
+                std::string{"VERT_CS[\"synthetic-positive-up\"]"},
+                std::nullopt,
+                std::string{"Synthetic vertical datum"},
+                std::string{"Synthetic vertical realisation"},
+                2026.0,
+                {"Gravity-related height"},
+                {"up"},
+                {"metre"}},
             tsunami::geo::ComputationalAxisConvention::east_north,
             "m",
             std::string{"m"},
@@ -269,23 +282,96 @@ namespace
     }
 
     [[nodiscard]] auto resampled(
-        const tsunami::geo::TerrainTargetGrid &grid,
+        const tsunami::geo::TerrainConditioningPreparation &preparation,
         std::string dataset_id,
         tsunami::geo::TerrainSourceRole role,
         std::vector<double> values,
-        std::vector<std::uint8_t> mask) -> tsunami::geo::ResampledTerrainSource
+        std::vector<std::uint8_t> mask,
+        tsunami::geo::ResampledTerrainCellStatus invalid_status = tsunami::geo::ResampledTerrainCellStatus::source_nodata) -> tsunami::geo::ResampledTerrainSource
     {
+        const auto &grid = preparation.grid;
+        REQUIRE(values.size() == static_cast<std::size_t>(grid.cell_count()));
+        REQUIRE(mask.size() == static_cast<std::size_t>(grid.cell_count()));
+        REQUIRE(invalid_status != tsunami::geo::ResampledTerrainCellStatus::valid_resampled);
+        const auto asset_id = role == tsunami::geo::TerrainSourceRole::bathymetry ? std::string{"bathymetry-asset"} : std::string{"topography-asset"};
+        auto cell_status = std::vector<tsunami::geo::ResampledTerrainCellStatus>{};
+        cell_status.reserve(mask.size());
+        auto output_valid_count = std::uint64_t{};
+        auto source_nodata_count = std::uint64_t{};
+        auto outside_coverage_count = std::uint64_t{};
+        for (const auto valid : mask) {
+            if (valid != 0U) {
+                cell_status.push_back(tsunami::geo::ResampledTerrainCellStatus::valid_resampled);
+                ++output_valid_count;
+            } else {
+                cell_status.push_back(invalid_status);
+                if (invalid_status == tsunami::geo::ResampledTerrainCellStatus::source_nodata) {
+                    ++source_nodata_count;
+                } else {
+                    ++outside_coverage_count;
+                }
+            }
+        }
         auto record = tsunami::geo::RasterResamplingRecord{};
         record.dataset_id = dataset_id;
-        record.asset_id = dataset_id + "-asset";
+        record.asset_id = asset_id;
+        record.import_identity = tsunami::geo::GeospatialImportIdentity{
+            dataset_id + "-import",
+            1U,
+            preparation.identity.case_revision,
+            preparation.identity.manifest_id,
+            preparation.identity.manifest_revision,
+            dataset_id,
+            asset_id,
+            "2026-07-31T00:00:00Z"};
+        record.transformation_identity = tsunami::geo::CoordinateTransformationIdentity{
+            dataset_id + "-transform",
+            1U,
+            preparation.identity.case_revision,
+            preparation.identity.manifest_id,
+            preparation.identity.manifest_revision,
+            record.import_identity.import_id,
+            record.import_identity.import_revision,
+            dataset_id,
+            asset_id,
+            dataset_id + "-projected",
+            dataset_id + "-transform-process",
+            "2026-07-31T00:00:00Z"};
         record.role = role;
+        record.kernel = tsunami::geo::RasterResamplingKernel::bilinear;
         record.source_registration = tsunami::geo::RasterCellRegistration::pixel_is_area;
         record.target_registration = tsunami::geo::RasterCellRegistration::pixel_is_area;
+        record.minimum_source_spacing_m = grid.spacing_m();
+        record.maximum_source_spacing_m = grid.spacing_m();
+        record.nominal_source_spacing_m = grid.spacing_m();
         record.target_spacing_m = grid.spacing_m();
-        record.maximum_upsampling_factor = 4.0;
+        record.maximum_upsampling_factor = preparation.policy.grid.maximum_upsampling_factor;
+        record.source_valid_cell_count = output_valid_count;
+        record.output_valid_cell_count = output_valid_count;
+        record.source_nodata_cell_count = source_nodata_count;
+        record.outside_coverage_cell_count = outside_coverage_count;
+        record.operation = tsunami::geo::CoordinateOperationRecord{
+            dataset_id + " synthetic operation",
+            std::string{"TEST"},
+            std::string{"1001"},
+            std::string{"Synthetic fixture method"},
+            0.0,
+            std::string{"terrain fixture operation scope"},
+            tsunami::geo::GeographicAreaOfInterest{-1.0, -1.0, 1.0, 1.0},
+            std::nullopt,
+            std::string{"{\"type\":\"Conversion\"}"},
+            std::string{"+proj=noop"},
+            false,
+            reference("SOURCE-" + dataset_id),
+            grid.target_reference().horizontal,
+            {},
+            "fixture-engine",
+            "1.0",
+            std::string{"fixture-db"}};
+        record.vertical_steps = tsunami::geo::VerticalTransformationSpecification{false, {}};
         record.adapter_name = "fixture";
         record.adapter_version = "1.0";
-        return tsunami::geo::ResampledTerrainSource{std::move(dataset_id), role, grid, std::move(values), std::move(mask), std::vector<tsunami::geo::ResampledTerrainCellStatus>(static_cast<std::size_t>(grid.cell_count()), tsunami::geo::ResampledTerrainCellStatus::valid_resampled), std::move(record)};
+        return tsunami::geo::ResampledTerrainSource{std::move(dataset_id), role, grid, std::move(values), std::move(mask), std::move(cell_status), std::move(record)};
     }
 
     [[nodiscard]] auto read_text(const std::filesystem::path &path) -> std::string
@@ -300,6 +386,69 @@ namespace
         }
         REQUIRE(file);
         return std::string{std::istreambuf_iterator<char>{file}, std::istreambuf_iterator<char>{}};
+    }
+
+    auto check_resampling_fields_equal(
+        const tsunami::geo::RasterResamplingRecord &left,
+        const tsunami::geo::RasterResamplingRecord &right) -> void
+    {
+        CHECK(left.dataset_id == right.dataset_id);
+        CHECK(left.asset_id == right.asset_id);
+        CHECK(left.import_identity == right.import_identity);
+        CHECK(left.transformation_identity == right.transformation_identity);
+        CHECK(left.role == right.role);
+        CHECK(left.kernel == right.kernel);
+        CHECK(left.source_registration == right.source_registration);
+        CHECK(left.target_registration == right.target_registration);
+        CHECK(left.source_scale == right.source_scale);
+        CHECK(left.source_offset == right.source_offset);
+        CHECK(left.minimum_source_spacing_m == right.minimum_source_spacing_m);
+        CHECK(left.maximum_source_spacing_m == right.maximum_source_spacing_m);
+        CHECK(left.nominal_source_spacing_m == right.nominal_source_spacing_m);
+        CHECK(left.target_spacing_m == right.target_spacing_m);
+        CHECK(left.maximum_upsampling_factor == right.maximum_upsampling_factor);
+        CHECK(left.source_valid_cell_count == right.source_valid_cell_count);
+        CHECK(left.output_valid_cell_count == right.output_valid_cell_count);
+        CHECK(left.source_nodata_cell_count == right.source_nodata_cell_count);
+        CHECK(left.outside_coverage_cell_count == right.outside_coverage_cell_count);
+        CHECK(left.operation == right.operation);
+        CHECK(left.vertical_steps == right.vertical_steps);
+        CHECK(left.adapter_name == right.adapter_name);
+        CHECK(left.adapter_version == right.adapter_version);
+    }
+
+    auto check_record_fields_equal(
+        const tsunami::geo::TerrainConditioningRecord &left,
+        const tsunami::geo::TerrainConditioningRecord &right) -> void
+    {
+        CHECK(left.schema == right.schema);
+        CHECK(left.policy_version == right.policy_version);
+        CHECK(left.formula_version == right.formula_version);
+        CHECK(left.identity == right.identity);
+        CHECK(left.scenario_id == right.scenario_id);
+        CHECK(left.target_site == right.target_site);
+        CHECK(left.bathymetry_dataset_id == right.bathymetry_dataset_id);
+        CHECK(left.bathymetry_asset_id == right.bathymetry_asset_id);
+        CHECK(left.bathymetry_import_identity == right.bathymetry_import_identity);
+        CHECK(left.bathymetry_transformation_identity == right.bathymetry_transformation_identity);
+        CHECK(left.topography_dataset_id == right.topography_dataset_id);
+        CHECK(left.topography_asset_id == right.topography_asset_id);
+        CHECK(left.topography_import_identity == right.topography_import_identity);
+        CHECK(left.topography_transformation_identity == right.topography_transformation_identity);
+        CHECK(left.corridor_identity == right.corridor_identity);
+        CHECK(left.target_reference == right.target_reference);
+        CHECK(left.grid == right.grid);
+        CHECK(left.grid_policy == right.grid_policy);
+        check_resampling_fields_equal(left.bathymetry_resampling, right.bathymetry_resampling);
+        check_resampling_fields_equal(left.topography_resampling, right.topography_resampling);
+        CHECK(left.merge_policy == right.merge_policy);
+        CHECK(left.gap_policy == right.gap_policy);
+        CHECK(left.diagnostics == right.diagnostics);
+        CHECK(left.output_uncertainty == right.output_uncertainty);
+        CHECK(left.output_media_type == right.output_media_type);
+        CHECK(left.output_path == right.output_path);
+        CHECK(left.digest_status == right.digest_status);
+        CHECK(left.warnings == right.warnings);
     }
 }
 
@@ -350,8 +499,8 @@ TEST_CASE("terrain domain merge records overlap diagnostics and rejects unresolv
     preparation.output_uncertainty = tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::not_reported, {}, std::string{"not_reported"}};
     preparation.output_path = tsunami::geo::default_conditioned_terrain_path("conditioned-terrain");
 
-    auto bathy = resampled(grid, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, {-5.0, -4.0, -3.0, -2.0, -6.0, -5.0, -4.0, -3.0}, {1U, 1U, 1U, 0U, 1U, 1U, 0U, 0U});
-    auto topo = resampled(grid, "topography-primary", tsunami::geo::TerrainSourceRole::topography, {1.0, 2.0, 3.0, 4.0, 2.0, 3.0, 4.0, 5.0}, {0U, 0U, 1U, 1U, 0U, 1U, 1U, 1U});
+    auto bathy = resampled(preparation, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, {-5.0, -4.0, -3.0, -2.0, -6.0, -5.0, -4.0, -3.0}, {1U, 1U, 1U, 0U, 1U, 1U, 0U, 0U});
+    auto topo = resampled(preparation, "topography-primary", tsunami::geo::TerrainSourceRole::topography, {1.0, 2.0, 3.0, 4.0, 2.0, 3.0, 4.0, 5.0}, {0U, 0U, 1U, 1U, 0U, 1U, 1U, 1U});
     const auto result = tsunami::geo::condition_terrain_from_resampled_sources(preparation, bathy, topo).value();
     CHECK(result.diagnostics.unresolved_cell_count == 0U);
     CHECK(result.diagnostics.overlap_cell_count == 2U);
@@ -389,8 +538,8 @@ TEST_CASE("terrain bounded gap fill uses one donor family and preserves complete
     auto values = std::vector<double>(12U, -4.0);
     auto mask = std::vector<std::uint8_t>(12U, 1U);
     mask[5U] = 0U;
-    auto bathy = resampled(grid, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, values, mask);
-    auto topo = resampled(grid, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(12U, 1.0), std::vector<std::uint8_t>(12U, 0U));
+    auto bathy = resampled(preparation, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, values, mask);
+    auto topo = resampled(preparation, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(12U, 1.0), std::vector<std::uint8_t>(12U, 0U));
     const auto result = tsunami::geo::condition_terrain_from_resampled_sources(preparation, bathy, topo).value();
     CHECK(result.diagnostics.initially_unresolved_cell_count == 1U);
     CHECK(result.diagnostics.filled_cell_count == 1U);
@@ -400,8 +549,8 @@ TEST_CASE("terrain bounded gap fill uses one donor family and preserves complete
     mask[6U] = 0U;
     auto topo_mask = std::vector<std::uint8_t>(12U, 0U);
     topo_mask[6U] = 1U;
-    auto mixed_bathy = resampled(grid, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, values, mask);
-    auto mixed_topo = resampled(grid, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(12U, 1.0), topo_mask);
+    auto mixed_bathy = resampled(preparation, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, values, mask);
+    auto mixed_topo = resampled(preparation, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(12U, 1.0), topo_mask);
     const auto mixed = tsunami::geo::condition_terrain_from_resampled_sources(preparation, mixed_bathy, mixed_topo);
     REQUIRE_FALSE(mixed.has_value());
     CHECK(mixed.error().code() == "geo.terrain.gap_donor_lineage_mixed");
@@ -424,8 +573,8 @@ TEST_CASE("terrain records serialise deterministically and write transactionally
     preparation.target_site = "kamaishi";
     preparation.output_uncertainty = tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::not_reported, {}, std::string{"not_reported"}};
     preparation.output_path = tsunami::geo::default_conditioned_terrain_path("conditioned-terrain");
-    auto bathy = resampled(grid, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, std::vector<double>(8U, -3.0), std::vector<std::uint8_t>(8U, 1U));
-    auto topo = resampled(grid, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(8U, 2.0), std::vector<std::uint8_t>(8U, 0U));
+    auto bathy = resampled(preparation, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, std::vector<double>(8U, -3.0), std::vector<std::uint8_t>(8U, 1U));
+    auto topo = resampled(preparation, "topography-primary", tsunami::geo::TerrainSourceRole::topography, std::vector<double>(8U, 2.0), std::vector<std::uint8_t>(8U, 0U));
     const auto result = tsunami::geo::condition_terrain_from_resampled_sources(preparation, bathy, topo).value();
     const auto first = tsunami::geo::serialise_terrain_conditioning_record(result.record).value();
     const auto second = tsunami::geo::serialise_terrain_conditioning_record(result.record).value();
@@ -439,6 +588,41 @@ TEST_CASE("terrain records serialise deterministically and write transactionally
     invalid.diagnostics.unresolved_cell_count = 1U;
     CHECK_FALSE(tsunami::geo::write_terrain_conditioning_record(out, invalid).has_value());
     CHECK(read_text(out) == first);
+}
+
+TEST_CASE("actual terrain producer records parse and reserialise byte-identically", "[geo][terrain record][readback]")
+{
+    const auto corridor = corridor_result();
+    const auto policy = grid_policy();
+    const auto grid = tsunami::geo::build_corridor_aligned_terrain_grid(corridor.corridor, corridor.record, policy).value();
+    const auto coverage = tsunami::geo::calculate_corridor_coverage(corridor.corridor, corridor.record, grid, policy).value();
+    auto preparation = tsunami::geo::TerrainConditioningPreparation{};
+    preparation.grid = grid;
+    preparation.coverage = coverage;
+    preparation.identity = terrain_identity();
+    preparation.policy.grid = policy;
+    preparation.policy.merge = tsunami::geo::TerrainMergePolicy{"bathymetry-primary", "topography-primary", 20.0, tsunami::geo::TerrainOverlapConflictPolicy::accept_priority_with_warning, "bathymetry preferred in actual producer readback fixture"};
+    preparation.policy.gaps = tsunami::geo::TerrainGapResolutionPolicy{tsunami::geo::TerrainGapResolutionKind::reject, 0.0, 0.0, 0U, 0U, 0.0, 0.0, "reject unresolved fixture gaps"};
+    preparation.corridor_identity = corridor.record.identity;
+    preparation.scenario_id = "terrain-scenario";
+    preparation.target_site = "kamaishi";
+    preparation.output_uncertainty = tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::not_reported, {}, std::string{"not_reported"}};
+    preparation.output_path = tsunami::geo::default_conditioned_terrain_path("conditioned-terrain");
+
+    auto bathy = resampled(preparation, "bathymetry-primary", tsunami::geo::TerrainSourceRole::bathymetry, {-5.0, -4.0, -3.0, -2.0, -6.0, -5.0, -4.0, -3.0}, {1U, 1U, 1U, 0U, 1U, 1U, 0U, 0U});
+    auto topo = resampled(preparation, "topography-primary", tsunami::geo::TerrainSourceRole::topography, {1.0, 2.0, 3.0, 4.0, 2.0, 3.0, 4.0, 5.0}, {0U, 0U, 1U, 1U, 0U, 1U, 1U, 1U});
+    const auto result = tsunami::geo::condition_terrain_from_resampled_sources(preparation, bathy, topo);
+    REQUIRE(result.has_value());
+    REQUIRE(tsunami::geo::validate_terrain_conditioning_record(result.value().record).has_value());
+
+    const auto serialised = tsunami::geo::serialise_terrain_conditioning_record(result.value().record);
+    REQUIRE(serialised.has_value());
+    const auto parsed = tsunami::geo::parse_terrain_conditioning_record(serialised.value(), "actual-producer-terrain");
+    REQUIRE(parsed.has_value());
+    check_record_fields_equal(parsed.value(), result.value().record);
+    const auto reserialised = tsunami::geo::serialise_terrain_conditioning_record(parsed.value());
+    REQUIRE(reserialised.has_value());
+    CHECK(reserialised.value() == serialised.value());
 }
 
 TEST_CASE("terrain public headers keep domain and adapter boundaries explicit", "[geo][terrain][architecture]")

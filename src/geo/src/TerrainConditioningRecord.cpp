@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <array>
+#include <cctype>
 #include <cmath>
 #include <filesystem>
 #include <limits>
@@ -154,6 +155,21 @@ namespace tsunami::geo
             });
         }
 
+        [[nodiscard]] auto sha256_valid(std::string_view text) noexcept -> bool
+        {
+            return text.size() == 64U &&
+                std::all_of(text.begin(), text.end(), [](char ch) {
+                    const auto value = static_cast<unsigned char>(ch);
+                    return std::isdigit(value) || (ch >= 'a' && ch <= 'f');
+                });
+        }
+
+        [[nodiscard]] auto digest_valid(const tsunami::data::ContentDigest &digest) noexcept -> bool
+        {
+            return digest.algorithm == tsunami::data::DigestAlgorithm::sha256 &&
+                sha256_valid(digest.value);
+        }
+
         [[nodiscard]] auto import_identity_complete(const GeospatialImportIdentity &identity) -> bool
         {
             return logical_id_valid(identity.import_id) && identity.import_revision > 0U &&
@@ -258,6 +274,31 @@ namespace tsunami::geo
                 finite(record.target_spacing_m) && record.target_spacing_m > 0.0 &&
                 finite(record.maximum_upsampling_factor) && record.maximum_upsampling_factor >= 1.0 &&
                 text_present(record.adapter_name) && text_present(record.adapter_version);
+        }
+
+        [[nodiscard]] auto operation_grid_text_valid(const CoordinateOperationGrid &grid) -> bool
+        {
+            return text_present(grid.short_name) &&
+                optional_text_present(grid.full_path) &&
+                optional_text_present(grid.package_name) &&
+                optional_text_present(grid.source_uri) &&
+                (!grid.declared_digest || digest_valid(*grid.declared_digest));
+        }
+
+        [[nodiscard]] auto operation_text_valid(const CoordinateOperationRecord &operation) -> bool
+        {
+            return std::all_of(operation.grids.begin(), operation.grids.end(), operation_grid_text_valid);
+        }
+
+        [[nodiscard]] auto vertical_text_valid(const VerticalTransformationSpecification &vertical) -> bool
+        {
+            return std::all_of(vertical.steps.begin(), vertical.steps.end(), [](const VerticalTransformationStep &step) {
+                return optional_text_present(step.operation_authority) &&
+                    optional_text_present(step.operation_code) &&
+                    optional_text_present(step.required_resource_name) &&
+                    text_present(step.source_reference) &&
+                    text_present(step.target_reference);
+            });
         }
 
         [[nodiscard]] auto resampling_target_consistent(
@@ -525,6 +566,12 @@ namespace tsunami::geo
         }
         if (auto vertical = validate_vertical_transformation(record.topography_resampling.vertical_steps); !vertical) {
             return vertical;
+        }
+        if (!operation_text_valid(record.bathymetry_resampling.operation) ||
+            !operation_text_valid(record.topography_resampling.operation) ||
+            !vertical_text_valid(record.bathymetry_resampling.vertical_steps) ||
+            !vertical_text_valid(record.topography_resampling.vertical_steps)) {
+            return tsunami::core::failure(record_error("terrain operation or vertical metadata contains invalid persisted text", "geo.terrain.resampling.text"));
         }
         if (record.grid.width() == 0U || record.grid.height() == 0U ||
             record.grid.width() > std::numeric_limits<std::uint64_t>::max() / record.grid.height() ||
