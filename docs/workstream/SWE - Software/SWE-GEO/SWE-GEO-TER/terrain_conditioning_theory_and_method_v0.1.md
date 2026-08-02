@@ -181,3 +181,18 @@ and GeoTIFF writes are transactional through sibling temporary files.
 G1 inspection artefacts are elevation, coverage and lineage GeoTIFFs. They are
 verification outputs for QGIS or GDAL inspection, not final simulation
 visualisation.
+
+The durable G1 terrain handoff is the conditioned-terrain artefact bundle. Its
+primary path is the `TerrainConditioningRecord` v2 output path; coverage and
+lineage are deterministic siblings and are not recorded as new schema fields.
+The lineage code vocabulary is method-neutral and versioned as
+`terrain-cell-lineage-code-v1`; zero or unknown codes are invalid and never
+default to `outside_corridor`.
+
+Read-back is a domain validation step, not a source-data import. The adapter
+checks bundle identity, role metadata, CRS semantics, vertical metadata,
+grid/extent equivalence, band type/unit/description, absence of scale/offset and
+nodata transforms, binary terrain mask, coverage classes and lineage categories.
+Only a field-equivalent `ConditionedTerrainRaster` reconstructed from all three
+artefacts may proceed to Regional2D geometry preflight and conservative
+raster-to-cell transfer.

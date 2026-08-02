@@ -116,6 +116,7 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
     find_package(GDAL CONFIG REQUIRED)
     add_library(tsunami_geo_gdal STATIC
         geo_gdal/src/GdalGeospatialImporter.cpp
+        geo_gdal/src/GdalConditionedTerrainArtifacts.cpp
         geo_gdal/src/GdalMetadataExtraction.cpp
         geo_gdal/src/GdalRasterImporter.cpp
         geo_gdal/src/GdalTerrainResampler.cpp
