@@ -104,6 +104,7 @@ Existing pre-WBS code and documents may provide historical, prototype, partial o
 - [Source term verification v0.1](SWE-R2D/source_term_verification_v0.1.md)
 - [Regional2D earthquake initialisation v0.1](SWE-R2D/regional_earthquake_initialisation_v0.1.md)
 - [Earthquake initialisation verification v0.1](SWE-R2D/earthquake_initialisation_verification_v0.1.md)
+- [Regional2D file-driven earthquake coupling v0.1](SWE-R2D/regional_file_case_earthquake_coupling_v0.1.md)
 
 ## Architecture handoff notes
 

@@ -5,14 +5,19 @@
 #include <cmath>
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 #include <limits>
+#include <map>
 #include <sstream>
 #include <stdexcept>
 #include <string_view>
 #include <system_error>
 #include <utility>
 
+#include <nlohmann/json.hpp>
+
 #include <tsunami/adapters/gmsh/GmshMeshImporter.hpp>
+#include <tsunami/coupling/SectionExport.hpp>
 #include <tsunami/data/CaseConfigurationParsing.hpp>
 #include <tsunami/data/DatasetManifestParsing.hpp>
 #include <tsunami/data/DatasetManifestValidation.hpp>
@@ -20,6 +25,7 @@
 #include <tsunami/geo/CorridorConstructionParsing.hpp>
 #include <tsunami/geo/TerrainConditioningParsing.hpp>
 #include <tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp>
+#include <tsunami/geo_gdal/GdalEarthquakeDisplacementArtifacts.hpp>
 #include <tsunami/r2d_io/RegionalCsvOutputWriter.hpp>
 
 namespace tsunami::r2d_case
@@ -60,6 +66,18 @@ namespace tsunami::r2d_case
             if (!path.empty()) {
                 error.add_context("path", path.generic_string());
             }
+            return error;
+        }
+
+        [[nodiscard]] auto io_error(std::string code, std::string message) -> tsunami::core::Error
+        {
+            auto error = tsunami::core::Error{
+                std::move(code),
+                std::move(message),
+                tsunami::core::DiagnosticCategory::persistence,
+                tsunami::core::Severity::error};
+            error.add_context("operation", operation_name)
+                .add_context("state_changed", "true");
             return error;
         }
 
@@ -332,6 +350,55 @@ namespace tsunami::r2d_case
             return input.good();
         }
 
+        [[nodiscard]] auto has_role(const tsunami::data::DatasetRecord &dataset, tsunami::data::DatasetRole role) -> bool
+        {
+            return std::find(dataset.roles.begin(), dataset.roles.end(), role) != dataset.roles.end();
+        }
+
+        [[nodiscard]] auto dataset_primary_asset(const tsunami::data::DatasetRecord &dataset)
+            -> const tsunami::data::DatasetAsset *
+        {
+            const auto found = std::find_if(dataset.assets.begin(), dataset.assets.end(), [](const auto &asset) {
+                return asset.role == tsunami::data::DatasetAssetRole::primary;
+            });
+            return found == dataset.assets.end() ? nullptr : std::addressof(*found);
+        }
+
+        [[nodiscard]] auto dataset_metadata_asset(const tsunami::data::DatasetRecord &dataset)
+            -> const tsunami::data::DatasetAsset *
+        {
+            const auto found = std::find_if(dataset.assets.begin(), dataset.assets.end(), [](const auto &asset) {
+                return asset.role == tsunami::data::DatasetAssetRole::metadata;
+            });
+            return found == dataset.assets.end() ? nullptr : std::addressof(*found);
+        }
+
+        [[nodiscard]] auto managed_asset_path(
+            const tsunami::data::DatasetAsset &asset,
+            const RegionalFileCaseRunRequest &request,
+            std::string stage) -> tsunami::core::Result<std::filesystem::path>
+        {
+            if (asset.location.kind != tsunami::data::DatasetLocationKind::managed_path ||
+                !asset.location.managed_path ||
+                !path_is_case_relative(*asset.location.managed_path)) {
+                return tsunami::core::failure<std::filesystem::path>(file_error(
+                    "r2d.file_case.contract_mismatch",
+                    "dataset asset must use a safe case-relative managed path",
+                    tsunami::core::DiagnosticCategory::validation,
+                    std::move(stage),
+                    request,
+                    false));
+            }
+            return tsunami::core::success(*asset.location.managed_path);
+        }
+
+        struct EarthquakeArtifactBinding
+        {
+            tsunami::r2d::RegionalSeabedDisplacement displacement;
+            tsunami::r2d::RegionalEarthquakeSourceMetadata metadata;
+            tsunami::geo_gdal::EarthquakeDisplacementArtifactReadDiagnostics diagnostics;
+        };
+
         [[nodiscard]] auto mesh_import_failure_is_preflight_contract(const tsunami::core::Error &error) -> bool
         {
             return error.code() == "mesh.gmsh.physical_name_missing";
@@ -448,6 +515,65 @@ namespace tsunami::r2d_case
             return tsunami::core::success(evidence);
         }
 
+        [[nodiscard]] auto validate_final_dynamic_physical_state(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const tsunami::r2d::RegionalPreparedCase &prepared_case,
+            const tsunami::r2d::RegionalCasePreparationPolicy &preparation_policy,
+            const tsunami::r2d::RegionalSolveSummary &solve_summary)
+            -> tsunami::core::Result<FinalLakeAtRestEvidence>
+        {
+            const auto &state = prepared_case.simulation_state().conserved_state();
+            const auto &bathymetry = prepared_case.bathymetry();
+            if (!state.is_bound_to(mesh) || !bathymetry.is_bound_to(mesh) ||
+                state.size() != mesh.summary().cell_count || bathymetry.size() != mesh.summary().cell_count) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final dynamic state is not bound to the imported mesh"));
+            }
+
+            auto evidence = FinalLakeAtRestEvidence{};
+            for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                const auto local_state = state.local_state(cell_id);
+                const auto bed = bathymetry.local_bed_elevation(cell_id);
+                const auto area = mesh.cell_geometry(cell_id).measure;
+                if (!std::isfinite(local_state.depth) ||
+                    !std::isfinite(local_state.momentum_x) ||
+                    !std::isfinite(local_state.momentum_y) ||
+                    !std::isfinite(bed) ||
+                    !std::isfinite(area) ||
+                    area <= 0.0 ||
+                    local_state.depth < -preparation_policy.depth_tolerance_m) {
+                    evidence.limiting_final_depth_cell_id = cell_id;
+                    evidence.limiting_final_momentum_cell_id = cell_id;
+                    return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                        final_state_error("Regional2D final dynamic state must remain finite and physically admissible", evidence));
+                }
+                if (local_state.depth < 0.0) {
+                    evidence.maximum_final_depth_residual_m = std::max(
+                        evidence.maximum_final_depth_residual_m,
+                        std::abs(local_state.depth));
+                    evidence.limiting_final_depth_cell_id = cell_id;
+                }
+                const auto momentum = std::max(std::abs(local_state.momentum_x), std::abs(local_state.momentum_y));
+                if (momentum > evidence.maximum_final_momentum_m2_per_s) {
+                    evidence.maximum_final_momentum_m2_per_s = momentum;
+                    evidence.limiting_final_momentum_cell_id = cell_id;
+                }
+            }
+            if (!std::isfinite(solve_summary.final_integrals.water_volume)) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final dynamic water volume must be finite", evidence));
+            }
+            evidence.final_water_volume_residual_m3 = std::abs(
+                solve_summary.final_integrals.water_volume -
+                prepared_case.diagnostics().total_water_volume_m3);
+            if (!std::isfinite(evidence.final_water_volume_residual_m3)) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final dynamic water-volume diagnostic is nonfinite", evidence));
+            }
+            return tsunami::core::success(evidence);
+        }
+
         [[nodiscard]] auto unsupported_modes(
             const tsunami::data::CaseConfiguration &configuration,
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<void>
@@ -459,15 +585,6 @@ namespace tsunami::r2d_case
                 return tsunami::core::failure(file_error(
                     "r2d.file_case.unsupported_prescribed_surface_transfer",
                     "file-driven Regional2D runs do not yet support prescribed free-surface transfer artifacts",
-                    tsunami::core::DiagnosticCategory::unsupported,
-                    "contract",
-                    request,
-                    false));
-            }
-            if (physics.earthquake.enabled) {
-                return tsunami::core::failure(file_error(
-                    "r2d.file_case.unsupported_earthquake_artifact",
-                    "file-driven Regional2D runs do not yet support earthquake displacement artifacts",
                     tsunami::core::DiagnosticCategory::unsupported,
                     "contract",
                     request,
@@ -680,16 +797,397 @@ namespace tsunami::r2d_case
                 diagnostics.validation_status};
         }
 
+        [[nodiscard]] auto load_earthquake_artifact(
+            const std::filesystem::path &case_root,
+            const tsunami::data::CaseConfiguration &configuration,
+            const tsunami::data::DatasetManifest &manifest,
+            const tsunami::geo::TerrainConditioningRecord &terrain_record,
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const tsunami::r2d::RegionalRasterCellTransferStencil &stencil,
+            const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<std::optional<EarthquakeArtifactBinding>>
+        {
+            const auto &earthquake = configuration.regional_2d().physics.earthquake;
+            if (!earthquake.enabled) {
+                if (configuration.datasets().earthquake_displacement || earthquake.displacement_binding) {
+                    return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(file_error(
+                        "r2d.file_case.contract_mismatch",
+                        "earthquake displacement bindings are only valid when earthquake physics is enabled",
+                        tsunami::core::DiagnosticCategory::validation,
+                        "earthquake_artifact",
+                        request,
+                        false));
+                }
+                return tsunami::core::success(std::optional<EarthquakeArtifactBinding>{});
+            }
+            if (!configuration.datasets().earthquake_displacement || !earthquake.displacement_binding ||
+                *configuration.datasets().earthquake_displacement != *earthquake.displacement_binding) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(file_error(
+                    "r2d.file_case.contract_mismatch",
+                    "enabled earthquake physics requires a matching earthquake displacement dataset binding",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "earthquake_artifact",
+                    request,
+                    false));
+            }
+            const auto dataset_id = *configuration.datasets().earthquake_displacement;
+            const auto *dataset = manifest.find_dataset(dataset_id);
+            if (dataset == nullptr ||
+                dataset->origin_kind != tsunami::data::DatasetOriginKind::generated ||
+                dataset->representation != tsunami::data::DatasetRepresentationKind::raster ||
+                !has_role(*dataset, tsunami::data::DatasetRole::earthquake_displacement)) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(file_error(
+                    "r2d.file_case.contract_mismatch",
+                    "earthquake displacement dataset must be a generated raster with the earthquake_displacement role",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "earthquake_artifact",
+                    request,
+                    false));
+            }
+            const auto *primary = dataset_primary_asset(*dataset);
+            const auto *metadata_asset = dataset_metadata_asset(*dataset);
+            if (primary == nullptr || metadata_asset == nullptr) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(file_error(
+                    "r2d.file_case.contract_mismatch",
+                    "earthquake displacement dataset must declare primary GeoTIFF and metadata assets",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "earthquake_artifact",
+                    request,
+                    false));
+            }
+            auto primary_relative = managed_asset_path(*primary, request, "earthquake_artifact");
+            auto metadata_relative = managed_asset_path(*metadata_asset, request, "earthquake_artifact");
+            if (!primary_relative || !metadata_relative) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(
+                    !primary_relative ? primary_relative.error() : metadata_relative.error());
+            }
+            auto primary_path = validate_existing_file_under_root(case_root, case_root / primary_relative.value(), request, "earthquake_artifact");
+            auto metadata_path = validate_existing_file_under_root(case_root, case_root / metadata_relative.value(), request, "earthquake_artifact");
+            if (!primary_path || !metadata_path) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(
+                    !primary_path ? primary_path.error() : metadata_path.error());
+            }
+            auto artifact = tsunami::geo_gdal::read_earthquake_displacement_artifact_with_gdal(
+                tsunami::geo_gdal::EarthquakeDisplacementArtifactPaths{primary_path.value(), metadata_path.value()},
+                terrain_record,
+                tsunami::geo_gdal::EarthquakeDisplacementArtifactReadPolicy{terrain_record.grid_policy.maximum_output_cells});
+            if (!artifact) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(wrap_failure(
+                    "r2d.file_case.earthquake_artifact_read_failed",
+                    "earthquake displacement artifact could not be read",
+                    tsunami::core::DiagnosticCategory::input_data,
+                    "earthquake_artifact",
+                    request,
+                    artifact.error(),
+                    false,
+                    primary_path.value()));
+            }
+            auto transfer = tsunami::r2d::transfer_scalar_raster_to_regional_cells(
+                mesh,
+                artifact.value().grid,
+                artifact.value().vertical_displacement_m,
+                artifact.value().valid_mask,
+                stencil,
+                dataset_id);
+            if (!transfer) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(wrap_failure(
+                    "r2d.file_case.earthquake_transfer_failed",
+                    "earthquake displacement raster could not be transferred to the Regional2D mesh",
+                    tsunami::core::DiagnosticCategory::preparation,
+                    "earthquake_transfer",
+                    request,
+                    transfer.error(),
+                    false,
+                    primary_path.value()));
+            }
+            auto displacement = tsunami::r2d::make_vertical_regional_seabed_displacement(mesh, std::move(transfer.value().values));
+            if (!displacement) {
+                return tsunami::core::failure<std::optional<EarthquakeArtifactBinding>>(wrap_failure(
+                    "r2d.file_case.earthquake_transfer_failed",
+                    "transferred earthquake displacement could not create a Regional2D seabed displacement",
+                    tsunami::core::DiagnosticCategory::preparation,
+                    "earthquake_transfer",
+                    request,
+                    displacement.error(),
+                    false,
+                    primary_path.value()));
+            }
+            auto metadata = tsunami::r2d::RegionalEarthquakeSourceMetadata{
+                tsunami::r2d::RegionalEarthquakeSourceKind::finite_fault,
+                artifact.value().metadata.event_id,
+                artifact.value().metadata.model_id,
+                artifact.value().metadata.source_format,
+                artifact.value().metadata.coordinate_reference,
+                static_cast<std::size_t>(artifact.value().metadata.subfault_count)};
+            return tsunami::core::success(std::optional<EarthquakeArtifactBinding>{
+                EarthquakeArtifactBinding{
+                    std::move(displacement).value(),
+                    std::move(metadata),
+                    artifact.value().diagnostics}});
+        }
+
+        class CouplingSectionExporter
+        {
+        public:
+            CouplingSectionExporter(
+                std::filesystem::path output_directory,
+                tsunami::coupling::RegionalCouplingSectionRequest request,
+                tsunami::coupling::RegionalCouplingSectionExportMetadata metadata,
+                bool overwrite)
+                : output_directory_{std::move(output_directory)}
+                , request_{std::move(request)}
+                , metadata_{std::move(metadata)}
+                , overwrite_{overwrite}
+            {
+            }
+
+            [[nodiscard]] auto paths() const -> tsunami::coupling::RegionalCouplingSectionExportPaths
+            {
+                const auto directory = output_directory_ / "coupling" / request_.section_id;
+                return tsunami::coupling::RegionalCouplingSectionExportPaths{
+                    directory / "metadata.json",
+                    directory / "samples.csv",
+                    directory / "history.csv"};
+            }
+
+            [[nodiscard]] auto metadata() const noexcept -> const tsunami::coupling::RegionalCouplingSectionExportMetadata &
+            {
+                return metadata_;
+            }
+
+            [[nodiscard]] auto output_state_changed() const noexcept -> bool { return output_state_changed_; }
+
+            auto prepare() -> tsunami::core::Result<void>
+            {
+                const auto export_paths = paths();
+                std::error_code ec;
+                std::filesystem::create_directories(export_paths.metadata_json.parent_path(), ec);
+                if (ec) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_prepare_failed",
+                        "could not create Regional2D coupling section output directory"));
+                }
+                output_state_changed_ = true;
+                if (overwrite_) {
+                    for (const auto &path : {export_paths.metadata_json, export_paths.samples_csv, export_paths.history_csv}) {
+                        ec.clear();
+                        const auto removed = std::filesystem::remove(path, ec);
+                        if (ec) {
+                            return tsunami::core::failure(io_error(
+                                "r2d.coupling.export_prepare_failed",
+                                "could not remove existing coupling section output before overwrite"));
+                        }
+                        output_state_changed_ = output_state_changed_ || removed;
+                    }
+                }
+                auto json = nlohmann::ordered_json{
+                    {"contract_version", metadata_.contract_version},
+                    {"section_id", metadata_.section_id},
+                    {"boundary_patch_name", metadata_.boundary_patch_name},
+                    {"mesh_id", metadata_.mesh_id},
+                    {"sample_count", metadata_.sample_count},
+                    {"fields", {"depth", "momentum_x", "momentum_y", "bed_elevation", "free_surface_elevation"}}};
+                json["samples"] = nlohmann::ordered_json::array();
+                for (const auto &sample : metadata_.samples) {
+                    json["samples"].push_back(nlohmann::ordered_json{
+                        {"local_index", sample.local_index},
+                        {"cell", sample.cell_index},
+                        {"face", sample.face_index},
+                        {"x_m", sample.x_m},
+                        {"y_m", sample.y_m}});
+                }
+                auto metadata_file = std::ofstream{export_paths.metadata_json, std::ios::binary | std::ios::trunc};
+                if (!metadata_file) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not open Regional2D coupling metadata output"));
+                }
+                metadata_file << json.dump(2) << '\n';
+                metadata_file.flush();
+                if (!metadata_file.good()) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not write Regional2D coupling metadata output"));
+                }
+                samples_header_written_ = std::filesystem::exists(export_paths.samples_csv, ec);
+                if (ec) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_prepare_failed",
+                        "could not query Regional2D coupling samples output"));
+                }
+                history_header_written_ = std::filesystem::exists(export_paths.history_csv, ec);
+                if (ec) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_prepare_failed",
+                        "could not query Regional2D coupling history output"));
+                }
+                return tsunami::core::success();
+            }
+
+            auto write_snapshot(const tsunami::r2d::RegionalSnapshot &snapshot) -> tsunami::core::Result<void>
+            {
+                if (snapshot.depth.size() != snapshot.momentum_x.size() ||
+                    snapshot.depth.size() != snapshot.momentum_y.size() ||
+                    snapshot.depth.size() != snapshot.bed_elevation.size() ||
+                    snapshot.depth.size() != snapshot.free_surface_elevation.size()) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.snapshot_invalid",
+                        "regional coupling snapshot arrays must have matching cell cardinality"));
+                }
+                const auto export_paths = paths();
+                auto samples = std::ofstream{export_paths.samples_csv, std::ios::app};
+                if (!samples) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not open Regional2D coupling samples output"));
+                }
+                samples << std::setprecision(17);
+                if (!samples_header_written_) {
+                    samples << "step,time,section_id,local_index,cell,face,x_m,y_m,depth,momentum_x,momentum_y,bed_elevation,free_surface_elevation\n";
+                    samples_header_written_ = true;
+                }
+                auto maximum_depth = 0.0;
+                auto maximum_speed = 0.0;
+                for (const auto &sample : metadata_.samples) {
+                    if (sample.cell_index >= snapshot.depth.size()) {
+                        return tsunami::core::failure(io_error(
+                            "r2d.coupling.snapshot_invalid",
+                            "coupling section sample references a cell outside the snapshot"));
+                    }
+                    const auto depth = snapshot.depth[sample.cell_index];
+                    const auto qx = snapshot.momentum_x[sample.cell_index];
+                    const auto qy = snapshot.momentum_y[sample.cell_index];
+                    maximum_depth = std::max(maximum_depth, depth);
+                    maximum_speed = std::max(maximum_speed, std::hypot(qx, qy) / std::max(1.0e-12, depth));
+                    samples << snapshot.step_index << ','
+                            << snapshot.time << ','
+                            << request_.section_id << ','
+                            << sample.local_index << ','
+                            << sample.cell_index << ','
+                            << sample.face_index << ','
+                            << sample.x_m << ','
+                            << sample.y_m << ','
+                            << depth << ','
+                            << qx << ','
+                            << qy << ','
+                            << snapshot.bed_elevation[sample.cell_index] << ','
+                            << snapshot.free_surface_elevation[sample.cell_index] << '\n';
+                }
+                samples.flush();
+                if (!samples.good()) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not write Regional2D coupling samples output"));
+                }
+
+                auto history = std::ofstream{export_paths.history_csv, std::ios::app};
+                if (!history) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not open Regional2D coupling history output"));
+                }
+                history << std::setprecision(17);
+                if (!history_header_written_) {
+                    history << "step,time,section_id,sample_count,maximum_depth,maximum_speed\n";
+                    history_header_written_ = true;
+                }
+                history << snapshot.step_index << ','
+                        << snapshot.time << ','
+                        << request_.section_id << ','
+                        << metadata_.sample_count << ','
+                        << maximum_depth << ','
+                        << maximum_speed << '\n';
+                history.flush();
+                if (!history.good()) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.coupling.export_write_failed",
+                        "could not write Regional2D coupling history output"));
+                }
+                output_state_changed_ = true;
+                return tsunami::core::success();
+            }
+
+        private:
+            std::filesystem::path output_directory_;
+            tsunami::coupling::RegionalCouplingSectionRequest request_;
+            tsunami::coupling::RegionalCouplingSectionExportMetadata metadata_;
+            bool overwrite_{};
+            bool samples_header_written_{};
+            bool history_header_written_{};
+            bool output_state_changed_{};
+        };
+
+        [[nodiscard]] auto make_coupling_exporter(
+            const std::filesystem::path &outputs,
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalFileCaseRunRequest &request)
+            -> tsunami::core::Result<std::optional<CouplingSectionExporter>>
+        {
+            if (!request.coupling_section) {
+                return tsunami::core::success(std::optional<CouplingSectionExporter>{});
+            }
+            const auto &section = *request.coupling_section;
+            if (!logical_id_valid(section.section_id) || section.boundary_patch_name.empty()) {
+                return tsunami::core::failure<std::optional<CouplingSectionExporter>>(file_error(
+                    "r2d.coupling.request_invalid",
+                    "coupling section id and boundary patch name must be valid",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "coupling_section",
+                    request,
+                    false,
+                    outputs));
+            }
+            const auto *patch = static_cast<const tsunami::fvm::BoundaryPatchRecord *>(nullptr);
+            for (std::size_t index = 0U; index < mesh.summary().boundary_patch_count; ++index) {
+                const auto &candidate = mesh.boundary_patch(tsunami::fvm::BoundaryPatchId{index});
+                if (candidate.name == section.boundary_patch_name) {
+                    patch = std::addressof(candidate);
+                    break;
+                }
+            }
+            if (patch == nullptr || patch->faces.empty()) {
+                return tsunami::core::failure<std::optional<CouplingSectionExporter>>(file_error(
+                    "r2d.coupling.request_invalid",
+                    "coupling section boundary patch is not present in the imported mesh",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "coupling_section",
+                    request,
+                    false,
+                    outputs));
+            }
+            auto metadata = tsunami::coupling::RegionalCouplingSectionExportMetadata{};
+            metadata.section_id = section.section_id;
+            metadata.boundary_patch_name = section.boundary_patch_name;
+            metadata.mesh_id = mesh.summary().id.value;
+            metadata.samples.reserve(patch->faces.size());
+            for (std::size_t local = 0U; local < patch->faces.size(); ++local) {
+                const auto face_id = patch->faces[local];
+                const auto &face = mesh.face(face_id);
+                const auto &centroid = mesh.face_geometry(face_id).centroid;
+                metadata.samples.push_back(tsunami::coupling::RegionalCouplingSectionSample{
+                    local,
+                    face.owner.value,
+                    face_id.value,
+                    centroid.x,
+                    centroid.y});
+            }
+            metadata.sample_count = metadata.samples.size();
+            return tsunami::core::success(std::optional<CouplingSectionExporter>{
+                CouplingSectionExporter{outputs, section, std::move(metadata), request.overwrite_existing_outputs}});
+        }
+
         [[nodiscard]] auto output_artifacts(
             const std::filesystem::path &directory,
-            bool has_earthquake_diagnostics) -> RegionalFileCaseRunOutputArtifacts
+            bool has_earthquake_diagnostics,
+            std::optional<tsunami::coupling::RegionalCouplingSectionExportPaths> coupling_paths)
+            -> RegionalFileCaseRunOutputArtifacts
         {
             return RegionalFileCaseRunOutputArtifacts{
                 directory / "diagnostics.csv",
                 directory / "snapshots.csv",
                 has_earthquake_diagnostics
                     ? std::optional<std::filesystem::path>{directory / "earthquake_initialisation.csv"}
-                    : std::nullopt};
+                    : std::nullopt,
+                std::move(coupling_paths)};
         }
 
     } // namespace
@@ -954,6 +1452,21 @@ namespace tsunami::r2d_case
             }
             completed_steps.push_back("terrain_transferred");
 
+            auto earthquake_artifact = load_earthquake_artifact(
+                case_root,
+                configuration.value(),
+                manifest.value(),
+                terrain_record.value(),
+                imported_mesh.value().mesh,
+                stencil.value(),
+                request);
+            if (!earthquake_artifact) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(earthquake_artifact.error());
+            }
+            if (earthquake_artifact.value()) {
+                completed_steps.push_back("earthquake_artifact_transferred");
+            }
+
             auto prepared = tsunami::r2d::prepare_regional_case(
                 tsunami::r2d::RegionalCasePreparationRequest{
                     &configuration.value(),
@@ -963,11 +1476,15 @@ namespace tsunami::r2d_case
                     &imported_mesh.value().mesh,
                     &transfer.value().bathymetry,
                     request.policy.preparation,
-                    nullptr,
+                    earthquake_artifact.value()
+                        ? &earthquake_artifact.value()->displacement
+                        : nullptr,
                     nullptr,
                     std::nullopt,
                     std::nullopt,
-                    nullptr});
+                    earthquake_artifact.value()
+                        ? &earthquake_artifact.value()->metadata
+                        : nullptr});
             if (!prepared) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
                     "r2d.file_case.preparation_failed",
@@ -1001,6 +1518,26 @@ namespace tsunami::r2d_case
                     outputs));
             }
             completed_steps.push_back("outputs_prepared");
+            auto coupling_exporter = make_coupling_exporter(outputs, imported_mesh.value().mesh, request);
+            if (!coupling_exporter) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(coupling_exporter.error());
+            }
+            if (coupling_exporter.value()) {
+                auto coupling_prepared = coupling_exporter.value()->prepare();
+                output_state_changed = output_state_changed || coupling_exporter.value()->output_state_changed();
+                if (!coupling_prepared) {
+                    return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
+                        "r2d.file_case.output_prepare_failed",
+                        "regional coupling section outputs could not be prepared",
+                        tsunami::core::DiagnosticCategory::persistence,
+                        "output_prepare",
+                        request,
+                        coupling_prepared.error(),
+                        output_state_changed,
+                        outputs));
+                }
+                completed_steps.push_back("coupling_section_prepared");
+            }
             if (const auto *forced = std::getenv("TSUNAMI_R2D_FILE_RUNNER_THROW_AFTER_OUTPUT_PREPARE");
                 forced != nullptr && std::string_view{forced} == "1") {
                 throw std::runtime_error{"forced Regional2D file-runner exception after output preparation"};
@@ -1014,7 +1551,15 @@ namespace tsunami::r2d_case
             auto snapshot_sink = [&](const tsunami::r2d::RegionalSnapshot &snapshot) {
                 auto written = writer.write_snapshot(snapshot);
                 output_state_changed = output_state_changed || writer.output_state_changed();
-                return written;
+                if (!written) {
+                    return written;
+                }
+                if (coupling_exporter.value()) {
+                    auto coupling_written = coupling_exporter.value()->write_snapshot(snapshot);
+                    output_state_changed = output_state_changed || coupling_exporter.value()->output_state_changed();
+                    return coupling_written;
+                }
+                return tsunami::core::success();
             };
             if (prepared.value().earthquake_diagnostics()) {
                 auto written = writer.write_earthquake_initialisation(*prepared.value().earthquake_diagnostics());
@@ -1079,15 +1624,23 @@ namespace tsunami::r2d_case
                     output_state_changed,
                     outputs));
             }
-            auto final_evidence = validate_final_lake_at_rest(
-                imported_mesh.value().mesh,
-                prepared.value(),
-                request.policy.preparation,
-                solve.value());
+            auto final_evidence = prepared.value().earthquake_diagnostics()
+                ? validate_final_dynamic_physical_state(
+                      imported_mesh.value().mesh,
+                      prepared.value(),
+                      request.policy.preparation,
+                      solve.value())
+                : validate_final_lake_at_rest(
+                      imported_mesh.value().mesh,
+                      prepared.value(),
+                      request.policy.preparation,
+                      solve.value());
             if (!final_evidence) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
                     "r2d.file_case.solve_failed",
-                    "Regional2D solve did not leave a local lake-at-rest final state",
+                    prepared.value().earthquake_diagnostics()
+                        ? "Regional2D solve did not leave a finite admissible dynamic final state"
+                        : "Regional2D solve did not leave a local lake-at-rest final state",
                     tsunami::core::DiagnosticCategory::execution,
                     "solve",
                     request,
@@ -1096,9 +1649,19 @@ namespace tsunami::r2d_case
                     outputs));
             }
 
-            const auto artifacts = output_artifacts(outputs, prepared.value().earthquake_diagnostics().has_value());
+            auto coupling_paths = coupling_exporter.value()
+                ? std::optional<tsunami::coupling::RegionalCouplingSectionExportPaths>{coupling_exporter.value()->paths()}
+                : std::nullopt;
+            const auto artifacts = output_artifacts(
+                outputs,
+                prepared.value().earthquake_diagnostics().has_value(),
+                coupling_paths);
             if (!file_readable(artifacts.diagnostics_csv) || !file_readable(artifacts.snapshots_csv) ||
-                (artifacts.earthquake_initialisation_csv && !file_readable(*artifacts.earthquake_initialisation_csv))) {
+                (artifacts.earthquake_initialisation_csv && !file_readable(*artifacts.earthquake_initialisation_csv)) ||
+                (artifacts.coupling_section &&
+                 (!file_readable(artifacts.coupling_section->metadata_json) ||
+                  !file_readable(artifacts.coupling_section->samples_csv) ||
+                  !file_readable(artifacts.coupling_section->history_csv)))) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(file_error(
                     "r2d.file_case.output_prepare_failed",
                     "regional CSV outputs were not closed into readable files",
@@ -1133,6 +1696,14 @@ namespace tsunami::r2d_case
             diagnostics.final_water_volume_residual_m3 = final_evidence.value().final_water_volume_residual_m3;
             diagnostics.limiting_final_depth_cell_id = final_evidence.value().limiting_final_depth_cell_id.value;
             diagnostics.limiting_final_momentum_cell_id = final_evidence.value().limiting_final_momentum_cell_id.value;
+            diagnostics.earthquake_initialised = prepared.value().earthquake_diagnostics().has_value();
+            if (prepared.value().earthquake_diagnostics()) {
+                diagnostics.earthquake_event_id = prepared.value().earthquake_diagnostics()->metadata.event_id;
+                diagnostics.earthquake_model_id = prepared.value().earthquake_diagnostics()->metadata.model_id;
+            }
+            if (coupling_exporter.value()) {
+                diagnostics.coupling_section = coupling_exporter.value()->metadata();
+            }
             diagnostics.completed_steps = std::move(completed_steps);
 
             return tsunami::core::success(RegionalFileCaseRunResult{

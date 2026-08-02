@@ -646,4 +646,161 @@ namespace tsunami::r2d
             std::move(bathymetry).value(), std::move(diagnostics)});
     }
 
+    auto transfer_scalar_raster_to_regional_cells(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const tsunami::geo::TerrainTargetGrid &grid,
+        std::span<const double> raster_values,
+        std::span<const std::uint8_t> valid_mask,
+        const RegionalRasterCellTransferStencil &stencil,
+        std::string source_id)
+        -> tsunami::core::Result<RegionalScalarRasterTransferResult>
+    {
+        const auto summary = mesh.summary();
+        const auto cell_count = grid.cell_count();
+        const auto cell_ranges = stencil.cell_ranges();
+        const auto mapped_area_m2 = stencil.mapped_area_m2();
+        const auto contributions = stencil.contributions();
+        const auto &stencil_policy = stencil.policy();
+        if (raster_values.size() != cell_count || valid_mask.size() != cell_count ||
+            stencil.mesh_binding() != tsunami::fvm::make_mesh_binding(mesh) ||
+            stencil.grid() != grid ||
+            cell_ranges.size() != summary.cell_count ||
+            mapped_area_m2.size() != summary.cell_count ||
+            !valid_policy(stencil_policy)) {
+            return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                "r2d.scalar_raster_transfer.request_invalid",
+                "scalar raster arrays and stencil layout must match their bound grid and mesh",
+                "transfer_scalar_raster_to_regional_cells",
+                &mesh,
+                std::move(source_id)));
+        }
+
+        auto result = RegionalScalarRasterTransferResult{};
+        result.values.resize(summary.cell_count);
+        result.cell_count = summary.cell_count;
+        result.total_contributor_count = contributions.size();
+        result.minimum_value = std::numeric_limits<double>::infinity();
+        result.maximum_value = -std::numeric_limits<double>::infinity();
+
+        auto expected_range_begin = std::size_t{0U};
+        for (std::size_t cell_index = 0U; cell_index < summary.cell_count; ++cell_index) {
+            const auto range = cell_ranges[cell_index];
+            if (range.begin != expected_range_begin || range.begin > contributions.size() ||
+                range.count > contributions.size() - range.begin ||
+                range.count == 0U || range.count > stencil_policy.maximum_contributors_per_cell) {
+                return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                    "r2d.scalar_raster_transfer.weight_invalid",
+                    "stencil contribution range is invalid",
+                    "transfer_scalar_raster_to_regional_cells",
+                    &mesh,
+                    source_id,
+                    cell_index));
+            }
+            expected_range_begin += range.count;
+            const auto cell_measure = mesh.cell_geometry(tsunami::fvm::CellId{cell_index}).measure;
+            const auto mapped_area = mapped_area_m2[cell_index];
+            if (!std::isfinite(cell_measure) || cell_measure <= 0.0 ||
+                !std::isfinite(mapped_area) || mapped_area <= 0.0) {
+                return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                    "r2d.scalar_raster_transfer.weight_invalid",
+                    "stencil mapped area and FVM cell measure must be finite and positive",
+                    "transfer_scalar_raster_to_regional_cells",
+                    &mesh,
+                    source_id,
+                    cell_index));
+            }
+            auto value = 0.0;
+            auto weight_sum = 0.0;
+            auto overlap_area_sum = 0.0;
+            auto previous_raster_index = std::optional<std::uint64_t>{};
+            for (std::size_t offset = 0U; offset < range.count; ++offset) {
+                const auto &contribution = contributions[range.begin + offset];
+                if (contribution.raster_cell_index >= cell_count) {
+                    return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                        "r2d.scalar_raster_transfer.source_index_invalid",
+                        "stencil contributor is outside the scalar raster",
+                        "transfer_scalar_raster_to_regional_cells",
+                        &mesh,
+                        source_id,
+                        cell_index,
+                        contribution.raster_cell_index));
+                }
+                const auto index = static_cast<std::size_t>(contribution.raster_cell_index);
+                const auto row = contribution.raster_cell_index / grid.width();
+                const auto column = contribution.raster_cell_index % grid.width();
+                if (previous_raster_index && contribution.raster_cell_index <= *previous_raster_index) {
+                    return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                        "r2d.scalar_raster_transfer.weight_invalid",
+                        "cell contributors must retain strict row-major raster order",
+                        "transfer_scalar_raster_to_regional_cells",
+                        &mesh,
+                        source_id,
+                        cell_index,
+                        contribution.raster_cell_index,
+                        row,
+                        column));
+                }
+                previous_raster_index = contribution.raster_cell_index;
+                if (valid_mask[index] == 0U || !std::isfinite(raster_values[index])) {
+                    return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                        "r2d.scalar_raster_transfer.source_value_invalid",
+                        "contributing scalar raster cell must be valid and finite",
+                        "transfer_scalar_raster_to_regional_cells",
+                        &mesh,
+                        source_id,
+                        cell_index,
+                        contribution.raster_cell_index,
+                        row,
+                        column));
+                }
+                const auto expected_weight = contribution.overlap_area_m2 / mapped_area;
+                if (!std::isfinite(contribution.weight) || contribution.weight <= 0.0 ||
+                    !std::isfinite(contribution.overlap_area_m2) || contribution.overlap_area_m2 <= 0.0 ||
+                    !std::isfinite(expected_weight)) {
+                    return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                        "r2d.scalar_raster_transfer.weight_invalid",
+                        "positive stencil contributions require finite positive areas and weights",
+                        "transfer_scalar_raster_to_regional_cells",
+                        &mesh,
+                        source_id,
+                        cell_index,
+                        contribution.raster_cell_index,
+                        row,
+                        column));
+                }
+                value += contribution.weight * raster_values[index];
+                weight_sum += contribution.weight;
+                overlap_area_sum += contribution.overlap_area_m2;
+            }
+            const auto area_tolerance = stencil_policy.absolute_area_tolerance_m2 +
+                stencil_policy.relative_area_tolerance * std::max(1.0, cell_measure);
+            const auto weight_tolerance = 32.0 * std::numeric_limits<double>::epsilon() *
+                std::max(1.0, static_cast<double>(range.count));
+            if (!std::isfinite(value) ||
+                std::abs(mapped_area - cell_measure) > area_tolerance ||
+                std::abs(overlap_area_sum - mapped_area) > area_tolerance ||
+                std::abs(weight_sum - 1.0) > weight_tolerance) {
+                return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                    "r2d.scalar_raster_transfer.weight_invalid",
+                    "cell transfer weights must sum to one and produce a finite scalar value",
+                    "transfer_scalar_raster_to_regional_cells",
+                    &mesh,
+                    source_id,
+                    cell_index));
+            }
+            result.values[cell_index] = value;
+            result.minimum_value = std::min(result.minimum_value, value);
+            result.maximum_value = std::max(result.maximum_value, value);
+        }
+        if (expected_range_begin != contributions.size()) {
+            return tsunami::core::failure<RegionalScalarRasterTransferResult>(transfer_error(
+                "r2d.scalar_raster_transfer.weight_invalid",
+                "stencil contains contributions outside its contiguous cell ranges",
+                "transfer_scalar_raster_to_regional_cells",
+                &mesh,
+                source_id));
+        }
+        return tsunami::core::success(std::move(result));
+    }
+
 } // namespace tsunami::r2d
