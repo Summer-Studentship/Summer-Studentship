@@ -874,6 +874,55 @@ namespace
         REQUIRE(dataset->SetMetadataItem(std::string{key}.c_str(), std::string{value}.c_str()) == CE_None);
     }
 
+    auto check_single_terrain_geotiff_matches(
+        const std::filesystem::path &path,
+        const tsunami::geo::ConditionedTerrainRaster &terrain) -> void
+    {
+        auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER, nullptr, nullptr, nullptr));
+        REQUIRE(raw != nullptr);
+        auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
+        REQUIRE(dataset->GetRasterXSize() == static_cast<int>(terrain.grid().width()));
+        REQUIRE(dataset->GetRasterYSize() == static_cast<int>(terrain.grid().height()));
+        REQUIRE(dataset->GetRasterCount() == 1);
+        auto *band = dataset->GetRasterBand(1);
+        REQUIRE(band != nullptr);
+        auto values = std::vector<double>(terrain.values().size());
+        REQUIRE(band->RasterIO(
+                    GF_Read,
+                    0,
+                    0,
+                    dataset->GetRasterXSize(),
+                    dataset->GetRasterYSize(),
+                    values.data(),
+                    dataset->GetRasterXSize(),
+                    dataset->GetRasterYSize(),
+                    GDT_Float64,
+                    0,
+                    0) == CE_None);
+        auto mask = std::vector<std::uint8_t>(terrain.valid_mask().size());
+        auto *mask_band = band->GetMaskBand();
+        REQUIRE(mask_band != nullptr);
+        REQUIRE(mask_band->RasterIO(
+                    GF_Read,
+                    0,
+                    0,
+                    dataset->GetRasterXSize(),
+                    dataset->GetRasterYSize(),
+                    mask.data(),
+                    dataset->GetRasterXSize(),
+                    dataset->GetRasterYSize(),
+                    GDT_Byte,
+                    0,
+                    0) == CE_None);
+        REQUIRE(values.size() == terrain.values().size());
+        for (std::size_t i = 0U; i < values.size(); ++i) {
+            CHECK(values[i] == Catch::Approx(terrain.values()[i]));
+        }
+        for (std::size_t i = 0U; i < mask.size(); ++i) {
+            CHECK((mask[i] != 0U) == (terrain.valid_mask()[i] != 0U));
+        }
+    }
+
     auto overwrite_lineage_code(const std::filesystem::path &path, std::uint16_t value) -> void
     {
         auto *raw = static_cast<GDALDataset *>(GDALOpenEx(path.string().c_str(), GDAL_OF_RASTER | GDAL_OF_UPDATE, nullptr, nullptr, nullptr));
@@ -1571,7 +1620,83 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         CHECK_FALSE(contains_transaction_directory(root));
     }
 
-    SECTION("single terrain compatibility writer preserves fixed companion sentinels on success and failure")
+    SECTION("single terrain compatibility writer rejects malformed storage before filesystem mutation")
+    {
+        struct Case
+        {
+            std::string name;
+            std::string field;
+            tsunami::geo::ConditionedTerrainRaster terrain;
+        };
+
+        const auto make_raster = [&](std::vector<double> values,
+                                     std::vector<std::uint8_t> mask,
+                                     std::vector<double> coverage,
+                                     std::vector<tsunami::geo::TerrainCellLineage> lineage) {
+            return tsunami::geo::ConditionedTerrainRaster{
+                produced.terrain.grid(),
+                std::move(values),
+                std::move(mask),
+                std::move(coverage),
+                std::move(lineage),
+                produced.terrain.minimum_elevation_m(),
+                produced.terrain.maximum_elevation_m()};
+        };
+
+        const auto cases = std::vector<Case>{
+            Case{
+                "single-short-values",
+                "values",
+                make_raster(
+                    std::vector<double>{produced.terrain.values().begin(), produced.terrain.values().end() - 1},
+                    produced.terrain.valid_mask(),
+                    produced.terrain.corridor_coverage_fraction(),
+                    produced.terrain.cell_lineage())},
+            Case{
+                "single-short-mask",
+                "valid_mask",
+                make_raster(
+                    produced.terrain.values(),
+                    std::vector<std::uint8_t>{produced.terrain.valid_mask().begin(), produced.terrain.valid_mask().end() - 1},
+                    produced.terrain.corridor_coverage_fraction(),
+                    produced.terrain.cell_lineage())},
+            Case{
+                "single-short-coverage",
+                "corridor_coverage_fraction",
+                make_raster(
+                    produced.terrain.values(),
+                    produced.terrain.valid_mask(),
+                    std::vector<double>{produced.terrain.corridor_coverage_fraction().begin(), produced.terrain.corridor_coverage_fraction().end() - 1},
+                    produced.terrain.cell_lineage())},
+            Case{
+                "single-short-lineage",
+                "cell_lineage",
+                make_raster(
+                    produced.terrain.values(),
+                    produced.terrain.valid_mask(),
+                    produced.terrain.corridor_coverage_fraction(),
+                    std::vector<tsunami::geo::TerrainCellLineage>{produced.terrain.cell_lineage().begin(), produced.terrain.cell_lineage().end() - 1})}};
+
+        for (const auto &test_case : cases) {
+            const auto root = std::filesystem::temp_directory_path() / ("tsunami-terrain-artifact-readback-" + test_case.name);
+            std::filesystem::remove_all(root);
+            const auto terrain_path = root / "outputs/terrain/single.tif";
+
+            auto written = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, test_case.terrain, produced.record);
+            REQUIRE_FALSE(written.has_value());
+            CHECK(written.error().code() == "geo.terrain.artifact_write.request_invalid");
+            CHECK(written.error().code().rfind("geo.terrain.artifact_read", 0U) != 0U);
+            CHECK(context_value(written.error(), "state_changed") == "false");
+            CHECK(context_value(written.error(), "field") == test_case.field);
+            CHECK_FALSE(std::filesystem::exists(root));
+            CHECK_FALSE(std::filesystem::exists(terrain_path));
+            CHECK_FALSE(std::filesystem::exists(path_with_suffix(terrain_path, ".coverage.tmp.tif")));
+            CHECK_FALSE(std::filesystem::exists(path_with_suffix(terrain_path, ".lineage.tmp.tif")));
+            CHECK_FALSE(contains_transaction_directory(root));
+        }
+    }
+
+    SECTION("single terrain compatibility writer preserves sentinels and reports truthful commit cleanup")
     {
         const auto root = readback_case_root("single-writer");
         const auto terrain_path = root / "outputs/terrain/single.tif";
@@ -1584,14 +1709,52 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
 
         auto written = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
         REQUIRE(written.has_value());
+        check_single_terrain_geotiff_matches(terrain_path, produced.terrain);
         check_snapshot_restored(snapshot);
+
+        const auto fail_cleanup = ScopedGdalConfig{"TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_SINGLE_COMPANION_CLEANUP", "YES"};
+        auto cleanup_failed = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
+        REQUIRE_FALSE(cleanup_failed.has_value());
+        CHECK(cleanup_failed.error().code() == "geo.terrain.artifact_write.cleanup_failed");
+        CHECK(cleanup_failed.error().code().rfind("geo.terrain.artifact_read", 0U) != 0U);
+        CHECK(context_value(cleanup_failed.error(), "state_changed") == "true");
+        CHECK(context_value(cleanup_failed.error(), "recovery_directory_count") != "0");
+        CHECK(cleanup_failed.error().context_value("recovery_directory_0").has_value());
+        check_single_terrain_geotiff_matches(terrain_path, produced.terrain);
+        check_snapshot_restored(snapshot);
+    }
+
+    SECTION("single terrain compatibility writer preserves existing target on pre-commit bundle failure")
+    {
+        const auto root = readback_case_root("single-writer-precommit");
+        const auto terrain_path = root / "outputs/terrain/single.tif";
+        const auto sentinels = std::vector<std::filesystem::path>{
+            std::filesystem::path{terrain_path.string() + ".coverage.tmp.tif"},
+            std::filesystem::path{terrain_path.string() + ".lineage.tmp.tif"}};
+        write_bytes(sentinels[0U], "do not delete coverage");
+        write_bytes(sentinels[1U], "do not delete lineage");
+        auto written = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
+        REQUIRE(written.has_value());
+        const auto snapshot = snapshot_files({
+            terrain_path,
+            path_with_suffix(terrain_path, ".msk"),
+            path_with_suffix(terrain_path, ".aux.xml"),
+            sentinels[0U],
+            sentinels[1U]});
 
         const auto fail_after_terrain = ScopedGdalConfig{"TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_AFTER_TERRAIN_STAGING", "YES"};
         auto failed = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
         REQUIRE_FALSE(failed.has_value());
         CHECK(failed.error().code() == "geo.terrain.artifact_write.temporary_validation_failed");
+        CHECK(failed.error().code().rfind("geo.terrain.artifact_read", 0U) != 0U);
         check_snapshot_restored(snapshot);
         CHECK_FALSE(contains_transaction_directory(root));
+    }
+
+    SECTION("single terrain compatibility writer uses artifact transaction naming without random_device")
+    {
+        CHECK(read_text("src/geo_gdal/src/GdalTerrainResampler.cpp").find("std::random_device") == std::string::npos);
+        CHECK(read_text("src/geo_gdal/src/GdalConditionedTerrainArtifacts.cpp").find(".tsunami-terrain-single-artifact-txn-") == std::string::npos);
     }
 }
 

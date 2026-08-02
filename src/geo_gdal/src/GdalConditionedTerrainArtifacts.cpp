@@ -1453,13 +1453,16 @@ namespace tsunami::geo_gdal
             (void)result;
         }
 
-        [[nodiscard]] auto cleanup_failed_error(const CleanupResult &cleanup) -> tsunami::core::Error
+        [[nodiscard]] auto cleanup_failed_error(
+            const CleanupResult &cleanup,
+            std::string message = "conditioned terrain artefact bundle is committed but transaction-owned backups could not be fully removed",
+            std::string rule_id = "geo.terrain.artifact.transaction_cleanup") -> tsunami::core::Error
         {
             auto error = write_error(
                 "cleanup_failed",
-                "conditioned terrain artefact bundle is committed but transaction-owned backups could not be fully removed",
+                std::move(message),
                 tsunami::core::DiagnosticCategory::input_data,
-                "geo.terrain.artifact.transaction_cleanup",
+                std::move(rule_id),
                 true);
             error.add_context("recovery_directory_count", std::to_string(cleanup.retained_directories.size()));
             for (std::size_t i = 0U; i < cleanup.retained_directories.size(); ++i) {
@@ -1653,6 +1656,58 @@ namespace tsunami::geo_gdal
             }
             return tsunami::core::success();
         }
+
+        [[nodiscard]] auto validate_single_writer_request(
+            const std::filesystem::path &terrain_path,
+            const tsunami::geo::ConditionedTerrainRaster &terrain,
+            const tsunami::geo::TerrainConditioningRecord &record) -> tsunami::core::Result<std::filesystem::path>
+        {
+            if (auto valid = tsunami::geo::validate_terrain_conditioning_record(record); !valid) {
+                return tsunami::core::failure<std::filesystem::path>(write_error("request_invalid", "accepted terrain record is invalid", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.record")
+                    .with_cause_code(valid.error().code()));
+            }
+            const auto target = terrain_path.lexically_normal();
+            const auto validation_companion = parent_or_current(target) / ".tsunami-terrain-artifact-txn-validation-placeholder";
+            const auto validation_paths = ConditionedTerrainArtifactPaths{
+                target,
+                validation_companion / "coverage.tif",
+                validation_companion / "lineage.tif"};
+            if (auto valid = validate_bundle_paths(validation_paths, false); !valid) {
+                return tsunami::core::failure<std::filesystem::path>(write_error("path_invalid", "conditioned terrain compatibility artefact output path is invalid", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.path_bundle")
+                    .with_cause_code(valid.error().code()));
+            }
+            if (auto valid = validate_terrain_against_record(terrain, record); !valid) {
+                return tsunami::core::failure<std::filesystem::path>(valid.error());
+            }
+            return tsunami::core::success(target);
+        }
+
+        [[nodiscard]] auto cleanup_single_writer_companion_directory(const std::filesystem::path &directory) -> CleanupResult
+        {
+            auto result = CleanupResult{};
+            if (test_config_enabled("TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_SINGLE_COMPANION_CLEANUP")) {
+                result.ok = false;
+                result.retained_directories.push_back(directory);
+                return result;
+            }
+            if (!remove_owned_tree(directory)) {
+                result.ok = false;
+                result.retained_directories.push_back(directory);
+            }
+            return result;
+        }
+
+        [[nodiscard]] auto single_writer_cleanup_failed_error(
+            const CleanupResult &cleanup,
+            bool committed) -> tsunami::core::Error
+        {
+            return cleanup_failed_error(
+                cleanup,
+                committed
+                    ? "conditioned terrain compatibility target is committed but transaction-owned companion artefacts could not be fully removed"
+                    : "failed to remove transaction-owned conditioned terrain compatibility companion artefacts",
+                "geo.terrain.artifact.single_writer_companion");
+        }
     }
 
     auto make_conditioned_terrain_artifact_paths(
@@ -1783,6 +1838,50 @@ namespace tsunami::geo_gdal
             if (!replaced) {
                 ignore_cleanup(cleanup_staging(transaction.value()));
                 return replaced;
+            }
+            return tsunami::core::success();
+        } catch (const std::exception &ex) {
+            return tsunami::core::failure(write_error("temporary_validation_failed", ex.what(), tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.no_throw"));
+        }
+    }
+
+    auto write_conditioned_terrain_geotiff_with_gdal(
+        const std::filesystem::path &path,
+        const tsunami::geo::ConditionedTerrainRaster &terrain,
+        const tsunami::geo::TerrainConditioningRecord &record)
+        -> tsunami::core::Result<void>
+    {
+        try {
+            auto target = validate_single_writer_request(path, terrain, record);
+            if (!target) {
+                return tsunami::core::failure(target.error());
+            }
+
+            auto companion_directory = create_transaction_directory(parent_or_current(target.value()));
+            if (!companion_directory) {
+                return tsunami::core::failure(companion_directory.error());
+            }
+
+            auto paths = ConditionedTerrainArtifactPaths{
+                target.value(),
+                (companion_directory.value() / "coverage.tif").lexically_normal(),
+                (companion_directory.value() / "lineage.tif").lexically_normal()};
+            auto result = write_conditioned_terrain_artifacts_with_gdal(paths, terrain, record);
+            if (!result && result.error().code() == "geo.terrain.artifact_write.cleanup_failed") {
+                return result;
+            }
+
+            const auto cleanup = cleanup_single_writer_companion_directory(companion_directory.value());
+            if (!result) {
+                if (!cleanup.ok) {
+                    auto error = single_writer_cleanup_failed_error(cleanup, false);
+                    error.with_cause_code(result.error().code());
+                    return tsunami::core::failure(error);
+                }
+                return result;
+            }
+            if (!cleanup.ok) {
+                return tsunami::core::failure(single_writer_cleanup_failed_error(cleanup, true));
             }
             return tsunami::core::success();
         } catch (const std::exception &ex) {
