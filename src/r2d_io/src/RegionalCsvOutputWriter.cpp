@@ -54,6 +54,44 @@ namespace tsunami::r2d_io
             return tsunami::core::success();
         }
 
+        [[nodiscard]] auto snapshot_cardinality_error(
+            std::string field,
+            std::size_t expected,
+            std::size_t actual) -> tsunami::core::Error
+        {
+            auto error = tsunami::core::Error{
+                "r2d.io.csv.snapshot_invalid",
+                "regional snapshot arrays must have matching cell cardinality",
+                tsunami::core::DiagnosticCategory::validation,
+                tsunami::core::Severity::error};
+            error.add_context("field", std::move(field))
+                .add_context("expected", std::to_string(expected))
+                .add_context("actual", std::to_string(actual));
+            return error;
+        }
+
+        [[nodiscard]] auto validate_snapshot_cardinality(const tsunami::r2d::RegionalSnapshot &snapshot)
+            -> tsunami::core::Result<void>
+        {
+            const auto expected = snapshot.depth.size();
+            if (snapshot.momentum_x.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("momentum_x", expected, snapshot.momentum_x.size()));
+            }
+            if (snapshot.momentum_y.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("momentum_y", expected, snapshot.momentum_y.size()));
+            }
+            if (snapshot.bed_elevation.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("bed_elevation", expected, snapshot.bed_elevation.size()));
+            }
+            if (snapshot.free_surface_elevation.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error(
+                    "free_surface_elevation",
+                    expected,
+                    snapshot.free_surface_elevation.size()));
+            }
+            return tsunami::core::success();
+        }
+
         [[nodiscard]] auto restriction_name(tsunami::r2d::TimestepRestrictionKind restriction) -> std::string_view
         {
             switch (restriction) {
@@ -274,6 +312,9 @@ namespace tsunami::r2d_io
     auto RegionalCsvOutputWriter::write_snapshot(const tsunami::r2d::RegionalSnapshot &snapshot)
         -> tsunami::core::Result<void>
     {
+        if (auto valid = validate_snapshot_cardinality(snapshot); !valid) {
+            return valid;
+        }
         auto file = open_append(output_directory_ / "snapshots.csv", output_state_changed_);
         if (!file) {
             return tsunami::core::failure(file.error());

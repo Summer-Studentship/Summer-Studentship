@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <filesystem>
 #include <fstream>
+#include <iterator>
 #include <string>
+#include <string_view>
 
 #include <tsunami/r2d_io/RegionalCsvOutputWriter.hpp>
 
@@ -64,6 +66,20 @@ namespace
         snapshot.bed_elevation = {2.0};
         snapshot.free_surface_elevation = {3.0};
         return snapshot;
+    }
+
+    [[nodiscard]] auto read_text(const std::filesystem::path &path) -> std::string
+    {
+        auto input = std::ifstream{path, std::ios::binary};
+        REQUIRE(input);
+        return std::string{std::istreambuf_iterator<char>{input}, std::istreambuf_iterator<char>{}};
+    }
+
+    [[nodiscard]] auto context_value(const tsunami::core::Error &error, std::string_view key) -> std::string
+    {
+        auto value = error.context_value(key);
+        REQUIRE(value.has_value());
+        return *value;
     }
 }
 
@@ -165,5 +181,100 @@ TEST_CASE("Regional CSV writer reports preparation and write failures", "[r2d][i
         REQUIRE(first_header != std::string::npos);
         CHECK(diagnostics_text.find("step,start_time,end_time", first_header + 1U) == std::string::npos);
         std::filesystem::remove_all(output_dir);
+    }
+}
+
+TEST_CASE("Regional CSV writer rejects malformed snapshots before filesystem mutation", "[r2d][io]")
+{
+    const auto require_snapshot_invalid =
+        [](std::string_view name, std::string_view field, auto mutate, std::size_t expected, std::size_t actual) {
+            const auto output_dir = std::filesystem::temp_directory_path() / ("tsunami-r2d-csv-invalid-snapshot-" + std::string{name});
+            std::filesystem::remove_all(output_dir);
+            std::filesystem::create_directories(output_dir);
+            {
+                auto sentinel = std::ofstream{output_dir / "snapshots.csv", std::ios::binary};
+                REQUIRE(sentinel);
+                sentinel << "existing snapshot sentinel\n";
+                REQUIRE(sentinel.good());
+            }
+            const auto before = read_text(output_dir / "snapshots.csv");
+            auto writer = tsunami::r2d_io::RegionalCsvOutputWriter{output_dir, false};
+            auto snapshot = snapshot_row();
+            mutate(snapshot);
+
+            auto result = writer.write_snapshot(snapshot);
+            REQUIRE_FALSE(result.has_value());
+            CHECK(result.error().code() == "r2d.io.csv.snapshot_invalid");
+            CHECK(context_value(result.error(), "field") == field);
+            CHECK(context_value(result.error(), "expected") == std::to_string(expected));
+            CHECK(context_value(result.error(), "actual") == std::to_string(actual));
+            CHECK(read_text(output_dir / "snapshots.csv") == before);
+            CHECK_FALSE(writer.output_state_changed());
+            std::filesystem::remove_all(output_dir);
+        };
+
+    SECTION("short momentum_x")
+    {
+        require_snapshot_invalid("short-momentum-x", "momentum_x", [](auto &snapshot) {
+            snapshot.depth = {1.0, 2.0};
+            snapshot.momentum_x = {0.0};
+            snapshot.momentum_y = {0.0, 0.0};
+            snapshot.bed_elevation = {2.0, 3.0};
+            snapshot.free_surface_elevation = {3.0, 4.0};
+        },
+                                  2U,
+                                  1U);
+    }
+
+    SECTION("short momentum_y")
+    {
+        require_snapshot_invalid("short-momentum-y", "momentum_y", [](auto &snapshot) {
+            snapshot.depth = {1.0, 2.0};
+            snapshot.momentum_x = {0.0, 0.0};
+            snapshot.momentum_y = {0.0};
+            snapshot.bed_elevation = {2.0, 3.0};
+            snapshot.free_surface_elevation = {3.0, 4.0};
+        },
+                                  2U,
+                                  1U);
+    }
+
+    SECTION("short bed elevation")
+    {
+        require_snapshot_invalid("short-bed-elevation", "bed_elevation", [](auto &snapshot) {
+            snapshot.depth = {1.0, 2.0};
+            snapshot.momentum_x = {0.0, 0.0};
+            snapshot.momentum_y = {0.0, 0.0};
+            snapshot.bed_elevation = {2.0};
+            snapshot.free_surface_elevation = {3.0, 4.0};
+        },
+                                  2U,
+                                  1U);
+    }
+
+    SECTION("short free-surface elevation")
+    {
+        require_snapshot_invalid("short-free-surface", "free_surface_elevation", [](auto &snapshot) {
+            snapshot.depth = {1.0, 2.0};
+            snapshot.momentum_x = {0.0, 0.0};
+            snapshot.momentum_y = {0.0, 0.0};
+            snapshot.bed_elevation = {2.0, 3.0};
+            snapshot.free_surface_elevation = {3.0};
+        },
+                                  2U,
+                                  1U);
+    }
+
+    SECTION("array longer than depth")
+    {
+        require_snapshot_invalid("long-momentum-x", "momentum_x", [](auto &snapshot) {
+            snapshot.depth = {1.0};
+            snapshot.momentum_x = {0.0, 0.0};
+            snapshot.momentum_y = {0.0};
+            snapshot.bed_elevation = {2.0};
+            snapshot.free_surface_elevation = {3.0};
+        },
+                                  1U,
+                                  2U);
     }
 }

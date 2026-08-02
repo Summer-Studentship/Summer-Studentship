@@ -332,11 +332,138 @@ namespace tsunami::r2d_case
             return input.good();
         }
 
+        [[nodiscard]] auto mesh_import_failure_is_preflight_contract(const tsunami::core::Error &error) -> bool
+        {
+            return error.code() == "mesh.gmsh.physical_name_missing";
+        }
+
+        struct FinalLakeAtRestEvidence
+        {
+            tsunami::core::Real maximum_final_depth_residual_m{};
+            tsunami::core::Real maximum_final_momentum_m2_per_s{};
+            tsunami::core::Real final_water_volume_residual_m3{};
+            tsunami::fvm::CellId limiting_final_depth_cell_id{};
+            tsunami::fvm::CellId limiting_final_momentum_cell_id{};
+        };
+
+        [[nodiscard]] auto machine_tolerance(tsunami::core::Real scale) noexcept -> tsunami::core::Real
+        {
+            return 128.0 * std::numeric_limits<tsunami::core::Real>::epsilon() *
+                   std::max(tsunami::core::Real{1.0}, std::abs(scale));
+        }
+
+        [[nodiscard]] auto final_state_error(
+            std::string message,
+            FinalLakeAtRestEvidence evidence = {}) -> tsunami::core::Error
+        {
+            auto error = tsunami::core::Error{
+                "r2d.file_case.final_state_invalid",
+                std::move(message),
+                tsunami::core::DiagnosticCategory::execution,
+                tsunami::core::Severity::error};
+            error.add_context("maximum_final_depth_residual_m", std::to_string(evidence.maximum_final_depth_residual_m))
+                .add_context("maximum_final_momentum_m2_per_s", std::to_string(evidence.maximum_final_momentum_m2_per_s))
+                .add_context("final_water_volume_residual_m3", std::to_string(evidence.final_water_volume_residual_m3))
+                .add_context("limiting_final_depth_cell_id", std::to_string(evidence.limiting_final_depth_cell_id.value))
+                .add_context("limiting_final_momentum_cell_id", std::to_string(evidence.limiting_final_momentum_cell_id.value));
+            return error;
+        }
+
+        [[nodiscard]] auto validate_final_lake_at_rest(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const tsunami::r2d::RegionalPreparedCase &prepared_case,
+            const tsunami::r2d::RegionalCasePreparationPolicy &preparation_policy,
+            const tsunami::r2d::RegionalSolveSummary &solve_summary)
+            -> tsunami::core::Result<FinalLakeAtRestEvidence>
+        {
+            const auto &state = prepared_case.simulation_state().conserved_state();
+            const auto &bathymetry = prepared_case.bathymetry();
+            if (!state.is_bound_to(mesh) || !bathymetry.is_bound_to(mesh) ||
+                state.size() != mesh.summary().cell_count || bathymetry.size() != mesh.summary().cell_count) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final state is not bound to the imported mesh"));
+            }
+
+            auto evidence = FinalLakeAtRestEvidence{};
+            auto total_mesh_area = tsunami::core::Real{0.0};
+            for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                const auto local_state = state.local_state(cell_id);
+                const auto bed = bathymetry.local_bed_elevation(cell_id);
+                const auto area = mesh.cell_geometry(cell_id).measure;
+                if (!std::isfinite(local_state.depth) ||
+                    !std::isfinite(local_state.momentum_x) ||
+                    !std::isfinite(local_state.momentum_y) ||
+                    !std::isfinite(bed) ||
+                    !std::isfinite(area) ||
+                    area <= 0.0) {
+                    evidence.limiting_final_depth_cell_id = cell_id;
+                    evidence.limiting_final_momentum_cell_id = cell_id;
+                    return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                        final_state_error("Regional2D final state, bathymetry and cell areas must be finite", evidence));
+                }
+
+                total_mesh_area += area;
+                const auto expected_depth = std::max<tsunami::core::Real>(
+                    0.0,
+                    preparation_policy.pre_event_free_surface_elevation_m - bed);
+                const auto depth_scale = std::max(std::abs(local_state.depth), std::abs(expected_depth));
+                const auto depth_residual = std::abs(local_state.depth - expected_depth);
+                if (depth_residual > evidence.maximum_final_depth_residual_m) {
+                    evidence.maximum_final_depth_residual_m = depth_residual;
+                    evidence.limiting_final_depth_cell_id = cell_id;
+                }
+                const auto momentum = std::max(std::abs(local_state.momentum_x), std::abs(local_state.momentum_y));
+                if (momentum > evidence.maximum_final_momentum_m2_per_s) {
+                    evidence.maximum_final_momentum_m2_per_s = momentum;
+                    evidence.limiting_final_momentum_cell_id = cell_id;
+                }
+
+                if (depth_residual > preparation_policy.depth_tolerance_m + machine_tolerance(depth_scale) ||
+                    std::abs(local_state.momentum_x) > preparation_policy.zero_momentum_tolerance ||
+                    std::abs(local_state.momentum_y) > preparation_policy.zero_momentum_tolerance) {
+                    return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                        final_state_error("Regional2D final state is not locally a lake at rest", evidence));
+                }
+            }
+            if (!std::isfinite(total_mesh_area) || total_mesh_area <= 0.0) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final mesh area is invalid", evidence));
+            }
+
+            evidence.final_water_volume_residual_m3 = std::abs(
+                solve_summary.final_integrals.water_volume -
+                prepared_case.diagnostics().total_water_volume_m3);
+            const auto volume_scale = std::max(
+                std::abs(solve_summary.final_integrals.water_volume),
+                std::abs(prepared_case.diagnostics().total_water_volume_m3));
+            const auto volume_tolerance =
+                preparation_policy.depth_tolerance_m * total_mesh_area +
+                machine_tolerance(volume_scale);
+            if (!std::isfinite(evidence.final_water_volume_residual_m3) ||
+                evidence.final_water_volume_residual_m3 > volume_tolerance) {
+                return tsunami::core::failure<FinalLakeAtRestEvidence>(
+                    final_state_error("Regional2D final water volume is inconsistent with the prepared lake at rest", evidence));
+            }
+            return tsunami::core::success(evidence);
+        }
+
         [[nodiscard]] auto unsupported_modes(
             const tsunami::data::CaseConfiguration &configuration,
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<void>
         {
             const auto &physics = configuration.regional_2d().physics;
+            if (physics.earthquake.surface_transfer == tsunami::data::SurfaceTransfer::prescribed ||
+                physics.earthquake.prescribed_surface_binding.has_value() ||
+                configuration.datasets().prescribed_surface.has_value()) {
+                return tsunami::core::failure(file_error(
+                    "r2d.file_case.unsupported_prescribed_surface_transfer",
+                    "file-driven Regional2D runs do not yet support prescribed free-surface transfer artifacts",
+                    tsunami::core::DiagnosticCategory::unsupported,
+                    "contract",
+                    request,
+                    false));
+            }
             if (physics.earthquake.enabled) {
                 return tsunami::core::failure(file_error(
                     "r2d.file_case.unsupported_earthquake_artifact",
@@ -346,14 +473,19 @@ namespace tsunami::r2d_case
                     request,
                     false));
             }
-            if (physics.manning.kind == tsunami::data::ManningConfigurationKind::dataset ||
-                physics.coriolis.kind == tsunami::data::CoriolisConfigurationKind::dataset ||
-                physics.earthquake.surface_transfer == tsunami::data::SurfaceTransfer::prescribed ||
-                physics.earthquake.prescribed_surface_binding.has_value() ||
-                configuration.datasets().prescribed_surface.has_value()) {
+            if (physics.manning.kind == tsunami::data::ManningConfigurationKind::dataset) {
                 return tsunami::core::failure(file_error(
-                    "r2d.file_case.unsupported_dataset_source",
-                    "file-driven Regional2D runs require uniform/constant sources and passive free-surface transfer",
+                    "r2d.file_case.unsupported_manning_dataset_source",
+                    "file-driven Regional2D runs do not yet support dataset-backed Manning source artifacts",
+                    tsunami::core::DiagnosticCategory::unsupported,
+                    "contract",
+                    request,
+                    false));
+            }
+            if (physics.coriolis.kind == tsunami::data::CoriolisConfigurationKind::dataset) {
+                return tsunami::core::failure(file_error(
+                    "r2d.file_case.unsupported_coriolis_dataset_source",
+                    "file-driven Regional2D runs do not yet support dataset-backed Coriolis source artifacts",
                     tsunami::core::DiagnosticCategory::unsupported,
                     "contract",
                     request,
@@ -599,6 +731,10 @@ namespace tsunami::r2d_case
             }
             completed_steps.push_back("case_read");
 
+            if (auto unsupported = unsupported_modes(configuration.value(), request); !unsupported) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(unsupported.error());
+            }
+
             auto manifest_path = resolve_input_file(case_root, configuration.value().datasets().manifest_path, request, "manifest");
             if (!manifest_path) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(manifest_path.error());
@@ -679,9 +815,6 @@ namespace tsunami::r2d_case
             }
             completed_steps.push_back("terrain_record_read");
 
-            if (auto unsupported = unsupported_modes(configuration.value(), request); !unsupported) {
-                return tsunami::core::failure<RegionalFileCaseRunResult>(unsupported.error());
-            }
             if (auto valid = validate_cross_contracts(configuration.value(), manifest.value(), corridor_record.value(), terrain_record.value(), request); !valid) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(valid.error());
             }
@@ -747,11 +880,16 @@ namespace tsunami::r2d_case
             }
             auto imported_mesh = tsunami::adapters::gmsh::import_gmsh_msh41_ascii_mesh(mesh_path.value());
             if (!imported_mesh) {
+                const auto preflight_contract_failure = mesh_import_failure_is_preflight_contract(imported_mesh.error());
                 return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
-                    "r2d.file_case.mesh_import_failed",
-                    "Gmsh MSH 4.1 Regional2D mesh could not be imported",
-                    tsunami::core::DiagnosticCategory::input_data,
-                    "mesh",
+                    preflight_contract_failure ? "r2d.file_case.preflight_failed" : "r2d.file_case.mesh_import_failed",
+                    preflight_contract_failure
+                        ? "Regional2D mesh import metadata is missing a required preflight physical group"
+                        : "Gmsh MSH 4.1 Regional2D mesh could not be imported",
+                    preflight_contract_failure
+                        ? tsunami::core::DiagnosticCategory::validation
+                        : tsunami::core::DiagnosticCategory::input_data,
+                    preflight_contract_failure ? "preflight" : "mesh",
                     request,
                     imported_mesh.error(),
                     false,
@@ -929,23 +1067,31 @@ namespace tsunami::r2d_case
             }
             const auto time_scale = std::max<tsunami::core::Real>(1.0, std::abs(solve_request.value().final_time));
             const auto time_tolerance = solve_request.value().time_policy.timestep_comparison_tolerance * time_scale;
-            const auto volume_scale = std::max<tsunami::core::Real>(
-                1.0,
-                std::abs(prepared.value().diagnostics().total_water_volume_m3));
-            const auto volume_tolerance = solve_request.value().time_policy.timestep_comparison_tolerance * volume_scale;
             if (!solve.value().completed_successfully ||
                 solve.value().accepted_step_count > solve_request.value().maximum_steps ||
-                std::abs(solve.value().final_time - solve_request.value().final_time) > time_tolerance ||
-                !prepared.value().simulation_state().conserved_state().is_bound_to(imported_mesh.value().mesh) ||
-                std::abs(solve.value().final_integrals.water_volume - prepared.value().diagnostics().total_water_volume_m3) > volume_tolerance ||
-                std::abs(solve.value().final_integrals.momentum_x) > request.policy.preparation.zero_momentum_tolerance ||
-                std::abs(solve.value().final_integrals.momentum_y) > request.policy.preparation.zero_momentum_tolerance) {
+                std::abs(solve.value().final_time - solve_request.value().final_time) > time_tolerance) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(file_error(
                     "r2d.file_case.solve_failed",
                     "Regional2D solve did not reach the requested final state",
                     tsunami::core::DiagnosticCategory::execution,
                     "solve",
                     request,
+                    output_state_changed,
+                    outputs));
+            }
+            auto final_evidence = validate_final_lake_at_rest(
+                imported_mesh.value().mesh,
+                prepared.value(),
+                request.policy.preparation,
+                solve.value());
+            if (!final_evidence) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
+                    "r2d.file_case.solve_failed",
+                    "Regional2D solve did not leave a local lake-at-rest final state",
+                    tsunami::core::DiagnosticCategory::execution,
+                    "solve",
+                    request,
+                    final_evidence.error(),
                     output_state_changed,
                     outputs));
             }
@@ -982,6 +1128,11 @@ namespace tsunami::r2d_case
             diagnostics.terrain_transfer = transfer.value().diagnostics;
             diagnostics.preparation = prepared.value().diagnostics();
             diagnostics.solve = solve.value();
+            diagnostics.maximum_final_depth_residual_m = final_evidence.value().maximum_final_depth_residual_m;
+            diagnostics.maximum_final_momentum_m2_per_s = final_evidence.value().maximum_final_momentum_m2_per_s;
+            diagnostics.final_water_volume_residual_m3 = final_evidence.value().final_water_volume_residual_m3;
+            diagnostics.limiting_final_depth_cell_id = final_evidence.value().limiting_final_depth_cell_id.value;
+            diagnostics.limiting_final_momentum_cell_id = final_evidence.value().limiting_final_momentum_cell_id.value;
             diagnostics.completed_steps = std::move(completed_steps);
 
             return tsunami::core::success(RegionalFileCaseRunResult{

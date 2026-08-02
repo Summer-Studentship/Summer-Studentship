@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iterator>
 #include <optional>
+#include <sstream>
 #include <string>
 #include <string_view>
 #include <utility>
@@ -42,6 +43,18 @@ namespace
         std::filesystem::path terrain_record{"manifests/terrain/conditioned-terrain.json"};
         std::filesystem::path mesh{"meshes/regional-square.msh"};
         std::filesystem::path override_corridor{"manifests/corridors/override-corridor.json"};
+    };
+
+    struct SnapshotCsvRow
+    {
+        std::size_t step{};
+        double time{};
+        std::size_t cell{};
+        double depth{};
+        double momentum_x{};
+        double momentum_y{};
+        double bed_elevation{};
+        double free_surface_elevation{};
     };
 
     class ScopedEnvironmentFlag
@@ -98,6 +111,43 @@ namespace
         REQUIRE(file);
         file << text;
         REQUIRE(file.good());
+    }
+
+    [[nodiscard]] auto split_csv_line(const std::string &line) -> std::vector<std::string>
+    {
+        auto values = std::vector<std::string>{};
+        auto stream = std::stringstream{line};
+        auto value = std::string{};
+        while (std::getline(stream, value, ',')) {
+            values.push_back(value);
+        }
+        return values;
+    }
+
+    [[nodiscard]] auto read_snapshot_rows(const std::filesystem::path &path) -> std::vector<SnapshotCsvRow>
+    {
+        auto input = std::ifstream{path};
+        REQUIRE(input);
+        auto line = std::string{};
+        REQUIRE(std::getline(input, line));
+        auto rows = std::vector<SnapshotCsvRow>{};
+        while (std::getline(input, line)) {
+            if (line.empty()) {
+                continue;
+            }
+            const auto values = split_csv_line(line);
+            REQUIRE(values.size() == 8U);
+            rows.push_back(SnapshotCsvRow{
+                static_cast<std::size_t>(std::stoull(values[0])),
+                std::stod(values[1]),
+                static_cast<std::size_t>(std::stoull(values[2])),
+                std::stod(values[3]),
+                std::stod(values[4]),
+                std::stod(values[5]),
+                std::stod(values[6]),
+                std::stod(values[7])});
+        }
+        return rows;
     }
 
     [[nodiscard]] auto replace_all(std::string text, std::string_view from, std::string_view to) -> std::string
@@ -540,6 +590,32 @@ $EndElements
         return fixture;
     }
 
+    template <class Mutator>
+    auto rewrite_case_configuration(const FileCaseFixture &fixture, Mutator mutate) -> void
+    {
+        auto parsed = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        REQUIRE(parsed.has_value());
+        auto scenario = parsed.value().scenario();
+        auto frame = parsed.value().coordinate_frame();
+        auto datasets = parsed.value().datasets();
+        auto regional = parsed.value().regional_2d();
+        auto outputs = parsed.value().outputs();
+        mutate(datasets, regional);
+        auto made = tsunami::data::make_case_configuration(
+            parsed.value().schema_identity(),
+            parsed.value().compatibility(),
+            std::string{parsed.value().policy_version()},
+            parsed.value().identity(),
+            scenario,
+            frame,
+            datasets,
+            regional,
+            outputs,
+            parsed.value().extensions());
+        REQUIRE(made.has_value());
+        REQUIRE(tsunami::data::write_case_configuration(fixture.root / "case.json", made.value()).has_value());
+    }
+
     [[nodiscard]] auto request_for(
         const FileCaseFixture &fixture,
         std::string run_id,
@@ -588,6 +664,11 @@ $EndElements
         CHECK(context_value(result.error(), "state_changed") == state_changed);
         return result.error();
     }
+
+    [[nodiscard]] auto run_output_directory(const FileCaseFixture &fixture, std::string_view run_id) -> std::filesystem::path
+    {
+        return fixture.root / "runs" / std::string{run_id} / "outputs/regional2d";
+    }
 } // namespace
 
 TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[r2d-file-runner]")
@@ -603,8 +684,24 @@ TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[
     CHECK(first.value().final_simulation_time == Approx(0.02));
     CHECK(first.value().diagnostics.solve.final_integrals.momentum_x == Approx(0.0).margin(1.0e-12));
     CHECK(first.value().diagnostics.solve.final_integrals.momentum_y == Approx(0.0).margin(1.0e-12));
+    CHECK(first.value().diagnostics.maximum_final_depth_residual_m == Approx(0.0).margin(1.0e-12));
+    CHECK(first.value().diagnostics.maximum_final_momentum_m2_per_s == Approx(0.0).margin(1.0e-12));
+    CHECK(first.value().diagnostics.final_water_volume_residual_m3 == Approx(0.0).margin(1.0e-12));
     CHECK(std::filesystem::is_regular_file(first.value().output_artifacts.diagnostics_csv));
     CHECK(std::filesystem::is_regular_file(first.value().output_artifacts.snapshots_csv));
+    const auto snapshot_rows = read_snapshot_rows(first.value().output_artifacts.snapshots_csv);
+    auto final_row_count = std::size_t{0U};
+    for (const auto &row : snapshot_rows) {
+        if (row.time == Approx(first.value().final_simulation_time).margin(1.0e-12)) {
+            ++final_row_count;
+            CHECK(row.depth == Approx(3.0).margin(1.0e-12));
+            CHECK(row.momentum_x == Approx(0.0).margin(1.0e-12));
+            CHECK(row.momentum_y == Approx(0.0).margin(1.0e-12));
+            CHECK(row.bed_elevation == Approx(-3.0).margin(1.0e-12));
+            CHECK(row.free_surface_elevation == Approx(0.0).margin(1.0e-12));
+        }
+    }
+    CHECK(final_row_count == 2U);
 
     auto second_request = request_for(fixture, "run-b", fixture.override_corridor);
     second_request.case_root = fixture.root.lexically_relative(std::filesystem::current_path());
@@ -615,6 +712,88 @@ TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[
     CHECK(read_text(first.value().output_artifacts.snapshots_csv) ==
           read_text(second.value().output_artifacts.snapshots_csv));
     std::filesystem::remove_all(fixture.root);
+}
+
+TEST_CASE("file-driven Regional2D runner rejects unsupported physics before outputs", "[r2d-file-runner]")
+{
+    SECTION("earthquake enabled is rejected")
+    {
+        const auto fixture = make_fixture("unsupported-earthquake");
+        rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
+            datasets.earthquake_displacement = "earthquake-displacement";
+            regional.physics.earthquake.enabled = true;
+            regional.physics.earthquake.displacement_binding = "earthquake-displacement";
+        });
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "unsupported-earthquake"));
+        require_failure(result, "r2d.file_case.unsupported_earthquake_artifact", "false");
+        CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "unsupported-earthquake")));
+        auto reread = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        REQUIRE(reread.has_value());
+        CHECK(reread.value().regional_2d().physics.earthquake.enabled);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("prescribed surface transfer is rejected")
+    {
+        const auto fixture = make_fixture("unsupported-prescribed-surface");
+        rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
+            datasets.earthquake_displacement = "earthquake-displacement";
+            datasets.prescribed_surface = "prescribed-surface";
+            regional.physics.earthquake.enabled = true;
+            regional.physics.earthquake.displacement_binding = "earthquake-displacement";
+            regional.physics.earthquake.surface_transfer = tsunami::data::SurfaceTransfer::prescribed;
+            regional.physics.earthquake.prescribed_surface_binding = "prescribed-surface";
+        });
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "unsupported-prescribed"));
+        require_failure(result, "r2d.file_case.unsupported_prescribed_surface_transfer", "false");
+        CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "unsupported-prescribed")));
+        auto reread = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        REQUIRE(reread.has_value());
+        CHECK(reread.value().regional_2d().physics.earthquake.surface_transfer == tsunami::data::SurfaceTransfer::prescribed);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("dataset-backed Manning is rejected")
+    {
+        const auto fixture = make_fixture("unsupported-manning");
+        rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
+            datasets.manning = "manning";
+            regional.physics.manning = tsunami::data::ManningConfiguration{
+                tsunami::data::ManningConfigurationKind::dataset,
+                std::nullopt,
+                std::string{"manning"}};
+        });
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "unsupported-manning"));
+        require_failure(result, "r2d.file_case.unsupported_manning_dataset_source", "false");
+        CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "unsupported-manning")));
+        auto reread = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        REQUIRE(reread.has_value());
+        CHECK(reread.value().regional_2d().physics.manning.kind == tsunami::data::ManningConfigurationKind::dataset);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("dataset-backed Coriolis is rejected")
+    {
+        const auto fixture = make_fixture("unsupported-coriolis");
+        rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
+            datasets.coriolis = "coriolis";
+            regional.physics.coriolis = tsunami::data::CoriolisConfiguration{
+                tsunami::data::CoriolisConfigurationKind::dataset,
+                std::nullopt,
+                std::string{"coriolis"}};
+        });
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "unsupported-coriolis"));
+        require_failure(result, "r2d.file_case.unsupported_coriolis_dataset_source", "false");
+        CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "unsupported-coriolis")));
+        auto reread = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        REQUIRE(reread.has_value());
+        CHECK(reread.value().regional_2d().physics.coriolis.kind == tsunami::data::CoriolisConfigurationKind::dataset);
+        std::filesystem::remove_all(fixture.root);
+    }
 }
 
 TEST_CASE("file-driven Regional2D runner rejects unsafe paths before outputs", "[r2d-file-runner]")
@@ -822,6 +1001,69 @@ TEST_CASE("file-driven Regional2D runner preserves existing outputs when overwri
     CHECK(context_value(second.error(), "state_changed") == "false");
     CHECK(read_text(first.value().output_directory / "sentinel.txt") == "preserve me\n");
     std::filesystem::remove_all(fixture.root);
+}
+
+TEST_CASE("file-driven Regional2D runner covers request, preflight and overwrite branches", "[r2d-file-runner]")
+{
+    SECTION("default RunId is rejected before file access")
+    {
+        const auto missing_root = std::filesystem::temp_directory_path() / "tsunami-r2d-file-runner-no-such-case-root";
+        std::filesystem::remove_all(missing_root);
+        auto request = tsunami::r2d_case::RegionalFileCaseRunRequest{
+            missing_root,
+            "manifests/terrain/conditioned-terrain.json",
+            "meshes/regional-square.msh",
+            std::nullopt,
+            tsunami::core::RunId{},
+            tsunami::r2d_case::RegionalFileCaseRunPolicy{
+                tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
+                tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
+            false,
+            {}};
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request);
+        const auto &error = require_failure(result, "r2d.file_case.request_invalid", "false");
+        CHECK(context_value(error, "stage") == "request");
+        CHECK_FALSE(std::filesystem::exists(missing_root));
+    }
+
+    SECTION("missing required mesh physical group preserves the preflight cause")
+    {
+        const auto fixture = make_fixture("missing-physical-group");
+        auto mesh = gmsh_text();
+        mesh = replace_all(mesh, "$PhysicalNames\n5\n", "$PhysicalNames\n4\n");
+        mesh = replace_all(mesh, "1 5 \"boundary.right_side\"\n", "");
+        write_text(fixture.root / fixture.mesh, mesh);
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "missing-physical"));
+        const auto &error = require_failure(result, "r2d.file_case.preflight_failed", "false");
+        REQUIRE(error.cause_code().has_value());
+        CHECK(*error.cause_code() == "mesh.gmsh.physical_name_missing");
+        CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "missing-physical")));
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("overwrite enabled replaces CSV outputs without touching unrelated files")
+    {
+        const auto fixture = make_fixture("overwrite-enabled");
+        auto first = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "replace"));
+        REQUIRE(first.has_value());
+        write_text(first.value().output_artifacts.diagnostics_csv, "old diagnostics\n");
+        write_text(first.value().output_artifacts.snapshots_csv, "old snapshots\n");
+        write_text(first.value().output_directory / "sentinel.txt", "preserve run sentinel\n");
+        const auto sibling = fixture.root / "runs/sibling/outputs/regional2d";
+        write_text(sibling / "sentinel.txt", "preserve sibling sentinel\n");
+
+        auto second = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "replace", std::nullopt, true));
+        REQUIRE(second.has_value());
+        CHECK(read_text(second.value().output_artifacts.diagnostics_csv).find("step,start_time,end_time") != std::string::npos);
+        CHECK(read_text(second.value().output_artifacts.snapshots_csv).find("step,time,cell,depth") != std::string::npos);
+        CHECK(read_text(second.value().output_artifacts.diagnostics_csv) != "old diagnostics\n");
+        CHECK(read_text(second.value().output_artifacts.snapshots_csv) != "old snapshots\n");
+        CHECK(read_text(second.value().output_directory / "sentinel.txt") == "preserve run sentinel\n");
+        CHECK(read_text(sibling / "sentinel.txt") == "preserve sibling sentinel\n");
+        std::filesystem::remove_all(fixture.root);
+    }
 }
 
 TEST_CASE("file-driven Regional2D runner reports output mutation state truthfully", "[r2d-file-runner]")

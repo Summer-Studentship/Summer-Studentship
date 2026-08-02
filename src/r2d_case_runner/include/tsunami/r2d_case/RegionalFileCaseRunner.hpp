@@ -70,6 +70,11 @@ namespace tsunami::r2d_case
         tsunami::r2d::RegionalTerrainTransferDiagnostics terrain_transfer;
         tsunami::r2d::RegionalCasePreparationDiagnostics preparation;
         tsunami::r2d::RegionalSolveSummary solve;
+        double maximum_final_depth_residual_m{};
+        double maximum_final_momentum_m2_per_s{};
+        double final_water_volume_residual_m3{};
+        std::uint64_t limiting_final_depth_cell_id{};
+        std::uint64_t limiting_final_momentum_cell_id{};
         std::vector<std::string> completed_steps;
     };
 
