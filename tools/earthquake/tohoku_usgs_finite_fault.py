@@ -12,6 +12,7 @@ import argparse
 import hashlib
 import json
 import math
+import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
@@ -19,7 +20,7 @@ from typing import Iterable
 
 ARTIFACT_CONTRACT_VERSION = 1
 LOCKED_USGS_SOURCE = (
-    "https://earthquake.usgs.gov/archive/product/finite-fault/"
+    "https://earthquake.usgs.gov/product/finite-fault/"
     "usp000hvnu/us/1539808472261/basic_inversion.param"
 )
 
@@ -51,7 +52,23 @@ def parse_usgs_basic_inversion_param(path: Path) -> list[SubFault]:
     """Parse the USGS basic_inversion.param table used by the Tohoku prompt."""
 
     subfaults: list[SubFault] = []
+    segment_length_km: float | None = None
+    segment_width_km: float | None = None
+    table_order: str | None = None
     for line_number, raw_line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        stripped = raw_line.strip()
+        if stripped.startswith("#"):
+            lower = stripped.lower()
+            if "fault_segment" in lower:
+                dx = re.search(r"\bDx=\s*([0-9.+\-Ee]+)\s*km", stripped)
+                dy = re.search(r"\bDy=\s*([0-9.+\-Ee]+)\s*km", stripped)
+                if dx and dy:
+                    segment_length_km = float(dx.group(1))
+                    segment_width_km = float(dy.group(1))
+            if "lat." in lower and "lon." in lower and "slip" in lower:
+                table_order = "lat_lon_depth_slip"
+            elif "lon." in lower and "lat." in lower and "slip" in lower:
+                table_order = "lon_lat_depth_slip"
         line = raw_line.split("#", 1)[0].strip()
         if not line:
             continue
@@ -59,9 +76,22 @@ def parse_usgs_basic_inversion_param(path: Path) -> list[SubFault]:
         if fields is None or len(fields) < 9:
             continue
 
-        # USGS finite-fault param tables are numeric rows. For this locked source
-        # the required fields are lon, lat, depth, slip, rake, strike, dip, length, width.
-        lon, lat, depth_km, slip_m, rake, strike, dip, length_km, width_km = fields[:9]
+        if table_order == "lat_lon_depth_slip" and len(fields) >= 11 and segment_length_km and segment_width_km:
+            # Legacy USGS PARAM rows store lat/lon and rupture timing columns;
+            # subfault dimensions are segment-level Dx/Dy. The slip column is
+            # centimetres in this product family, while GeoClaw expects metres.
+            lat, lon, depth_km, slip_cm, rake, strike, dip = fields[:7]
+            slip_m = slip_cm / 100.0
+            length_km = segment_length_km
+            width_km = segment_width_km
+        elif table_order == "lon_lat_depth_slip" and len(fields) >= 11 and segment_length_km and segment_width_km:
+            lon, lat, depth_km, slip_cm, rake, strike, dip = fields[:7]
+            slip_m = slip_cm / 100.0
+            length_km = segment_length_km
+            width_km = segment_width_km
+        else:
+            # Compact fixtures retain the Prompt A order with per-row dimensions.
+            lon, lat, depth_km, slip_m, rake, strike, dip, length_km, width_km = fields[:9]
         values = (lon, lat, depth_km, slip_m, rake, strike, dip, length_km, width_km)
         if not all(math.isfinite(value) for value in values):
             raise ValueError(f"non-finite subfault value at line {line_number}")
@@ -82,13 +112,35 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def _terrain_grid(record_path: Path) -> dict:
+def _reference_crs_text(reference: dict | None) -> str | None:
+    if not isinstance(reference, dict):
+        return None
+    authority = reference.get("authority_name")
+    code = reference.get("authority_code")
+    if isinstance(authority, str) and isinstance(code, str) and authority and code:
+        return f"{authority}:{code}"
+    projjson = reference.get("canonical_projjson")
+    if isinstance(projjson, str) and projjson:
+        return projjson
+    wkt = reference.get("canonical_wkt2")
+    if isinstance(wkt, str) and wkt:
+        return wkt
+    return None
+
+
+def _terrain_grid(record_path: Path, coordinate_reference: str) -> dict:
     record = json.loads(record_path.read_text(encoding="utf-8"))
     grid = record["grid"]
     affine = grid["affine"]
+    target = record.get("target_reference", {})
+    target_crs = _reference_crs_text(target.get("horizontal"))
+    if target_crs is None:
+        target_crs = coordinate_reference
     return {
         "width": int(grid["width"]),
         "height": int(grid["height"]),
+        "target_crs": target_crs,
+        "record_target_reference": target,
         "transform": (
             float(affine["origin_x"]),
             float(affine["pixel_width"]),
@@ -100,28 +152,69 @@ def _terrain_grid(record_path: Path) -> dict:
     }
 
 
-def _grid_centres(grid: dict) -> tuple[list[float], list[float]]:
-    width = grid["width"]
-    height = grid["height"]
-    x0, dx, rx, y0, cx, dy = grid["transform"]
-    xs = [x0 + (col + 0.5) * dx + 0.5 * rx for col in range(width)]
-    ys = [y0 + 0.5 * cx + (row + 0.5) * dy for row in range(height)]
-    return xs, ys
+def _grid_center_arrays(grid: dict):
+    try:
+        import numpy as np
+        from rasterio.transform import Affine
+    except ImportError as exc:
+        raise SystemExit("GeoTIFF production requires numpy and rasterio.") from exc
+    transform = Affine.from_gdal(*grid["transform"])
+    rows, cols = np.meshgrid(np.arange(grid["height"], dtype="float64"), np.arange(grid["width"], dtype="float64"), indexing="ij")
+    xs, ys = transform * (cols + 0.5, rows + 0.5)
+    return np.asarray(xs, dtype="float64"), np.asarray(ys, dtype="float64")
+
+
+def _working_geographic_axes(grid: dict):
+    try:
+        import numpy as np
+        import rasterio
+        from rasterio.transform import Affine
+        from pyproj import CRS, Transformer
+    except ImportError as exc:
+        raise SystemExit(
+            "GeoTIFF production requires preprocessing-only dependencies: "
+            "pyproj and rasterio. They are intentionally not C++ runtime dependencies."
+        ) from exc
+
+    target_crs = CRS.from_user_input(grid["target_crs"])
+    target_transform = Affine.from_gdal(*grid["transform"])
+    projected_x, projected_y = _grid_center_arrays(grid)
+    if target_crs.is_geographic:
+        lon = projected_x
+        lat = projected_y
+        transformed = False
+    else:
+        transformer = Transformer.from_crs(target_crs, CRS.from_epsg(4326), always_xy=True)
+        lon, lat = transformer.transform(projected_x, projected_y)
+        lon = np.asarray(lon, dtype="float64")
+        lat = np.asarray(lat, dtype="float64")
+        transformed = True
+    if not (np.all(np.isfinite(lon)) and np.all(np.isfinite(lat))):
+        raise ValueError("target grid centres did not transform to finite WGS84 coordinates")
+    lon_axis = lon[grid["height"] // 2, :]
+    lat_axis = lat[:, grid["width"] // 2]
+    return lon_axis, lat_axis, target_transform, rasterio, {
+        "target_crs": target_crs.to_string(),
+        "target_crs_wkt": target_crs.to_wkt(),
+        "working_crs": "EPSG:4326",
+        "projected_centres_transformed_to_wgs84": transformed,
+        "working_longitude_range": [float(np.min(lon)), float(np.max(lon))],
+        "working_latitude_range": [float(np.min(lat)), float(np.max(lat))],
+        "working_axis_derivation": "middle-row longitudes and middle-column latitudes from transformed target cell centres",
+    }
 
 
 def _okada_vertical_displacement(subfaults: Iterable[SubFault], grid: dict):
     try:
         import numpy as np
-        import rasterio
-        from rasterio.transform import Affine
         from clawpack.geoclaw import dtopotools
     except ImportError as exc:
         raise SystemExit(
             "GeoTIFF production requires preprocessing-only dependencies: "
-            "clawpack==5.14.0 and rasterio. They are intentionally not C++ runtime dependencies."
+            "clawpack==5.14.0, pyproj and rasterio. They are intentionally not C++ runtime dependencies."
         ) from exc
 
-    xs, ys = _grid_centres(grid)
+    xs, ys, transform, rasterio, crs_metadata = _working_geographic_axes(grid)
     fault = dtopotools.Fault()
     fault.subfaults = []
     for item in subfaults:
@@ -140,8 +233,7 @@ def _okada_vertical_displacement(subfaults: Iterable[SubFault], grid: dict):
 
     dtopo = fault.create_dtopography(np.asarray(xs), np.asarray(ys), times=[1.0])
     displacement = np.asarray(dtopo.dZ[-1], dtype="float64")
-    transform = Affine.from_gdal(*grid["transform"])
-    return displacement, transform, rasterio
+    return displacement, transform, rasterio, crs_metadata
 
 
 def write_artifact(args: argparse.Namespace) -> None:
@@ -150,8 +242,8 @@ def write_artifact(args: argparse.Namespace) -> None:
     output_tif = Path(args.output_tif)
     output_json = Path(args.output_json)
     subfaults = parse_usgs_basic_inversion_param(source)
-    grid = _terrain_grid(terrain_record)
-    displacement, transform, rasterio = _okada_vertical_displacement(subfaults, grid)
+    grid = _terrain_grid(terrain_record, args.coordinate_reference)
+    displacement, transform, rasterio, crs_metadata = _okada_vertical_displacement(subfaults, grid)
 
     output_tif.parent.mkdir(parents=True, exist_ok=True)
     with rasterio.open(
@@ -163,6 +255,7 @@ def write_artifact(args: argparse.Namespace) -> None:
         count=1,
         dtype="float64",
         transform=transform,
+        crs=grid["target_crs"],
         nodata=-1.0e300,
     ) as dataset:
         dataset.write(displacement, 1)
@@ -178,6 +271,9 @@ def write_artifact(args: argparse.Namespace) -> None:
         "model_id": args.model_id,
         "source_format": "USGS finite-fault basic_inversion.param",
         "coordinate_reference": args.coordinate_reference,
+        "target_coordinate_reference": grid["target_crs"],
+        "working_coordinate_reference": "EPSG:4326",
+        "crs_evaluation": crs_metadata,
         "subfault_count": len(subfaults),
         "vertical_unit": "m",
         "source_uri": LOCKED_USGS_SOURCE,

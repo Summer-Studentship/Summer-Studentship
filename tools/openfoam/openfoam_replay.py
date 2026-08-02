@@ -851,10 +851,20 @@ mergePatchPairs
 """
 
 
-def _block_mesh_barrier(length: float, span: float, height: float, nx: int, ny: int, nz: int) -> str:
-    xb0 = 0.90
-    xb1 = 0.96
-    hb = 0.24
+def _block_mesh_barrier(
+    length: float,
+    span: float,
+    height: float,
+    nx: int,
+    ny: int,
+    nz: int,
+    position: float = 0.90,
+    thickness: float = 0.06,
+    barrier_height: float = 0.24,
+) -> str:
+    xb0 = max(0.05 * length, min(position, 0.95 * length))
+    xb1 = max(xb0 + 1.0e-6, min(xb0 + thickness, 0.98 * length))
+    hb = max(1.0e-6, min(barrier_height, 0.95 * height))
     xs = [0.0, xb0, xb1, length]
     zs = [0.0, hb, height]
     verts = []
@@ -975,6 +985,28 @@ mergePatchPairs
 """.replace("            ['(", "            (").replace(")']", ")")
 
 
+def _config_number(section: dict, key: str, default: float, label: str) -> float:
+    if key not in section:
+        return default
+    return _positive(_float(section[key], label), label)
+
+
+def _config_int(section: dict, key: str, default: int, label: str) -> int:
+    if key not in section:
+        return default
+    value = _int(section[key], label)
+    if value <= 0:
+        raise ReplayError(f"{label} must be positive")
+    return value
+
+
+def _config_fraction(section: dict, key: str, default: float, label: str) -> float:
+    value = _config_number(section, key, default, label)
+    if value > 1.0:
+        raise ReplayError(f"{label} must be no greater than 1")
+    return value
+
+
 def turbulence_values(config: dict, replay_conversion: dict) -> tuple[float, float]:
     turbulence = config["turbulence"]
     speed = max(float(turbulence["minimum_speed_m_per_s"]), float(replay_conversion.get("maximum_boundary_speed_m_per_s", 0.0)))
@@ -1000,12 +1032,25 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     replay_conversion = load_json(replay_root / "replay_conversion.json")
     has_barrier = variant == "simple_rigid_barrier"
     local = config["local"]
-    length = 2.0
+    local_case = config.get("local_case", {})
+    barrier_config = config.get("barrier", {})
+    if not isinstance(local_case, dict) or not isinstance(barrier_config, dict):
+        raise ReplayError("local_case and barrier sections must be objects when present")
+    length = _config_number(local_case, "streamwise_length_m", 2.0, "local_case.streamwise_length_m")
     span = float(local["span_max_m"]) - float(local["span_min_m"])
     height = float(local["vertical_max_m"]) - float(local["vertical_min_m"])
-    nx, ny, nz = 30, max(4, int(local["span_cells"])), max(10, int(local["vertical_cells"]))
-    end_time = float(replay_conversion["time_range"][1])
-    first_level = 0.18
+    nx = _config_int(local_case, "streamwise_cells", 30, "local_case.streamwise_cells")
+    ny = _config_int(local_case, "span_cells", max(4, int(local["span_cells"])), "local_case.span_cells")
+    nz = _config_int(local_case, "vertical_cells", max(10, int(local["vertical_cells"])), "local_case.vertical_cells")
+    end_time = _config_number(local_case, "end_time_s", float(replay_conversion["time_range"][1]), "local_case.end_time_s")
+    maximum_timestep = _config_number(local_case, "maximum_timestep_s", 0.005, "local_case.maximum_timestep_s")
+    write_interval = _config_number(local_case, "write_interval_s", max(end_time / 2.0, 0.01), "local_case.write_interval_s")
+    initial_water_level = min(height * 0.5, _config_number(local_case, "initial_water_level_m", 0.18, "local_case.initial_water_level_m"))
+    alpha_tolerance = _config_number(local_case, "alpha_tolerance", 1.0e-6, "local_case.alpha_tolerance")
+    barrier_position = _config_number(barrier_config, "streamwise_position_m", 0.90, "barrier.streamwise_position_m")
+    barrier_thickness = _config_number(barrier_config, "thickness_m", 0.06, "barrier.thickness_m")
+    barrier_height = _config_number(barrier_config, "height_m", 0.24, "barrier.height_m")
+    barrier_span_fraction = _config_fraction(barrier_config, "span_fraction", 1.0, "barrier.span_fraction")
     k_value, omega_value = turbulence_values(config, replay_conversion)
     patches = _patches(has_barrier)
 
@@ -1013,7 +1058,7 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
         (output_root / directory).mkdir(parents=True, exist_ok=True)
     shutil.copytree(replay_root / "constant" / "boundaryData", output_root / "constant" / "boundaryData")
     (output_root / "case.foam").write_text("OpenFOAM replay case\n", encoding="utf-8")
-    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz)
+    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz, barrier_position, barrier_thickness, barrier_height) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz)
     (output_root / "system/blockMeshDict").write_text(block_mesh, encoding="utf-8")
     (output_root / "constant/g").write_text(_dict_header("g", "constant") + "dimensions      [0 1 -2 0 0 0 0];\nvalue           (0 0 -9.81);\n", encoding="utf-8")
     (output_root / "constant/phaseProperties").write_text(_dict_header("phaseProperties", "constant") + "phases          (water air);\n\nsigma           0.07;\n", encoding="utf-8")
@@ -1089,7 +1134,7 @@ regions
 (
     boxToCell
     {{
-        box (0 0 0) ({_fmt(length)} {_fmt(span)} {_fmt(first_level)});
+        box (0 0 0) ({_fmt(length)} {_fmt(span)} {_fmt(initial_water_level)});
         fieldValues
         (
             volScalarFieldValue alpha.water 1
@@ -1108,8 +1153,8 @@ functions
         writeInterval   1;
         probeLocations
         (
-            (0.55 0.30 0.12)
-            (1.45 0.30 0.12)
+            ({_fmt(0.5 * barrier_position)} {_fmt(0.5 * span)} {_fmt(0.5 * min(initial_water_level, height))})
+            ({_fmt(min(length * 0.95, barrier_position + 0.25 * (length - barrier_position)))} {_fmt(0.5 * span)} {_fmt(0.5 * min(initial_water_level, height))})
         );
         fixedLocations  false;
         fields
@@ -1121,17 +1166,17 @@ functions
     }}
 """
     if has_barrier:
-        functions += """
+        functions += f"""
     forces
-    {
+    {{
         type            forces;
         libs            ("libforces.so");
         patches         (barrier);
         log             on;
         writeControl    timeStep;
         writeInterval   1;
-        CofR            (0.93 0.30 0.12);
-    }
+        CofR            ({_fmt(barrier_position + 0.5 * barrier_thickness)} {_fmt(0.5 * span)} {_fmt(0.5 * barrier_height)});
+    }}
 """
     functions += "}\n"
     (output_root / "system/controlDict").write_text(_dict_header("controlDict", "system") + f"""application     foamRun;
@@ -1145,7 +1190,7 @@ endTime         {_fmt(end_time)};
 deltaT          0.002;
 
 writeControl    adjustableRunTime;
-writeInterval   {_fmt(max(end_time / 2.0, 0.01))};
+writeInterval   {_fmt(write_interval)};
 purgeWrite      0;
 writeFormat     ascii;
 writePrecision  10;
@@ -1157,7 +1202,7 @@ runTimeModifiable yes;
 adjustTimeStep  yes;
 maxCo           0.5;
 maxAlphaCo      0.5;
-maxDeltaT       0.005;
+maxDeltaT       {_fmt(maximum_timestep)};
 {functions}
 """, encoding="utf-8")
     (output_root / "system/fvSchemes").write_text(_dict_header("fvSchemes", "system") + """ddtSchemes
@@ -1203,9 +1248,9 @@ wallDist
 {
     "alpha.water.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
-        nLimiterIter    5;
+        nAlphaCorr      2;
+        nAlphaSubCycles 4;
+        nLimiterIter    8;
     }
 
     p_rgh
@@ -1274,6 +1319,16 @@ relaxationFactors
         "k": k_value,
         "omega": omega_value,
         "end_time": end_time,
+        "maximum_timestep": maximum_timestep,
+        "write_interval": write_interval,
+        "initial_water_level": initial_water_level,
+        "alpha_tolerance": alpha_tolerance,
+        "barrier": {
+            "streamwise_position_m": barrier_position,
+            "thickness_m": barrier_thickness,
+            "height_m": barrier_height,
+            "span_fraction": barrier_span_fraction,
+        } if has_barrier else None,
         "patches": patches,
         "tutorial_authority": [
             "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
@@ -1428,7 +1483,7 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
     alpha_values = _read_internal_scalar_field(alpha_path) if alpha_path.exists() else []
     alpha_min = min(alpha_values) if alpha_values else 0.0
     alpha_max = max(alpha_values) if alpha_values else 1.0
-    alpha_tolerance = 1.0e-6
+    alpha_tolerance = float(load_json(case_root / "openfoam_case_summary.json").get("alpha_tolerance", 1.0e-6))
     if alpha_min < -alpha_tolerance or alpha_max > 1.0 + alpha_tolerance:
         raise ReplayError(f"{variant}: alpha.water out of bounds [{alpha_min}, {alpha_max}]")
     return {

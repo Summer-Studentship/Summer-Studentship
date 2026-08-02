@@ -357,13 +357,17 @@ namespace tsunami::geo
             std::string_view bathymetry_dataset_id,
             std::string_view topography_dataset_id) -> bool
         {
+            const auto single_source_carries_both_roles =
+                bathymetry_dataset_id == topography_dataset_id &&
+                policy.first_priority_dataset_id == bathymetry_dataset_id &&
+                policy.second_priority_dataset_id == topography_dataset_id;
             const auto priority_ids_match_sources =
                 ((policy.first_priority_dataset_id == bathymetry_dataset_id &&
                   policy.second_priority_dataset_id == topography_dataset_id) ||
                  (policy.first_priority_dataset_id == topography_dataset_id &&
                   policy.second_priority_dataset_id == bathymetry_dataset_id));
-            return priority_ids_match_sources &&
-                policy.first_priority_dataset_id != policy.second_priority_dataset_id &&
+            return (priority_ids_match_sources || single_source_carries_both_roles) &&
+                (policy.first_priority_dataset_id != policy.second_priority_dataset_id || single_source_carries_both_roles) &&
                 finite(policy.maximum_overlap_disagreement_m) &&
                 policy.maximum_overlap_disagreement_m >= 0.0 &&
                 text_present(policy.priority_basis);
