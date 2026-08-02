@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <tsunami/coupling/SectionExport.hpp>
 #include <tsunami/r2d_case/RegionalFileCaseRunner.hpp>
 
 namespace
@@ -59,7 +60,9 @@ namespace
         tsunami::core::RunId run_id,
         const tsunami::r2d::RegionalCasePreparationPolicy &preparation,
         const tsunami::r2d::RegionalRasterCellTransferPolicy &transfer,
-        bool overwrite) -> tsunami::r2d_case::RegionalFileCaseRunRequest
+        bool overwrite,
+        std::optional<tsunami::coupling::RegionalCouplingSectionRequest> coupling_section)
+        -> tsunami::r2d_case::RegionalFileCaseRunRequest
     {
         return tsunami::r2d_case::RegionalFileCaseRunRequest{
             case_root,
@@ -69,6 +72,7 @@ namespace
             std::move(run_id),
             tsunami::r2d_case::RegionalFileCaseRunPolicy{preparation, transfer},
             overwrite,
+            std::move(coupling_section),
             {}};
     }
 } // namespace
@@ -80,6 +84,7 @@ auto main(int argc, char **argv) -> int
     auto mesh = std::filesystem::path{};
     auto corridor_record = std::optional<std::filesystem::path>{};
     auto run_id = std::string{};
+    auto coupling_section = std::optional<std::string>{};
     auto overwrite = false;
     auto preparation = tsunami::r2d::RegionalCasePreparationPolicy{};
     auto transfer = tsunami::r2d::RegionalRasterCellTransferPolicy{};
@@ -90,6 +95,10 @@ auto main(int argc, char **argv) -> int
     app.add_option("--mesh", mesh, "Case-relative Gmsh MSH 4.1 ASCII mesh path")->required();
     app.add_option("--corridor-record", corridor_record, "Case-relative corridor construction record path");
     app.add_option("--run-id", run_id, "Run identifier used under runs/<run-id>/outputs/regional2d")->required();
+    app.add_option(
+        "--coupling-section",
+        coupling_section,
+        "Boundary patch name to export under coupling/<section-id> (for example boundary.offshore)");
     app.add_option(
            "--pre-event-free-surface-elevation-m",
            preparation.pre_event_free_surface_elevation_m,
@@ -155,7 +164,19 @@ auto main(int argc, char **argv) -> int
     }
 
     auto result = tsunami::r2d_case::run_regional_case_from_files(
-        make_request(case_root, terrain_record, mesh, corridor_record, *std::move(strong_run_id), preparation, transfer, overwrite));
+        make_request(
+            case_root,
+            terrain_record,
+            mesh,
+            corridor_record,
+            *std::move(strong_run_id),
+            preparation,
+            transfer,
+            overwrite,
+            coupling_section
+                ? std::optional<tsunami::coupling::RegionalCouplingSectionRequest>{
+                      tsunami::coupling::RegionalCouplingSectionRequest{*coupling_section, *coupling_section}}
+                : std::nullopt));
     if (!result) {
         print_failure(result.error());
         return 1;
@@ -173,5 +194,10 @@ auto main(int argc, char **argv) -> int
               << "steps=" << run.diagnostics.solve.accepted_step_count << '\n'
               << "final_time=" << run.final_simulation_time << '\n'
               << "output_dir=" << run.output_directory.generic_string() << '\n';
+    if (run.output_artifacts.coupling_section) {
+        std::cout << "coupling_metadata=" << run.output_artifacts.coupling_section->metadata_json.generic_string() << '\n'
+                  << "coupling_samples=" << run.output_artifacts.coupling_section->samples_csv.generic_string() << '\n'
+                  << "coupling_history=" << run.output_artifacts.coupling_section->history_csv.generic_string() << '\n';
+    }
     return 0;
 }

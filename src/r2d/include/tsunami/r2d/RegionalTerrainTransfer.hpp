@@ -117,6 +117,15 @@ namespace tsunami::r2d
         RegionalTerrainTransferDiagnostics diagnostics;
     };
 
+    struct RegionalScalarRasterTransferResult
+    {
+        std::vector<tsunami::core::Real> values;
+        std::size_t cell_count{};
+        std::size_t total_contributor_count{};
+        double minimum_value{};
+        double maximum_value{};
+    };
+
     [[nodiscard]] auto make_regional_raster_cell_transfer_stencil(
         const tsunami::fvm::FiniteVolumeMesh &mesh,
         const tsunami::geo::TerrainTargetGrid &grid,
@@ -132,5 +141,14 @@ namespace tsunami::r2d
         tsunami::fvm::FieldId field_id,
         std::string field_name)
         -> tsunami::core::Result<RegionalTerrainTransferResult>;
+
+    [[nodiscard]] auto transfer_scalar_raster_to_regional_cells(
+        const tsunami::fvm::FiniteVolumeMesh &mesh,
+        const tsunami::geo::TerrainTargetGrid &grid,
+        std::span<const double> raster_values,
+        std::span<const std::uint8_t> valid_mask,
+        const RegionalRasterCellTransferStencil &stencil,
+        std::string source_id)
+        -> tsunami::core::Result<RegionalScalarRasterTransferResult>;
 
 } // namespace tsunami::r2d

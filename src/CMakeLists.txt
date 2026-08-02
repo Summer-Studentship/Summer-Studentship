@@ -115,6 +115,7 @@ tsunami_apply_compiler_warnings(tsunami_geo)
 if(TSUNAMI_ENABLE_GEOSPATIAL)
     find_package(GDAL CONFIG REQUIRED)
     add_library(tsunami_geo_gdal STATIC
+        geo_gdal/src/GdalEarthquakeDisplacementArtifacts.cpp
         geo_gdal/src/GdalGeospatialImporter.cpp
         geo_gdal/src/GdalConditionedTerrainArtifacts.cpp
         geo_gdal/src/GdalMetadataExtraction.cpp
@@ -135,6 +136,7 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
             tsunami_geo
         PRIVATE
             GDAL::GDAL
+            nlohmann_json::nlohmann_json
     )
     tsunami_apply_compiler_warnings(tsunami_geo_gdal)
 
@@ -247,10 +249,12 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
             tsunami_geo
             tsunami_fvm
             tsunami_r2d
+            tsunami_coupling
         PRIVATE
             tsunami_geo_gdal
             tsunami_mesh_gmsh
             tsunami_r2d_io
+            nlohmann_json::nlohmann_json
     )
     tsunami_apply_compiler_warnings(tsunami_r2d_case_runner)
 endif()

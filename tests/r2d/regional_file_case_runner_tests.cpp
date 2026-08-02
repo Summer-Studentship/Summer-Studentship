@@ -23,6 +23,7 @@
 #include <tsunami/geo/TerrainConditioningParsing.hpp>
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 #include <tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp>
+#include <tsunami/geo_gdal/GdalEarthquakeDisplacementArtifacts.hpp>
 #include <tsunami/r2d_case/RegionalFileCaseRunner.hpp>
 
 #include "geospatial_record_fixtures.hpp"
@@ -235,6 +236,78 @@ namespace
                 tsunami::data::TemporalResolution{tsunami::data::TemporalResolutionKind::static_dataset, std::nullopt, std::nullopt, std::nullopt}},
             tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::not_reported, {}, std::string{"not_reported"}},
             std::string{"Synthetic citation only"},
+            {}};
+    }
+
+    [[nodiscard]] auto earthquake_dataset() -> tsunami::data::DatasetRecord
+    {
+        return tsunami::data::DatasetRecord{
+            "tohoku-earthquake-displacement",
+            tsunami::data::DatasetOriginKind::generated,
+            tsunami::data::DatasetRepresentationKind::raster,
+            {tsunami::data::DatasetRole::earthquake_displacement},
+            "Synthetic Tohoku vertical seabed displacement",
+            std::string{"Fixture artifact representing a generated vertical seabed displacement raster."},
+            "illustrative-provider",
+            "illustrative-licence",
+            std::nullopt,
+            std::string{"earthquake-artifact-process"},
+            {tsunami::data::DatasetAsset{
+                 "tohoku-vertical-displacement",
+                 tsunami::data::DatasetAssetRole::primary,
+                 tsunami::data::DatasetAssetLocation{
+                     tsunami::data::DatasetLocationKind::managed_path,
+                     std::filesystem::path{"inputs/data/earthquake/tohoku_vertical_displacement.tif"},
+                     std::nullopt},
+                 "image/tiff",
+                 std::nullopt,
+                 tsunami::data::ContentDigest{
+                     tsunami::data::DigestAlgorithm::sha256,
+                     std::string(64U, '4'),
+                     tsunami::data::DigestOrigin::project_computed}},
+             tsunami::data::DatasetAsset{
+                 "tohoku-vertical-displacement-metadata",
+                 tsunami::data::DatasetAssetRole::metadata,
+                 tsunami::data::DatasetAssetLocation{
+                     tsunami::data::DatasetLocationKind::managed_path,
+                     std::filesystem::path{"inputs/data/earthquake/tohoku_vertical_displacement.json"},
+                     std::nullopt},
+                 "application/json",
+                 std::nullopt,
+                 tsunami::data::ContentDigest{
+                     tsunami::data::DigestAlgorithm::sha256,
+                     std::string(64U, '5'),
+                     tsunami::data::DigestOrigin::project_computed}}},
+            tsunami::data::DatasetSpatialReference{
+                tsunami::data::SpatialApplicability::spatial,
+                std::string{"TEST:EN-METRIC-1"},
+                std::string{"synthetic-positive-up"},
+                std::string{"m"},
+                std::string{"m"},
+                std::string{"east_north"},
+                std::string{"up"}},
+            tsunami::data::DatasetResolution{
+                tsunami::data::SpatialResolution{tsunami::data::SpatialResolutionKind::grid_spacing, 10.0, 10.0, std::string{"m"}, std::nullopt},
+                tsunami::data::TemporalResolution{tsunami::data::TemporalResolutionKind::static_dataset, std::nullopt, std::nullopt, std::nullopt}},
+            tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::estimated, {}, std::string{"synthetic fixture"}},
+            std::string{"USGS finite-fault fixture lineage; no network access during tests"},
+            {}};
+    }
+
+    [[nodiscard]] auto earthquake_process() -> tsunami::data::ProcessingRecord
+    {
+        return tsunami::data::ProcessingRecord{
+            "earthquake-artifact-process",
+            "earthquake-artifact-produce",
+            "2026-08-02T00:00:00Z",
+            tsunami::data::ProcessingSoftware{
+                "tsunami-tohoku-artifact",
+                "0.1.0",
+                std::nullopt,
+                std::nullopt},
+            "{}",
+            {"bathymetry-primary"},
+            {"tohoku-earthquake-displacement"},
             {}};
     }
 
@@ -616,6 +689,63 @@ $EndElements
         REQUIRE(tsunami::data::write_case_configuration(fixture.root / "case.json", made.value()).has_value());
     }
 
+    auto add_earthquake_artifact(const FileCaseFixture &fixture) -> void
+    {
+        rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
+            datasets.earthquake_displacement = "tohoku-earthquake-displacement";
+            regional.physics.earthquake.enabled = true;
+            regional.physics.earthquake.displacement_binding = "tohoku-earthquake-displacement";
+        });
+
+        auto configuration = tsunami::data::read_case_configuration(fixture.root / "case.json");
+        auto manifest = tsunami::data::read_dataset_manifest(fixture.root / "manifests/datasets.json");
+        auto terrain_record = tsunami::geo::read_terrain_conditioning_record(fixture.root / fixture.terrain_record);
+        REQUIRE(configuration.has_value());
+        REQUIRE(manifest.has_value());
+        REQUIRE(terrain_record.has_value());
+
+        auto datasets = manifest.value().datasets();
+        datasets.push_back(earthquake_dataset());
+        auto processes = manifest.value().processes();
+        processes.push_back(earthquake_process());
+        auto made_manifest = tsunami::data::make_dataset_manifest(
+            manifest.value().schema_identity(),
+            manifest.value().compatibility(),
+            std::string{manifest.value().policy_version()},
+            manifest.value().identity(),
+            manifest.value().providers(),
+            manifest.value().licences(),
+            std::move(datasets),
+            std::move(processes),
+            manifest.value().extensions());
+        REQUIRE(made_manifest.has_value());
+        REQUIRE(tsunami::data::write_dataset_manifest(fixture.root / "manifests/datasets.json", made_manifest.value()).has_value());
+
+        const auto paths = tsunami::geo_gdal::EarthquakeDisplacementArtifactPaths{
+            fixture.root / "inputs/data/earthquake/tohoku_vertical_displacement.tif",
+            fixture.root / "inputs/data/earthquake/tohoku_vertical_displacement.json"};
+        auto displacement = std::vector<double>{0.02, 0.02, 0.01, 0.01, -0.01, -0.01, 0.0, 0.0};
+        auto valid = std::vector<std::uint8_t>(displacement.size(), 1U);
+        REQUIRE(tsunami::geo_gdal::write_earthquake_displacement_artifact_with_gdal(
+                    paths,
+                    terrain_record.value().grid,
+                    displacement,
+                    valid,
+                    tsunami::geo_gdal::EarthquakeDisplacementArtifactMetadata{
+                        tsunami::geo_gdal::earthquake_displacement_artifact_contract_version,
+                        configuration.value().scenario().event_id,
+                        "usgs-usp000hvnu-basic-inversion",
+                        "USGS finite-fault basic_inversion.param",
+                        "TEST:EN-METRIC-1",
+                        4U,
+                        "m",
+                        "https://earthquake.usgs.gov/archive/product/finite-fault/usp000hvnu/us/1539808472261/basic_inversion.param",
+                        std::string(64U, '6'),
+                        "2026-08-02T00:00:00Z",
+                        "synthetic test fixture"})
+                    .has_value());
+    }
+
     [[nodiscard]] auto request_for(
         const FileCaseFixture &fixture,
         std::string run_id,
@@ -634,6 +764,7 @@ $EndElements
                 tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
                 tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
             overwrite,
+            std::nullopt,
             {}};
     }
 
@@ -714,9 +845,38 @@ TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[
     std::filesystem::remove_all(fixture.root);
 }
 
+TEST_CASE("file-driven Regional2D runner initialises earthquake artifact and exports coupling section", "[r2d-file-runner]")
+{
+    const auto fixture = make_fixture("earthquake-coupling");
+    add_earthquake_artifact(fixture);
+
+    auto request = request_for(fixture, "quake-section");
+    request.coupling_section = tsunami::coupling::RegionalCouplingSectionRequest{
+        "boundary.offshore",
+        "boundary.offshore"};
+
+    auto result = tsunami::r2d_case::run_regional_case_from_files(request);
+    REQUIRE(result.has_value());
+    CHECK(result.value().diagnostics.earthquake_initialised);
+    CHECK(result.value().diagnostics.earthquake_event_id == "synthetic-tohoku");
+    CHECK(result.value().diagnostics.earthquake_model_id == "usgs-usp000hvnu-basic-inversion");
+    CHECK(result.value().output_artifacts.earthquake_initialisation_csv.has_value());
+    REQUIRE(result.value().output_artifacts.coupling_section.has_value());
+    CHECK(std::filesystem::is_regular_file(*result.value().output_artifacts.earthquake_initialisation_csv));
+    CHECK(std::filesystem::is_regular_file(result.value().output_artifacts.coupling_section->metadata_json));
+    CHECK(std::filesystem::is_regular_file(result.value().output_artifacts.coupling_section->samples_csv));
+    CHECK(std::filesystem::is_regular_file(result.value().output_artifacts.coupling_section->history_csv));
+    REQUIRE(result.value().diagnostics.coupling_section.has_value());
+    CHECK(result.value().diagnostics.coupling_section->section_id == "boundary.offshore");
+    CHECK(result.value().diagnostics.coupling_section->sample_count == 1U);
+    CHECK(read_text(result.value().output_artifacts.coupling_section->samples_csv).find("free_surface_elevation") != std::string::npos);
+    CHECK(read_text(result.value().output_artifacts.coupling_section->history_csv).find("maximum_speed") != std::string::npos);
+    std::filesystem::remove_all(fixture.root);
+}
+
 TEST_CASE("file-driven Regional2D runner rejects unsupported physics before outputs", "[r2d-file-runner]")
 {
-    SECTION("earthquake enabled is rejected")
+    SECTION("earthquake enabled without a generated artifact is rejected")
     {
         const auto fixture = make_fixture("unsupported-earthquake");
         rewrite_case_configuration(fixture, [](auto &datasets, auto &regional) {
@@ -726,7 +886,7 @@ TEST_CASE("file-driven Regional2D runner rejects unsupported physics before outp
         });
 
         auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "unsupported-earthquake"));
-        require_failure(result, "r2d.file_case.unsupported_earthquake_artifact", "false");
+        require_failure(result, "r2d.file_case.manifest_read_failed", "false");
         CHECK_FALSE(std::filesystem::exists(run_output_directory(fixture, "unsupported-earthquake")));
         auto reread = tsunami::data::read_case_configuration(fixture.root / "case.json");
         REQUIRE(reread.has_value());
@@ -1019,6 +1179,7 @@ TEST_CASE("file-driven Regional2D runner covers request, preflight and overwrite
                 tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
                 tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
             false,
+            std::nullopt,
             {}};
 
         auto result = tsunami::r2d_case::run_regional_case_from_files(request);

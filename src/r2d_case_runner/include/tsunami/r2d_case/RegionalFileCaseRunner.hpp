@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <tsunami/coupling/SectionExport.hpp>
 #include <tsunami/core/Identity.hpp>
 #include <tsunami/core/Result.hpp>
 #include <tsunami/r2d/RegionalCasePreparation.hpp>
@@ -31,6 +32,7 @@ namespace tsunami::r2d_case
         tsunami::core::RunId run_id;
         RegionalFileCaseRunPolicy policy;
         bool overwrite_existing_outputs{};
+        std::optional<tsunami::coupling::RegionalCouplingSectionRequest> coupling_section;
         std::stop_token stop_token{};
     };
 
@@ -75,6 +77,10 @@ namespace tsunami::r2d_case
         double final_water_volume_residual_m3{};
         std::uint64_t limiting_final_depth_cell_id{};
         std::uint64_t limiting_final_momentum_cell_id{};
+        bool earthquake_initialised{};
+        std::string earthquake_event_id;
+        std::string earthquake_model_id;
+        std::optional<tsunami::coupling::RegionalCouplingSectionExportMetadata> coupling_section;
         std::vector<std::string> completed_steps;
     };
 
@@ -83,6 +89,7 @@ namespace tsunami::r2d_case
         std::filesystem::path diagnostics_csv;
         std::filesystem::path snapshots_csv;
         std::optional<std::filesystem::path> earthquake_initialisation_csv;
+        std::optional<tsunami::coupling::RegionalCouplingSectionExportPaths> coupling_section;
 
         [[nodiscard]] auto operator==(const RegionalFileCaseRunOutputArtifacts &) const -> bool = default;
     };
