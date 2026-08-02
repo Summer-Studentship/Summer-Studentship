@@ -16,7 +16,7 @@ EXPECTED_DOMAINS = {
 FRAMEWORK_OWNERS = {
     "Qt": {"tsunami_gui"},
     "Qt6::": {"tsunami_gui"},
-    "CLI11": {"tsunami_cli"},
+    "CLI11": {"tsunami_cli", "tsunami_r2d_case"},
     "Catch2": {"tsunami_tests"},
     "Matplot": {"tsunami_diagnostics_matplot"},
 }

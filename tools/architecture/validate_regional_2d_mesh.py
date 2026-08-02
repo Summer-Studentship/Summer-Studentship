@@ -105,8 +105,9 @@ def validate_sources(root: Path, policy: dict, target_policy: dict) -> None:
 
     require("add_library(tsunami_fvm STATIC" in src_cmake, "tsunami_fvm must be a static library")
     require("target_link_libraries(tsunami_fvm PUBLIC tsunami_core)" in src_cmake, "tsunami_fvm must link only tsunami_core")
+    fvm_block = src_cmake.split("add_library(tsunami_mesh_gmsh", 1)[0]
     for blocked in ("Qt", "Qt6::", "CLI11", "HDF5", "GDAL", "Gmsh", "Eigen3::Eigen"):
-        require(blocked not in src_cmake.split("add_library(tsunami_data", 1)[0], f"tsunami_fvm CMake block references {blocked}")
+        require(blocked not in fvm_block, f"tsunami_fvm CMake block references {blocked}")
 
     for header in (root / "src/fvm/include/tsunami/fvm").glob("*.hpp"):
         text = read_text(header)

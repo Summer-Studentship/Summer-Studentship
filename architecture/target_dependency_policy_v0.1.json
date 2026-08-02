@@ -20,10 +20,12 @@
     ],
     "external_framework_owners": {
       "CLI11": [
-        "tsunami_cli"
+        "tsunami_cli",
+        "tsunami_r2d_case"
       ],
       "CLI11::CLI11": [
-        "tsunami_cli"
+        "tsunami_cli",
+        "tsunami_r2d_case"
       ],
       "Qt": [
         "tsunami_gui"
@@ -74,10 +76,14 @@
         "tsunami_data"
       ],
       "nlohmann-json": [
-        "tsunami_data"
+        "tsunami_data",
+        "tsunami_geo",
+        "tsunami_tests"
       ],
       "nlohmann_json::nlohmann_json": [
-        "tsunami_data"
+        "tsunami_data",
+        "tsunami_geo",
+        "tsunami_tests"
       ],
       "pugixml": [
         "tsunami_io_xdmf"
@@ -348,7 +354,9 @@
         "tsunami_io_xdmf",
         "tsunami_diagnostics_matplot"
       ],
-      "owned_external_dependencies": [],
+      "owned_external_dependencies": [
+        "nlohmann-json"
+      ],
       "prohibited_external_dependencies": [
         "Qt",
         "CLI11",
@@ -585,6 +593,50 @@
       "public_boundary_notes": "Owns Regional2D CSV diagnostics and snapshot serialization behind solver-neutral callback contracts. The solver core must not depend on this target."
     },
     {
+      "target_name": "tsunami_r2d_case_runner",
+      "namespaced_alias": "Tsunami::r2d_case_runner",
+      "status": "active file-driven Regional2D case orchestration",
+      "type": "static_library",
+      "wbs_owner": [
+        "SWE-R2D-SOL",
+        "SWE-VER-REG"
+      ],
+      "conceptual_layer": "Application",
+      "state": "active",
+      "classification": "application",
+      "allowed_direct_project_dependencies": [
+        "tsunami_core",
+        "tsunami_data",
+        "tsunami_geo",
+        "tsunami_fvm",
+        "tsunami_r2d",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d_io"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_coupling",
+        "tsunami_l3d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "CLI11",
+        "Catch2",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Composes accepted case, manifest, corridor, terrain-artifact, Gmsh mesh, Regional2D preparation, solver and CSV writer contracts for headless file-driven runs. Public headers remain frontend-neutral and avoid concrete GDAL, Gmsh, CLI11, Qt, HDF5 and OpenFOAM types."
+    },
+    {
       "target_name": "tsunami_r2d_benchmarks",
       "namespaced_alias": "Tsunami::r2d_benchmarks",
       "status": "active Regional2D programmatic benchmark cases",
@@ -772,6 +824,7 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_case_runner",
         "tsunami_r2d_benchmarks",
         "tsunami_r2d_io",
         "tsunami_l3d",
@@ -789,6 +842,54 @@
         "Matplot++"
       ],
       "public_boundary_notes": "Owns command parsing and service-status formatting. Lifecycle semantics come from tsunami_application."
+    },
+    {
+      "target_name": "tsunami_r2d_case",
+      "namespaced_alias": null,
+      "status": "active headless file-driven Regional2D executable",
+      "type": "executable",
+      "wbs_owner": [
+        "SWE-R2D-SOL",
+        "SWE-VER-REG",
+        "SWE-ENV-BLD"
+      ],
+      "conceptual_layer": "Frontend",
+      "state": "active",
+      "classification": "frontend",
+      "allowed_direct_project_dependencies": [
+        "tsunami_r2d_case_runner"
+      ],
+      "prohibited_direct_project_dependencies": [
+        "tsunami_cli",
+        "tsunami_gui",
+        "tsunami_tests",
+        "tsunami_application",
+        "tsunami_fvm",
+        "tsunami_data",
+        "tsunami_io_hdf5",
+        "tsunami_io_xdmf",
+        "tsunami_geo",
+        "tsunami_geo_gdal",
+        "tsunami_mesh_gmsh",
+        "tsunami_r2d",
+        "tsunami_r2d_benchmarks",
+        "tsunami_r2d_io",
+        "tsunami_l3d",
+        "tsunami_coupling",
+        "tsunami_diagnostics_matplot"
+      ],
+      "owned_external_dependencies": [
+        "CLI11"
+      ],
+      "prohibited_external_dependencies": [
+        "Qt",
+        "Catch2",
+        "GDAL",
+        "Gmsh",
+        "HDF5",
+        "Matplot++"
+      ],
+      "public_boundary_notes": "Owns only CLI11 option parsing and terminal summaries for file-driven Regional2D runs. It delegates all case orchestration to tsunami_r2d_case_runner."
     },
     {
       "target_name": "tsunami_gui",
@@ -816,6 +917,7 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_case_runner",
         "tsunami_r2d_benchmarks",
         "tsunami_r2d_io",
         "tsunami_l3d",
@@ -916,6 +1018,7 @@
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
         "tsunami_r2d",
+        "tsunami_r2d_case_runner",
         "tsunami_r2d_benchmarks",
         "tsunami_r2d_io",
         "tsunami_l3d",
@@ -959,6 +1062,7 @@
         "tsunami_r2d_io",
         "tsunami_l3d",
         "tsunami_coupling",
+        "tsunami_r2d_case_runner",
         "tsunami_application",
         "tsunami_diagnostics_matplot"
       ],
@@ -967,7 +1071,8 @@
         "tsunami_gui"
       ],
       "owned_external_dependencies": [
-        "Catch2"
+        "Catch2",
+        "nlohmann-json"
       ],
       "prohibited_external_dependencies": [
         "Qt",

@@ -86,6 +86,17 @@ preflight, conservative raster-cell stencil construction and mesh-bound
 lineage-version metadata, duplicate/missing/unsafe paths, out-of-range coverage
 and unknown lineage codes.
 
+The focused `[r2d-file-runner]` vertical-slice tests extend
+`SWE-VER-REG-WP1-T3` from artefact read-back into a complete file-driven
+Regional2D run. The fixture writes `case.json`, the dataset manifest, corridor
+construction record, terrain conditioning record and strict three-GeoTIFF
+conditioned-terrain bundle through the accepted producers/serialisers, imports a
+deterministic Gmsh MSH 4.1 mesh, runs preflight, terrain transfer, case
+preparation, solve and `RegionalCsvOutputWriter`, and verifies readable
+byte-stable diagnostics/snapshot CSV outputs across two run IDs. Safety cases
+cover case-relative path enforcement and preservation of existing non-empty
+output directories when overwrite is disabled.
+
 ## Illustrative Fixture
 
 The illustrative terrain fixture is deterministic and non-authoritative. It is

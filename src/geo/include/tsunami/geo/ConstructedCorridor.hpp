@@ -2,10 +2,13 @@
 
 #include <vector>
 
+#include <tsunami/core/Result.hpp>
 #include <tsunami/geo/ImportedVector.hpp>
 
 namespace tsunami::geo
 {
+    struct CorridorConstructionRecord;
+
     struct CorridorLocalBasis
     {
         Point2D tangent;
@@ -77,5 +80,8 @@ namespace tsunami::geo
         double area_m2_{};
         double perimeter_m_{};
     };
+
+    [[nodiscard]] auto make_constructed_corridor_from_record(
+        const CorridorConstructionRecord &record) -> tsunami::core::Result<ConstructedCorridor>;
 
 } // namespace tsunami::geo
