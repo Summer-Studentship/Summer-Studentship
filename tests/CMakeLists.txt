@@ -56,8 +56,9 @@ tsunami_apply_compiler_warnings(tsunami_tests)
 if(TSUNAMI_ENABLE_GEOSPATIAL)
     target_sources(tsunami_tests PRIVATE
         geo_gdal/gdal_geospatial_import_tests.cpp
+        r2d/regional_file_case_runner_tests.cpp
     )
-    target_link_libraries(tsunami_tests PRIVATE tsunami_geo_gdal)
+    target_link_libraries(tsunami_tests PRIVATE tsunami_geo_gdal tsunami_r2d_case_runner)
     target_compile_definitions(tsunami_tests PRIVATE TSUNAMI_ENABLE_GEOSPATIAL=1)
 endif()
 

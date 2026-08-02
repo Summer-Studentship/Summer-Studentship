@@ -137,6 +137,7 @@ if(TSUNAMI_ENABLE_GEOSPATIAL)
             GDAL::GDAL
     )
     tsunami_apply_compiler_warnings(tsunami_geo_gdal)
+
 endif()
 
 if(TSUNAMI_ENABLE_CRS_TRANSFORMATIONS)
@@ -227,6 +228,32 @@ target_include_directories(tsunami_r2d_io
 target_compile_features(tsunami_r2d_io PUBLIC cxx_std_20)
 target_link_libraries(tsunami_r2d_io PUBLIC tsunami_core tsunami_r2d)
 tsunami_apply_compiler_warnings(tsunami_r2d_io)
+
+if(TSUNAMI_ENABLE_GEOSPATIAL)
+    add_library(tsunami_r2d_case_runner STATIC
+        r2d_case_runner/src/RegionalFileCaseRunner.cpp
+    )
+    add_library(Tsunami::r2d_case_runner ALIAS tsunami_r2d_case_runner)
+    target_include_directories(tsunami_r2d_case_runner
+        PUBLIC
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/r2d_case_runner/include>
+            $<INSTALL_INTERFACE:include>
+    )
+    target_compile_features(tsunami_r2d_case_runner PUBLIC cxx_std_20)
+    target_link_libraries(tsunami_r2d_case_runner
+        PUBLIC
+            tsunami_core
+            tsunami_data
+            tsunami_geo
+            tsunami_fvm
+            tsunami_r2d
+        PRIVATE
+            tsunami_geo_gdal
+            tsunami_mesh_gmsh
+            tsunami_r2d_io
+    )
+    tsunami_apply_compiler_warnings(tsunami_r2d_case_runner)
+endif()
 
 add_library(tsunami_r2d_benchmarks STATIC
     r2d_benchmarks/src/RegionalBenchmarkCases.cpp

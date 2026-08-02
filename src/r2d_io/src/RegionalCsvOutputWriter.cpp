@@ -1,5 +1,6 @@
 #include <tsunami/r2d_io/RegionalCsvOutputWriter.hpp>
 
+#include <cstdlib>
 #include <fstream>
 #include <iomanip>
 #include <optional>
@@ -16,16 +17,79 @@ namespace tsunami::r2d_io
             return tsunami::core::Error{std::move(code), std::move(message)};
         }
 
-        [[nodiscard]] auto open_append(const std::filesystem::path &path) -> tsunami::core::Result<std::ofstream>
+        [[nodiscard]] auto seam_enabled(const char *name) noexcept -> bool
         {
+            const auto *value = std::getenv(name);
+            return value != nullptr && std::string_view{value} == "1";
+        }
+
+        [[nodiscard]] auto open_append(const std::filesystem::path &path, bool &state_changed) -> tsunami::core::Result<std::ofstream>
+        {
+            std::error_code ec;
+            const auto existed = std::filesystem::exists(path, ec);
+            if (ec) {
+                return tsunami::core::failure<std::ofstream>(io_error(
+                    "r2d.io.csv.query_failed",
+                    "could not query regional CSV output path before append"));
+            }
             std::ofstream file(path, std::ios::app);
             if (!file) {
                 return tsunami::core::failure<std::ofstream>(io_error(
                     "r2d.io.csv.open_failed",
                     "could not open regional CSV output for append"));
             }
+            if (!existed) {
+                state_changed = true;
+            }
             file << std::setprecision(17);
             return tsunami::core::success(std::move(file));
+        }
+
+        [[nodiscard]] auto check_written(std::ofstream &file, std::string code, std::string message) -> tsunami::core::Result<void>
+        {
+            file.flush();
+            if (!file.good()) {
+                return tsunami::core::failure(io_error(std::move(code), std::move(message)));
+            }
+            return tsunami::core::success();
+        }
+
+        [[nodiscard]] auto snapshot_cardinality_error(
+            std::string field,
+            std::size_t expected,
+            std::size_t actual) -> tsunami::core::Error
+        {
+            auto error = tsunami::core::Error{
+                "r2d.io.csv.snapshot_invalid",
+                "regional snapshot arrays must have matching cell cardinality",
+                tsunami::core::DiagnosticCategory::validation,
+                tsunami::core::Severity::error};
+            error.add_context("field", std::move(field))
+                .add_context("expected", std::to_string(expected))
+                .add_context("actual", std::to_string(actual));
+            return error;
+        }
+
+        [[nodiscard]] auto validate_snapshot_cardinality(const tsunami::r2d::RegionalSnapshot &snapshot)
+            -> tsunami::core::Result<void>
+        {
+            const auto expected = snapshot.depth.size();
+            if (snapshot.momentum_x.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("momentum_x", expected, snapshot.momentum_x.size()));
+            }
+            if (snapshot.momentum_y.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("momentum_y", expected, snapshot.momentum_y.size()));
+            }
+            if (snapshot.bed_elevation.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error("bed_elevation", expected, snapshot.bed_elevation.size()));
+            }
+            if (snapshot.free_surface_elevation.size() != expected) {
+                return tsunami::core::failure(snapshot_cardinality_error(
+                    "free_surface_elevation",
+                    expected,
+                    snapshot.free_surface_elevation.size()));
+            }
+            return tsunami::core::success();
         }
 
         [[nodiscard]] auto restriction_name(tsunami::r2d::TimestepRestrictionKind restriction) -> std::string_view
@@ -103,36 +167,88 @@ namespace tsunami::r2d_io
     auto RegionalCsvOutputWriter::prepare() -> tsunami::core::Result<void>
     {
         std::error_code ec;
-        if (std::filesystem::exists(output_directory_, ec) && !overwrite_existing_ &&
-            (!std::filesystem::is_empty(output_directory_, ec))) {
+        const auto output_exists = std::filesystem::exists(output_directory_, ec);
+        if (ec) {
             return tsunami::core::failure(io_error(
-                "r2d.io.csv.output_exists",
-                "regional CSV output directory already exists and is not empty"));
+                "r2d.io.csv.query_failed",
+                "could not query regional CSV output directory"));
         }
-        std::filesystem::create_directories(output_directory_, ec);
+        if (output_exists) {
+            const auto output_is_directory = std::filesystem::is_directory(output_directory_, ec);
+            if (ec) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.query_failed",
+                    "could not query regional CSV output directory type"));
+            }
+            if (!output_is_directory) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.output_not_directory",
+                    "regional CSV output path exists and is not a directory"));
+            }
+            const auto empty = std::filesystem::is_empty(output_directory_, ec);
+            if (ec) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.query_failed",
+                    "could not query regional CSV output directory emptiness"));
+            }
+            if (!overwrite_existing_ && !empty) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.output_exists",
+                    "regional CSV output directory already exists and is not empty"));
+            }
+        }
+        const auto created = std::filesystem::create_directories(output_directory_, ec);
         if (ec) {
             return tsunami::core::failure(io_error(
                 "r2d.io.csv.create_failed",
                 "could not create regional CSV output directory"));
         }
-        if (overwrite_existing_) {
-            std::filesystem::remove(output_directory_ / "diagnostics.csv", ec);
-            std::filesystem::remove(output_directory_ / "snapshots.csv", ec);
-            std::filesystem::remove(output_directory_ / "earthquake_initialisation.csv", ec);
+        output_state_changed_ = output_state_changed_ || created;
+        if (seam_enabled("TSUNAMI_R2D_CSV_FAIL_PREPARE_AFTER_CREATE")) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.csv.create_failed",
+                "forced regional CSV preparation failure after directory creation"));
         }
-        diagnostics_header_written_ = std::filesystem::exists(output_directory_ / "diagnostics.csv");
-        snapshot_index_header_written_ = std::filesystem::exists(output_directory_ / "snapshots.csv");
+        if (overwrite_existing_) {
+            for (const auto &name : {"diagnostics.csv", "snapshots.csv", "earthquake_initialisation.csv"}) {
+                ec.clear();
+                const auto removed = std::filesystem::remove(output_directory_ / name, ec);
+                if (ec) {
+                    return tsunami::core::failure(io_error(
+                        "r2d.io.csv.remove_failed",
+                        "could not remove existing regional CSV output before overwrite"));
+                }
+                output_state_changed_ = output_state_changed_ || removed;
+            }
+        }
+        diagnostics_header_written_ = std::filesystem::exists(output_directory_ / "diagnostics.csv", ec);
+        if (ec) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.csv.query_failed",
+                "could not query diagnostics CSV output"));
+        }
+        snapshot_index_header_written_ = std::filesystem::exists(output_directory_ / "snapshots.csv", ec);
+        if (ec) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.csv.query_failed",
+                "could not query snapshots CSV output"));
+        }
         return tsunami::core::success();
     }
 
     auto RegionalCsvOutputWriter::write_diagnostics(const tsunami::r2d::RegionalStepDiagnostics &diagnostics)
         -> tsunami::core::Result<void>
     {
-        auto file = open_append(output_directory_ / "diagnostics.csv");
+        auto file = open_append(output_directory_ / "diagnostics.csv", output_state_changed_);
         if (!file) {
             return tsunami::core::failure(file.error());
         }
         if (!diagnostics_header_written_) {
+            if (seam_enabled("TSUNAMI_R2D_CSV_FAIL_DIAGNOSTICS_WRITE")) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.write_failed",
+                    "forced regional diagnostics CSV write failure"));
+            }
             file.value() << "step,start_time,end_time,timestep,scheme,attempted_stages,accepted_stages,rejected_attempts,"
                             "maximum_signal_speed,water_volume,momentum_x,momentum_y,wet_cells,dry_cells,minimum_depth,maximum_depth,"
                             "relaxation_zones,relaxation_active_cells,relaxation_maximum_rate,"
@@ -144,6 +260,9 @@ namespace tsunami::r2d_io
                             "source_momentum_x_change,source_momentum_y_change,"
                             "source_initial_kinetic_energy,source_final_kinetic_energy,"
                             "friction_kinetic_energy_removed,coriolis_kinetic_energy_error\n";
+            if (auto written = check_written(file.value(), "r2d.io.csv.write_failed", "could not write regional diagnostics CSV header"); !written) {
+                return written;
+            }
             diagnostics_header_written_ = true;
         }
         file.value()
@@ -183,18 +302,33 @@ namespace tsunami::r2d_io
             << diagnostics.sources.final_kinetic_energy << ','
             << diagnostics.sources.friction_kinetic_energy_removed << ','
             << diagnostics.sources.coriolis_kinetic_energy_error << '\n';
+        if (auto written = check_written(file.value(), "r2d.io.csv.write_failed", "could not write regional diagnostics CSV row"); !written) {
+            return written;
+        }
+        output_state_changed_ = true;
         return tsunami::core::success();
     }
 
     auto RegionalCsvOutputWriter::write_snapshot(const tsunami::r2d::RegionalSnapshot &snapshot)
         -> tsunami::core::Result<void>
     {
-        auto file = open_append(output_directory_ / "snapshots.csv");
+        if (auto valid = validate_snapshot_cardinality(snapshot); !valid) {
+            return valid;
+        }
+        auto file = open_append(output_directory_ / "snapshots.csv", output_state_changed_);
         if (!file) {
             return tsunami::core::failure(file.error());
         }
         if (!snapshot_index_header_written_) {
+            if (seam_enabled("TSUNAMI_R2D_CSV_FAIL_SNAPSHOT_WRITE")) {
+                return tsunami::core::failure(io_error(
+                    "r2d.io.csv.write_failed",
+                    "forced regional snapshot CSV write failure"));
+            }
             file.value() << "step,time,cell,depth,momentum_x,momentum_y,bed_elevation,free_surface_elevation\n";
+            if (auto written = check_written(file.value(), "r2d.io.csv.write_failed", "could not write regional snapshot CSV header"); !written) {
+                return written;
+            }
             snapshot_index_header_written_ = true;
         }
         for (std::size_t index = 0; index < snapshot.depth.size(); ++index) {
@@ -208,13 +342,31 @@ namespace tsunami::r2d_io
                 << snapshot.bed_elevation[index] << ','
                 << snapshot.free_surface_elevation[index] << '\n';
         }
+        if (auto written = check_written(file.value(), "r2d.io.csv.write_failed", "could not write regional snapshot CSV rows"); !written) {
+            return written;
+        }
+        output_state_changed_ = true;
         return tsunami::core::success();
     }
 
     auto RegionalCsvOutputWriter::write_earthquake_initialisation(
         const tsunami::r2d::RegionalEarthquakeInitialisationDiagnostics &diagnostics) -> tsunami::core::Result<void>
     {
-        return write_regional_earthquake_initialisation_csv(output_directory_ / "earthquake_initialisation.csv", diagnostics);
+        const auto path = output_directory_ / "earthquake_initialisation.csv";
+        std::error_code ec;
+        const auto existed = std::filesystem::exists(path, ec);
+        if (ec) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.csv.query_failed",
+                "could not query earthquake initialisation CSV output before write"));
+        }
+        auto written = write_regional_earthquake_initialisation_csv(path, diagnostics);
+        if (written) {
+            output_state_changed_ = true;
+        } else if (!existed) {
+            output_state_changed_ = true;
+        }
+        return written;
     }
 
     auto write_regional_earthquake_initialisation_csv(
@@ -270,7 +422,13 @@ namespace tsunami::r2d_io
              << diagnostics.newly_dry_cell_count << ','
              << real_string(diagnostics.pre_event_maximum_momentum) << ','
              << real_string(diagnostics.post_event_maximum_momentum) << '\n';
-        if (!file) {
+        if (seam_enabled("TSUNAMI_R2D_CSV_FAIL_EARTHQUAKE_WRITE")) {
+            return tsunami::core::failure(io_error(
+                "r2d.io.earthquake_csv_write_failed",
+                "forced earthquake initialisation CSV write failure"));
+        }
+        file.flush();
+        if (!file.good()) {
             return tsunami::core::failure(io_error(
                 "r2d.io.earthquake_csv_write_failed",
                 "could not write earthquake initialisation CSV output"));

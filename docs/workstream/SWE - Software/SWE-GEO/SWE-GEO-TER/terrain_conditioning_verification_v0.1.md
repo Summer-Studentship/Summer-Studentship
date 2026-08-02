@@ -86,6 +86,12 @@ preflight, conservative raster-cell stencil construction and mesh-bound
 lineage-version metadata, duplicate/missing/unsafe paths, out-of-range coverage
 and unknown lineage codes.
 
+The downstream `[r2d-file-runner]` vertical-slice evidence is owned by
+`SWE-VER-REG-WP1-T3`; see
+`docs/workstream/SWE - Software/SWE-VER/SWE-VER-REG/SWE-VER-REG-WP1-T3/file_driven_regional2d_runner_v0.1.md`.
+This terrain note remains limited to producer and strict artefact read-back
+evidence.
+
 ## Illustrative Fixture
 
 The illustrative terrain fixture is deterministic and non-authoritative. It is

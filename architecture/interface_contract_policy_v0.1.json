@@ -13,6 +13,7 @@
     "src/geo/include",
     "src/geo_gdal/include",
     "src/r2d/include",
+    "src/r2d_case_runner/include",
     "src/l3d/include",
     "src/coupling/include",
     "src/application/include"
@@ -42,7 +43,7 @@
         "src/core/include/tsunami/core/Types.hpp",
         "src/core/include/tsunami/core/Constants.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_cli", "tsunami_gui", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_cli", "tsunami_gui", "tsunami_tests"],
       "permitted_dependency_targets": [],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_tests"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::"],
@@ -89,7 +90,7 @@
         "src/fvm/include/tsunami/fvm/Mesh.hpp",
         "src/fvm/include/tsunami/fvm/Field.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_fvm", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_r2d", "tsunami_l3d", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_fvm", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_r2d", "tsunami_l3d", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core"],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_coupling", "tsunami_io_hdf5", "tsunami_io_xdmf"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::"],
@@ -120,7 +121,7 @@
         "src/data/include/tsunami/data/DatasetManifestValidation.hpp",
         "src/data/include/tsunami/data/DatasetManifestSerialisation.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_data", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core"],
       "prohibited_dependency_targets": ["tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::"],
@@ -147,7 +148,7 @@
         "src/geo/include/tsunami/geo/ImportedVector.hpp",
         "src/geo/include/tsunami/geo/SpatialReferenceEvidence.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_gdal", "tsunami_mesh_gmsh", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_gdal", "tsunami_mesh_gmsh", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "OSR", "CPL", "PROJ", "Gmsh", "matplot", "Eigen::", "nlohmann::"],
@@ -173,7 +174,7 @@
         "src/geo/include/tsunami/geo/CoordinateTransformationSerialisation.hpp",
         "src/geo/include/tsunami/geo/TransformedVector.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_proj", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_proj", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_geo_proj", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "OSR", "CPL", "PJ", "PJ_CONTEXT", "PROJ", "proj_", "Gmsh", "matplot", "Eigen::", "nlohmann::"],
@@ -199,7 +200,7 @@
         "src/geo/include/tsunami/geo/CorridorConstructionRecord.hpp",
         "src/geo/include/tsunami/geo/CorridorConstructionSerialisation.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_geo", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_geo", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_geo_proj", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "OSR", "CPL", "PJ", "PJ_CONTEXT", "PROJ", "proj_", "Gmsh", "matplot", "Eigen::", "nlohmann::"],
@@ -227,7 +228,7 @@
         "src/geo/include/tsunami/geo/TerrainResampling.hpp",
         "src/geo/include/tsunami/geo/TerrainTargetGrid.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_gdal", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_geo", "tsunami_geo_gdal", "tsunami_r2d", "tsunami_l3d", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_data"],
       "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_geo_proj", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "OSR", "CPL", "PJ", "PJ_CONTEXT", "PROJ", "proj_", "Gmsh", "matplot", "Eigen::", "nlohmann::"],
@@ -287,7 +288,7 @@
         "src/r2d/include/tsunami/r2d/RegionalTerrainTransfer.hpp",
         "src/r2d/include/tsunami/r2d/RegionalCasePreparation.hpp"
       ],
-      "permitted_consumer_targets": ["tsunami_r2d", "tsunami_r2d_io", "tsunami_r2d_benchmarks", "tsunami_r2d_benchmark", "tsunami_coupling", "tsunami_application", "tsunami_tests"],
+      "permitted_consumer_targets": ["tsunami_r2d", "tsunami_r2d_io", "tsunami_r2d_benchmarks", "tsunami_r2d_benchmark", "tsunami_coupling", "tsunami_application", "tsunami_r2d_case_runner", "tsunami_tests"],
       "permitted_dependency_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data", "tsunami_geo"],
       "prohibited_dependency_targets": ["tsunami_l3d", "tsunami_coupling", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
       "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "Gmsh", "matplot", "Eigen::", "tsunami::l3d"],
@@ -300,6 +301,29 @@
       "thread_safety": "not_thread_safe_by_default",
       "state": "active",
       "downstream_implementation_owner": "SWE-R2D-*"
+    },
+    {
+      "name": "regional_file_case_runner",
+      "owning_target": "tsunami_r2d_case_runner",
+      "owning_namespace": "tsunami::r2d_case",
+      "owning_wbs": "SWE-VER-REG-WP1-T3",
+      "public_headers": [
+        "src/r2d_case_runner/include/tsunami/r2d_case/RegionalFileCaseRunner.hpp"
+      ],
+      "permitted_consumer_targets": ["tsunami_r2d_case_runner", "tsunami_r2d_case", "tsunami_tests"],
+      "permitted_dependency_targets": ["tsunami_core", "tsunami_fvm", "tsunami_data", "tsunami_geo", "tsunami_r2d"],
+      "prohibited_dependency_targets": ["tsunami_cli", "tsunami_gui", "tsunami_io_hdf5", "tsunami_io_xdmf", "tsunami_geo_gdal", "tsunami_mesh_gmsh"],
+      "prohibited_external_type_tokens": ["QObject", "QString", "QVariant", "CLI::", "Catch::", "H5::", "hid_t", "GDAL", "OGR", "CPL", "PROJ", "Gmsh", "OpenFOAM", "matplot", "Eigen::", "nlohmann::"],
+      "ownership_model": "owning_value",
+      "mutability_model": "transactional_write",
+      "borrowed_lifetime_model": "not_retained",
+      "error_model": "result_based",
+      "diagnostic_model": "Runner returns Result-based errors with deterministic context and cause codes; no borrowed file objects are retained.",
+      "cancellation_model": "borrowed_token",
+      "observer_model": "synchronous_runner_call",
+      "thread_safety": "not_thread_safe_by_default",
+      "state": "active",
+      "downstream_implementation_owner": "SWE-VER-REG-WP1-T3"
     },
     {
       "name": "local_solver",
