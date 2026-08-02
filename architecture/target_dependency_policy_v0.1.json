@@ -404,7 +404,9 @@
         "tsunami_diagnostics_matplot"
       ],
       "owned_external_dependencies": [
-        "GDAL"
+        "GDAL",
+        "nlohmann-json",
+        "nlohmann_json::nlohmann_json"
       ],
       "prohibited_external_dependencies": [
         "Qt",
@@ -414,7 +416,7 @@
         "PROJ",
         "Matplot++"
       ],
-      "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction, in-memory terrain raster warp, accepted coordinate-operation reuse, source-mask propagation, conditioned terrain GeoTIFF export and error translation behind the tsunami_geo contracts. Direct external dependency remains GDAL only; G1 does not link directly to PROJ transformation APIs from this adapter, and the tsunami_geo target must not depend on this adapter."
+      "public_boundary_notes": "Owns GDAL-specific GeoTIFF and GeoPackage opening, native metadata extraction, in-memory terrain raster warp, accepted coordinate-operation reuse, source-mask propagation, conditioned terrain GeoTIFF export, earthquake displacement artifact JSON read/write and error translation behind the tsunami_geo contracts. Direct external dependencies remain GDAL and nlohmann-json only; G1 does not link directly to PROJ transformation APIs from this adapter, and the tsunami_geo target must not depend on this adapter."
     },
     {
       "target_name": "tsunami_geo_proj",
@@ -612,21 +614,24 @@
         "tsunami_r2d",
         "tsunami_geo_gdal",
         "tsunami_mesh_gmsh",
-        "tsunami_r2d_io"
+        "tsunami_r2d_io",
+        "tsunami_coupling"
       ],
       "prohibited_direct_project_dependencies": [
         "tsunami_cli",
         "tsunami_gui",
         "tsunami_tests",
         "tsunami_application",
-        "tsunami_coupling",
         "tsunami_l3d",
         "tsunami_r2d_benchmarks",
         "tsunami_io_hdf5",
         "tsunami_io_xdmf",
         "tsunami_diagnostics_matplot"
       ],
-      "owned_external_dependencies": [],
+      "owned_external_dependencies": [
+        "nlohmann-json",
+        "nlohmann_json::nlohmann_json"
+      ],
       "prohibited_external_dependencies": [
         "Qt",
         "CLI11",
@@ -634,7 +639,7 @@
         "HDF5",
         "Matplot++"
       ],
-      "public_boundary_notes": "Composes accepted case, manifest, corridor, terrain-artifact, Gmsh mesh, Regional2D preparation, solver and CSV writer contracts for headless file-driven runs. Public headers remain frontend-neutral and avoid concrete GDAL, Gmsh, CLI11, Qt, HDF5 and OpenFOAM types."
+      "public_boundary_notes": "Composes accepted case, manifest, corridor, terrain-artifact, Gmsh mesh, Regional2D preparation, solver, coupling-export and CSV writer contracts for headless file-driven runs. JSON parsing remains private to the runner implementation. Public headers remain frontend-neutral and avoid concrete GDAL, Gmsh, CLI11, Qt, HDF5 and OpenFOAM types."
     },
     {
       "target_name": "tsunami_r2d_benchmarks",

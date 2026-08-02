@@ -1,0 +1,13 @@
+step,time,section_id,local_index,cell,face,x_m,y_m,depth,momentum_x,momentum_y,bed_elevation,free_surface_elevation
+0,0,boundary.offshore,0,10,20,0,0.1,0.06,0.012,0.001,0,0.06
+0,0,boundary.offshore,1,11,21,0,0.3,0.16,0.040,-0.003,0,0.16
+0,0,boundary.offshore,2,12,22,0,0.5,0.0000002,0,0,0,0.0000002
+1,0.04,boundary.offshore,0,10,20,0,0.1,0.20,0.080,0.008,0,0.20
+1,0.04,boundary.offshore,1,11,21,0,0.3,0.28,0.140,-0.012,0,0.28
+1,0.04,boundary.offshore,2,12,22,0,0.5,0.05,0.010,0.004,0,0.05
+2,0.08,boundary.offshore,0,10,20,0,0.1,0.12,0.036,0.006,0,0.12
+2,0.08,boundary.offshore,1,11,21,0,0.3,0.34,0.170,-0.015,0,0.34
+2,0.08,boundary.offshore,2,12,22,0,0.5,0.18,0.054,0.010,0,0.18
+3,0.12,boundary.offshore,0,10,20,0,0.1,0.04,0.004,0.001,0,0.04
+3,0.12,boundary.offshore,1,11,21,0,0.3,0.18,0.054,-0.006,0,0.18
+3,0.12,boundary.offshore,2,12,22,0,0.5,0.08,0.016,0.003,0,0.08

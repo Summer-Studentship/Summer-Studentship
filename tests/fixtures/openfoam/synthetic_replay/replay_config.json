@@ -1,0 +1,39 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_replay_configuration",
+    "version": "1.0.0"
+  },
+  "section_id": "boundary.offshore",
+  "openfoam_patch": "inlet",
+  "regional": {
+    "dry_depth_m": 1.0e-6,
+    "eta_consistency_tolerance_m": 1.0e-8,
+    "inward_normal_xy": [1.0, 0.0],
+    "tangent_xy": [0.0, 1.0],
+    "vertical_datum_origin_m": 0.0
+  },
+  "local": {
+    "inward_axis": [1.0, 0.0, 0.0],
+    "span_axis": [0.0, 1.0, 0.0],
+    "vertical_axis": [0.0, 0.0, 1.0],
+    "origin_m": [0.0, 0.0, 0.0],
+    "span_min_m": 0.0,
+    "span_max_m": 0.6,
+    "vertical_min_m": 0.0,
+    "vertical_max_m": 0.6,
+    "span_cells": 6,
+    "vertical_cells": 12
+  },
+  "mapping": {
+    "spatial_interpolation": "piecewise_linear_along_section",
+    "outside_span": "clamp",
+    "velocity_profile": "depth_uniform",
+    "vertical_velocity_m_per_s": 0.0,
+    "preserve_discrete_discharge": true
+  },
+  "turbulence": {
+    "intensity": 0.05,
+    "length_scale_m": 0.05,
+    "minimum_speed_m_per_s": 0.01
+  }
+}
