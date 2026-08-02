@@ -1259,31 +1259,74 @@ namespace tsunami::geo_gdal
             return std::to_string(ticks) + "-" + std::to_string(thread_hash) + "-" + std::to_string(counter.fetch_add(1U));
         }
 
-        [[nodiscard]] auto create_transaction_directory(const std::filesystem::path &parent) -> tsunami::core::Result<std::filesystem::path>
+        [[nodiscard]] auto create_transaction_directory(
+            const std::filesystem::path &parent)
+            -> tsunami::core::Result<std::filesystem::path>
         {
+            const auto normal_parent = parent.lexically_normal();
+
             std::error_code ec;
-            std::filesystem::create_directories(parent, ec);
-            if (ec) {
-                return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "failed to create conditioned terrain artefact transaction parent directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_parent")
-                    .add_context("path", parent.generic_string()));
+            std::filesystem::create_directories(normal_parent, ec);
+            if (ec)
+            {
+                return tsunami::core::failure<std::filesystem::path>(
+                    write_error(
+                        "replacement_failed",
+                        "failed to create conditioned terrain artefact transaction parent directory",
+                        tsunami::core::DiagnosticCategory::input_data,
+                        "geo.terrain.artifact.transaction_parent")
+                        .add_context("path", normal_parent.generic_string()));
             }
-            if (test_config_matches_path("TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_TRANSACTION_PARENT", parent)) {
-                return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "test seam forced conditioned terrain transaction parent allocation failure", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_parent")
-                    .add_context("path", parent.generic_string()));
+
+            if (test_config_matches_path(
+                    "TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_TRANSACTION_PARENT",
+                    normal_parent))
+            {
+                return tsunami::core::failure<std::filesystem::path>(
+                    write_error(
+                        "replacement_failed",
+                        "test seam forced conditioned terrain transaction parent allocation failure",
+                        tsunami::core::DiagnosticCategory::input_data,
+                        "geo.terrain.artifact.transaction_parent")
+                        .add_context("path", normal_parent.generic_string()));
             }
-            for (auto attempt = 0U; attempt < 64U; ++attempt) {
-                const auto candidate = parent / (".tsunami-terrain-artifact-txn-" + unique_token() + "-" + std::to_string(attempt));
+
+            for (auto attempt = 0U; attempt < 64U; ++attempt)
+            {
+                const auto candidate =
+                    (normal_parent /
+                     (".tsunami-terrain-artifact-txn-" +
+                      unique_token() +
+                      "-" +
+                      std::to_string(attempt)))
+                        .lexically_normal();
+
                 ec.clear();
-                if (std::filesystem::create_directory(candidate, ec)) {
+
+                if (std::filesystem::create_directory(candidate, ec))
+                {
                     return tsunami::core::success(candidate);
                 }
-                if (ec && !std::filesystem::exists(candidate)) {
-                    return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "failed to claim conditioned terrain artefact transaction directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_claim")
-                        .add_context("path", candidate.generic_string()));
+
+                if (ec && !std::filesystem::exists(candidate))
+                {
+                    return tsunami::core::failure<std::filesystem::path>(
+                        write_error(
+                            "replacement_failed",
+                            "failed to claim conditioned terrain artefact transaction directory",
+                            tsunami::core::DiagnosticCategory::input_data,
+                            "geo.terrain.artifact.transaction_claim")
+                            .add_context("path", candidate.generic_string()));
                 }
             }
-            return tsunami::core::failure<std::filesystem::path>(write_error("replacement_failed", "could not allocate a unique conditioned terrain artefact transaction directory", tsunami::core::DiagnosticCategory::input_data, "geo.terrain.artifact.transaction_unique")
-                .add_context("path", parent.generic_string()));
+
+            return tsunami::core::failure<std::filesystem::path>(
+                write_error(
+                    "replacement_failed",
+                    "could not allocate a unique conditioned terrain artefact transaction directory",
+                    tsunami::core::DiagnosticCategory::input_data,
+                    "geo.terrain.artifact.transaction_unique")
+                    .add_context("path", normal_parent.generic_string()));
         }
 
         struct TransactionItem
@@ -1317,20 +1360,32 @@ namespace tsunami::geo_gdal
 
         [[nodiscard]] auto directory_for_parent(
             BundleTransaction &transaction,
-            std::vector<std::pair<std::filesystem::path, std::filesystem::path>> &mapped_directories,
-            const std::filesystem::path &parent) -> tsunami::core::Result<std::filesystem::path>
+            std::vector<std::pair<std::filesystem::path, std::filesystem::path>>
+                &mapped_directories,
+            const std::filesystem::path &parent)
+            -> tsunami::core::Result<std::filesystem::path>
         {
-            for (const auto &[mapped_parent, directory] : mapped_directories) {
-                if (mapped_parent == parent) {
+            const auto normal_parent = parent.lexically_normal();
+
+            for (const auto &[mapped_parent, directory] : mapped_directories)
+            {
+                if (mapped_parent == normal_parent)
+                {
                     return tsunami::core::success(directory);
                 }
             }
-            auto directory = create_transaction_directory(parent);
-            if (!directory) {
+
+            auto directory = create_transaction_directory(normal_parent);
+            if (!directory)
+            {
                 return directory;
             }
-            mapped_directories.push_back({parent, directory.value()});
+
+            mapped_directories.push_back(
+                {normal_parent, directory.value()});
+
             transaction.directories.push_back(directory.value());
+
             return directory;
         }
 
@@ -1667,11 +1722,15 @@ namespace tsunami::geo_gdal
                     .with_cause_code(valid.error().code()));
             }
             const auto target = terrain_path.lexically_normal();
-            const auto validation_companion = parent_or_current(target) / ".tsunami-terrain-artifact-txn-validation-placeholder";
+            const auto validation_companion =
+                (parent_or_current(target) /
+                 ".tsunami-terrain-artifact-txn-validation-placeholder")
+                    .lexically_normal();
+
             const auto validation_paths = ConditionedTerrainArtifactPaths{
                 target,
-                validation_companion / "coverage.tif",
-                validation_companion / "lineage.tif"};
+                (validation_companion / "coverage.tif").lexically_normal(),
+                (validation_companion / "lineage.tif").lexically_normal()};
             if (auto valid = validate_bundle_paths(validation_paths, false); !valid) {
                 return tsunami::core::failure<std::filesystem::path>(write_error("path_invalid", "conditioned terrain compatibility artefact output path is invalid", tsunami::core::DiagnosticCategory::validation, "geo.terrain.artifact.path_bundle")
                     .with_cause_code(valid.error().code()));

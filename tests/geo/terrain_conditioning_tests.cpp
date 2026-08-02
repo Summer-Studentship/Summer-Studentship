@@ -214,8 +214,8 @@ namespace
         const auto data = manifest();
         const auto epicentre = transformed_points({0.0, 0.0, -5.0});
         const auto target_coordinate = std::abs(config.regional_2d().corridor.bearing_degrees_clockwise_from_north - 45.0) < 1.0e-12
-            ? tsunami::geo::Coordinate3D{20.0, 20.0, 2.0}
-            : tsunami::geo::Coordinate3D{20.0, 0.0, 2.0};
+                                           ? tsunami::geo::Coordinate3D{20.0, 20.0, 2.0}
+                                           : tsunami::geo::Coordinate3D{20.0, 0.0, 2.0};
         const auto target = transformed_points(target_coordinate);
         const auto epicentre_record = transformation_record(epicentre.source_reference(), "epicentre-transform", "epicentre-import", "epicentre-source", "epicentre-asset");
         const auto target_record = transformation_record(target.source_reference(), "target-transform", "target-import", "target-source", "target-asset");
@@ -310,15 +310,22 @@ namespace
         auto output_valid_count = std::uint64_t{};
         auto source_nodata_count = std::uint64_t{};
         auto outside_coverage_count = std::uint64_t{};
-        for (const auto valid : mask) {
-            if (valid != 0U) {
+        for (const auto valid : mask)
+        {
+            if (valid != 0U)
+            {
                 cell_status.push_back(tsunami::geo::ResampledTerrainCellStatus::valid_resampled);
                 ++output_valid_count;
-            } else {
+            }
+            else
+            {
                 cell_status.push_back(invalid_status);
-                if (invalid_status == tsunami::geo::ResampledTerrainCellStatus::source_nodata) {
+                if (invalid_status == tsunami::geo::ResampledTerrainCellStatus::source_nodata)
+                {
                     ++source_nodata_count;
-                } else {
+                }
+                else
+                {
                     ++outside_coverage_count;
                 }
             }
@@ -390,7 +397,8 @@ namespace
         auto resolved = path;
         auto file = std::ifstream{resolved, std::ios::binary};
         auto current = std::filesystem::current_path();
-        for (auto depth = 0; !file && depth < 6; ++depth) {
+        for (auto depth = 0; !file && depth < 6; ++depth)
+        {
             resolved = current / path;
             file = std::ifstream{resolved, std::ios::binary};
             current = current.parent_path();
@@ -482,7 +490,8 @@ TEST_CASE("terrain target grids are corridor aligned pixel-is-area rasters with 
     CHECK(coverage.active_cell_count == 8U);
     CHECK(coverage.outside_cell_count == 0U);
     CHECK(coverage.excluded_boundary_cell_count == 0U);
-    CHECK(std::all_of(coverage.fractions.begin(), coverage.fractions.end(), [](double value) { return std::abs(value - 1.0) < 1.0e-12; }));
+    CHECK(std::all_of(coverage.fractions.begin(), coverage.fractions.end(), [](double value)
+                      { return std::abs(value - 1.0) < 1.0e-12; }));
 
     auto rotated_corridor_request = tsunami::data::CorridorRequest{"terrain-rotated", tsunami::data::CorridorOrigin{0.0, 0.0}, 45.0, 20.0, 10.0, 10.0, tsunami::data::CorridorNarrowingConfiguration{false, std::nullopt}, tsunami::data::CorridorSpongeConfiguration{0.0, 0.0}};
     auto rotated = corridor_result(rotated_corridor_request);
@@ -646,18 +655,22 @@ TEST_CASE("terrain public headers keep domain and adapter boundaries explicit", 
         "src/geo/include/tsunami/geo/TerrainResampling.hpp",
         "src/geo/include/tsunami/geo/TerrainTargetGrid.hpp"};
     const auto forbidden = std::vector<std::string>{"GDAL", "OGR", "OSR", "CPL", "PJ_CONTEXT", "PROJ", "proj_", "H5", "Gmsh", "QObject", "QString", "QVariant", "nlohmann::"};
-    for (const auto &header : domain_headers) {
+    for (const auto &header : domain_headers)
+    {
         const auto text = read_text(header);
-        for (const auto &token : forbidden) {
+        for (const auto &token : forbidden)
+        {
             CHECK(text.find(token) == std::string::npos);
         }
     }
     const auto adapter_headers = std::vector<std::filesystem::path>{
         "src/geo_gdal/include/tsunami/geo_gdal/GdalTerrainResampler.hpp",
         "src/geo_gdal/include/tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp"};
-    for (const auto &header : adapter_headers) {
+    for (const auto &header : adapter_headers)
+    {
         const auto text = read_text(header);
-        for (const auto &token : {"GDALDataset", "GDALRasterBand", "OGR", "OSR", "CPL", "PJ_CONTEXT", "PROJ", "proj_", "H5", "OpenFOAM", "QObject", "QString", "QVariant"}) {
+        for (const auto &token : {"GDALDataset", "GDALRasterBand", "OGR", "OSR", "CPL", "PJ_CONTEXT", "PROJ", "proj_", "H5", "OpenFOAM", "QObject", "QString", "QVariant"})
+        {
             CHECK(text.find(token) == std::string::npos);
         }
     }
@@ -714,7 +727,8 @@ namespace
         ScopedGdalConfig(std::string key, const char *value)
             : key_{std::move(key)}
         {
-            if (const auto *previous = CPLGetConfigOption(key_.c_str(), nullptr); previous != nullptr) {
+            if (const auto *previous = CPLGetConfigOption(key_.c_str(), nullptr); previous != nullptr)
+            {
                 previous_ = std::string{previous};
             }
             CPLSetConfigOption(key_.c_str(), value);
@@ -826,10 +840,14 @@ namespace
     {
         auto snapshot = FileSnapshot{};
         snapshot.reserve(paths.size());
-        for (const auto &path : paths) {
-            if (std::filesystem::exists(path)) {
+        for (const auto &path : paths)
+        {
+            if (std::filesystem::exists(path))
+            {
                 snapshot.push_back({path, read_bytes(path)});
-            } else {
+            }
+            else
+            {
                 snapshot.push_back({path, std::nullopt});
             }
         }
@@ -838,10 +856,12 @@ namespace
 
     auto check_snapshot_restored(const FileSnapshot &snapshot) -> void
     {
-        for (const auto &[path, bytes] : snapshot) {
+        for (const auto &[path, bytes] : snapshot)
+        {
             INFO(path.generic_string());
             CHECK(std::filesystem::exists(path) == bytes.has_value());
-            if (bytes) {
+            if (bytes)
+            {
                 CHECK(read_bytes(path) == *bytes);
             }
         }
@@ -849,13 +869,16 @@ namespace
 
     [[nodiscard]] auto contains_transaction_directory(const std::filesystem::path &root) -> bool
     {
-        if (!std::filesystem::exists(root)) {
+        if (!std::filesystem::exists(root))
+        {
             return false;
         }
-        for (const auto &entry : std::filesystem::recursive_directory_iterator{root}) {
+        for (const auto &entry : std::filesystem::recursive_directory_iterator{root})
+        {
             const auto name = entry.path().filename().generic_string();
             if (name.rfind(".tsunami-terrain-artifact-txn-", 0U) == 0U ||
-                name.rfind(".tsunami-terrain-single-artifact-txn-", 0U) == 0U) {
+                name.rfind(".tsunami-terrain-single-artifact-txn-", 0U) == 0U)
+            {
                 return true;
             }
         }
@@ -915,10 +938,12 @@ namespace
                     0,
                     0) == CE_None);
         REQUIRE(values.size() == terrain.values().size());
-        for (std::size_t i = 0U; i < values.size(); ++i) {
+        for (std::size_t i = 0U; i < values.size(); ++i)
+        {
             CHECK(values[i] == Catch::Approx(terrain.values()[i]));
         }
-        for (std::size_t i = 0U; i < mask.size(); ++i) {
+        for (std::size_t i = 0U; i < mask.size(); ++i)
+        {
             CHECK((mask[i] != 0U) == (terrain.valid_mask()[i] != 0U));
         }
     }
@@ -978,19 +1003,24 @@ namespace
         auto dataset = std::unique_ptr<GDALDataset, decltype(&GDALClose)>{raw, GDALClose};
         auto *band = dataset->GetRasterBand(1);
         REQUIRE(band != nullptr);
-        if (description) {
+        if (description)
+        {
             band->SetDescription(std::string{*description}.c_str());
         }
-        if (unit) {
+        if (unit)
+        {
             band->SetUnitType(std::string{*unit}.c_str());
         }
-        if (scale) {
+        if (scale)
+        {
             REQUIRE(band->SetScale(*scale) == CE_None);
         }
-        if (offset) {
+        if (offset)
+        {
             REQUIRE(band->SetOffset(*offset) == CE_None);
         }
-        if (nodata) {
+        if (nodata)
+        {
             REQUIRE(band->SetNoDataValue(*nodata) == CE_None);
         }
     }
@@ -1162,7 +1192,8 @@ TEST_CASE("conditioned terrain artefact bundle reads back into Regional2D prefli
 TEST_CASE("conditioned terrain artefact reader rejects stale metadata, unsafe paths and corrupted rasters", "[geo][terrain][gdal][terrain-artifact-readback]")
 {
     REQUIRE(tsunami::geo_gdal::gdal_driver_available("GTiff"));
-    const auto produced = [&] {
+    const auto produced = [&]
+    {
         const auto corridor = corridor_result();
         const auto config = case_configuration();
         const auto data = manifest();
@@ -1191,7 +1222,8 @@ TEST_CASE("conditioned terrain artefact reader rejects stale metadata, unsafe pa
         return tsunami::geo_gdal::condition_terrain_with_gdal(request).value();
     }();
 
-    const auto write_bundle = [&](std::string_view name) {
+    const auto write_bundle = [&](std::string_view name)
+    {
         const auto root = readback_case_root(name);
         auto paths = tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(root, produced.record);
         REQUIRE(paths.has_value());
@@ -1327,14 +1359,16 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
     const auto produced = conditioned_artifact_fixture();
     const auto policy = tsunami::geo_gdal::ConditionedTerrainArtifactReadPolicy{produced.record.grid_policy.maximum_output_cells};
 
-    const auto make_paths = [&](std::string_view name) {
+    const auto make_paths = [&](std::string_view name)
+    {
         const auto root = readback_case_root(name);
         auto paths = tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(root, produced.record);
         REQUIRE(paths.has_value());
         return std::pair{root, paths.value()};
     };
 
-    const auto write_bundle = [&](const tsunami::geo_gdal::ConditionedTerrainArtifactPaths &paths) {
+    const auto write_bundle = [&](const tsunami::geo_gdal::ConditionedTerrainArtifactPaths &paths)
+    {
         auto written = tsunami::geo_gdal::write_conditioned_terrain_artifacts_with_gdal(paths, produced.terrain, produced.record);
         const auto message = written.has_value() ? std::string{"written"} : written.error().code() + ": " + written.error().message();
         INFO(message);
@@ -1355,7 +1389,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
             {tsunami::geo::TerrainCellLineage::filled_from_bathymetry_neighbourhood, 9U},
             {tsunami::geo::TerrainCellLineage::filled_from_topography_neighbourhood, 10U},
         }};
-        for (const auto &[lineage, code] : expected) {
+        for (const auto &[lineage, code] : expected)
+        {
             CHECK(tsunami::geo::terrain_lineage_code(lineage) == code);
             auto decoded = tsunami::geo::terrain_cell_lineage_from_code(code);
             REQUIRE(decoded.has_value());
@@ -1402,6 +1437,44 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         CHECK(absolute_paths.value().lineage_path.parent_path() == absolute_paths.value().terrain_path.parent_path());
     }
 
+    SECTION("single terrain compatibility writer accepts a parentless relative target")
+    {
+        const auto root = readback_case_root("single-parentless");
+        const auto previous = std::filesystem::current_path();
+
+        struct CurrentPathGuard
+        {
+            std::filesystem::path previous;
+
+            ~CurrentPathGuard()
+            {
+                std::error_code ignored;
+                std::filesystem::current_path(previous, ignored);
+            }
+        } guard{previous};
+
+        std::filesystem::current_path(root);
+
+        const auto target = std::filesystem::path{"single.tif"};
+
+        auto written =
+            tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(
+                target,
+                produced.terrain,
+                produced.record);
+        const auto written_message =
+            written.has_value()
+                ? std::string{"single terrain write succeeded"}
+                : written.error().code() + ": " + written.error().message();
+
+        INFO(written_message);
+        REQUIRE(written.has_value());
+        
+        REQUIRE(std::filesystem::is_regular_file(target));
+        check_single_terrain_geotiff_matches(target, produced.terrain);
+        CHECK_FALSE(contains_transaction_directory(root));
+    }
+
     SECTION("malformed raster storage cardinality is rejected before filesystem mutation")
     {
         struct Case
@@ -1415,7 +1488,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         const auto make_raster = [&](std::vector<double> values,
                                      std::vector<std::uint8_t> mask,
                                      std::vector<double> coverage,
-                                     std::vector<tsunami::geo::TerrainCellLineage> lineage) {
+                                     std::vector<tsunami::geo::TerrainCellLineage> lineage)
+        {
             return tsunami::geo::ConditionedTerrainRaster{
                 produced.terrain.grid(),
                 std::move(values),
@@ -1475,7 +1549,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
                 produced.terrain.cell_lineage()),
             std::to_string(produced.terrain.values().size() + 1U)});
 
-        for (const auto &test_case : cases) {
+        for (const auto &test_case : cases)
+        {
             const auto [root, paths] = make_paths(test_case.name);
             write_bytes(paths.terrain_path, "existing terrain");
             write_bytes(paths.coverage_path, "existing coverage");
@@ -1587,7 +1662,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
             std::filesystem::path{paths.terrain_path.string() + ".bak"},
             std::filesystem::path{paths.coverage_path.string() + ".bak"},
             std::filesystem::path{paths.lineage_path.string() + ".bak"}};
-        for (std::size_t i = 0U; i < sentinels.size(); ++i) {
+        for (std::size_t i = 0U; i < sentinels.size(); ++i)
+        {
             write_bytes(sentinels[i], "sentinel " + std::to_string(i));
         }
         const auto snapshot = snapshot_files(sentinels);
@@ -1632,7 +1708,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         const auto make_raster = [&](std::vector<double> values,
                                      std::vector<std::uint8_t> mask,
                                      std::vector<double> coverage,
-                                     std::vector<tsunami::geo::TerrainCellLineage> lineage) {
+                                     std::vector<tsunami::geo::TerrainCellLineage> lineage)
+        {
             return tsunami::geo::ConditionedTerrainRaster{
                 produced.terrain.grid(),
                 std::move(values),
@@ -1677,7 +1754,8 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
                     produced.terrain.corridor_coverage_fraction(),
                     std::vector<tsunami::geo::TerrainCellLineage>{produced.terrain.cell_lineage().begin(), produced.terrain.cell_lineage().end() - 1})}};
 
-        for (const auto &test_case : cases) {
+        for (const auto &test_case : cases)
+        {
             const auto root = std::filesystem::temp_directory_path() / ("tsunami-terrain-artifact-readback-" + test_case.name);
             std::filesystem::remove_all(root);
             const auto terrain_path = root / "outputs/terrain/single.tif";
@@ -1735,12 +1813,11 @@ TEST_CASE("conditioned terrain artefact writer replaces bundles transactionally"
         write_bytes(sentinels[1U], "do not delete lineage");
         auto written = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
         REQUIRE(written.has_value());
-        const auto snapshot = snapshot_files({
-            terrain_path,
-            path_with_suffix(terrain_path, ".msk"),
-            path_with_suffix(terrain_path, ".aux.xml"),
-            sentinels[0U],
-            sentinels[1U]});
+        const auto snapshot = snapshot_files({terrain_path,
+                                              path_with_suffix(terrain_path, ".msk"),
+                                              path_with_suffix(terrain_path, ".aux.xml"),
+                                              sentinels[0U],
+                                              sentinels[1U]});
 
         const auto fail_after_terrain = ScopedGdalConfig{"TSUNAMI_TEST_TERRAIN_ARTIFACT_FAIL_AFTER_TERRAIN_STAGING", "YES"};
         auto failed = tsunami::geo_gdal::write_conditioned_terrain_geotiff_with_gdal(terrain_path, produced.terrain, produced.record);
