@@ -1,0 +1,13 @@
+{
+  "contract_version": 1,
+  "section_id": "boundary.offshore",
+  "boundary_patch_name": "boundary.offshore",
+  "mesh_id": "synthetic:g3-coupling-smoke",
+  "sample_count": 3,
+  "fields": ["depth", "momentum_x", "momentum_y", "bed_elevation", "free_surface_elevation"],
+  "samples": [
+    {"local_index": 0, "cell": 10, "face": 20, "x_m": 0.0, "y_m": 0.1},
+    {"local_index": 1, "cell": 11, "face": 21, "x_m": 0.0, "y_m": 0.3},
+    {"local_index": 2, "cell": 12, "face": 22, "x_m": 0.0, "y_m": 0.5}
+  ]
+}

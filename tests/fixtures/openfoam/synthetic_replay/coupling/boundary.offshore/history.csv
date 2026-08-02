@@ -1,0 +1,5 @@
+step,time,section_id,sample_count,maximum_depth,maximum_speed
+0,0,boundary.offshore,3,0.16,0.25070213900164473
+1,0.04,boundary.offshore,3,0.28,0.5018333734357228
+2,0.08,boundary.offshore,3,0.34,0.5019425931140004
+3,0.12,boundary.offshore,3,0.18,0.30184617127124724
