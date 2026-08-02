@@ -1,17 +1,54 @@
 #include <CLI/CLI.hpp>
 
+#include <algorithm>
 #include <filesystem>
 #include <iostream>
 #include <optional>
 #include <string>
+#include <vector>
 
 #include <tsunami/r2d_case/RegionalFileCaseRunner.hpp>
 
 namespace
 {
-    [[nodiscard]] auto context_value(const tsunami::core::Error &error, std::string_view key) -> std::string
+    [[nodiscard]] auto logical_id_valid(std::string_view value) noexcept -> bool
     {
-        return error.context_value(key).value_or("");
+        constexpr auto max_logical_id_length = std::size_t{128U};
+        if (value.empty() || value.size() > max_logical_id_length || value.find('\0') != std::string_view::npos) {
+            return false;
+        }
+        auto expect_alnum = true;
+        auto previous_separator = false;
+        for (const auto ch : value) {
+            const auto is_alnum = (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
+            const auto is_separator = ch == '.' || ch == '_' || ch == '-';
+            if (is_alnum) {
+                expect_alnum = false;
+                previous_separator = false;
+            } else if (is_separator && !expect_alnum && !previous_separator) {
+                expect_alnum = true;
+                previous_separator = true;
+            } else {
+                return false;
+            }
+        }
+        return !expect_alnum && !previous_separator;
+    }
+
+    auto print_failure(const tsunami::core::Error &error) -> void
+    {
+        std::cerr << "error_code=" << error.code() << '\n'
+                  << "error_message=" << error.message() << '\n';
+        if (error.cause_code()) {
+            std::cerr << "cause_code=" << *error.cause_code() << '\n';
+        }
+        auto context = std::vector<tsunami::core::ErrorContextEntry>{error.context().begin(), error.context().end()};
+        std::sort(context.begin(), context.end(), [](const auto &left, const auto &right) {
+            return left.key < right.key;
+        });
+        for (const auto &entry : context) {
+            std::cerr << entry.key << '=' << entry.value << '\n';
+        }
     }
 
     [[nodiscard]] auto make_request(
@@ -19,7 +56,7 @@ namespace
         const std::filesystem::path &terrain_record,
         const std::filesystem::path &mesh,
         const std::optional<std::filesystem::path> &corridor_record,
-        const std::string &run_id,
+        tsunami::core::RunId run_id,
         const tsunami::r2d::RegionalCasePreparationPolicy &preparation,
         const tsunami::r2d::RegionalRasterCellTransferPolicy &transfer,
         bool overwrite) -> tsunami::r2d_case::RegionalFileCaseRunRequest
@@ -29,7 +66,7 @@ namespace
             terrain_record,
             mesh,
             corridor_record,
-            run_id,
+            std::move(run_id),
             tsunami::r2d_case::RegionalFileCaseRunPolicy{preparation, transfer},
             overwrite,
             {}};
@@ -89,23 +126,49 @@ auto main(int argc, char **argv) -> int
         return app.exit(error);
     }
 
+    if (!logical_id_valid(run_id)) {
+        auto error = tsunami::core::Error{
+            "r2d.file_case.request_invalid",
+            "run-id must be a canonical logical identifier",
+            tsunami::core::DiagnosticCategory::validation,
+            tsunami::core::Severity::error};
+        error.add_context("operation", "tsunami_r2d_case")
+            .add_context("stage", "request")
+            .add_context("state_changed", "false")
+            .add_context("run_id", run_id);
+        print_failure(error);
+        return 1;
+    }
+    auto strong_run_id = tsunami::core::RunId::from_string(run_id);
+    if (!strong_run_id) {
+        auto error = tsunami::core::Error{
+            "r2d.file_case.request_invalid",
+            "run-id could not be constructed",
+            tsunami::core::DiagnosticCategory::validation,
+            tsunami::core::Severity::error};
+        error.add_context("operation", "tsunami_r2d_case")
+            .add_context("stage", "request")
+            .add_context("state_changed", "false")
+            .add_context("run_id", run_id);
+        print_failure(error);
+        return 1;
+    }
+
     auto result = tsunami::r2d_case::run_regional_case_from_files(
-        make_request(case_root, terrain_record, mesh, corridor_record, run_id, preparation, transfer, overwrite));
+        make_request(case_root, terrain_record, mesh, corridor_record, *std::move(strong_run_id), preparation, transfer, overwrite));
     if (!result) {
-        const auto &error = result.error();
-        std::cerr << "error_code=" << error.code() << '\n'
-                  << "error_message=" << error.message() << '\n'
-                  << "stage=" << context_value(error, "stage") << '\n'
-                  << "state_changed=" << context_value(error, "state_changed") << '\n';
-        if (error.cause_code()) {
-            std::cerr << "cause_code=" << *error.cause_code() << '\n';
-        }
+        print_failure(result.error());
         return 1;
     }
 
     const auto &run = result.value();
-    std::cout << "run_id=" << run.diagnostics.run_id << '\n'
-              << "case_id=" << run.diagnostics.case_id << '\n'
+    std::cout << "case_id=" << run.diagnostics.case_id << '\n'
+              << "case_revision=" << run.diagnostics.case_revision << '\n'
+              << "manifest_id=" << run.diagnostics.manifest_id << '\n'
+              << "manifest_revision=" << run.diagnostics.manifest_revision << '\n'
+              << "run_id=" << run.diagnostics.run_id << '\n'
+              << "corridor_id=" << run.diagnostics.corridor_id << '\n'
+              << "terrain_id=" << run.diagnostics.terrain_id << '\n'
               << "mesh_id=" << run.diagnostics.mesh_id << '\n'
               << "steps=" << run.diagnostics.solve.accepted_step_count << '\n'
               << "final_time=" << run.final_simulation_time << '\n'

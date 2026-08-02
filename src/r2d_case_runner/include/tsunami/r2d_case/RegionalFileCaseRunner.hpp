@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include <tsunami/core/Identity.hpp>
 #include <tsunami/core/Result.hpp>
 #include <tsunami/r2d/RegionalCasePreparation.hpp>
 #include <tsunami/r2d/RegionalSolveLoop.hpp>
@@ -27,7 +28,7 @@ namespace tsunami::r2d_case
         std::filesystem::path terrain_record_path;
         std::filesystem::path mesh_path;
         std::optional<std::filesystem::path> corridor_record_path;
-        std::string run_id;
+        tsunami::core::RunId run_id;
         RegionalFileCaseRunPolicy policy;
         bool overwrite_existing_outputs{};
         std::stop_token stop_token{};

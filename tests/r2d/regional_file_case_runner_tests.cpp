@@ -1,6 +1,7 @@
 #include <catch2/catch_approx.hpp>
 #include <catch2/catch_test_macros.hpp>
 
+#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iterator>
@@ -14,8 +15,11 @@
 #include <tsunami/data/CaseConfigurationSerialisation.hpp>
 #include <tsunami/data/DatasetManifestParsing.hpp>
 #include <tsunami/data/DatasetManifestSerialisation.hpp>
+#include <tsunami/geo/CorridorConstruction.hpp>
+#include <tsunami/geo/CorridorConstructionParsing.hpp>
 #include <tsunami/geo/CorridorConstructionSerialisation.hpp>
 #include <tsunami/geo/TerrainConditioning.hpp>
+#include <tsunami/geo/TerrainConditioningParsing.hpp>
 #include <tsunami/geo/TerrainConditioningSerialisation.hpp>
 #include <tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp>
 #include <tsunami/r2d_case/RegionalFileCaseRunner.hpp>
@@ -38,6 +42,35 @@ namespace
         std::filesystem::path terrain_record{"manifests/terrain/conditioned-terrain.json"};
         std::filesystem::path mesh{"meshes/regional-square.msh"};
         std::filesystem::path override_corridor{"manifests/corridors/override-corridor.json"};
+    };
+
+    class ScopedEnvironmentFlag
+    {
+    public:
+        explicit ScopedEnvironmentFlag(const char *name)
+            : name_{name}
+        {
+#ifdef _WIN32
+            _putenv_s(name_, "1");
+#else
+            setenv(name_, "1", 1);
+#endif
+        }
+
+        ScopedEnvironmentFlag(const ScopedEnvironmentFlag &) = delete;
+        auto operator=(const ScopedEnvironmentFlag &) -> ScopedEnvironmentFlag & = delete;
+
+        ~ScopedEnvironmentFlag()
+        {
+#ifdef _WIN32
+            _putenv_s(name_, "");
+#else
+            unsetenv(name_);
+#endif
+        }
+
+    private:
+        const char *name_{};
     };
 
     [[nodiscard]] auto source_root() -> std::filesystem::path
@@ -67,6 +100,16 @@ namespace
         REQUIRE(file.good());
     }
 
+    [[nodiscard]] auto replace_all(std::string text, std::string_view from, std::string_view to) -> std::string
+    {
+        auto pos = std::size_t{};
+        while ((pos = text.find(from, pos)) != std::string::npos) {
+            text.replace(pos, from.size(), to);
+            pos += to.size();
+        }
+        return text;
+    }
+
     [[nodiscard]] auto case_revision(const tsunami::data::CaseConfiguration &configuration)
         -> tsunami::data::CaseRevisionRef
     {
@@ -86,119 +129,193 @@ namespace
         return tsunami::tests::r2d_fixtures::target_reference();
     }
 
-    [[nodiscard]] auto transformation_identity(
-        std::string id,
-        const tsunami::data::CaseConfiguration &configuration)
-        -> tsunami::geo::CoordinateTransformationIdentity
+    [[nodiscard]] auto asset(
+        std::string asset_id,
+        std::filesystem::path managed_path,
+        std::string digest_value) -> tsunami::data::DatasetAsset
     {
-        const auto prefix = id;
-        return tsunami::tests::r2d_fixtures::transformation_identity(
-            std::move(id),
-            prefix + "-import",
-            prefix + "-source-dataset",
-            prefix + "-source-asset",
+        return tsunami::data::DatasetAsset{
+            std::move(asset_id),
+            tsunami::data::DatasetAssetRole::primary,
+            tsunami::data::DatasetAssetLocation{
+                tsunami::data::DatasetLocationKind::managed_path,
+                std::move(managed_path),
+                std::nullopt},
+            "application/octet-stream",
+            std::uint64_t{1024U},
+            tsunami::data::ContentDigest{
+                tsunami::data::DigestAlgorithm::sha256,
+                std::move(digest_value),
+                tsunami::data::DigestOrigin::provider_declared}};
+    }
+
+    [[nodiscard]] auto dataset(
+        std::string dataset_id,
+        std::string asset_id,
+        tsunami::data::DatasetRole role,
+        tsunami::data::DatasetRepresentationKind representation,
+        std::string digest_value) -> tsunami::data::DatasetRecord
+    {
+        return tsunami::data::DatasetRecord{
+            std::move(dataset_id),
+            tsunami::data::DatasetOriginKind::source,
+            representation,
+            {role},
+            "Synthetic Regional2D file-runner source",
+            std::string{"Producer-derived file-runner fixture source."},
+            "illustrative-provider",
+            "illustrative-licence",
+            tsunami::data::SourceAcquisitionRecord{
+                "https://example.invalid/file-runner-source",
+                "2026-07-30T20:05:00Z",
+                std::string{"illustrative-v1"},
+                std::string{"2026-07-30"}},
+            std::nullopt,
+            {asset(asset_id, std::filesystem::path{"inputs/data"} / (asset_id + ".bin"), std::move(digest_value))},
+            tsunami::data::DatasetSpatialReference{
+                tsunami::data::SpatialApplicability::spatial,
+                std::string{"TEST:SOURCE"},
+                std::string{"synthetic-positive-up"},
+                std::string{"m"},
+                std::string{"m"},
+                std::string{"east_north"},
+                std::string{"up"}},
+            tsunami::data::DatasetResolution{
+                tsunami::data::SpatialResolution{tsunami::data::SpatialResolutionKind::nominal, 10.0, 10.0, std::string{"m"}, std::nullopt},
+                tsunami::data::TemporalResolution{tsunami::data::TemporalResolutionKind::static_dataset, std::nullopt, std::nullopt, std::nullopt}},
+            tsunami::data::DatasetUncertainty{tsunami::data::UncertaintyStatus::not_reported, {}, std::string{"not_reported"}},
+            std::string{"Synthetic citation only"},
+            {}};
+    }
+
+    [[nodiscard]] auto dataset_manifest(const tsunami::data::CaseConfiguration &configuration)
+        -> tsunami::data::DatasetManifest
+    {
+        auto made = tsunami::data::make_dataset_manifest(
+            tsunami::data::SchemaIdentity{
+                std::string{tsunami::data::dataset_manifest_schema_name},
+                tsunami::data::supported_dataset_manifest_version},
+            tsunami::data::DatasetManifestCompatibility::exact,
+            std::string{tsunami::data::supported_dataset_manifest_policy_version},
+            tsunami::data::DatasetManifestIdentity{
+                "minimal-source-manifest",
+                1U,
+                case_revision(configuration),
+                "2026-07-30T20:00:00Z",
+                "fixture-author"},
+            {tsunami::data::DatasetProvider{
+                "illustrative-provider",
+                "Illustrative Provider",
+                std::string{"Illustrative Organisation"},
+                std::string{"https://example.invalid/provider"},
+                {}}},
+            {tsunami::data::DatasetLicence{
+                "illustrative-licence",
+                "Illustrative Licence",
+                "LicenseRef-Illustrative",
+                std::string{"https://example.invalid/licence"},
+                std::string{"Illustrative attribution only"},
+                {}}},
+            {dataset("bathymetry-primary", "bathymetry-asset", tsunami::data::DatasetRole::bathymetry, tsunami::data::DatasetRepresentationKind::raster, std::string(64U, '0')),
+             dataset("topography-primary", "topography-asset", tsunami::data::DatasetRole::topography, tsunami::data::DatasetRepresentationKind::raster, std::string(64U, '1')),
+             dataset("epicentre-source-dataset", "epicentre-source-asset", tsunami::data::DatasetRole::auxiliary, tsunami::data::DatasetRepresentationKind::point_series, std::string(64U, '2')),
+             dataset("target-source-dataset", "target-source-asset", tsunami::data::DatasetRole::auxiliary, tsunami::data::DatasetRepresentationKind::point_series, std::string(64U, '3'))},
+            {},
+            {});
+        REQUIRE(made.has_value());
+        return std::move(made).value();
+    }
+
+    [[nodiscard]] auto transformed_points(tsunami::geo::Coordinate3D point, std::string code = "EN-METRIC-1")
+        -> tsunami::geo::TransformedPointSet
+    {
+        auto made = tsunami::geo::make_transformed_point_set(reference("SOURCE-" + code), target_reference(), {point});
+        REQUIRE(made.has_value());
+        return std::move(made).value();
+    }
+
+    [[nodiscard]] auto transformation_record(
+        const tsunami::geo::TransformedPointSet &points,
+        const tsunami::data::CaseConfiguration &configuration,
+        std::string transformation_id,
+        std::string source_dataset_id,
+        std::string source_asset_id,
+        std::string output_dataset_id) -> tsunami::geo::CoordinateTransformationRecord
+    {
+        auto record = tsunami::geo::CoordinateTransformationRecord{};
+        const auto import_id = output_dataset_id + "-import";
+        record.identity = tsunami::tests::r2d_fixtures::transformation_identity(
+            std::move(transformation_id),
+            import_id,
+            std::move(source_dataset_id),
+            std::move(source_asset_id),
             case_revision(configuration),
             "minimal-source-manifest",
             1U,
-            prefix + "-transformed-dataset",
-            prefix + "-transform-process");
+            std::move(output_dataset_id),
+            "transform-process");
+        record.source_horizontal = points.source_reference();
+        record.target = points.target_reference();
+        return record;
     }
 
     [[nodiscard]] auto corridor_fixture(
-        const tsunami::data::CaseConfiguration &configuration) -> CorridorFixture
+        const tsunami::data::CaseConfiguration &configuration,
+        const tsunami::data::DatasetManifest &manifest) -> CorridorFixture
     {
-        const auto polygon = tsunami::geo::Polygon2D{
-            {
-                {-10.0, 5.0},
-                {-10.0, -5.0},
-                {30.0, -5.0},
-                {30.0, 5.0},
-                {-10.0, 5.0},
-            },
-            {}};
-        const auto extent = tsunami::geo::BoundingBox2D{-10.0, -5.0, 30.0, 5.0};
-        const auto basis = tsunami::geo::CorridorLocalBasis{{1.0, 0.0}, {0.0, 1.0}, 20.0, 90.0};
-        const auto stations = tsunami::geo::CorridorLongitudinalStations{-10.0, 0.0, 20.0, 30.0};
-        const auto sponge = tsunami::geo::CorridorSpongeLimits{-10.0, -10.0, 0.0, 10.0};
-        auto corridor = tsunami::geo::ConstructedCorridor{
-            polygon,
-            extent,
-            basis,
-            stations,
-            sponge,
-            10.0,
-            10.0,
-            40.0,
-            400.0,
-            100.0};
-
-        auto record = tsunami::geo::CorridorConstructionRecord{};
-        record.schema = tsunami::data::SchemaIdentity{
-            std::string{tsunami::geo::corridor_construction_record_schema_name},
-            tsunami::geo::supported_corridor_construction_record_version};
-        record.policy_version = tsunami::geo::supported_corridor_construction_record_policy_version;
-        record.identity = tsunami::geo::CorridorConstructionIdentity{
-            "corridor-file-runner",
-            1U,
-            case_revision(configuration),
-            configuration.regional_2d().corridor.trajectory_id,
-            "corridor-dataset",
-            "corridor-process",
-            "2026-07-31T00:00:00Z"};
-        record.scenario_id = configuration.scenario().scenario_id;
-        record.target_site = configuration.scenario().target_site;
-        record.epicentre = tsunami::geo::CorridorReferencePointEvidence{
-            tsunami::geo::CorridorReferencePointRole::epicentre,
-            "epicentre-point",
-            "synthetic epicentre",
-            {0.0, 0.0, -5.0},
-            0U,
-            std::string{"feature-epicentre"},
-            transformation_identity("epicentre-transform", configuration),
-            reference("SOURCE"),
-            target_reference(),
-            "Synthetic file-runner fixture",
-            "https://example.test/file-runner/epicentre",
-            "2026-07-31T00:00:00Z"};
-        record.target = tsunami::geo::CorridorReferencePointEvidence{
-            tsunami::geo::CorridorReferencePointRole::target,
-            "target-point",
-            "synthetic target",
-            {20.0, 0.0, 2.0},
-            0U,
-            std::string{"feature-target"},
-            transformation_identity("target-transform", configuration),
-            reference("SOURCE"),
-            target_reference(),
-            "Synthetic file-runner fixture",
-            "https://example.test/file-runner/target",
-            "2026-07-31T00:00:00Z"};
-        record.target_reference = target_reference();
-        record.policy = tsunami::geo::CorridorConstructionPolicy{1.0, 0.001, 0.001, 1.0e-12, 1.0e-7, 1.0e-12, "synthetic metric tolerances"};
-        record.configured_origin = {0.0, 0.0};
-        record.configured_bearing_degrees = 90.0;
-        record.derived_bearing_degrees = 90.0;
-        record.offshore_extent_m = 10.0;
-        record.epicentre_target_distance_m = 20.0;
-        record.inland_extent_m = 10.0;
-        record.total_length_m = 40.0;
-        record.offshore_width_m = 10.0;
-        record.inland_width_m = 10.0;
-        record.narrowing_rule = "constant_width";
-        record.local_basis = basis;
-        record.stations = stations;
-        record.sponge_limits = sponge;
-        record.polygon = polygon;
-        record.vertex_order_convention = "counter_clockwise_closed_offshore_left_offshore_right_inland_right_inland_left";
-        record.extent = extent;
-        record.area_m2 = 400.0;
-        record.perimeter_m = 100.0;
-        record.diagnostics.analytic_area_m2 = 400.0;
-        record.diagnostics.polygon_area_m2 = 400.0;
-        record.diagnostics.analytic_perimeter_m = 100.0;
-        record.diagnostics.polygon_perimeter_m = 100.0;
-        record.configured_field_paths = {"/regional_2d/corridor"};
-        return CorridorFixture{std::move(corridor), std::move(record)};
+        const auto epicentre = transformed_points({0.0, 0.0, -5.0});
+        const auto target = transformed_points({20.0, 0.0, 2.0});
+        const auto epicentre_record = transformation_record(
+            epicentre,
+            configuration,
+            "epicentre-transform",
+            "epicentre-source-dataset",
+            "epicentre-source-asset",
+            "epicentre-transformed-dataset");
+        const auto target_record = transformation_record(
+            target,
+            configuration,
+            "target-transform",
+            "target-source-dataset",
+            "target-source-asset",
+            "target-transformed-dataset");
+        auto result = tsunami::geo::construct_corridor(tsunami::geo::CorridorConstructionRequest{
+            &configuration,
+            &manifest,
+            tsunami::geo::CorridorReferencePointRequest{
+                tsunami::geo::CorridorReferencePointRole::epicentre,
+                &epicentre,
+                0U,
+                &epicentre_record,
+                "epicentre-point",
+                "synthetic epicentre",
+                std::string{"feature-epicentre"},
+                "Synthetic file-runner fixture",
+                "https://example.test/file-runner/epicentre",
+                "2026-07-31T00:00:00Z"},
+            tsunami::geo::CorridorReferencePointRequest{
+                tsunami::geo::CorridorReferencePointRole::target,
+                &target,
+                0U,
+                &target_record,
+                "target-point",
+                "synthetic target",
+                std::string{"feature-target"},
+                "Synthetic file-runner fixture",
+                "https://example.test/file-runner/target",
+                "2026-07-31T00:00:00Z"},
+            tsunami::geo::CorridorConstructionIdentity{
+                "corridor-file-runner",
+                1U,
+                case_revision(configuration),
+                configuration.regional_2d().corridor.trajectory_id,
+                "corridor-dataset",
+                "corridor-process",
+                "2026-07-31T00:00:00Z"},
+            tsunami::geo::CorridorConstructionPolicy{1.0, 0.001, 0.001, 1.0e-12, 1.0e-7, 1.0e-12, "synthetic metric tolerances"}});
+        REQUIRE(result.has_value());
+        auto produced = std::move(result).value();
+        return CorridorFixture{std::move(produced.corridor), std::move(produced.record)};
     }
 
     [[nodiscard]] auto terrain_grid() -> tsunami::geo::TerrainTargetGrid
@@ -403,15 +520,12 @@ $EndElements
         std::filesystem::create_directories(fixture.root);
 
         auto configuration = case_configuration();
-        auto manifest = tsunami::data::parse_dataset_manifest(
-            read_text(source_root() / "tests/fixtures/manifests/valid/minimal_source_manifest.json"),
-            "minimal-manifest");
-        REQUIRE(manifest.has_value());
+        auto manifest = dataset_manifest(configuration);
         std::filesystem::create_directories(fixture.root / "manifests");
         REQUIRE(tsunami::data::write_case_configuration(fixture.root / "case.json", configuration).has_value());
-        REQUIRE(tsunami::data::write_dataset_manifest(fixture.root / "manifests/datasets.json", manifest.value()).has_value());
+        REQUIRE(tsunami::data::write_dataset_manifest(fixture.root / "manifests/datasets.json", manifest).has_value());
 
-        auto corridor = corridor_fixture(configuration);
+        auto corridor = corridor_fixture(configuration, manifest);
         const auto default_corridor = tsunami::geo::default_corridor_construction_record_path(
             configuration.regional_2d().corridor.trajectory_id);
         REQUIRE(tsunami::geo::write_corridor_construction_record(fixture.root / default_corridor, corridor.record).has_value());
@@ -432,12 +546,14 @@ $EndElements
         std::optional<std::filesystem::path> corridor = std::nullopt,
         bool overwrite = false) -> tsunami::r2d_case::RegionalFileCaseRunRequest
     {
+        auto strong_run_id = tsunami::core::RunId::from_string(std::move(run_id));
+        REQUIRE(strong_run_id.has_value());
         return tsunami::r2d_case::RegionalFileCaseRunRequest{
             fixture.root,
             fixture.terrain_record,
             fixture.mesh,
             std::move(corridor),
-            std::move(run_id),
+            *std::move(strong_run_id),
             tsunami::r2d_case::RegionalFileCaseRunPolicy{
                 tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
                 tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
@@ -450,6 +566,27 @@ $EndElements
         auto value = error.context_value(key);
         REQUIRE(value.has_value());
         return *value;
+    }
+
+    [[nodiscard]] auto terrain_artifact_paths(const FileCaseFixture &fixture)
+        -> tsunami::geo_gdal::ConditionedTerrainArtifactPaths
+    {
+        auto record = tsunami::geo::read_terrain_conditioning_record(fixture.root / fixture.terrain_record);
+        REQUIRE(record.has_value());
+        auto paths = tsunami::geo_gdal::make_conditioned_terrain_artifact_paths(fixture.root, record.value());
+        REQUIRE(paths.has_value());
+        return paths.value();
+    }
+
+    auto require_failure(
+        const tsunami::core::Result<tsunami::r2d_case::RegionalFileCaseRunResult> &result,
+        std::string_view code,
+        std::string_view state_changed) -> const tsunami::core::Error &
+    {
+        REQUIRE_FALSE(result.has_value());
+        CHECK(result.error().code() == code);
+        CHECK(context_value(result.error(), "state_changed") == state_changed);
+        return result.error();
     }
 } // namespace
 
@@ -494,6 +631,184 @@ TEST_CASE("file-driven Regional2D runner rejects unsafe paths before outputs", "
     std::filesystem::remove_all(fixture.root);
 }
 
+TEST_CASE("file-driven Regional2D runner enforces physical containment", "[r2d-file-runner]")
+{
+    SECTION("case.json symlink outside root is rejected")
+    {
+        const auto fixture = make_fixture("case-symlink");
+        const auto outside = std::filesystem::temp_directory_path() / "tsunami-r2d-file-runner-case-outside.json";
+        write_text(outside, read_text(fixture.root / "case.json"));
+        std::filesystem::remove(fixture.root / "case.json");
+        std::filesystem::create_symlink(outside, fixture.root / "case.json");
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "case-escape"));
+        const auto &error = require_failure(result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(error, "path_failure") == "path_escape");
+        CHECK_FALSE(std::filesystem::exists(fixture.root / "runs/case-escape"));
+        CHECK(read_text(outside) == read_text(outside));
+        std::filesystem::remove(outside);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("terrain artefact symlink outside root is rejected")
+    {
+        const auto fixture = make_fixture("artifact-symlink");
+        const auto paths = terrain_artifact_paths(fixture);
+        const auto outside = std::filesystem::temp_directory_path() / "tsunami-r2d-file-runner-artifact-outside.tif";
+        write_text(outside, "outside sentinel\n");
+        std::filesystem::remove(paths.terrain_path);
+        std::filesystem::create_symlink(outside, paths.terrain_path);
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "artifact-escape"));
+        const auto &error = require_failure(result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(error, "path_failure") == "path_escape");
+        CHECK(read_text(outside) == "outside sentinel\n");
+        std::filesystem::remove(outside);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("runs symlink outside root is rejected before output mutation")
+    {
+        const auto fixture = make_fixture("runs-symlink");
+        const auto outside = std::filesystem::temp_directory_path() / "tsunami-r2d-file-runner-runs-outside";
+        std::filesystem::remove_all(outside);
+        std::filesystem::create_directories(outside);
+        write_text(outside / "sentinel.txt", "preserve\n");
+        std::filesystem::create_directory_symlink(outside, fixture.root / "runs");
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "runs-escape"));
+        const auto &error = require_failure(result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(error, "path_failure") == "path_escape");
+        CHECK(read_text(outside / "sentinel.txt") == "preserve\n");
+        std::filesystem::remove_all(outside);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("run-specific directory symlink outside root is rejected")
+    {
+        const auto fixture = make_fixture("run-symlink");
+        const auto outside = std::filesystem::temp_directory_path() / "tsunami-r2d-file-runner-run-outside";
+        std::filesystem::remove_all(outside);
+        std::filesystem::create_directories(outside);
+        write_text(outside / "sentinel.txt", "preserve\n");
+        std::filesystem::create_directories(fixture.root / "runs");
+        std::filesystem::create_directory_symlink(outside, fixture.root / "runs/run-escape");
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "run-escape"));
+        const auto &error = require_failure(result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(error, "path_failure") == "path_escape");
+        CHECK(read_text(outside / "sentinel.txt") == "preserve\n");
+        std::filesystem::remove_all(outside);
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("runs symlink inside root is accepted when containment is proven")
+    {
+        const auto fixture = make_fixture("safe-symlink");
+        std::filesystem::create_directories(fixture.root / "safe-runs");
+        std::filesystem::create_directory_symlink(fixture.root / "safe-runs", fixture.root / "runs");
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "safe-link"));
+        REQUIRE(result.has_value());
+        CHECK(std::filesystem::is_regular_file(fixture.root / "safe-runs/safe-link/outputs/regional2d/diagnostics.csv"));
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("parent traversal and directory inputs are rejected")
+    {
+        const auto fixture = make_fixture("traversal-directory");
+        auto traversal = request_for(fixture, "traversal");
+        traversal.terrain_record_path = "../terrain.json";
+        auto traversal_result = tsunami::r2d_case::run_regional_case_from_files(traversal);
+        const auto &traversal_error = require_failure(traversal_result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(traversal_error, "path_failure") == "path_escape");
+
+        auto directory = request_for(fixture, "directory");
+        directory.mesh_path = "meshes";
+        auto directory_result = tsunami::r2d_case::run_regional_case_from_files(directory);
+        const auto &directory_error = require_failure(directory_result, "r2d.file_case.path_invalid", "false");
+        CHECK(context_value(directory_error, "path_failure") == "non_regular_file");
+        std::filesystem::remove_all(fixture.root);
+    }
+}
+
+TEST_CASE("file-driven Regional2D runner binds persisted provenance to the manifest", "[r2d-file-runner]")
+{
+    SECTION("stale corridor transformation case revision is rejected")
+    {
+        const auto fixture = make_fixture("stale-corridor-case");
+        const auto path = fixture.root / std::filesystem::path{"manifests/corridors/file-runner-axis.json"};
+        auto record = tsunami::geo::read_corridor_construction_record(path);
+        REQUIRE(record.has_value());
+        record.value().epicentre.transformation_identity.case_revision.revision += 1U;
+        REQUIRE(tsunami::geo::write_corridor_construction_record(path, record.value()).has_value());
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "stale-corridor-case"));
+        const auto &error = require_failure(result, "r2d.file_case.contract_mismatch", "false");
+        CHECK(context_value(error, "field") == "corridor.epicentre.transformation.case_revision");
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("stale terrain manifest identity is rejected")
+    {
+        const auto fixture = make_fixture("stale-terrain-manifest");
+        const auto path = fixture.root / fixture.terrain_record;
+        write_text(path, replace_all(read_text(path), "\"manifest_revision\": 1", "\"manifest_revision\": 2"));
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "stale-terrain-manifest"));
+        const auto &error = require_failure(result, "r2d.file_case.contract_mismatch", "false");
+        CHECK(context_value(error, "field") == "terrain.identity.manifest");
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("missing terrain source asset is rejected")
+    {
+        const auto fixture = make_fixture("missing-terrain-asset");
+        const auto path = fixture.root / fixture.terrain_record;
+        auto record = tsunami::geo::read_terrain_conditioning_record(path);
+        REQUIRE(record.has_value());
+        record.value().bathymetry_asset_id = "missing-bathymetry-asset";
+        record.value().bathymetry_import_identity.asset_id = record.value().bathymetry_asset_id;
+        record.value().bathymetry_transformation_identity.source_asset_id = record.value().bathymetry_asset_id;
+        record.value().bathymetry_resampling.asset_id = record.value().bathymetry_asset_id;
+        record.value().bathymetry_resampling.import_identity = record.value().bathymetry_import_identity;
+        record.value().bathymetry_resampling.transformation_identity = record.value().bathymetry_transformation_identity;
+        REQUIRE(tsunami::geo::write_terrain_conditioning_record(path, record.value()).has_value());
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "missing-terrain-asset"));
+        const auto &error = require_failure(result, "r2d.file_case.contract_mismatch", "false");
+        CHECK(context_value(error, "field") == "terrain.bathymetry");
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("wrong terrain corridor identity is rejected")
+    {
+        const auto fixture = make_fixture("wrong-corridor-identity");
+        const auto path = fixture.root / fixture.terrain_record;
+        auto record = tsunami::geo::read_terrain_conditioning_record(path);
+        REQUIRE(record.has_value());
+        record.value().corridor_identity.corridor_id = "other-corridor";
+        REQUIRE(tsunami::geo::write_terrain_conditioning_record(path, record.value()).has_value());
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "wrong-corridor-identity"));
+        const auto &error = require_failure(result, "r2d.file_case.contract_mismatch", "false");
+        CHECK(context_value(error, "field") == "terrain.corridor_identity");
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("wrong terrain target reference is rejected")
+    {
+        const auto fixture = make_fixture("wrong-target-reference");
+        const auto path = fixture.root / fixture.terrain_record;
+        write_text(path, replace_all(read_text(path), "Synthetic east-north metric reference", "Other target reference"));
+
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "wrong-target-reference"));
+        const auto &error = require_failure(result, "r2d.file_case.contract_mismatch", "false");
+        CHECK(context_value(error, "field") == "terrain.target_reference");
+        std::filesystem::remove_all(fixture.root);
+    }
+}
+
 TEST_CASE("file-driven Regional2D runner preserves existing outputs when overwrite is disabled", "[r2d-file-runner]")
 {
     const auto fixture = make_fixture("overwrite");
@@ -507,4 +822,37 @@ TEST_CASE("file-driven Regional2D runner preserves existing outputs when overwri
     CHECK(context_value(second.error(), "state_changed") == "false");
     CHECK(read_text(first.value().output_directory / "sentinel.txt") == "preserve me\n");
     std::filesystem::remove_all(fixture.root);
+}
+
+TEST_CASE("file-driven Regional2D runner reports output mutation state truthfully", "[r2d-file-runner]")
+{
+    SECTION("CSV preparation failure after directory creation reports mutation")
+    {
+        const auto fixture = make_fixture("prepare-mutated");
+        const auto seam = ScopedEnvironmentFlag{"TSUNAMI_R2D_CSV_FAIL_PREPARE_AFTER_CREATE"};
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "prepare-mutated"));
+        require_failure(result, "r2d.file_case.output_prepare_failed", "true");
+        CHECK(std::filesystem::is_directory(fixture.root / "runs/prepare-mutated/outputs/regional2d"));
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("CSV callback failure propagates through solve with writer cause")
+    {
+        const auto fixture = make_fixture("callback-failure");
+        const auto seam = ScopedEnvironmentFlag{"TSUNAMI_R2D_CSV_FAIL_SNAPSHOT_WRITE"};
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "callback-failure"));
+        const auto &error = require_failure(result, "r2d.file_case.solve_failed", "true");
+        REQUIRE(error.cause_code().has_value());
+        CHECK(*error.cause_code() == "r2d.io.csv.write_failed");
+        std::filesystem::remove_all(fixture.root);
+    }
+
+    SECTION("exception after output preparation reports mutation")
+    {
+        const auto fixture = make_fixture("exception-mutated");
+        const auto seam = ScopedEnvironmentFlag{"TSUNAMI_R2D_FILE_RUNNER_THROW_AFTER_OUTPUT_PREPARE"};
+        auto result = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "exception-mutated"));
+        require_failure(result, "r2d.file_case.request_invalid", "true");
+        std::filesystem::remove_all(fixture.root);
+    }
 }

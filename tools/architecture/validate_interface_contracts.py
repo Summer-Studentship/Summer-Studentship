@@ -20,6 +20,7 @@ ACTIVE_CONTRACT_TARGETS = {
     "tsunami_r2d",
     "tsunami_l3d",
     "tsunami_coupling",
+    "tsunami_r2d_case_runner",
 }
 FORBIDDEN_LIBRARY_TOKENS = {
     "QObject", "QString", "QVariant", "#include <Q", "CLI::", "Catch::", "#include <catch2",

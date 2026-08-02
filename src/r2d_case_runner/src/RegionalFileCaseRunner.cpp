@@ -3,8 +3,11 @@
 #include <algorithm>
 #include <cctype>
 #include <cmath>
+#include <cstdlib>
 #include <fstream>
+#include <limits>
 #include <sstream>
+#include <stdexcept>
 #include <string_view>
 #include <system_error>
 #include <utility>
@@ -30,6 +33,11 @@ namespace tsunami::r2d_case
             return value ? "true" : "false";
         }
 
+        [[nodiscard]] auto run_id_text(const RegionalFileCaseRunRequest &request) -> std::string
+        {
+            return request.run_id.valid() ? request.run_id.str() : std::string{};
+        }
+
         [[nodiscard]] auto file_error(
             std::string code,
             std::string message,
@@ -47,7 +55,7 @@ namespace tsunami::r2d_case
                              .add_context("operation", operation_name)
                              .add_context("stage", std::move(stage))
                              .add_context("case_root", request.case_root.generic_string())
-                             .add_context("run_id", request.run_id)
+                             .add_context("run_id", run_id_text(request))
                              .add_context("state_changed", std::string{bool_text(state_changed)});
             if (!path.empty()) {
                 error.add_context("path", path.generic_string());
@@ -75,14 +83,33 @@ namespace tsunami::r2d_case
             return error;
         }
 
-        [[nodiscard]] auto run_id_valid(std::string_view value) noexcept -> bool
+        [[nodiscard]] auto has_embedded_null(std::string_view text) noexcept -> bool
         {
-            if (value.empty() || value == "." || value == "..") {
+            return text.find('\0') != std::string_view::npos;
+        }
+
+        [[nodiscard]] auto logical_id_valid(std::string_view value) noexcept -> bool
+        {
+            constexpr auto max_logical_id_length = std::size_t{128U};
+            if (value.empty() || value.size() > max_logical_id_length || has_embedded_null(value)) {
                 return false;
             }
-            return std::all_of(value.begin(), value.end(), [](unsigned char ch) {
-                return std::isalnum(ch) || ch == '-' || ch == '_';
-            });
+            auto expect_alnum = true;
+            auto previous_separator = false;
+            for (const auto ch : value) {
+                const auto is_alnum = (ch >= 'a' && ch <= 'z') || (ch >= '0' && ch <= '9');
+                const auto is_separator = ch == '.' || ch == '_' || ch == '-';
+                if (is_alnum) {
+                    expect_alnum = false;
+                    previous_separator = false;
+                } else if (is_separator && !expect_alnum && !previous_separator) {
+                    previous_separator = true;
+                    expect_alnum = true;
+                } else {
+                    return false;
+                }
+            }
+            return !expect_alnum && !previous_separator;
         }
 
         [[nodiscard]] auto path_is_case_relative(const std::filesystem::path &path) -> bool
@@ -112,6 +139,28 @@ namespace tsunami::r2d_case
             return root_it == root.end();
         }
 
+        [[nodiscard]] auto path_query_failure(
+            std::string stage,
+            const RegionalFileCaseRunRequest &request,
+            const std::filesystem::path &path,
+            std::string reason,
+            std::error_code ec = {}) -> tsunami::core::Error
+        {
+            auto error = file_error(
+                "r2d.file_case.path_invalid",
+                "filesystem path failed Regional2D case containment validation",
+                tsunami::core::DiagnosticCategory::validation,
+                std::move(stage),
+                request,
+                false,
+                path);
+            error.add_context("path_failure", std::move(reason));
+            if (ec) {
+                error.add_context("filesystem_error", ec.message());
+            }
+            return error;
+        }
+
         [[nodiscard]] auto canonical_case_root(
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<std::filesystem::path>
         {
@@ -130,6 +179,47 @@ namespace tsunami::r2d_case
             return tsunami::core::success(root);
         }
 
+        [[nodiscard]] auto validate_existing_file_under_root(
+            const std::filesystem::path &case_root,
+            const std::filesystem::path &path,
+            const RegionalFileCaseRunRequest &request,
+            std::string stage) -> tsunami::core::Result<std::filesystem::path>
+        {
+            std::error_code ec;
+            auto status = std::filesystem::symlink_status(path, ec);
+            if (ec) {
+                if (ec == std::errc::no_such_file_or_directory) {
+                    return tsunami::core::failure<std::filesystem::path>(
+                        path_query_failure(std::move(stage), request, path, "missing_file", ec));
+                }
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "query_failed", ec));
+            }
+            if (!std::filesystem::exists(status)) {
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "missing_file"));
+            }
+            auto resolved = std::filesystem::weakly_canonical(path, ec);
+            if (ec || resolved.empty()) {
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "query_failed", ec));
+            }
+            if (!path_is_under(case_root, resolved)) {
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "path_escape"));
+            }
+            const auto regular = std::filesystem::is_regular_file(resolved, ec);
+            if (ec) {
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "query_failed", ec));
+            }
+            if (!regular) {
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, path, "non_regular_file"));
+            }
+            return tsunami::core::success(resolved);
+        }
+
         [[nodiscard]] auto resolve_input_file(
             const std::filesystem::path &case_root,
             const std::filesystem::path &relative_path,
@@ -137,35 +227,16 @@ namespace tsunami::r2d_case
             std::string stage) -> tsunami::core::Result<std::filesystem::path>
         {
             if (!path_is_case_relative(relative_path)) {
-                return tsunami::core::failure<std::filesystem::path>(file_error(
-                    "r2d.file_case.path_invalid",
-                    "input paths must be non-empty case-relative paths without parent traversal",
-                    tsunami::core::DiagnosticCategory::validation,
-                    std::move(stage),
-                    request,
-                    false,
-                    relative_path));
+                return tsunami::core::failure<std::filesystem::path>(
+                    path_query_failure(std::move(stage), request, relative_path, "path_escape"));
             }
-            std::error_code ec;
-            auto resolved = std::filesystem::weakly_canonical(case_root / relative_path, ec);
-            if (ec || resolved.empty() || !path_is_under(case_root, resolved) ||
-                !std::filesystem::is_regular_file(resolved, ec)) {
-                return tsunami::core::failure<std::filesystem::path>(file_error(
-                    "r2d.file_case.path_invalid",
-                    "input path must resolve to a regular file inside the case root",
-                    tsunami::core::DiagnosticCategory::validation,
-                    std::move(stage),
-                    request,
-                    false,
-                    relative_path));
-            }
-            return tsunami::core::success(resolved);
+            return validate_existing_file_under_root(case_root, case_root / relative_path, request, std::move(stage));
         }
 
         [[nodiscard]] auto check_request(
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<void>
         {
-            if (!run_id_valid(request.run_id) ||
+            if (!request.run_id.valid() || !logical_id_valid(request.run_id.str()) ||
                 request.policy.transfer.maximum_contributors_per_cell == 0U ||
                 request.policy.transfer.absolute_area_tolerance_m2 < 0.0 ||
                 request.policy.transfer.relative_area_tolerance < 0.0) {
@@ -187,14 +258,62 @@ namespace tsunami::r2d_case
             return case_root / "runs" / std::string{run_id} / "outputs" / "regional2d";
         }
 
-        [[nodiscard]] auto ensure_output_allowed(
-            const std::filesystem::path &directory,
+        [[nodiscard]] auto validate_output_directory(
+            const std::filesystem::path &case_root,
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<void>
         {
-            std::error_code ec;
-            if (std::filesystem::exists(directory, ec) && !request.overwrite_existing_outputs &&
-                !std::filesystem::is_empty(directory, ec)) {
+            if (!request.run_id.valid() || !logical_id_valid(request.run_id.str())) {
                 return tsunami::core::failure(file_error(
+                    "r2d.file_case.request_invalid",
+                    "regional file case request contains an unsafe run identifier",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "output_path",
+                    request,
+                    false));
+            }
+            const auto relative = std::filesystem::path{"runs"} / request.run_id.str() / "outputs" / "regional2d";
+            const auto directory = output_directory(case_root, request.run_id.str());
+            if (directory == case_root || !path_is_under(case_root, directory.lexically_normal())) {
+                return tsunami::core::failure(path_query_failure("output_path", request, directory, "path_escape"));
+            }
+            std::error_code ec;
+            auto current = case_root;
+            for (const auto &part : relative) {
+                current /= part;
+                auto status = std::filesystem::symlink_status(current, ec);
+                if (ec) {
+                    if (ec == std::errc::no_such_file_or_directory) {
+                        ec.clear();
+                        continue;
+                    }
+                    return tsunami::core::failure(path_query_failure("output_path", request, current, "query_failed", ec));
+                }
+                if (!std::filesystem::exists(status)) {
+                    continue;
+                }
+                auto resolved = std::filesystem::weakly_canonical(current, ec);
+                if (ec || resolved.empty()) {
+                    return tsunami::core::failure(path_query_failure("output_path", request, current, "query_failed", ec));
+                }
+                if (!path_is_under(case_root, resolved)) {
+                    return tsunami::core::failure(path_query_failure("output_path", request, current, "path_escape"));
+                }
+                if (!std::filesystem::is_directory(resolved, ec)) {
+                    if (ec) {
+                        return tsunami::core::failure(path_query_failure("output_path", request, current, "query_failed", ec));
+                    }
+                    return tsunami::core::failure(path_query_failure("output_path", request, current, "non_directory_component"));
+                }
+            }
+            if (std::filesystem::exists(directory, ec)) {
+                if (ec) {
+                    return tsunami::core::failure(path_query_failure("output_path", request, directory, "query_failed", ec));
+                }
+                if (!request.overwrite_existing_outputs && !std::filesystem::is_empty(directory, ec)) {
+                    if (ec) {
+                        return tsunami::core::failure(path_query_failure("output_path", request, directory, "query_failed", ec));
+                    }
+                    return tsunami::core::failure(file_error(
                     "r2d.file_case.output_prepare_failed",
                     "regional output directory already exists and is not empty",
                     tsunami::core::DiagnosticCategory::persistence,
@@ -202,6 +321,7 @@ namespace tsunami::r2d_case
                     request,
                     false,
                     directory));
+                }
             }
             return tsunami::core::success();
         }
@@ -249,31 +369,163 @@ namespace tsunami::r2d_case
             const tsunami::geo::TerrainConditioningRecord &terrain,
             const RegionalFileCaseRunRequest &request) -> tsunami::core::Result<void>
         {
-            const auto case_ref = tsunami::data::CaseRevisionRef{
-                configuration.identity().case_id,
-                configuration.identity().revision};
-            if (configuration.scenario().model_family != tsunami::data::CaseModelFamily::regional_2d ||
-                manifest.identity().case_revision != case_ref ||
-                corridor.identity.case_revision != case_ref ||
-                terrain.identity.case_revision != case_ref ||
-                corridor.identity.trajectory_id != configuration.regional_2d().corridor.trajectory_id ||
-                corridor.scenario_id != configuration.scenario().scenario_id ||
-                corridor.target_site != configuration.scenario().target_site ||
-                terrain.scenario_id != configuration.scenario().scenario_id ||
-                terrain.target_site != configuration.scenario().target_site ||
-                terrain.identity.manifest_id != manifest.identity().manifest_id ||
-                terrain.identity.manifest_revision != manifest.identity().manifest_revision ||
-                terrain.corridor_identity != corridor.identity ||
-                terrain.target_reference != corridor.target_reference ||
-                terrain.bathymetry_dataset_id != configuration.datasets().bathymetry ||
-                terrain.topography_dataset_id != configuration.datasets().topography) {
-                return tsunami::core::failure(file_error(
+            const auto mismatch = [&](std::string field, std::string expected, std::string actual) {
+                auto error = file_error(
                     "r2d.file_case.contract_mismatch",
                     "case, manifest, corridor and terrain records do not describe the same Regional2D run contract",
                     tsunami::core::DiagnosticCategory::validation,
                     "contract",
                     request,
-                    false));
+                    false);
+                error.add_context("field", std::move(field))
+                    .add_context("expected", std::move(expected))
+                    .add_context("actual", std::move(actual));
+                return error;
+            };
+            const auto case_ref_text = [](const tsunami::data::CaseRevisionRef &ref) {
+                return ref.case_id.str() + "@" + std::to_string(ref.revision);
+            };
+            const auto manifest_ref_text = [](std::string_view id, std::uint64_t revision) {
+                return std::string{id} + "@" + std::to_string(revision);
+            };
+            const auto require_dataset_asset = [&](std::string field, std::string_view dataset_id, std::string_view asset_id)
+                -> tsunami::core::Result<void> {
+                const auto *dataset = manifest.find_dataset(dataset_id);
+                if (dataset == nullptr) {
+                    return tsunami::core::failure(mismatch(
+                        std::move(field),
+                        std::string{"dataset present in loaded manifest"},
+                        std::string{dataset_id}));
+                }
+                const auto asset_found = std::any_of(dataset->assets.begin(), dataset->assets.end(), [&](const auto &asset) {
+                    return asset.asset_id == asset_id;
+                });
+                if (!asset_found) {
+                    return tsunami::core::failure(mismatch(
+                        std::move(field),
+                        std::string{dataset_id} + "/" + std::string{asset_id},
+                        std::string{"asset missing from loaded manifest"}));
+                }
+                return tsunami::core::success();
+            };
+            const auto require_transformation = [&](std::string field, const tsunami::geo::CoordinateTransformationIdentity &identity)
+                -> tsunami::core::Result<void> {
+                const auto case_ref = tsunami::data::CaseRevisionRef{
+                    configuration.identity().case_id,
+                    configuration.identity().revision};
+                if (identity.case_revision != case_ref) {
+                    return tsunami::core::failure(mismatch(field + ".case_revision", case_ref_text(case_ref), case_ref_text(identity.case_revision)));
+                }
+                if (identity.manifest_id != manifest.identity().manifest_id ||
+                    identity.manifest_revision != manifest.identity().manifest_revision) {
+                    return tsunami::core::failure(mismatch(
+                        field + ".manifest",
+                        manifest_ref_text(manifest.identity().manifest_id, manifest.identity().manifest_revision),
+                        manifest_ref_text(identity.manifest_id, identity.manifest_revision)));
+                }
+                return require_dataset_asset(field + ".source_asset", identity.source_dataset_id, identity.source_asset_id);
+            };
+            const auto require_import = [&](std::string field, const tsunami::geo::GeospatialImportIdentity &identity)
+                -> tsunami::core::Result<void> {
+                const auto case_ref = tsunami::data::CaseRevisionRef{
+                    configuration.identity().case_id,
+                    configuration.identity().revision};
+                if (identity.case_revision != case_ref) {
+                    return tsunami::core::failure(mismatch(field + ".case_revision", case_ref_text(case_ref), case_ref_text(identity.case_revision)));
+                }
+                if (identity.manifest_id != manifest.identity().manifest_id ||
+                    identity.manifest_revision != manifest.identity().manifest_revision) {
+                    return tsunami::core::failure(mismatch(
+                        field + ".manifest",
+                        manifest_ref_text(manifest.identity().manifest_id, manifest.identity().manifest_revision),
+                        manifest_ref_text(identity.manifest_id, identity.manifest_revision)));
+                }
+                return require_dataset_asset(field + ".asset", identity.dataset_id, identity.asset_id);
+            };
+            const auto case_ref = tsunami::data::CaseRevisionRef{
+                configuration.identity().case_id,
+                configuration.identity().revision};
+            if (configuration.scenario().model_family != tsunami::data::CaseModelFamily::regional_2d) {
+                return tsunami::core::failure(mismatch("scenario.model_family", "regional_2d", "non_regional_2d"));
+            }
+            if (manifest.identity().case_revision != case_ref) {
+                return tsunami::core::failure(mismatch("manifest.case_revision", case_ref_text(case_ref), case_ref_text(manifest.identity().case_revision)));
+            }
+            if (corridor.identity.case_revision != case_ref) {
+                return tsunami::core::failure(mismatch("corridor.identity.case_revision", case_ref_text(case_ref), case_ref_text(corridor.identity.case_revision)));
+            }
+            if (terrain.identity.case_revision != case_ref) {
+                return tsunami::core::failure(mismatch("terrain.identity.case_revision", case_ref_text(case_ref), case_ref_text(terrain.identity.case_revision)));
+            }
+            if (corridor.identity.trajectory_id != configuration.regional_2d().corridor.trajectory_id) {
+                return tsunami::core::failure(mismatch("corridor.identity.trajectory_id", configuration.regional_2d().corridor.trajectory_id, corridor.identity.trajectory_id));
+            }
+            if (corridor.scenario_id != configuration.scenario().scenario_id) {
+                return tsunami::core::failure(mismatch("corridor.scenario_id", configuration.scenario().scenario_id, corridor.scenario_id));
+            }
+            if (corridor.target_site != configuration.scenario().target_site) {
+                return tsunami::core::failure(mismatch("corridor.target_site", configuration.scenario().target_site, corridor.target_site));
+            }
+            if (terrain.scenario_id != configuration.scenario().scenario_id) {
+                return tsunami::core::failure(mismatch("terrain.scenario_id", configuration.scenario().scenario_id, terrain.scenario_id));
+            }
+            if (terrain.target_site != configuration.scenario().target_site) {
+                return tsunami::core::failure(mismatch("terrain.target_site", configuration.scenario().target_site, terrain.target_site));
+            }
+            if (terrain.identity.manifest_id != manifest.identity().manifest_id ||
+                terrain.identity.manifest_revision != manifest.identity().manifest_revision) {
+                return tsunami::core::failure(mismatch(
+                    "terrain.identity.manifest",
+                    manifest_ref_text(manifest.identity().manifest_id, manifest.identity().manifest_revision),
+                    manifest_ref_text(terrain.identity.manifest_id, terrain.identity.manifest_revision)));
+            }
+            if (terrain.corridor_identity != corridor.identity) {
+                return tsunami::core::failure(mismatch("terrain.corridor_identity", corridor.identity.corridor_id, terrain.corridor_identity.corridor_id));
+            }
+            if (terrain.target_reference != corridor.target_reference) {
+                return tsunami::core::failure(mismatch("terrain.target_reference", "corridor.target_reference", "terrain.target_reference"));
+            }
+            if (terrain.bathymetry_dataset_id != configuration.datasets().bathymetry) {
+                return tsunami::core::failure(mismatch("terrain.bathymetry_dataset_id", configuration.datasets().bathymetry, terrain.bathymetry_dataset_id));
+            }
+            if (terrain.topography_dataset_id != configuration.datasets().topography) {
+                return tsunami::core::failure(mismatch("terrain.topography_dataset_id", configuration.datasets().topography, terrain.topography_dataset_id));
+            }
+            if (auto valid = require_transformation("corridor.epicentre.transformation", corridor.epicentre.transformation_identity); !valid) {
+                return valid;
+            }
+            if (auto valid = require_transformation("corridor.target.transformation", corridor.target.transformation_identity); !valid) {
+                return valid;
+            }
+            if (auto valid = require_dataset_asset("terrain.bathymetry", terrain.bathymetry_dataset_id, terrain.bathymetry_asset_id); !valid) {
+                return valid;
+            }
+            if (auto valid = require_dataset_asset("terrain.topography", terrain.topography_dataset_id, terrain.topography_asset_id); !valid) {
+                return valid;
+            }
+            if (auto valid = require_import("terrain.bathymetry_import", terrain.bathymetry_import_identity); !valid) {
+                return valid;
+            }
+            if (auto valid = require_import("terrain.topography_import", terrain.topography_import_identity); !valid) {
+                return valid;
+            }
+            if (auto valid = require_transformation("terrain.bathymetry_transformation", terrain.bathymetry_transformation_identity); !valid) {
+                return valid;
+            }
+            if (auto valid = require_transformation("terrain.topography_transformation", terrain.topography_transformation_identity); !valid) {
+                return valid;
+            }
+            if (terrain.bathymetry_resampling.dataset_id != terrain.bathymetry_dataset_id ||
+                terrain.bathymetry_resampling.asset_id != terrain.bathymetry_asset_id ||
+                terrain.bathymetry_resampling.import_identity != terrain.bathymetry_import_identity ||
+                terrain.bathymetry_resampling.transformation_identity != terrain.bathymetry_transformation_identity) {
+                return tsunami::core::failure(mismatch("terrain.bathymetry_resampling.identity", "record-level bathymetry identities", "resampling identities"));
+            }
+            if (terrain.topography_resampling.dataset_id != terrain.topography_dataset_id ||
+                terrain.topography_resampling.asset_id != terrain.topography_asset_id ||
+                terrain.topography_resampling.import_identity != terrain.topography_import_identity ||
+                terrain.topography_resampling.transformation_identity != terrain.topography_transformation_identity) {
+                return tsunami::core::failure(mismatch("terrain.topography_resampling.identity", "record-level topography identities", "resampling identities"));
             }
             return tsunami::core::success();
         }
@@ -308,16 +560,12 @@ namespace tsunami::r2d_case
                     : std::nullopt};
         }
 
-        [[nodiscard]] auto final_time_matches(tsunami::core::Time actual, tsunami::core::Time expected) -> bool
-        {
-            const auto scale = std::max<tsunami::core::Real>(1.0, std::abs(expected));
-            return std::abs(actual - expected) <= 1.0e-10 * scale;
-        }
     } // namespace
 
     auto run_regional_case_from_files(const RegionalFileCaseRunRequest &request)
         -> tsunami::core::Result<RegionalFileCaseRunResult>
     {
+        auto output_state_changed = false;
         try {
             if (auto valid = check_request(request); !valid) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(valid.error());
@@ -329,19 +577,15 @@ namespace tsunami::r2d_case
             const auto case_root = std::move(case_root_result).value();
             auto completed_steps = std::vector<std::string>{};
 
-            const auto case_path = case_root / tsunami::data::authoritative_case_configuration_path;
-            std::error_code ec;
-            if (!std::filesystem::is_regular_file(case_path, ec)) {
-                return tsunami::core::failure<RegionalFileCaseRunResult>(file_error(
-                    "r2d.file_case.case_read_failed",
-                    "case.json must be a regular file under the case root",
-                    tsunami::core::DiagnosticCategory::input_data,
-                    "case",
-                    request,
-                    false,
-                    case_path));
+            auto case_path = resolve_input_file(
+                case_root,
+                std::filesystem::path{tsunami::data::authoritative_case_configuration_path},
+                request,
+                "case");
+            if (!case_path) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(case_path.error());
             }
-            auto configuration = tsunami::data::read_case_configuration(case_path);
+            auto configuration = tsunami::data::read_case_configuration(case_path.value());
             if (!configuration) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
                     "r2d.file_case.case_read_failed",
@@ -351,7 +595,7 @@ namespace tsunami::r2d_case
                     request,
                     configuration.error(),
                     false,
-                    case_path));
+                    case_path.value()));
             }
             completed_steps.push_back("case_read");
 
@@ -454,6 +698,30 @@ namespace tsunami::r2d_case
                     terrain_artifact_paths.error(),
                     false,
                     terrain_record.value().output_path));
+            }
+            auto terrain_artifact_primary = validate_existing_file_under_root(
+                case_root,
+                terrain_artifact_paths.value().terrain_path,
+                request,
+                "terrain_artifacts");
+            if (!terrain_artifact_primary) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(terrain_artifact_primary.error());
+            }
+            auto terrain_artifact_coverage = validate_existing_file_under_root(
+                case_root,
+                terrain_artifact_paths.value().coverage_path,
+                request,
+                "terrain_artifacts");
+            if (!terrain_artifact_coverage) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(terrain_artifact_coverage.error());
+            }
+            auto terrain_artifact_lineage = validate_existing_file_under_root(
+                case_root,
+                terrain_artifact_paths.value().lineage_path,
+                request,
+                "terrain_artifacts");
+            if (!terrain_artifact_lineage) {
+                return tsunami::core::failure<RegionalFileCaseRunResult>(terrain_artifact_lineage.error());
             }
             auto terrain_artifacts = tsunami::geo_gdal::read_conditioned_terrain_artifacts_with_gdal(
                 terrain_artifact_paths.value(),
@@ -575,13 +843,14 @@ namespace tsunami::r2d_case
             }
             completed_steps.push_back("case_prepared");
 
-            const auto outputs = output_directory(case_root, request.run_id);
-            if (auto allowed = ensure_output_allowed(outputs, request); !allowed) {
+            if (auto allowed = validate_output_directory(case_root, request); !allowed) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(allowed.error());
             }
+            const auto outputs = output_directory(case_root, request.run_id.str());
 
             auto writer = tsunami::r2d_io::RegionalCsvOutputWriter{outputs, request.overwrite_existing_outputs};
             auto output_prepared = writer.prepare();
+            output_state_changed = writer.output_state_changed();
             if (!output_prepared) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
                     "r2d.file_case.output_prepare_failed",
@@ -590,19 +859,28 @@ namespace tsunami::r2d_case
                     "output_prepare",
                     request,
                     output_prepared.error(),
-                    true,
+                    output_state_changed,
                     outputs));
             }
             completed_steps.push_back("outputs_prepared");
+            if (const auto *forced = std::getenv("TSUNAMI_R2D_FILE_RUNNER_THROW_AFTER_OUTPUT_PREPARE");
+                forced != nullptr && std::string_view{forced} == "1") {
+                throw std::runtime_error{"forced Regional2D file-runner exception after output preparation"};
+            }
 
             auto diagnostics_sink = [&](const tsunami::r2d::RegionalStepDiagnostics &diagnostics) {
-                return writer.write_diagnostics(diagnostics);
+                auto written = writer.write_diagnostics(diagnostics);
+                output_state_changed = output_state_changed || writer.output_state_changed();
+                return written;
             };
             auto snapshot_sink = [&](const tsunami::r2d::RegionalSnapshot &snapshot) {
-                return writer.write_snapshot(snapshot);
+                auto written = writer.write_snapshot(snapshot);
+                output_state_changed = output_state_changed || writer.output_state_changed();
+                return written;
             };
             if (prepared.value().earthquake_diagnostics()) {
                 auto written = writer.write_earthquake_initialisation(*prepared.value().earthquake_diagnostics());
+                output_state_changed = output_state_changed || writer.output_state_changed();
                 if (!written) {
                     return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
                         "r2d.file_case.output_prepare_failed",
@@ -611,7 +889,7 @@ namespace tsunami::r2d_case
                         "output_prepare",
                         request,
                         written.error(),
-                        true,
+                        output_state_changed,
                         outputs));
                 }
             }
@@ -630,7 +908,7 @@ namespace tsunami::r2d_case
                     "solve_request",
                     request,
                     solve_request.error(),
-                    true,
+                    output_state_changed,
                     outputs));
             }
 
@@ -646,34 +924,29 @@ namespace tsunami::r2d_case
                     "solve",
                     request,
                     solve.error(),
-                    true,
+                    output_state_changed,
                     outputs));
             }
+            const auto time_scale = std::max<tsunami::core::Real>(1.0, std::abs(solve_request.value().final_time));
+            const auto time_tolerance = solve_request.value().time_policy.timestep_comparison_tolerance * time_scale;
+            const auto volume_scale = std::max<tsunami::core::Real>(
+                1.0,
+                std::abs(prepared.value().diagnostics().total_water_volume_m3));
+            const auto volume_tolerance = solve_request.value().time_policy.timestep_comparison_tolerance * volume_scale;
             if (!solve.value().completed_successfully ||
                 solve.value().accepted_step_count > solve_request.value().maximum_steps ||
-                !final_time_matches(solve.value().final_time, solve_request.value().final_time) ||
-                !prepared.value().simulation_state().conserved_state().is_bound_to(imported_mesh.value().mesh)) {
+                std::abs(solve.value().final_time - solve_request.value().final_time) > time_tolerance ||
+                !prepared.value().simulation_state().conserved_state().is_bound_to(imported_mesh.value().mesh) ||
+                std::abs(solve.value().final_integrals.water_volume - prepared.value().diagnostics().total_water_volume_m3) > volume_tolerance ||
+                std::abs(solve.value().final_integrals.momentum_x) > request.policy.preparation.zero_momentum_tolerance ||
+                std::abs(solve.value().final_integrals.momentum_y) > request.policy.preparation.zero_momentum_tolerance) {
                 return tsunami::core::failure<RegionalFileCaseRunResult>(file_error(
                     "r2d.file_case.solve_failed",
                     "Regional2D solve did not reach the requested final state",
                     tsunami::core::DiagnosticCategory::execution,
                     "solve",
                     request,
-                    true,
-                    outputs));
-            }
-            auto final_state_check = tsunami::r2d::validate_and_canonicalise(
-                prepared.value().simulation_state().conserved_state(),
-                solve_request.value().state_policy);
-            if (!final_state_check) {
-                return tsunami::core::failure<RegionalFileCaseRunResult>(wrap_failure(
-                    "r2d.file_case.solve_failed",
-                    "Regional2D final state failed canonical validation",
-                    tsunami::core::DiagnosticCategory::execution,
-                    "solve",
-                    request,
-                    final_state_check.error(),
-                    true,
+                    output_state_changed,
                     outputs));
             }
 
@@ -686,7 +959,7 @@ namespace tsunami::r2d_case
                     tsunami::core::DiagnosticCategory::persistence,
                     "output_verify",
                     request,
-                    true,
+                    output_state_changed,
                     outputs));
             }
             completed_steps.push_back("solve_completed");
@@ -703,7 +976,7 @@ namespace tsunami::r2d_case
             diagnostics.terrain_id = terrain_record.value().identity.terrain_id;
             diagnostics.terrain_revision = terrain_record.value().identity.terrain_revision;
             diagnostics.mesh_id = imported_mesh.value().mesh.summary().id.value;
-            diagnostics.run_id = request.run_id;
+            diagnostics.run_id = request.run_id.str();
             diagnostics.terrain_artifacts = artifact_summary(terrain_artifacts.value().diagnostics);
             diagnostics.preflight = preflight.value();
             diagnostics.terrain_transfer = transfer.value().diagnostics;
@@ -725,7 +998,7 @@ namespace tsunami::r2d_case
                     tsunami::core::DiagnosticCategory::internal,
                     "exception",
                     request,
-                    false));
+                    output_state_changed));
         } catch (...) {
             return tsunami::core::failure<RegionalFileCaseRunResult>(
                 file_error(
@@ -734,7 +1007,7 @@ namespace tsunami::r2d_case
                     tsunami::core::DiagnosticCategory::internal,
                     "exception",
                     request,
-                    false));
+                    output_state_changed));
         }
     }
 
