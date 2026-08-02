@@ -123,6 +123,7 @@ def _okada_vertical_displacement(subfaults: Iterable[SubFault], grid: dict):
 
     xs, ys = _grid_centres(grid)
     fault = dtopotools.Fault()
+    fault.subfaults = []
     for item in subfaults:
         subfault = dtopotools.SubFault()
         subfault.coordinate_specification = "top center"
