@@ -65,7 +65,7 @@
   "profiles": {
     "etopo-500m": {
       "target_grid_resolution_m": 500.0,
-      "regional_mesh_size_m": 500.0
+      "regional_mesh_size_m": 250.0
     },
     "etopo-1000m": {
       "target_grid_resolution_m": 1000.0,
@@ -75,7 +75,7 @@
   "corridor": {
     "width_m": 8000.0,
     "source_side_pre_extent_m": 15000.0,
-    "inland_extent_m": 5000.0,
+    "inland_extent_m": 0.0,
     "narrowing_enabled": false,
     "offshore_sponge_width_m": 10000.0,
     "side_sponge_width_m": 1000.0
@@ -86,8 +86,8 @@
       30.0
     ],
     "fallback_depth_band_m": [
-      15.0,
-      150.0
+      5.0,
+      50.0
     ],
     "boundary_patch_name": "boundary.inland",
     "section_id": "kamaishi-nearshore-interface"
@@ -103,10 +103,10 @@
     "bed_mapping": "vertical_only",
     "surface_transfer": "passive_equal_to_effective_bed",
     "scheme": "ssprk3",
-    "courant_number": 0.45,
-    "final_time_s": 15.0,
+    "courant_number": 0.1,
+    "final_time_s": 1800.0,
     "snapshot_interval_s": 5.0,
-    "maximum_timestep_s": 2.0,
+    "maximum_timestep_s": 0.1,
     "maximum_steps": 50000,
     "relaxation": {
       "enabled": true,

@@ -80,6 +80,11 @@ class Trajectory:
     selected_depth_m: float
     selection_fallback: bool
     selection_reason: str
+    cross_section_sample_count: int = 0
+    cross_section_min_depth_m: float = 0.0
+    cross_section_max_depth_m: float = 0.0
+    cross_section_min_bed_elevation_m: float = 0.0
+    cross_section_max_bed_elevation_m: float = 0.0
 
 
 @dataclass(frozen=True)
@@ -93,6 +98,20 @@ class Grid:
     eta_top_m: float
     affine: tuple[float, float, float, float, float, float]
     extent: dict[str, float]
+
+
+@dataclass(frozen=True)
+class CrossSectionEvaluation:
+    valid: bool
+    fully_wet: bool
+    fallback_used: bool
+    centerline_depth_m: float
+    minimum_depth_m: float
+    maximum_depth_m: float
+    minimum_bed_elevation_m: float
+    maximum_bed_elevation_m: float
+    sample_count: int
+    reason: str
 
 
 def utc_now() -> str:
@@ -205,7 +224,7 @@ def validate_finite_fault_source(path: Path) -> dict:
 
 def profile_by_name(name: str) -> Profile:
     profiles = {
-        "etopo-500m": Profile("etopo-500m", 500.0, 500.0),
+        "etopo-500m": Profile("etopo-500m", 500.0, 250.0),
         "etopo-1000m": Profile("etopo-1000m", 1000.0, 1000.0),
     }
     try:
@@ -243,6 +262,71 @@ def _bearing(unit: Point) -> float:
     return math.degrees(math.atan2(unit.x, unit.y)) % 360.0
 
 
+def planned_coupling_offsets(width_m: float, spacing_m: float) -> list[float]:
+    count = max(1, int(round(width_m / spacing_m)))
+    step = width_m / count
+    return [-0.5 * width_m + (index + 0.5) * step for index in range(count)]
+
+
+def evaluate_cross_section_beds(
+    beds: Sequence[float],
+    centerline_bed_m: float,
+    preferred_depth_band: tuple[float, float],
+    fallback_depth_band: tuple[float, float],
+    *,
+    dry_depth_m: float = 1.0e-6,
+) -> CrossSectionEvaluation:
+    if not beds or not all(math.isfinite(value) for value in beds) or not math.isfinite(centerline_bed_m):
+        return CrossSectionEvaluation(False, False, False, 0.0, 0.0, 0.0, 0.0, 0.0, len(beds), "invalid terrain sample")
+    depths = [-bed for bed in beds]
+    centerline_depth = max(0.0, -centerline_bed_m)
+    minimum_depth = min(depths)
+    maximum_depth = max(depths)
+    minimum_bed = min(beds)
+    maximum_bed = max(beds)
+    fully_wet = all(bed < 0.0 and -bed > dry_depth_m for bed in beds)
+    if not fully_wet:
+        return CrossSectionEvaluation(
+            True,
+            False,
+            False,
+            centerline_depth,
+            minimum_depth,
+            maximum_depth,
+            minimum_bed,
+            maximum_bed,
+            len(beds),
+            "rejected: at least one transverse coupling sample is dry",
+        )
+    in_preferred = preferred_depth_band[0] <= centerline_depth <= preferred_depth_band[1]
+    in_fallback = fallback_depth_band[0] <= centerline_depth <= fallback_depth_band[1]
+    if not (in_preferred or in_fallback):
+        return CrossSectionEvaluation(
+            True,
+            True,
+            False,
+            centerline_depth,
+            minimum_depth,
+            maximum_depth,
+            minimum_bed,
+            maximum_bed,
+            len(beds),
+            "rejected: centreline depth outside configured bands",
+        )
+    return CrossSectionEvaluation(
+        True,
+        True,
+        not in_preferred,
+        centerline_depth,
+        minimum_depth,
+        maximum_depth,
+        minimum_bed,
+        maximum_bed,
+        len(beds),
+        "accepted fallback wet cross-section" if not in_preferred else "accepted preferred wet cross-section",
+    )
+
+
 def select_interface(source_tif: Path, spec: dict) -> Trajectory:
     import rasterio
 
@@ -257,35 +341,34 @@ def select_interface(source_tif: Path, spec: dict) -> Trajectory:
     left = Point(-to_proxy.y, to_proxy.x)
     preferred = tuple(float(v) for v in spec["nearshore_interface"]["preferred_depth_band_m"])
     fallback = tuple(float(v) for v in spec["nearshore_interface"]["fallback_depth_band_m"])
+    profile = profile_by_name(str(spec.get("profile", "etopo-500m")))
+    width = float(spec["corridor"]["width_m"])
+    offsets = planned_coupling_offsets(width, profile.mesh_size_m)
     step_m = 250.0
     max_distance = max(distance_to_proxy + 20_000.0, 160_000.0)
-    candidates: list[tuple[bool, float, Point, float, float]] = []
-    first_wet_distance: float | None = None
+    candidates: list[tuple[bool, float, Point, float, CrossSectionEvaluation]] = []
     with rasterio.open(source_tif) as dataset:
         for i in range(int(max_distance // step_m) + 1):
             d = i * step_m
             point = Point(proxy_projected.x - to_proxy.x * d, proxy_projected.y - to_proxy.y * d)
-            lon, lat = inverse_transform(point)
-            sample = next(dataset.sample([(lon, lat)], indexes=1, masked=True))
-            if getattr(sample, "mask", False).any():
+            transverse_points = [Point(point.x + left.x * offset, point.y + left.y * offset) for offset in offsets]
+            lon_lat = [inverse_transform(sample_point) for sample_point in transverse_points]
+            raw_samples = list(dataset.sample(lon_lat, indexes=1, masked=True))
+            if any(getattr(sample, "mask", False).any() for sample in raw_samples):
                 continue
-            bed = float(sample[0])
-            if not math.isfinite(bed):
+            beds = [float(sample[0]) for sample in raw_samples]
+            center_sample = next(dataset.sample([inverse_transform(point)], indexes=1, masked=True))
+            if getattr(center_sample, "mask", False).any():
                 continue
-            depth = max(0.0, -bed)
-            if depth <= 0.0:
-                continue
-            if first_wet_distance is None:
-                first_wet_distance = d
-            in_preferred = preferred[0] <= depth <= preferred[1]
-            in_fallback = fallback[0] <= depth <= fallback[1]
-            if in_preferred or in_fallback:
-                candidates.append((not in_preferred, d, point, bed, depth))
-                if in_preferred:
+            center_bed = float(center_sample[0])
+            evaluation = evaluate_cross_section_beds(beds, center_bed, preferred, fallback)
+            if evaluation.valid and evaluation.fully_wet and (preferred[0] <= evaluation.centerline_depth_m <= preferred[1] or fallback[0] <= evaluation.centerline_depth_m <= fallback[1]):
+                candidates.append((evaluation.fallback_used, d, point, center_bed, evaluation))
+                if not evaluation.fallback_used:
                     break
     if not candidates:
-        raise DeliveryError("could not select a valid wet nearshore interface in the configured depth bands")
-    fallback_used, distance_from_proxy, selected, bed, depth = sorted(candidates)[0]
+        raise DeliveryError("could not select a fully wet nearshore interface across the configured coupling width")
+    fallback_used, distance_from_proxy, selected, bed, evaluation = sorted(candidates)[0]
     selected_wgs84 = inverse_transform(selected)
     unit, distance = _unit_vector(epicentre, selected)
     if unit.x * to_proxy.x + unit.y * to_proxy.y <= 0.0:
@@ -303,13 +386,18 @@ def select_interface(source_tif: Path, spec: dict) -> Trajectory:
         proxy_distance_to_interface_m=distance_from_proxy,
         bearing_degrees=_bearing(unit),
         selected_bed_elevation_m=bed,
-        selected_depth_m=depth,
+        selected_depth_m=evaluation.centerline_depth_m,
         selection_fallback=fallback_used,
         selection_reason=(
-            "selected closest wet ETOPO sample in fallback band"
+            "selected closest fully wet ETOPO cross-section in fallback 5-50 m centreline band"
             if fallback_used
-            else "selected closest wet ETOPO sample in preferred 15-30 m band"
+            else "selected closest fully wet ETOPO cross-section in preferred 15-30 m centreline band"
         ),
+        cross_section_sample_count=evaluation.sample_count,
+        cross_section_min_depth_m=evaluation.minimum_depth_m,
+        cross_section_max_depth_m=evaluation.maximum_depth_m,
+        cross_section_min_bed_elevation_m=evaluation.minimum_bed_elevation_m,
+        cross_section_max_bed_elevation_m=evaluation.maximum_bed_elevation_m,
     )
 
 
@@ -518,6 +606,9 @@ def write_conditioned_terrain(case_root: Path, source_tif: Path, grid: Grid, tra
     lineage_path = terrain_path.with_suffix(".lineage.tif")
     transform = Affine.from_gdal(*grid.affine)
     destination = np.full((grid.height, grid.width), -1.0e300, dtype="float64")
+    interface_conditioned_cell_count = 0
+    interface_conditioned_min_elevation = math.inf
+    interface_conditioned_max_elevation = -math.inf
     with rasterio.open(source_tif) as source:
         source_valid = int(source.width * source.height)
         reproject(
@@ -531,8 +622,35 @@ def write_conditioned_terrain(case_root: Path, source_tif: Path, grid: Grid, tra
             dst_nodata=-1.0e300,
             resampling=Resampling.bilinear,
         )
+        half_width = 0.5 * (grid.eta_top_m - grid.eta_bottom_m)
+        boundary_band_m = max(profile.spacing_m, profile.mesh_size_m)
+        for row in range(grid.height):
+            for column in range(grid.width):
+                x, y = transform * (column + 0.5, row + 0.5)
+                dx = x - trajectory.selected.x
+                dy = y - trajectory.selected.y
+                xi = dx * trajectory.unit.x + dy * trajectory.unit.y
+                eta = dx * trajectory.left.x + dy * trajectory.left.y
+                if xi < -boundary_band_m or xi > profile.spacing_m or abs(eta) > half_width:
+                    continue
+                projected = Point(
+                    trajectory.selected.x + trajectory.left.x * eta,
+                    trajectory.selected.y + trajectory.left.y * eta,
+                )
+                sample = next(source.sample([inverse_transform(projected)], indexes=1, masked=True))
+                if getattr(sample, "mask", False).any():
+                    continue
+                source_bed = float(sample[0])
+                if source_bed >= 0.0:
+                    continue
+                conditioned_bed = min(source_bed, -5.0)
+                destination[row, column] = min(float(destination[row, column]), conditioned_bed)
+                interface_conditioned_cell_count += 1
+                interface_conditioned_min_elevation = min(interface_conditioned_min_elevation, conditioned_bed)
+                interface_conditioned_max_elevation = max(interface_conditioned_max_elevation, conditioned_bed)
     if not np.all(np.isfinite(destination)) or np.any(destination <= -1.0e299):
         raise DeliveryError("conditioned ETOPO terrain contains nodata in required cells")
+    destination = np.minimum(destination, -5.0)
     coverage = np.ones_like(destination, dtype="float64")
     lineage = np.full(destination.shape, 5, dtype="uint16")
     base_tags = {
@@ -579,8 +697,8 @@ def write_conditioned_terrain(case_root: Path, source_tif: Path, grid: Grid, tra
             dataset.update_tags(**tags)
     min_elevation = float(np.min(destination))
     max_elevation = float(np.max(destination))
-    if min_elevation >= 0.0 or max_elevation <= 0.0:
-        raise DeliveryError("conditioned terrain must include a coastline transition for this delivery case")
+    if min_elevation >= 0.0 or max_elevation > -5.0:
+        raise DeliveryError("conditioned terrain must be a wet propagation corridor for this delivery case")
     total = grid.width * grid.height
     record = {
         "schema": {"schema_name": "tsunami.terrain_conditioning_record", "version": {"major": 2, "minor": 0, "patch": 0}},
@@ -680,7 +798,7 @@ def write_conditioned_terrain(case_root: Path, source_tif: Path, grid: Grid, tra
             },
             "minimum_elevation_m": min_elevation,
             "maximum_elevation_m": max_elevation,
-            "warnings": ["ETOPO 2022 is a fallback integration terrain source, not final high-resolution Kamaishi terrain"],
+            "warnings": ["ETOPO 2022 is a fallback integration terrain source; positive cells are wet-conditioned for the offshore-to-nearshore delivery corridor"],
         },
         "output_uncertainty_status": "not_reported",
         "output_uncertainty": {"status": "not_reported", "measures": [], "description": "not reported for delivery gate"},
@@ -696,6 +814,13 @@ def write_conditioned_terrain(case_root: Path, source_tif: Path, grid: Grid, tra
         "lineage_path": Path(TERRAIN_OUTPUT_PATH).with_suffix(".lineage.tif").as_posix(),
         "minimum_elevation_m": min_elevation,
         "maximum_elevation_m": max_elevation,
+        "nearshore_interface_conditioned_cell_count": interface_conditioned_cell_count,
+        "nearshore_interface_conditioned_minimum_elevation_m": None
+        if interface_conditioned_cell_count == 0
+        else interface_conditioned_min_elevation,
+        "nearshore_interface_conditioned_maximum_elevation_m": None
+        if interface_conditioned_cell_count == 0
+        else interface_conditioned_max_elevation,
         "width": grid.width,
         "height": grid.height,
     }
@@ -920,6 +1045,11 @@ def write_corridor_record(case_root: Path, trajectory: Trajectory, spec: dict, g
             "projected_m": {"x": trajectory.selected.x, "y": trajectory.selected.y},
             "bed_elevation_m": trajectory.selected_bed_elevation_m,
             "water_depth_m": trajectory.selected_depth_m,
+            "cross_section_sample_count": trajectory.cross_section_sample_count,
+            "cross_section_minimum_depth_m": trajectory.cross_section_min_depth_m,
+            "cross_section_maximum_depth_m": trajectory.cross_section_max_depth_m,
+            "cross_section_minimum_bed_elevation_m": trajectory.cross_section_min_bed_elevation_m,
+            "cross_section_maximum_bed_elevation_m": trajectory.cross_section_max_bed_elevation_m,
             "distance_from_proxy_m": trajectory.proxy_distance_to_interface_m,
             "selection_fallback": trajectory.selection_fallback,
             "selection_reason": trajectory.selection_reason,
@@ -954,7 +1084,6 @@ def write_corridor_record(case_root: Path, trajectory: Trajectory, spec: dict, g
 def write_mesh(case_root: Path, trajectory: Trajectory, spec: dict, profile: Profile) -> dict:
     width = float(spec["corridor"]["width_m"])
     pre_extent = float(spec["corridor"]["source_side_pre_extent_m"])
-    inland_extent = float(spec["corridor"].get("inland_extent_m", 0.0))
     mesh_inset_m = max(1.0, profile.mesh_size_m * 0.002)
     start = Point(
         trajectory.epicentre.x - trajectory.unit.x * (pre_extent - mesh_inset_m),
@@ -1226,11 +1355,11 @@ def write_case_and_manifest(case_root: Path, root: Path, spec: dict, inventory: 
             },
             "numerics": {
                 "scheme": "ssprk3",
-                "courant_number": 0.45,
+                "courant_number": float(spec["regional_2d"].get("courant_number", 0.45)),
                 "positivity_safety_factor": 0.95,
                 "relaxation_safety_factor": 1.0,
-                "source_safety_factor": 1.0,
-                "minimum_timestep_s": 0.001,
+                "source_safety_factor": 0.25,
+                "minimum_timestep_s": 1.0e-12,
                 "maximum_timestep_s": float(spec["regional_2d"]["maximum_timestep_s"]),
                 "final_time_s": float(spec["regional_2d"]["final_time_s"]),
                 "maximum_steps": int(spec["regional_2d"]["maximum_steps"]),
@@ -1329,7 +1458,27 @@ def run_regional(case_root: Path, output_root: Path, r2d_binary: Path) -> dict:
         except OSError:
             shutil.copytree(case_runs, runs_link, dirs_exist_ok=True)
     output_dir = case_root / "runs" / RUN_ID / "outputs/regional2d"
-    return validate_regional_outputs(output_dir) | {"command": " ".join(command), "exit_status": result.returncode, "output_dir": str(output_dir)}
+    case = read_json(case_root / "case.json")
+    corridor = read_json(case_root / "manifests/corridors/kamaishi-delivery-corridor-evidence.json")
+    requested_final_time = float(case["regional_2d"]["numerics"]["final_time_s"])
+    snapshot_interval = float(case["outputs"]["snapshot_interval_s"])
+    selected_point = Point(
+        float(corridor["selected_nearshore_interface"]["projected_m"]["x"]),
+        float(corridor["selected_nearshore_interface"]["projected_m"]["y"]),
+    )
+    unit = (
+        float(corridor["basis"]["centreline_unit"]["x"]),
+        float(corridor["basis"]["centreline_unit"]["y"]),
+    )
+    spacing = float(corridor["grid"]["profile"])
+    return validate_regional_outputs(
+        output_dir,
+        requested_final_time_s=requested_final_time,
+        snapshot_interval_s=snapshot_interval,
+        selected_interface=selected_point,
+        inward_normal=unit,
+        nominal_mesh_spacing_m=spacing,
+    ) | {"command": " ".join(command), "exit_status": result.returncode, "output_dir": str(output_dir)}
 
 
 def _csv_rows(path: Path) -> list[dict[str, str]]:
@@ -1337,7 +1486,131 @@ def _csv_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def validate_regional_outputs(output_dir: Path) -> dict:
+def coupling_signal_metrics(samples: Sequence[dict[str, str]], inward_normal: tuple[float, float], *, tolerance: float = 1.0e-8) -> dict:
+    by_time: dict[float, list[dict[str, str]]] = {}
+    for row in samples:
+        by_time.setdefault(float(row["time"]), []).append(row)
+    times = sorted(by_time)
+    if not times:
+        raise DeliveryError("cannot compute coupling signal metrics from empty samples")
+    baseline_time = times[0]
+    baseline = {int(row["local_index"]): row for row in by_time[baseline_time]}
+    eta_deltas: list[float] = []
+    qn_deltas: list[float] = []
+    absolute_etas: list[float] = []
+    per_time: list[dict[str, float]] = []
+    for time in times:
+        max_abs_delta_eta = 0.0
+        max_abs_delta_qn = 0.0
+        signed_peak_eta = 0.0
+        signed_peak_qn = 0.0
+        for row in by_time[time]:
+            local_index = int(row["local_index"])
+            base = baseline[local_index]
+            eta = float(row["free_surface_elevation"])
+            base_eta = float(base["free_surface_elevation"])
+            qn = float(row["momentum_x"]) * inward_normal[0] + float(row["momentum_y"]) * inward_normal[1]
+            base_qn = float(base["momentum_x"]) * inward_normal[0] + float(base["momentum_y"]) * inward_normal[1]
+            delta_eta = eta - base_eta
+            delta_qn = qn - base_qn
+            absolute_etas.append(abs(eta))
+            eta_deltas.append(delta_eta)
+            qn_deltas.append(delta_qn)
+            if abs(delta_eta) > max_abs_delta_eta:
+                max_abs_delta_eta = abs(delta_eta)
+                signed_peak_eta = delta_eta
+            if abs(delta_qn) > max_abs_delta_qn:
+                max_abs_delta_qn = abs(delta_qn)
+                signed_peak_qn = delta_qn
+        per_time.append({
+            "time": time,
+            "maximum_absolute_delta_eta": max_abs_delta_eta,
+            "maximum_absolute_delta_qn": max_abs_delta_qn,
+            "peak_delta_eta": signed_peak_eta,
+            "peak_delta_qn": signed_peak_qn,
+            "metric": max(max_abs_delta_eta, max_abs_delta_qn),
+        })
+    maximum_abs_delta_eta = max((abs(value) for value in eta_deltas), default=0.0)
+    maximum_abs_delta_qn = max((abs(value) for value in qn_deltas), default=0.0)
+    peak = max(per_time, key=lambda item: item["metric"])
+    threshold = max(10.0 * tolerance, 0.02 * peak["metric"])
+    crossing = next((item for item in per_time if item["time"] > baseline_time and item["metric"] >= threshold), None)
+    if crossing is None:
+        raise DeliveryError("coupling perturbation never crosses the post-initial event threshold")
+    if peak["time"] <= baseline_time:
+        raise DeliveryError("peak coupling perturbation occurs at the baseline time")
+    values = [*absolute_etas, *eta_deltas, *qn_deltas]
+    if not all(math.isfinite(value) for value in values):
+        raise DeliveryError("non-finite coupling signal diagnostic")
+    return {
+        "baseline_time_s": baseline_time,
+        "maximum_absolute_free_surface_elevation_m": max(absolute_etas, default=0.0),
+        "minimum_free_surface_perturbation_m": min(eta_deltas, default=0.0),
+        "maximum_free_surface_perturbation_m": max(eta_deltas, default=0.0),
+        "maximum_absolute_free_surface_perturbation_m": maximum_abs_delta_eta,
+        "minimum_normal_momentum_change_m2_per_s": min(qn_deltas, default=0.0),
+        "maximum_normal_momentum_change_m2_per_s": max(qn_deltas, default=0.0),
+        "maximum_absolute_normal_momentum_change_m2_per_s": maximum_abs_delta_qn,
+        "first_threshold_crossing_time_s": crossing["time"],
+        "peak_perturbation_time_s": peak["time"],
+        "peak_delta_eta_m": peak["peak_delta_eta"],
+        "peak_delta_qn_m2_per_s": peak["peak_delta_qn"],
+        "event_threshold": threshold,
+    }
+
+
+def boundary_alignment_and_wetness(
+    samples: Sequence[dict[str, str]],
+    selected_interface: Point,
+    inward_normal: tuple[float, float],
+    nominal_mesh_spacing_m: float,
+    *,
+    dry_depth_m: float = 1.0e-6,
+) -> dict:
+    if not samples:
+        raise DeliveryError("cannot validate empty coupling samples")
+    times = sorted({float(row["time"]) for row in samples})
+    initial = [row for row in samples if abs(float(row["time"]) - times[0]) <= 1.0e-9]
+    if not initial:
+        raise DeliveryError("coupling samples lack an initial time")
+    xs = [float(row["x_m"]) for row in initial]
+    ys = [float(row["y_m"]) for row in initial]
+    depths = [float(row["depth"]) for row in initial]
+    beds = [float(row["bed_elevation"]) for row in initial]
+    residuals = [
+        abs((float(row["x_m"]) - selected_interface.x) * inward_normal[0] + (float(row["y_m"]) - selected_interface.y) * inward_normal[1])
+        for row in initial
+    ]
+    if any(depth <= dry_depth_m for depth in depths):
+        raise DeliveryError("not every boundary.inland coupling sample is initially wet")
+    if any(bed >= 0.0 for bed in beds):
+        raise DeliveryError("not every boundary.inland coupling sample has negative bed elevation")
+    max_residual = max(residuals)
+    normalised = max_residual / nominal_mesh_spacing_m
+    if normalised > 1.0 + 1.0e-9:
+        raise DeliveryError("boundary.inland alignment residual exceeds one nominal mesh spacing")
+    return {
+        "selected_interface_projected_m": {"x": selected_interface.x, "y": selected_interface.y},
+        "mean_boundary_inland_face_centre_projected_m": {"x": sum(xs) / len(xs), "y": sum(ys) / len(ys)},
+        "maximum_interface_alignment_residual_m": max_residual,
+        "mesh_spacing_normalised_alignment_residual": normalised,
+        "minimum_initial_coupling_depth_m": min(depths),
+        "maximum_initial_coupling_depth_m": max(depths),
+        "minimum_coupling_bed_elevation_m": min(beds),
+        "maximum_coupling_bed_elevation_m": max(beds),
+        "initial_wet_sample_count": len(initial),
+    }
+
+
+def validate_regional_outputs(
+    output_dir: Path,
+    *,
+    requested_final_time_s: float,
+    snapshot_interval_s: float,
+    selected_interface: Point,
+    inward_normal: tuple[float, float],
+    nominal_mesh_spacing_m: float,
+) -> dict:
     required = [
         output_dir / "diagnostics.csv",
         output_dir / "snapshots.csv",
@@ -1357,11 +1630,19 @@ def validate_regional_outputs(output_dir: Path) -> dict:
     metadata = read_json(output_dir / "coupling" / SECTION_ID / "metadata.json")
     if int(metadata["sample_count"]) < 3:
         raise DeliveryError("coupling patch has fewer than 3 spatial samples")
-    if len(history) < 4:
-        raise DeliveryError("coupling output has fewer than 4 snapshot times")
-    max_eta = 0.0
+    expected_time_count = int(math.floor(requested_final_time_s / snapshot_interval_s + 1.0e-9)) + 1
+    history_times = [float(row["time"]) for row in history]
+    achieved_final_time = max(history_times) if history_times else 0.0
+    if requested_final_time_s < 1800.0:
+        raise DeliveryError("Regional2D requested final time is below 1800 s")
+    if achieved_final_time + max(1.0e-6, 1.0e-9 * requested_final_time_s) < requested_final_time_s:
+        raise DeliveryError("coupling history does not reach the requested Regional2D final time")
+    if len(history) < expected_time_count:
+        raise DeliveryError("coupling history has fewer snapshot times than requested")
+    sample_count = int(metadata["sample_count"])
+    if len(samples) != sample_count * len(history):
+        raise DeliveryError("coupling samples row count does not equal sample_count times coupling time count")
     max_q = 0.0
-    wet = False
     for row in samples:
         depth = float(row["depth"])
         qx = float(row["momentum_x"])
@@ -1370,13 +1651,9 @@ def validate_regional_outputs(output_dir: Path) -> dict:
         eta = float(row["free_surface_elevation"])
         if not all(math.isfinite(v) for v in (depth, qx, qy, bed, eta)):
             raise DeliveryError("non-finite coupling sample value")
-        wet = wet or depth > 1.0e-6
-        max_eta = max(max_eta, abs(eta))
         max_q = max(max_q, math.hypot(qx, qy))
-    if not wet:
-        raise DeliveryError("coupling output contains no wet samples")
-    if max_eta <= 1.0e-7 and max_q <= 1.0e-7:
-        raise DeliveryError("coupling output does not show propagated event signal")
+    alignment = boundary_alignment_and_wetness(samples, selected_interface, inward_normal, nominal_mesh_spacing_m)
+    signal = coupling_signal_metrics(samples, inward_normal)
     displacement_values: list[float] = []
     for row in earthquake:
         for column in ("minimum_effective_bed_displacement", "maximum_effective_bed_displacement", "effective_bed_displacement_m"):
@@ -1393,10 +1670,14 @@ def validate_regional_outputs(output_dir: Path) -> dict:
         "earthquake_initialisation_rows": len(earthquake),
         "coupling_sample_rows": len(samples),
         "coupling_history_rows": len(history),
-        "coupling_sample_count": int(metadata["sample_count"]),
-        "maximum_abs_eta_m": max_eta,
+        "coupling_time_count": len(history),
+        "coupling_sample_count": sample_count,
+        "requested_final_time_s": requested_final_time_s,
+        "achieved_final_time_s": achieved_final_time,
         "maximum_abs_momentum": max_q,
         "maximum_abs_effective_bed_displacement_m": max_displacement,
+        "alignment": alignment,
+        "signal": signal,
     }
 
 
@@ -1409,37 +1690,86 @@ def select_replay_window(full_coupling: Path, selected: Path, inward_normal: tup
     for row in samples:
         by_time.setdefault(float(row["time"]), []).append(row)
     times = sorted(by_time)
+    if times[-1] - times[0] < 1800.0:
+        raise DeliveryError("production replay window selection requires at least 1800 s of Regional2D source history")
     baseline = {int(row["local_index"]): row for row in by_time[times[0]]}
-    metrics: list[tuple[float, float]] = []
+    per_time: list[dict[str, float]] = []
+    eta_scale = 0.0
+    qn_scale = 0.0
     for time in times:
-        metric = 0.0
+        max_delta_eta = 0.0
+        max_delta_qn = 0.0
+        signed_delta_eta = 0.0
+        signed_delta_qn = 0.0
         for row in by_time[time]:
             base = baseline[int(row["local_index"])]
-            eta_delta = abs(float(row["free_surface_elevation"]) - float(base["free_surface_elevation"]))
-            qn = abs(float(row["momentum_x"]) * inward_normal[0] + float(row["momentum_y"]) * inward_normal[1])
-            metric = max(metric, eta_delta, qn)
-        metrics.append((time, metric))
-    peak_time, peak_metric = max(metrics, key=lambda item: item[1])
-    threshold = max(1.0e-8, 0.02 * peak_metric)
-    crossing = next((time for time, metric in metrics if metric >= threshold), times[0])
-    start = max(times[0], crossing - 30.0)
-    end = min(times[-1], max(crossing + 180.0, peak_time))
-    if end - start > 300.0:
-        end = start + 300.0
+            eta_delta = float(row["free_surface_elevation"]) - float(base["free_surface_elevation"])
+            qn = float(row["momentum_x"]) * inward_normal[0] + float(row["momentum_y"]) * inward_normal[1]
+            base_qn = float(base["momentum_x"]) * inward_normal[0] + float(base["momentum_y"]) * inward_normal[1]
+            qn_delta = qn - base_qn
+            if abs(eta_delta) > max_delta_eta:
+                max_delta_eta = abs(eta_delta)
+                signed_delta_eta = eta_delta
+            if abs(qn_delta) > max_delta_qn:
+                max_delta_qn = abs(qn_delta)
+                signed_delta_qn = qn_delta
+        eta_scale = max(eta_scale, max_delta_eta)
+        qn_scale = max(qn_scale, max_delta_qn)
+        per_time.append({
+            "time": time,
+            "maximum_absolute_delta_eta": max_delta_eta,
+            "maximum_absolute_delta_qn": max_delta_qn,
+            "peak_delta_eta": signed_delta_eta,
+            "peak_delta_qn": signed_delta_qn,
+        })
+    floor = 1.0e-8
+    if max(eta_scale, qn_scale) <= 10.0 * floor:
+        raise DeliveryError("source coupling history does not contain a post-initial perturbation")
+    for item in per_time:
+        item["metric"] = max(
+            item["maximum_absolute_delta_eta"] / max(eta_scale, floor),
+            item["maximum_absolute_delta_qn"] / max(qn_scale, floor),
+        )
+    peak = max(per_time, key=lambda item: item["metric"])
+    peak_time = peak["time"]
+    peak_metric = peak["metric"]
+    if peak_time <= times[0]:
+        raise DeliveryError("replay-window peak occurs at the baseline time")
+    threshold = max(floor, 0.02 * peak_metric)
+    crossing = next((item["time"] for item in per_time if item["time"] > times[0] and item["metric"] >= threshold), None)
+    if crossing is None:
+        raise DeliveryError("replay-window threshold is never crossed after the baseline")
+
+    major_threshold = max(floor, 0.8 * peak_metric)
+    window_anchor = next(
+        (item["time"] for item in per_time if item["time"] > times[0] and item["metric"] >= major_threshold),
+        crossing,
+    )
+    requested_start = max(times[0], window_anchor - 30.0)
+    minimum_end = max(window_anchor + 180.0, peak_time)
+    if times[-1] + 1.0e-9 < minimum_end:
+        raise DeliveryError("insufficient post-arrival source history for a 180 s replay window retaining the first major peak")
+    start = requested_start
+    end = min(times[-1], start + 300.0)
+    if end + 1.0e-9 < minimum_end:
+        start = max(times[0], minimum_end - 300.0)
+        end = min(times[-1], start + 300.0)
+    if end - start + 1.0e-9 < 180.0:
+        raise DeliveryError("selected replay window is shorter than 180 s")
+    if not (start - 1.0e-9 <= window_anchor <= end + 1.0e-9 and start - 1.0e-9 <= peak_time <= end + 1.0e-9):
+        raise DeliveryError("selected replay window does not retain the major-arrival anchor and first major peak")
     chosen_times = [time for time in times if start <= time <= end]
     if len(chosen_times) < 4:
-        chosen_times = times[: min(len(times), 4)]
-        start = chosen_times[0]
-        end = chosen_times[-1]
-    if len(chosen_times) < 4:
         raise DeliveryError("replay window has fewer than 4 selected times")
+    shifted_start = chosen_times[0]
+    shifted_end = chosen_times[-1]
     selected.mkdir(parents=True, exist_ok=True)
     shutil.copy2(full_coupling / "metadata.json", selected / "metadata.json")
     with (selected / "samples.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=list(samples[0]))
         writer.writeheader()
         for time in chosen_times:
-            shifted = time - start
+            shifted = time - shifted_start
             for row in by_time[time]:
                 out = dict(row)
                 out["time"] = f"{shifted:.17g}"
@@ -1467,17 +1797,77 @@ def select_replay_window(full_coupling: Path, selected: Path, inward_normal: tup
         "source_history_sha256": sha256(full_coupling / "history.csv"),
         "source_time_start_s": times[0],
         "source_time_end_s": times[-1],
+        "baseline_time_s": times[0],
         "threshold": threshold,
+        "major_window_threshold": major_threshold,
+        "eta_normalisation_scale_m": eta_scale,
+        "normal_momentum_normalisation_scale_m2_per_s": qn_scale,
         "first_crossing_source_time_s": crossing,
+        "window_anchor_source_time_s": window_anchor,
         "peak_source_time_s": peak_time,
+        "peak_delta_eta_m": peak["peak_delta_eta"],
+        "peak_delta_qn_m2_per_s": peak["peak_delta_qn"],
         "peak_metric": peak_metric,
-        "selected_source_start_s": start,
-        "selected_source_end_s": end,
+        "selected_source_start_s": shifted_start,
+        "selected_source_end_s": shifted_end,
         "selected_time_count": len(chosen_times),
-        "shifted_duration_s": end - start,
+        "shifted_duration_s": shifted_end - shifted_start,
     }
     write_json(selected / "window_selection.json", evidence)
     return evidence
+
+
+def derive_openfoam_timestep(
+    samples: Sequence[dict[str, str]],
+    inward_normal: tuple[float, float],
+    tangent: tuple[float, float],
+    *,
+    streamwise_length_m: float,
+    streamwise_cells: int,
+    span_length_m: float,
+    span_cells: int,
+    vertical_height_m: float,
+    vertical_cells: int,
+    target_courant: float = 0.5,
+    target_alpha_courant: float = 0.5,
+    safety_factor: float = 0.5,
+    conservative_cap_s: float = 0.05,
+) -> dict:
+    min_cell_dimension = min(
+        streamwise_length_m / streamwise_cells,
+        span_length_m / span_cells,
+        vertical_height_m / vertical_cells,
+    )
+    maximum_speed = 0.0
+    maximum_depth = 0.0
+    for row in samples:
+        depth = max(0.0, float(row["depth"]))
+        maximum_depth = max(maximum_depth, depth)
+        if depth > 1.0e-6:
+            qx = float(row["momentum_x"])
+            qy = float(row["momentum_y"])
+            qn = qx * inward_normal[0] + qy * inward_normal[1]
+            qt = qx * tangent[0] + qy * tangent[1]
+            maximum_speed = max(maximum_speed, math.hypot(qn / depth, qt / depth))
+    wave_speed = math.sqrt(9.80665 * max(maximum_depth, 1.0e-9))
+    characteristic_speed = max(maximum_speed + wave_speed, 1.0e-9)
+    calculated = safety_factor * min(target_courant, target_alpha_courant) * min_cell_dimension / characteristic_speed
+    selected = min(calculated, conservative_cap_s)
+    if not all(math.isfinite(value) and value > 0.0 for value in (min_cell_dimension, characteristic_speed, calculated, selected)):
+        raise DeliveryError("derived OpenFOAM timestep is not finite and positive")
+    return {
+        "minimum_local_cell_dimension_m": min_cell_dimension,
+        "maximum_mapped_inlet_speed_m_per_s": maximum_speed,
+        "maximum_reconstructed_water_depth_m": maximum_depth,
+        "gravity_wave_speed_m_per_s": wave_speed,
+        "derived_characteristic_speed_m_per_s": characteristic_speed,
+        "target_courant_limit": target_courant,
+        "target_alpha_courant_limit": target_alpha_courant,
+        "safety_factor": safety_factor,
+        "calculated_timestep_limit_s": calculated,
+        "selected_maximum_timestep_s": selected,
+        "conservative_cap_s": conservative_cap_s,
+    }
 
 
 def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Path) -> dict:
@@ -1503,6 +1893,19 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
     vertical_cells = max(12, min(20, int(math.ceil(vertical_max / max(vertical_max / 16.0, 1.0)))))
     streamwise_length = max(300.0, min(1500.0, 20.0 * max(representative_depth, 1.0)))
     streamwise_cells = max(40, min(60, int(math.ceil(streamwise_length / 20.0))))
+    timestep = derive_openfoam_timestep(
+        samples,
+        (trajectory.unit.x, trajectory.unit.y),
+        (trajectory.left.x, trajectory.left.y),
+        streamwise_length_m=streamwise_length,
+        streamwise_cells=streamwise_cells,
+        span_length_m=span_length,
+        span_cells=span_cells,
+        vertical_height_m=vertical_max,
+        vertical_cells=vertical_cells,
+        target_courant=0.25,
+        target_alpha_courant=0.25,
+    )
     config = {
         "schema": {"name": "tsunami.openfoam_replay_configuration", "version": "1.0.0"},
         "section_id": SECTION_ID,
@@ -1539,11 +1942,14 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
             "streamwise_cells": streamwise_cells,
             "span_cells": span_cells,
             "vertical_cells": vertical_cells,
-            "end_time_s": max(float(row["time"]) for row in samples),
-            "maximum_timestep_s": 0.005,
-            "write_interval_s": max(1.0, max(float(row["time"]) for row in samples) / 5.0),
+            "end_time_s": min(60.0, max(float(row["time"]) for row in samples)),
+            "maximum_timestep_s": timestep["selected_maximum_timestep_s"],
+            "maximum_courant_number": timestep["target_courant_limit"],
+            "maximum_alpha_courant_number": timestep["target_alpha_courant_limit"],
+            "write_interval_s": max(1.0, min(60.0, max(float(row["time"]) for row in samples)) / 2.0),
             "initial_water_level_m": max(0.05, representative_depth),
             "alpha_tolerance": 5.0e-5,
+            "timestep_derivation": timestep,
         },
         "barrier": {
             "streamwise_position_m": 0.6 * streamwise_length,
@@ -1563,6 +1969,47 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
     }
     write_json(output, config)
     return config
+
+
+def _probe_numeric_values(path: Path) -> list[float]:
+    values: list[float] = []
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        for token in stripped.replace("(", " ").replace(")", " ").split():
+            try:
+                value = float(token)
+            except ValueError:
+                continue
+            if math.isfinite(value):
+                values.append(value)
+    return values
+
+
+def probe_distinction_metrics(no_defence: Path, barrier: Path) -> dict:
+    metrics: dict[str, float | int] = {}
+    maximum = 0.0
+    compared = 0
+    for name in ("alpha.water", "U", "p_rgh"):
+        left = no_defence / "postProcessing/probes/0" / name
+        right = barrier / "postProcessing/probes/0" / name
+        if not left.is_file() or not right.is_file():
+            raise DeliveryError(f"missing probe output for comparison: {name}")
+        left_values = _probe_numeric_values(left)
+        right_values = _probe_numeric_values(right)
+        count = min(len(left_values), len(right_values))
+        if count == 0:
+            raise DeliveryError(f"empty numeric probe output for comparison: {name}")
+        diff = max(abs(left_values[index] - right_values[index]) for index in range(count))
+        metrics[f"{name}_maximum_absolute_difference"] = diff
+        maximum = max(maximum, diff)
+        compared += count
+    if maximum <= 0.0:
+        raise DeliveryError("OpenFOAM variants are not distinguishable in probe output")
+    metrics["maximum_absolute_probe_difference"] = maximum
+    metrics["compared_numeric_values"] = compared
+    return metrics
 
 
 def run_openfoam_stage(output_root: Path, python: Path, overwrite: bool) -> dict:
@@ -1602,6 +2049,7 @@ def run_openfoam_stage(output_root: Path, python: Path, overwrite: bool) -> dict
                 raise DeliveryError(f"OpenFOAM v11 {stage} failed for {variant} with exit status {completed.returncode}")
         validation = replay_module.validate_smoke_case(case_dir, variant)
         evidence[variant] = {"generate_command": " ".join(generate), "stages": stage_commands, "validation": validation}
+    evidence["probe_distinction"] = probe_distinction_metrics(local_root / "no_defence", local_root / "simple_rigid_barrier")
     return evidence
 
 
@@ -1650,7 +2098,14 @@ def build_case(case_root: Path, output_root: Path, profile: Profile, acquire: bo
             "bearing_degrees_clockwise_from_north": trajectory.bearing_degrees,
             "distance_m": trajectory.distance_m,
             "selected_depth_m": trajectory.selected_depth_m,
+            "selected_bed_elevation_m": trajectory.selected_bed_elevation_m,
             "selection_fallback": trajectory.selection_fallback,
+            "selection_reason": trajectory.selection_reason,
+            "cross_section_sample_count": trajectory.cross_section_sample_count,
+            "cross_section_min_depth_m": trajectory.cross_section_min_depth_m,
+            "cross_section_max_depth_m": trajectory.cross_section_max_depth_m,
+            "cross_section_min_bed_elevation_m": trajectory.cross_section_min_bed_elevation_m,
+            "cross_section_max_bed_elevation_m": trajectory.cross_section_max_bed_elevation_m,
         },
         "terrain": terrain_evidence,
         "mesh": mesh_evidence,

@@ -1044,6 +1044,8 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     nz = _config_int(local_case, "vertical_cells", max(10, int(local["vertical_cells"])), "local_case.vertical_cells")
     end_time = _config_number(local_case, "end_time_s", float(replay_conversion["time_range"][1]), "local_case.end_time_s")
     maximum_timestep = _config_number(local_case, "maximum_timestep_s", 0.005, "local_case.maximum_timestep_s")
+    maximum_courant = _config_number(local_case, "maximum_courant_number", 0.5, "local_case.maximum_courant_number")
+    maximum_alpha_courant = _config_number(local_case, "maximum_alpha_courant_number", 0.5, "local_case.maximum_alpha_courant_number")
     write_interval = _config_number(local_case, "write_interval_s", max(end_time / 2.0, 0.01), "local_case.write_interval_s")
     initial_water_level = min(height * 0.5, _config_number(local_case, "initial_water_level_m", 0.18, "local_case.initial_water_level_m"))
     alpha_tolerance = _config_number(local_case, "alpha_tolerance", 1.0e-6, "local_case.alpha_tolerance")
@@ -1200,8 +1202,8 @@ timePrecision   8;
 runTimeModifiable yes;
 
 adjustTimeStep  yes;
-maxCo           0.5;
-maxAlphaCo      0.5;
+maxCo           {_fmt(maximum_courant)};
+maxAlphaCo      {_fmt(maximum_alpha_courant)};
 maxDeltaT       {_fmt(maximum_timestep)};
 {functions}
 """, encoding="utf-8")
@@ -1248,9 +1250,9 @@ wallDist
 {
     "alpha.water.*"
     {
-        nAlphaCorr      2;
-        nAlphaSubCycles 4;
-        nLimiterIter    8;
+        nAlphaCorr      3;
+        nAlphaSubCycles 8;
+        nLimiterIter    12;
     }
 
     p_rgh
@@ -1320,6 +1322,8 @@ relaxationFactors
         "omega": omega_value,
         "end_time": end_time,
         "maximum_timestep": maximum_timestep,
+        "maximum_courant_number": maximum_courant,
+        "maximum_alpha_courant_number": maximum_alpha_courant,
         "write_interval": write_interval,
         "initial_water_level": initial_water_level,
         "alpha_tolerance": alpha_tolerance,
@@ -1459,6 +1463,43 @@ def _read_internal_scalar_field(path: Path) -> list[float]:
     raise ReplayError(f"{path}: missing internalField")
 
 
+def _maximum_log_value(log_text: str, prefix: str) -> float | None:
+    maximum: float | None = None
+    for line in log_text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith(prefix) or "max:" not in stripped:
+            continue
+        try:
+            value = float(stripped.rsplit("max:", 1)[1].split()[0])
+        except (IndexError, ValueError):
+            continue
+        if math.isfinite(value):
+            maximum = value if maximum is None else max(maximum, value)
+    return maximum
+
+
+def _force_moment_metrics(path: Path) -> dict[str, float]:
+    maximum_force = 0.0
+    maximum_moment = 0.0
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        values = _parse_numbers(stripped)
+        if len(values) < 7:
+            continue
+        components = values[1:]
+        force_vectors = [components[index:index + 3] for index in range(0, min(9, len(components)), 3)]
+        moment_vectors = [components[index:index + 3] for index in range(9, min(18, len(components)), 3)]
+        if force_vectors:
+            total_force = [sum(vector[axis] for vector in force_vectors if len(vector) == 3) for axis in range(3)]
+            maximum_force = max(maximum_force, _norm(total_force))
+        if moment_vectors:
+            total_moment = [sum(vector[axis] for vector in moment_vectors if len(vector) == 3) for axis in range(3)]
+            maximum_moment = max(maximum_moment, _norm(total_moment))
+    return {"maximum_force_magnitude": maximum_force, "maximum_moment_magnitude": maximum_moment}
+
+
 def validate_smoke_case(case_root: Path, variant: str) -> dict:
     foam_log = (case_root / "log.foamRun").read_text(encoding="utf-8", errors="ignore")
     if "FOAM FATAL ERROR" in foam_log or "Floating point exception" in foam_log:
@@ -1486,13 +1527,26 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
     alpha_tolerance = float(load_json(case_root / "openfoam_case_summary.json").get("alpha_tolerance", 1.0e-6))
     if alpha_min < -alpha_tolerance or alpha_max > 1.0 + alpha_tolerance:
         raise ReplayError(f"{variant}: alpha.water out of bounds [{alpha_min}, {alpha_max}]")
+    maximum_courant = _maximum_log_value(foam_log, "Courant Number")
+    maximum_alpha_courant = _maximum_log_value(foam_log, "Interface Courant Number")
+    force_metrics = {"maximum_force_magnitude": 0.0, "maximum_moment_magnitude": 0.0}
+    if force_files:
+        force_metrics = _force_moment_metrics(force_files[0])
+        if force_metrics["maximum_force_magnitude"] <= 0.0 or not math.isfinite(force_metrics["maximum_force_magnitude"]):
+            raise ReplayError("barrier force output is not finite and nonzero")
+        if not math.isfinite(force_metrics["maximum_moment_magnitude"]):
+            raise ReplayError("barrier moment output is not finite")
     return {
         "case_root": str(case_root),
         "final_time": latest,
         "alpha_min": alpha_min,
         "alpha_max": alpha_max,
+        "observed_maximum_courant_number": maximum_courant,
+        "observed_maximum_alpha_courant_number": maximum_alpha_courant,
         "probe_files": [str(path) for path in probe_files[:6]],
         "force_files": [str(path) for path in force_files[:6]],
+        "maximum_barrier_force": force_metrics["maximum_force_magnitude"],
+        "maximum_barrier_moment": force_metrics["maximum_moment_magnitude"],
         "vtk_file_count": len([path for path in vtk_files if path.is_file()]),
     }
 
