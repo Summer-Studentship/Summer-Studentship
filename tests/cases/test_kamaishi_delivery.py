@@ -92,6 +92,25 @@ class KamaishiDeliveryTests(unittest.TestCase):
             for step, time in enumerate(times):
                 writer.writerow({"step": step, "time": f"{time:.17g}", "section_id": kamaishi.SECTION_ID, "sample_count": len(samples), "maximum_depth": 24.0, "maximum_speed": 0.2})
 
+    def _trajectory(self) -> kamaishi.Trajectory:
+        return kamaishi.Trajectory(
+            epicentre_wgs84=(0.0, 0.0),
+            proxy_wgs84=(0.0, 0.0),
+            epicentre=kamaishi.Point(0.0, 0.0),
+            proxy=kamaishi.Point(0.0, 0.0),
+            selected=kamaishi.Point(1.0, 0.0),
+            selected_wgs84=(0.0, 0.0),
+            unit=kamaishi.Point(1.0, 0.0),
+            left=kamaishi.Point(0.0, 1.0),
+            distance_m=1.0,
+            proxy_distance_to_interface_m=0.0,
+            bearing_degrees=90.0,
+            selected_bed_elevation_m=-1.0,
+            selected_depth_m=1.0,
+            selection_fallback=False,
+            selection_reason="unit fixture",
+        )
+
     def test_case_spec_defaults_are_delivery_acceptance_values(self):
         spec = json.loads((ROOT / "cases/kamaishi_delivery/case_spec.json").read_text())
         self.assertGreaterEqual(float(spec["regional_2d"]["final_time_s"]), 1800.0)
@@ -181,32 +200,33 @@ class KamaishiDeliveryTests(unittest.TestCase):
     def test_replay_config_is_data_derived_and_valid(self):
         coupling = self._kamaishi_coupling_fixture()
         selected = self.tmp / "selected"
-        kamaishi.select_replay_window(coupling, selected, (1.0, 0.0))
-        trajectory = kamaishi.Trajectory(
-            epicentre_wgs84=(0.0, 0.0),
-            proxy_wgs84=(0.0, 0.0),
-            epicentre=kamaishi.Point(0.0, 0.0),
-            proxy=kamaishi.Point(0.0, 0.0),
-            selected=kamaishi.Point(1.0, 0.0),
-            selected_wgs84=(0.0, 0.0),
-            unit=kamaishi.Point(1.0, 0.0),
-            left=kamaishi.Point(0.0, 1.0),
-            distance_m=1.0,
-            proxy_distance_to_interface_m=0.0,
-            bearing_degrees=90.0,
-            selected_bed_elevation_m=-1.0,
-            selected_depth_m=1.0,
-            selection_fallback=False,
-            selection_reason="unit fixture",
-        )
+        window = kamaishi.select_replay_window(coupling, selected, (1.0, 0.0))
         config_path = self.tmp / "replay_config.json"
-        config = kamaishi.replay_config_from_window(selected, trajectory, config_path)
+        config = kamaishi.replay_config_from_window(selected, self._trajectory(), config_path)
         self.assertEqual(config["section_id"], kamaishi.SECTION_ID)
         self.assertIn("local_case", config)
         self.assertIn("span_fraction", config["barrier"])
+        self.assertEqual(config["local_case"]["end_time_s"], window["shifted_duration_s"])
+        self.assertEqual(config["local_case"]["end_time_s"], 300.0)
+        self.assertEqual(config["local_case"]["write_interval_s"], 60.0)
+        self.assertAlmostEqual(config["replay_window"]["peak_shifted_time_s"], window["peak_source_time_s"] - window["selected_source_start_s"])
         self.assertGreater(config["local_case"]["maximum_timestep_s"], 0.005)
         self.assertIn("timestep_derivation", config["local_case"])
         replay.load_replay_config(config_path)
+
+    def test_sixty_second_selected_replay_remains_sixty_seconds(self):
+        selected = self.tmp / "selected-60"
+        self._write_coupling(selected, [0.0, 30.0, 60.0], arrival_time=0.0, peak_time=60.0)
+        (selected / "window_selection.json").write_text(json.dumps({
+            "selected_source_start_s": 100.0,
+            "selected_source_end_s": 160.0,
+            "shifted_duration_s": 60.0,
+            "selected_time_count": 3,
+            "peak_source_time_s": 160.0,
+        }), encoding="utf-8")
+        config = kamaishi.replay_config_from_window(selected, self._trajectory(), self.tmp / "replay-60.json")
+        self.assertEqual(config["local_case"]["end_time_s"], 60.0)
+        self.assertEqual(config["local_case"]["write_interval_s"], 12.0)
 
     def test_openfoam_timestep_derivation_responds_to_speed_and_mesh(self):
         rows = [{"depth": "10", "momentum_x": "10", "momentum_y": "0"}]
@@ -229,7 +249,7 @@ class KamaishiDeliveryTests(unittest.TestCase):
             "streamwise_cells": 42,
             "span_cells": 8,
             "vertical_cells": 14,
-            "end_time_s": 2.0,
+            "end_time_s": 0.12,
             "maximum_timestep_s": 0.02,
             "write_interval_s": 0.5,
             "initial_water_level_m": 1.2,

@@ -466,6 +466,10 @@ def _time_name(value: float) -> str:
     return "0" if text in {"-0", "0"} else text
 
 
+def _time_tolerance(value: float) -> float:
+    return max(1.0e-8, 1.0e-9 * max(1.0, abs(value)))
+
+
 def _foam_header(class_name: str, object_name: str, location: str | None = None) -> str:
     location_line = f'    location    "{location}";\n' if location is not None else ""
     return (
@@ -1030,6 +1034,8 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     output_root.mkdir(parents=True)
     config = load_replay_config(config_path)
     replay_conversion = load_json(replay_root / "replay_conversion.json")
+    boundary_start = float(replay_conversion["time_range"][0])
+    boundary_end = float(replay_conversion["time_range"][1])
     has_barrier = variant == "simple_rigid_barrier"
     local = config["local"]
     local_case = config.get("local_case", {})
@@ -1043,6 +1049,20 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     ny = _config_int(local_case, "span_cells", max(4, int(local["span_cells"])), "local_case.span_cells")
     nz = _config_int(local_case, "vertical_cells", max(10, int(local["vertical_cells"])), "local_case.vertical_cells")
     end_time = _config_number(local_case, "end_time_s", float(replay_conversion["time_range"][1]), "local_case.end_time_s")
+    boundary_tolerance = _time_tolerance(boundary_end)
+    if boundary_end + boundary_tolerance < end_time:
+        raise ReplayError("boundaryData maximum time is shorter than local_case.end_time_s")
+    replay_window = config.get("replay_window", {})
+    peak_shifted_time: float | None = None
+    if isinstance(replay_window, dict):
+        if replay_window.get("shifted_duration_s") is not None:
+            shifted_duration = _float(replay_window["shifted_duration_s"], "replay_window.shifted_duration_s")
+            if abs(end_time - shifted_duration) > _time_tolerance(shifted_duration):
+                raise ReplayError("production OpenFOAM end time must equal selected replay shifted duration")
+        if replay_window.get("peak_shifted_time_s") is not None:
+            peak_shifted_time = _float(replay_window["peak_shifted_time_s"], "replay_window.peak_shifted_time_s")
+            if end_time + _time_tolerance(end_time) < peak_shifted_time:
+                raise ReplayError("production OpenFOAM end time is shorter than the major replay peak time")
     maximum_timestep = _config_number(local_case, "maximum_timestep_s", 0.005, "local_case.maximum_timestep_s")
     maximum_courant = _config_number(local_case, "maximum_courant_number", 0.5, "local_case.maximum_courant_number")
     maximum_alpha_courant = _config_number(local_case, "maximum_alpha_courant_number", 0.5, "local_case.maximum_alpha_courant_number")
@@ -1321,6 +1341,8 @@ relaxationFactors
         "k": k_value,
         "omega": omega_value,
         "end_time": end_time,
+        "boundary_data_time_range": [boundary_start, boundary_end],
+        "major_replay_peak_time": peak_shifted_time,
         "maximum_timestep": maximum_timestep,
         "maximum_courant_number": maximum_courant,
         "maximum_alpha_courant_number": maximum_alpha_courant,
@@ -1463,6 +1485,16 @@ def _read_internal_scalar_field(path: Path) -> list[float]:
     raise ReplayError(f"{path}: missing internalField")
 
 
+def _assert_finite_field(path: Path, label: str) -> None:
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    nonfinite_tokens = {"nan", "+nan", "-nan", "inf", "+inf", "-inf", "infinity", "+infinity", "-infinity"}
+    for token in text.replace("(", " ").replace(")", " ").replace(";", " ").replace(",", " ").split():
+        if token.lower() in nonfinite_tokens:
+            raise ReplayError(f"{label}: non-finite value in {path}")
+    if not _parse_numbers(text):
+        raise ReplayError(f"{label}: no numeric field values in {path}")
+
+
 def _maximum_log_value(log_text: str, prefix: str) -> float | None:
     maximum: float | None = None
     for line in log_text.splitlines():
@@ -1476,6 +1508,36 @@ def _maximum_log_value(log_text: str, prefix: str) -> float | None:
         if math.isfinite(value):
             maximum = value if maximum is None else max(maximum, value)
     return maximum
+
+
+def _boundary_data_time_range(case_root: Path, patch: str = "inlet") -> tuple[float, float]:
+    directory = case_root / "constant" / "boundaryData" / patch
+    times: list[float] = []
+    for child in directory.iterdir():
+        if not child.is_dir():
+            continue
+        try:
+            times.append(float(child.name))
+        except ValueError:
+            continue
+    if not times:
+        raise ReplayError(f"missing boundaryData time directories for patch {patch}")
+    return min(times), max(times)
+
+
+def _series_final_time(path: Path) -> float:
+    latest: float | None = None
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        values = _parse_numbers(stripped)
+        if not values:
+            continue
+        latest = values[0] if latest is None else max(latest, values[0])
+    if latest is None:
+        raise ReplayError(f"{path}: no numeric time samples")
+    return latest
 
 
 def _force_moment_metrics(path: Path) -> dict[str, float]:
@@ -1505,9 +1567,23 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
     if "FOAM FATAL ERROR" in foam_log or "Floating point exception" in foam_log:
         raise ReplayError(f"{variant}: solver log contains fatal error")
     latest = _latest_time(case_root)
-    expected = float(load_json(case_root / "openfoam_case_summary.json")["end_time"])
+    summary = load_json(case_root / "openfoam_case_summary.json")
+    expected = float(summary["end_time"])
+    tolerance = _time_tolerance(expected)
     if latest + 1.0e-9 < expected:
         raise ReplayError(f"{variant}: final time {latest} did not reach {expected}")
+    boundary_start, boundary_end = _boundary_data_time_range(case_root)
+    if boundary_end + tolerance < expected:
+        raise ReplayError(f"{variant}: boundaryData ends at {boundary_end}, before requested end time {expected}")
+    peak_time = summary.get("major_replay_peak_time")
+    peak_traversed = False
+    if peak_time is not None:
+        peak_time = float(peak_time)
+        if expected + tolerance < peak_time:
+            raise ReplayError(f"{variant}: requested end time {expected} is before major replay peak {peak_time}")
+        if latest + tolerance < peak_time:
+            raise ReplayError(f"{variant}: solver final time {latest} did not traverse major replay peak {peak_time}")
+        peak_traversed = True
     vtk_files = list((case_root / "VTK").glob("**/*")) if (case_root / "VTK").exists() else []
     if not any(path.is_file() and path.stat().st_size > 0 for path in vtk_files):
         raise ReplayError(f"{variant}: missing non-empty VTK output")
@@ -1515,12 +1591,21 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
     probe_files = [path for path in probe_files if path.is_file() and path.stat().st_size > 0]
     if not probe_files:
         raise ReplayError(f"{variant}: missing non-empty probe output")
+    probe_final_time = min(_series_final_time(path) for path in probe_files)
+    if probe_final_time + tolerance < expected:
+        raise ReplayError(f"{variant}: probe output ends at {probe_final_time}, before requested end time {expected}")
     force_files: list[Path] = []
+    force_final_time: float | None = None
     if variant == "simple_rigid_barrier":
         force_files = [path for path in (case_root / "postProcessing").glob("forces/**/*") if path.is_file() and path.stat().st_size > 0]
         if not force_files:
             raise ReplayError("barrier case missing non-empty force output")
+        force_final_time = min(_series_final_time(path) for path in force_files)
+        if force_final_time + tolerance < expected:
+            raise ReplayError(f"barrier force output ends at {force_final_time}, before requested end time {expected}")
     alpha_path = case_root / _time_name(latest) / "alpha.water"
+    _assert_finite_field(case_root / _time_name(latest) / "U", f"{variant}: U")
+    _assert_finite_field(case_root / _time_name(latest) / "p_rgh", f"{variant}: p_rgh")
     alpha_values = _read_internal_scalar_field(alpha_path) if alpha_path.exists() else []
     alpha_min = min(alpha_values) if alpha_values else 0.0
     alpha_max = max(alpha_values) if alpha_values else 1.0
@@ -1538,7 +1623,13 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
             raise ReplayError("barrier moment output is not finite")
     return {
         "case_root": str(case_root),
+        "requested_end_time": expected,
         "final_time": latest,
+        "boundary_data_time_range": [boundary_start, boundary_end],
+        "major_replay_peak_time": peak_time,
+        "major_replay_peak_traversed": peak_traversed,
+        "probe_final_time": probe_final_time,
+        "force_final_time": force_final_time,
         "alpha_min": alpha_min,
         "alpha_max": alpha_max,
         "observed_maximum_courant_number": maximum_courant,
@@ -1548,6 +1639,7 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
         "maximum_barrier_force": force_metrics["maximum_force_magnitude"],
         "maximum_barrier_moment": force_metrics["maximum_moment_magnitude"],
         "vtk_file_count": len([path for path in vtk_files if path.is_file()]),
+        "vtk_final_time": latest,
     }
 
 

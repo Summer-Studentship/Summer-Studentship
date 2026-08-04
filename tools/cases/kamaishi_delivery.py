@@ -1906,6 +1906,12 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
         target_courant=0.25,
         target_alpha_courant=0.25,
     )
+    replay_duration = max(float(row["time"]) for row in samples)
+    replay_window_path = selected / "window_selection.json"
+    replay_window = read_json(replay_window_path) if replay_window_path.exists() else {}
+    peak_shifted_time = None
+    if replay_window:
+        peak_shifted_time = float(replay_window["peak_source_time_s"]) - float(replay_window["selected_source_start_s"])
     config = {
         "schema": {"name": "tsunami.openfoam_replay_configuration", "version": "1.0.0"},
         "section_id": SECTION_ID,
@@ -1942,14 +1948,24 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
             "streamwise_cells": streamwise_cells,
             "span_cells": span_cells,
             "vertical_cells": vertical_cells,
-            "end_time_s": min(60.0, max(float(row["time"]) for row in samples)),
+            "end_time_s": replay_duration,
             "maximum_timestep_s": timestep["selected_maximum_timestep_s"],
             "maximum_courant_number": timestep["target_courant_limit"],
             "maximum_alpha_courant_number": timestep["target_alpha_courant_limit"],
-            "write_interval_s": max(1.0, min(60.0, max(float(row["time"]) for row in samples)) / 2.0),
+            "write_interval_s": max(1.0e-6, min(60.0, replay_duration / 5.0)),
             "initial_water_level_m": max(0.05, representative_depth),
             "alpha_tolerance": 5.0e-5,
             "timestep_derivation": timestep,
+        },
+        "replay_window": {
+            "selected_source_start_s": replay_window.get("selected_source_start_s"),
+            "selected_source_end_s": replay_window.get("selected_source_end_s"),
+            "shifted_duration_s": replay_duration,
+            "selected_time_count": len({float(row["time"]) for row in samples}),
+            "peak_shifted_time_s": peak_shifted_time,
+            "source_metadata_sha256": replay_window.get("source_metadata_sha256"),
+            "source_samples_sha256": replay_window.get("source_samples_sha256"),
+            "source_history_sha256": replay_window.get("source_history_sha256"),
         },
         "barrier": {
             "streamwise_position_m": 0.6 * streamwise_length,
@@ -2039,7 +2055,7 @@ def run_openfoam_stage(output_root: Path, python: Path, overwrite: bool) -> dict
         if generated.returncode != 0:
             raise DeliveryError(f"OpenFOAM case generation failed for {variant}")
         stage_commands: list[dict[str, object]] = []
-        for stage in ("blockMesh", "setFields", "foamRun", "foamToVTK"):
+        for stage in ("blockMesh", "checkMesh", "setFields", "foamRun", "foamToVTK"):
             command = [str(repo_root() / OPENFOAM_RUNNER), str(case_dir), stage]
             if stage == "foamRun":
                 command.extend(["-solver", "incompressibleVoF"])
