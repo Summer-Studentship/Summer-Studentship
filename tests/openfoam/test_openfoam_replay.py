@@ -136,6 +136,45 @@ boundaryField
         self.assertGreater(summary["k"], 0.0)
         self.assertGreater(summary["omega"], 0.0)
 
+    def test_generator_rejects_requested_time_beyond_boundary_data(self):
+        replay.convert_boundary_data(COUPLING, CONFIG, self.tmp / "replay")
+        config = json.loads(CONFIG.read_text())
+        config["local_case"] = {"end_time_s": 1.0}
+        config_path = self.tmp / "too-long.json"
+        config_path.write_text(json.dumps(config))
+        with self.assertRaisesRegex(replay.ReplayError, "boundaryData maximum time"):
+            replay.generate_case(self.tmp / "replay", config_path, self.tmp / "too-long", "no_defence")
+
+    def test_generator_rejects_requested_time_shorter_than_replay_peak(self):
+        replay.convert_boundary_data(COUPLING, CONFIG, self.tmp / "replay")
+        config = json.loads(CONFIG.read_text())
+        config["local_case"] = {"end_time_s": 0.06}
+        config["replay_window"] = {"shifted_duration_s": 0.06, "peak_shifted_time_s": 0.08}
+        config_path = self.tmp / "misses-peak.json"
+        config_path.write_text(json.dumps(config))
+        with self.assertRaisesRegex(replay.ReplayError, "major replay peak"):
+            replay.generate_case(self.tmp / "replay", config_path, self.tmp / "misses-peak", "no_defence")
+
+    def test_smoke_validation_rejects_solver_short_of_replay_duration(self):
+        case = self.tmp / "short-solver"
+        case.mkdir()
+        (case / "log.foamRun").write_text("Time = 60\n", encoding="utf-8")
+        (case / "60").mkdir()
+        (case / "openfoam_case_summary.json").write_text(json.dumps({"end_time": 300.0}), encoding="utf-8")
+        with self.assertRaisesRegex(replay.ReplayError, "did not reach"):
+            replay.validate_smoke_case(case, "no_defence")
+
+    def test_smoke_validation_requires_boundary_data_to_cover_request(self):
+        case = self.tmp / "short-boundary"
+        (case / "300").mkdir(parents=True)
+        boundary = case / "constant/boundaryData/inlet"
+        (boundary / "0").mkdir(parents=True)
+        (boundary / "60").mkdir()
+        (case / "log.foamRun").write_text("Time = 300\n", encoding="utf-8")
+        (case / "openfoam_case_summary.json").write_text(json.dumps({"end_time": 300.0}), encoding="utf-8")
+        with self.assertRaisesRegex(replay.ReplayError, "boundaryData ends"):
+            replay.validate_smoke_case(case, "no_defence")
+
 
 if __name__ == "__main__":
     unittest.main()

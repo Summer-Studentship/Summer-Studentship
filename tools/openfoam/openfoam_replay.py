@@ -466,6 +466,10 @@ def _time_name(value: float) -> str:
     return "0" if text in {"-0", "0"} else text
 
 
+def _time_tolerance(value: float) -> float:
+    return max(1.0e-8, 1.0e-9 * max(1.0, abs(value)))
+
+
 def _foam_header(class_name: str, object_name: str, location: str | None = None) -> str:
     location_line = f'    location    "{location}";\n' if location is not None else ""
     return (
@@ -851,10 +855,20 @@ mergePatchPairs
 """
 
 
-def _block_mesh_barrier(length: float, span: float, height: float, nx: int, ny: int, nz: int) -> str:
-    xb0 = 0.90
-    xb1 = 0.96
-    hb = 0.24
+def _block_mesh_barrier(
+    length: float,
+    span: float,
+    height: float,
+    nx: int,
+    ny: int,
+    nz: int,
+    position: float = 0.90,
+    thickness: float = 0.06,
+    barrier_height: float = 0.24,
+) -> str:
+    xb0 = max(0.05 * length, min(position, 0.95 * length))
+    xb1 = max(xb0 + 1.0e-6, min(xb0 + thickness, 0.98 * length))
+    hb = max(1.0e-6, min(barrier_height, 0.95 * height))
     xs = [0.0, xb0, xb1, length]
     zs = [0.0, hb, height]
     verts = []
@@ -975,6 +989,28 @@ mergePatchPairs
 """.replace("            ['(", "            (").replace(")']", ")")
 
 
+def _config_number(section: dict, key: str, default: float, label: str) -> float:
+    if key not in section:
+        return default
+    return _positive(_float(section[key], label), label)
+
+
+def _config_int(section: dict, key: str, default: int, label: str) -> int:
+    if key not in section:
+        return default
+    value = _int(section[key], label)
+    if value <= 0:
+        raise ReplayError(f"{label} must be positive")
+    return value
+
+
+def _config_fraction(section: dict, key: str, default: float, label: str) -> float:
+    value = _config_number(section, key, default, label)
+    if value > 1.0:
+        raise ReplayError(f"{label} must be no greater than 1")
+    return value
+
+
 def turbulence_values(config: dict, replay_conversion: dict) -> tuple[float, float]:
     turbulence = config["turbulence"]
     speed = max(float(turbulence["minimum_speed_m_per_s"]), float(replay_conversion.get("maximum_boundary_speed_m_per_s", 0.0)))
@@ -998,14 +1034,45 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     output_root.mkdir(parents=True)
     config = load_replay_config(config_path)
     replay_conversion = load_json(replay_root / "replay_conversion.json")
+    boundary_start = float(replay_conversion["time_range"][0])
+    boundary_end = float(replay_conversion["time_range"][1])
     has_barrier = variant == "simple_rigid_barrier"
     local = config["local"]
-    length = 2.0
+    local_case = config.get("local_case", {})
+    barrier_config = config.get("barrier", {})
+    if not isinstance(local_case, dict) or not isinstance(barrier_config, dict):
+        raise ReplayError("local_case and barrier sections must be objects when present")
+    length = _config_number(local_case, "streamwise_length_m", 2.0, "local_case.streamwise_length_m")
     span = float(local["span_max_m"]) - float(local["span_min_m"])
     height = float(local["vertical_max_m"]) - float(local["vertical_min_m"])
-    nx, ny, nz = 30, max(4, int(local["span_cells"])), max(10, int(local["vertical_cells"]))
-    end_time = float(replay_conversion["time_range"][1])
-    first_level = 0.18
+    nx = _config_int(local_case, "streamwise_cells", 30, "local_case.streamwise_cells")
+    ny = _config_int(local_case, "span_cells", max(4, int(local["span_cells"])), "local_case.span_cells")
+    nz = _config_int(local_case, "vertical_cells", max(10, int(local["vertical_cells"])), "local_case.vertical_cells")
+    end_time = _config_number(local_case, "end_time_s", float(replay_conversion["time_range"][1]), "local_case.end_time_s")
+    boundary_tolerance = _time_tolerance(boundary_end)
+    if boundary_end + boundary_tolerance < end_time:
+        raise ReplayError("boundaryData maximum time is shorter than local_case.end_time_s")
+    replay_window = config.get("replay_window", {})
+    peak_shifted_time: float | None = None
+    if isinstance(replay_window, dict):
+        if replay_window.get("shifted_duration_s") is not None:
+            shifted_duration = _float(replay_window["shifted_duration_s"], "replay_window.shifted_duration_s")
+            if abs(end_time - shifted_duration) > _time_tolerance(shifted_duration):
+                raise ReplayError("production OpenFOAM end time must equal selected replay shifted duration")
+        if replay_window.get("peak_shifted_time_s") is not None:
+            peak_shifted_time = _float(replay_window["peak_shifted_time_s"], "replay_window.peak_shifted_time_s")
+            if end_time + _time_tolerance(end_time) < peak_shifted_time:
+                raise ReplayError("production OpenFOAM end time is shorter than the major replay peak time")
+    maximum_timestep = _config_number(local_case, "maximum_timestep_s", 0.005, "local_case.maximum_timestep_s")
+    maximum_courant = _config_number(local_case, "maximum_courant_number", 0.5, "local_case.maximum_courant_number")
+    maximum_alpha_courant = _config_number(local_case, "maximum_alpha_courant_number", 0.5, "local_case.maximum_alpha_courant_number")
+    write_interval = _config_number(local_case, "write_interval_s", max(end_time / 2.0, 0.01), "local_case.write_interval_s")
+    initial_water_level = min(height * 0.5, _config_number(local_case, "initial_water_level_m", 0.18, "local_case.initial_water_level_m"))
+    alpha_tolerance = _config_number(local_case, "alpha_tolerance", 1.0e-6, "local_case.alpha_tolerance")
+    barrier_position = _config_number(barrier_config, "streamwise_position_m", 0.90, "barrier.streamwise_position_m")
+    barrier_thickness = _config_number(barrier_config, "thickness_m", 0.06, "barrier.thickness_m")
+    barrier_height = _config_number(barrier_config, "height_m", 0.24, "barrier.height_m")
+    barrier_span_fraction = _config_fraction(barrier_config, "span_fraction", 1.0, "barrier.span_fraction")
     k_value, omega_value = turbulence_values(config, replay_conversion)
     patches = _patches(has_barrier)
 
@@ -1013,7 +1080,7 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
         (output_root / directory).mkdir(parents=True, exist_ok=True)
     shutil.copytree(replay_root / "constant" / "boundaryData", output_root / "constant" / "boundaryData")
     (output_root / "case.foam").write_text("OpenFOAM replay case\n", encoding="utf-8")
-    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz)
+    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz, barrier_position, barrier_thickness, barrier_height) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz)
     (output_root / "system/blockMeshDict").write_text(block_mesh, encoding="utf-8")
     (output_root / "constant/g").write_text(_dict_header("g", "constant") + "dimensions      [0 1 -2 0 0 0 0];\nvalue           (0 0 -9.81);\n", encoding="utf-8")
     (output_root / "constant/phaseProperties").write_text(_dict_header("phaseProperties", "constant") + "phases          (water air);\n\nsigma           0.07;\n", encoding="utf-8")
@@ -1089,7 +1156,7 @@ regions
 (
     boxToCell
     {{
-        box (0 0 0) ({_fmt(length)} {_fmt(span)} {_fmt(first_level)});
+        box (0 0 0) ({_fmt(length)} {_fmt(span)} {_fmt(initial_water_level)});
         fieldValues
         (
             volScalarFieldValue alpha.water 1
@@ -1108,8 +1175,8 @@ functions
         writeInterval   1;
         probeLocations
         (
-            (0.55 0.30 0.12)
-            (1.45 0.30 0.12)
+            ({_fmt(0.5 * barrier_position)} {_fmt(0.5 * span)} {_fmt(0.5 * min(initial_water_level, height))})
+            ({_fmt(min(length * 0.95, barrier_position + 0.25 * (length - barrier_position)))} {_fmt(0.5 * span)} {_fmt(0.5 * min(initial_water_level, height))})
         );
         fixedLocations  false;
         fields
@@ -1121,17 +1188,17 @@ functions
     }}
 """
     if has_barrier:
-        functions += """
+        functions += f"""
     forces
-    {
+    {{
         type            forces;
         libs            ("libforces.so");
         patches         (barrier);
         log             on;
         writeControl    timeStep;
         writeInterval   1;
-        CofR            (0.93 0.30 0.12);
-    }
+        CofR            ({_fmt(barrier_position + 0.5 * barrier_thickness)} {_fmt(0.5 * span)} {_fmt(0.5 * barrier_height)});
+    }}
 """
     functions += "}\n"
     (output_root / "system/controlDict").write_text(_dict_header("controlDict", "system") + f"""application     foamRun;
@@ -1145,7 +1212,7 @@ endTime         {_fmt(end_time)};
 deltaT          0.002;
 
 writeControl    adjustableRunTime;
-writeInterval   {_fmt(max(end_time / 2.0, 0.01))};
+writeInterval   {_fmt(write_interval)};
 purgeWrite      0;
 writeFormat     ascii;
 writePrecision  10;
@@ -1155,9 +1222,9 @@ timePrecision   8;
 runTimeModifiable yes;
 
 adjustTimeStep  yes;
-maxCo           0.5;
-maxAlphaCo      0.5;
-maxDeltaT       0.005;
+maxCo           {_fmt(maximum_courant)};
+maxAlphaCo      {_fmt(maximum_alpha_courant)};
+maxDeltaT       {_fmt(maximum_timestep)};
 {functions}
 """, encoding="utf-8")
     (output_root / "system/fvSchemes").write_text(_dict_header("fvSchemes", "system") + """ddtSchemes
@@ -1203,9 +1270,9 @@ wallDist
 {
     "alpha.water.*"
     {
-        nAlphaCorr      1;
-        nAlphaSubCycles 2;
-        nLimiterIter    5;
+        nAlphaCorr      3;
+        nAlphaSubCycles 8;
+        nLimiterIter    12;
     }
 
     p_rgh
@@ -1274,6 +1341,20 @@ relaxationFactors
         "k": k_value,
         "omega": omega_value,
         "end_time": end_time,
+        "boundary_data_time_range": [boundary_start, boundary_end],
+        "major_replay_peak_time": peak_shifted_time,
+        "maximum_timestep": maximum_timestep,
+        "maximum_courant_number": maximum_courant,
+        "maximum_alpha_courant_number": maximum_alpha_courant,
+        "write_interval": write_interval,
+        "initial_water_level": initial_water_level,
+        "alpha_tolerance": alpha_tolerance,
+        "barrier": {
+            "streamwise_position_m": barrier_position,
+            "thickness_m": barrier_thickness,
+            "height_m": barrier_height,
+            "span_fraction": barrier_span_fraction,
+        } if has_barrier else None,
         "patches": patches,
         "tutorial_authority": [
             "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
@@ -1404,14 +1485,105 @@ def _read_internal_scalar_field(path: Path) -> list[float]:
     raise ReplayError(f"{path}: missing internalField")
 
 
+def _assert_finite_field(path: Path, label: str) -> None:
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    nonfinite_tokens = {"nan", "+nan", "-nan", "inf", "+inf", "-inf", "infinity", "+infinity", "-infinity"}
+    for token in text.replace("(", " ").replace(")", " ").replace(";", " ").replace(",", " ").split():
+        if token.lower() in nonfinite_tokens:
+            raise ReplayError(f"{label}: non-finite value in {path}")
+    if not _parse_numbers(text):
+        raise ReplayError(f"{label}: no numeric field values in {path}")
+
+
+def _maximum_log_value(log_text: str, prefix: str) -> float | None:
+    maximum: float | None = None
+    for line in log_text.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith(prefix) or "max:" not in stripped:
+            continue
+        try:
+            value = float(stripped.rsplit("max:", 1)[1].split()[0])
+        except (IndexError, ValueError):
+            continue
+        if math.isfinite(value):
+            maximum = value if maximum is None else max(maximum, value)
+    return maximum
+
+
+def _boundary_data_time_range(case_root: Path, patch: str = "inlet") -> tuple[float, float]:
+    directory = case_root / "constant" / "boundaryData" / patch
+    times: list[float] = []
+    for child in directory.iterdir():
+        if not child.is_dir():
+            continue
+        try:
+            times.append(float(child.name))
+        except ValueError:
+            continue
+    if not times:
+        raise ReplayError(f"missing boundaryData time directories for patch {patch}")
+    return min(times), max(times)
+
+
+def _series_final_time(path: Path) -> float:
+    latest: float | None = None
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        values = _parse_numbers(stripped)
+        if not values:
+            continue
+        latest = values[0] if latest is None else max(latest, values[0])
+    if latest is None:
+        raise ReplayError(f"{path}: no numeric time samples")
+    return latest
+
+
+def _force_moment_metrics(path: Path) -> dict[str, float]:
+    maximum_force = 0.0
+    maximum_moment = 0.0
+    for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#"):
+            continue
+        values = _parse_numbers(stripped)
+        if len(values) < 7:
+            continue
+        components = values[1:]
+        force_vectors = [components[index:index + 3] for index in range(0, min(9, len(components)), 3)]
+        moment_vectors = [components[index:index + 3] for index in range(9, min(18, len(components)), 3)]
+        if force_vectors:
+            total_force = [sum(vector[axis] for vector in force_vectors if len(vector) == 3) for axis in range(3)]
+            maximum_force = max(maximum_force, _norm(total_force))
+        if moment_vectors:
+            total_moment = [sum(vector[axis] for vector in moment_vectors if len(vector) == 3) for axis in range(3)]
+            maximum_moment = max(maximum_moment, _norm(total_moment))
+    return {"maximum_force_magnitude": maximum_force, "maximum_moment_magnitude": maximum_moment}
+
+
 def validate_smoke_case(case_root: Path, variant: str) -> dict:
     foam_log = (case_root / "log.foamRun").read_text(encoding="utf-8", errors="ignore")
     if "FOAM FATAL ERROR" in foam_log or "Floating point exception" in foam_log:
         raise ReplayError(f"{variant}: solver log contains fatal error")
     latest = _latest_time(case_root)
-    expected = float(load_json(case_root / "openfoam_case_summary.json")["end_time"])
+    summary = load_json(case_root / "openfoam_case_summary.json")
+    expected = float(summary["end_time"])
+    tolerance = _time_tolerance(expected)
     if latest + 1.0e-9 < expected:
         raise ReplayError(f"{variant}: final time {latest} did not reach {expected}")
+    boundary_start, boundary_end = _boundary_data_time_range(case_root)
+    if boundary_end + tolerance < expected:
+        raise ReplayError(f"{variant}: boundaryData ends at {boundary_end}, before requested end time {expected}")
+    peak_time = summary.get("major_replay_peak_time")
+    peak_traversed = False
+    if peak_time is not None:
+        peak_time = float(peak_time)
+        if expected + tolerance < peak_time:
+            raise ReplayError(f"{variant}: requested end time {expected} is before major replay peak {peak_time}")
+        if latest + tolerance < peak_time:
+            raise ReplayError(f"{variant}: solver final time {latest} did not traverse major replay peak {peak_time}")
+        peak_traversed = True
     vtk_files = list((case_root / "VTK").glob("**/*")) if (case_root / "VTK").exists() else []
     if not any(path.is_file() and path.stat().st_size > 0 for path in vtk_files):
         raise ReplayError(f"{variant}: missing non-empty VTK output")
@@ -1419,26 +1591,55 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
     probe_files = [path for path in probe_files if path.is_file() and path.stat().st_size > 0]
     if not probe_files:
         raise ReplayError(f"{variant}: missing non-empty probe output")
+    probe_final_time = min(_series_final_time(path) for path in probe_files)
+    if probe_final_time + tolerance < expected:
+        raise ReplayError(f"{variant}: probe output ends at {probe_final_time}, before requested end time {expected}")
     force_files: list[Path] = []
+    force_final_time: float | None = None
     if variant == "simple_rigid_barrier":
         force_files = [path for path in (case_root / "postProcessing").glob("forces/**/*") if path.is_file() and path.stat().st_size > 0]
         if not force_files:
             raise ReplayError("barrier case missing non-empty force output")
+        force_final_time = min(_series_final_time(path) for path in force_files)
+        if force_final_time + tolerance < expected:
+            raise ReplayError(f"barrier force output ends at {force_final_time}, before requested end time {expected}")
     alpha_path = case_root / _time_name(latest) / "alpha.water"
+    _assert_finite_field(case_root / _time_name(latest) / "U", f"{variant}: U")
+    _assert_finite_field(case_root / _time_name(latest) / "p_rgh", f"{variant}: p_rgh")
     alpha_values = _read_internal_scalar_field(alpha_path) if alpha_path.exists() else []
     alpha_min = min(alpha_values) if alpha_values else 0.0
     alpha_max = max(alpha_values) if alpha_values else 1.0
-    alpha_tolerance = 1.0e-6
+    alpha_tolerance = float(load_json(case_root / "openfoam_case_summary.json").get("alpha_tolerance", 1.0e-6))
     if alpha_min < -alpha_tolerance or alpha_max > 1.0 + alpha_tolerance:
         raise ReplayError(f"{variant}: alpha.water out of bounds [{alpha_min}, {alpha_max}]")
+    maximum_courant = _maximum_log_value(foam_log, "Courant Number")
+    maximum_alpha_courant = _maximum_log_value(foam_log, "Interface Courant Number")
+    force_metrics = {"maximum_force_magnitude": 0.0, "maximum_moment_magnitude": 0.0}
+    if force_files:
+        force_metrics = _force_moment_metrics(force_files[0])
+        if force_metrics["maximum_force_magnitude"] <= 0.0 or not math.isfinite(force_metrics["maximum_force_magnitude"]):
+            raise ReplayError("barrier force output is not finite and nonzero")
+        if not math.isfinite(force_metrics["maximum_moment_magnitude"]):
+            raise ReplayError("barrier moment output is not finite")
     return {
         "case_root": str(case_root),
+        "requested_end_time": expected,
         "final_time": latest,
+        "boundary_data_time_range": [boundary_start, boundary_end],
+        "major_replay_peak_time": peak_time,
+        "major_replay_peak_traversed": peak_traversed,
+        "probe_final_time": probe_final_time,
+        "force_final_time": force_final_time,
         "alpha_min": alpha_min,
         "alpha_max": alpha_max,
+        "observed_maximum_courant_number": maximum_courant,
+        "observed_maximum_alpha_courant_number": maximum_alpha_courant,
         "probe_files": [str(path) for path in probe_files[:6]],
         "force_files": [str(path) for path in force_files[:6]],
+        "maximum_barrier_force": force_metrics["maximum_force_magnitude"],
+        "maximum_barrier_moment": force_metrics["maximum_moment_magnitude"],
         "vtk_file_count": len([path for path in vtk_files if path.is_file()]),
+        "vtk_final_time": latest,
     }
 
 

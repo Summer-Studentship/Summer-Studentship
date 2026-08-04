@@ -306,11 +306,16 @@ namespace tsunami::r2d
                     request));
             }
             const auto &stations = request.corridor->stations();
+            const auto tolerance = policy.geometry_absolute_tolerance_m;
+            const auto zero_inland_extent = std::abs(request.corridor_record->inland_extent_m) <= tolerance;
+            const auto target_before_inland = stations.target_xi_m < stations.inland_xi_m;
+            const auto target_at_inland_for_zero_extent =
+                zero_inland_extent && std::abs(stations.target_xi_m - stations.inland_xi_m) <= tolerance;
             if (!finite(stations.offshore_xi_m) || !finite(stations.epicentre_xi_m) ||
                 !finite(stations.target_xi_m) || !finite(stations.inland_xi_m) ||
                 !(stations.offshore_xi_m < stations.epicentre_xi_m) ||
                 !(stations.epicentre_xi_m < stations.target_xi_m) ||
-                !(stations.target_xi_m < stations.inland_xi_m) ||
+                !(target_before_inland || target_at_inland_for_zero_extent) ||
                 !finite(request.corridor->offshore_width_m()) || request.corridor->offshore_width_m() <= 0.0 ||
                 !finite(request.corridor->inland_width_m()) || request.corridor->inland_width_m() <= 0.0 ||
                 !finite(request.corridor->total_length_m()) || request.corridor->total_length_m() <= 0.0) {

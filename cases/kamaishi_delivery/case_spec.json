@@ -1,0 +1,127 @@
+{
+  "schema": {
+    "name": "tsunami.kamaishi_delivery_case",
+    "version": "1.0.0"
+  },
+  "delivery_deadline": "2026-08-08",
+  "event": {
+    "event_id": "usgs-usp000hvnu",
+    "name": "2011 Great Tohoku Earthquake",
+    "origin_utc": "2011-03-11T05:46:24Z",
+    "magnitude_mw": 9.1,
+    "epicentre_wgs84": {
+      "longitude": 142.373,
+      "latitude": 38.297
+    }
+  },
+  "kamaishi_proxy": {
+    "description": "Kamaishi evidence proxy used to determine the Regional2D trajectory only",
+    "longitude": 141.8858,
+    "latitude": 39.2757
+  },
+  "source_products": {
+    "terrain": {
+      "provider": "NOAA/NCEI",
+      "product": "ETOPO 2022 v1 15 arc-second surface elevation GeoTIFF",
+      "tile": "ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "source_uri": "https://www.ngdc.noaa.gov/mgg/global/relief/ETOPO2022/data/15s/15s_surface_elev_gtif/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "local_path": "data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "delivery_role": [
+        "bathymetry",
+        "topography"
+      ],
+      "delivery_status": "fallback integration source",
+      "vertical_reference_evidence": {
+        "expected_vertical_datum": "EGM2008",
+        "expected_epsg": "EPSG:3855",
+        "positive_direction": "up",
+        "evidence_basis": "NOAA ETOPO 2022 user-guide/product metadata; record explicitly when GeoTIFF metadata does not encode vertical CRS"
+      }
+    },
+    "earthquake": {
+      "provider": "USGS",
+      "product_id": "usp000hvnu",
+      "revision": "1539808472261",
+      "file": "basic_inversion.param",
+      "source_uri": "https://earthquake.usgs.gov/archive/product/finite-fault/usp000hvnu/us/1539808472261/basic_inversion.param",
+      "current_content_uri": "https://earthquake.usgs.gov/product/finite-fault/usp000hvnu/us/1539808472261/basic_inversion.param",
+      "local_path": "data/source/earthquake/usgs_usp000hvnu_1539808472261_basic_inversion.param"
+    }
+  },
+  "computational_crs": {
+    "authority": "EPSG",
+    "code": "32654",
+    "name": "WGS 84 / UTM zone 54N",
+    "horizontal_unit": "m",
+    "axis_order": "east_north"
+  },
+  "vertical_reference": {
+    "datum": "EGM2008",
+    "authority": "EPSG",
+    "code": "3855",
+    "vertical_unit": "m",
+    "positive_direction": "up"
+  },
+  "profiles": {
+    "etopo-500m": {
+      "target_grid_resolution_m": 500.0,
+      "regional_mesh_size_m": 250.0
+    },
+    "etopo-1000m": {
+      "target_grid_resolution_m": 1000.0,
+      "regional_mesh_size_m": 1000.0
+    }
+  },
+  "corridor": {
+    "width_m": 8000.0,
+    "source_side_pre_extent_m": 15000.0,
+    "inland_extent_m": 0.0,
+    "narrowing_enabled": false,
+    "offshore_sponge_width_m": 10000.0,
+    "side_sponge_width_m": 1000.0
+  },
+  "nearshore_interface": {
+    "preferred_depth_band_m": [
+      15.0,
+      30.0
+    ],
+    "fallback_depth_band_m": [
+      5.0,
+      50.0
+    ],
+    "boundary_patch_name": "boundary.inland",
+    "section_id": "kamaishi-nearshore-interface"
+  },
+  "regional_2d": {
+    "scenario": "Tohoku 2011 Kamaishi delivery integration",
+    "target_site": "Kamaishi",
+    "model_family": "regional_2d",
+    "gravity_m_per_s2": 9.80665,
+    "manning_uniform_s_per_m_one_third": 0.025,
+    "coriolis": "disabled",
+    "earthquake_enabled": true,
+    "bed_mapping": "vertical_only",
+    "surface_transfer": "passive_equal_to_effective_bed",
+    "scheme": "ssprk3",
+    "courant_number": 0.1,
+    "final_time_s": 1800.0,
+    "snapshot_interval_s": 5.0,
+    "maximum_timestep_s": 0.1,
+    "maximum_steps": 50000,
+    "relaxation": {
+      "enabled": true,
+      "maximum_rate_per_s": 0.02,
+      "profile_exponent": 2.0
+    }
+  },
+  "local_3d": {
+    "profile_label": "Kamaishi-forced representative local replay",
+    "flat_bed": true,
+    "representative_geometry_only": true,
+    "barrier_label": "simplified full-width fixed rigid wall",
+    "minimum_span_cells": 6,
+    "maximum_span_cells": 20,
+    "minimum_vertical_cells": 12,
+    "maximum_vertical_cells": 20
+  }
+}

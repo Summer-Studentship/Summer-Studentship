@@ -74,5 +74,12 @@ __pycache__/
 !data/**/.gitkeep
 !data/README.md
 
+# Prompt C real delivery source artefacts are acquired locally and recorded at runtime.
+data/source/SHA256SUMS
+data/source/source_inventory.json
+data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif
+data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.gdalinfo.json
+data/source/earthquake/usgs_usp000hvnu_1539808472261_basic_inversion.param
+
 desktop.ini
 .fake

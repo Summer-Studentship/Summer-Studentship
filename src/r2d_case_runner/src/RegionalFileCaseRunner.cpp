@@ -44,6 +44,25 @@ namespace tsunami::r2d_case
             return request.run_id.valid() ? request.run_id.str() : std::string{};
         }
 
+        [[nodiscard]] auto termination_reason_text(tsunami::r2d::RegionalSolveTerminationReason reason) noexcept -> std::string_view
+        {
+            switch (reason) {
+            case tsunami::r2d::RegionalSolveTerminationReason::final_time_reached:
+                return "final_time_reached";
+            case tsunami::r2d::RegionalSolveTerminationReason::maximum_steps_reached:
+                return "maximum_steps_reached";
+            case tsunami::r2d::RegionalSolveTerminationReason::minimum_timestep_reached:
+                return "minimum_timestep_reached";
+            case tsunami::r2d::RegionalSolveTerminationReason::cancelled:
+                return "cancelled";
+            case tsunami::r2d::RegionalSolveTerminationReason::callback_failed:
+                return "callback_failed";
+            case tsunami::r2d::RegionalSolveTerminationReason::numerical_failure:
+                return "numerical_failure";
+            }
+            return "unknown";
+        }
+
         [[nodiscard]] auto file_error(
             std::string code,
             std::string message,
@@ -1615,14 +1634,21 @@ namespace tsunami::r2d_case
             if (!solve.value().completed_successfully ||
                 solve.value().accepted_step_count > solve_request.value().maximum_steps ||
                 std::abs(solve.value().final_time - solve_request.value().final_time) > time_tolerance) {
-                return tsunami::core::failure<RegionalFileCaseRunResult>(file_error(
+                auto error = file_error(
                     "r2d.file_case.solve_failed",
                     "Regional2D solve did not reach the requested final state",
                     tsunami::core::DiagnosticCategory::execution,
                     "solve",
                     request,
                     output_state_changed,
-                    outputs));
+                    outputs);
+                error.add_context("termination_reason", std::string{termination_reason_text(solve.value().termination_reason)})
+                    .add_context("accepted_step_count", std::to_string(solve.value().accepted_step_count))
+                    .add_context("rejected_attempt_count", std::to_string(solve.value().rejected_attempt_count))
+                    .add_context("achieved_final_time_s", std::to_string(solve.value().final_time))
+                    .add_context("requested_final_time_s", std::to_string(solve_request.value().final_time))
+                    .add_context("last_timestep_s", std::to_string(solve.value().last_timestep));
+                return tsunami::core::failure<RegionalFileCaseRunResult>(std::move(error));
             }
             auto final_evidence = prepared.value().earthquake_diagnostics()
                 ? validate_final_dynamic_physical_state(

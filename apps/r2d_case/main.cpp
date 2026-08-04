@@ -85,6 +85,7 @@ auto main(int argc, char **argv) -> int
     auto corridor_record = std::optional<std::filesystem::path>{};
     auto run_id = std::string{};
     auto coupling_section = std::optional<std::string>{};
+    auto coupling_patch = std::optional<std::string>{};
     auto overwrite = false;
     auto preparation = tsunami::r2d::RegionalCasePreparationPolicy{};
     auto transfer = tsunami::r2d::RegionalRasterCellTransferPolicy{};
@@ -98,7 +99,11 @@ auto main(int argc, char **argv) -> int
     app.add_option(
         "--coupling-section",
         coupling_section,
-        "Boundary patch name to export under coupling/<section-id> (for example boundary.offshore)");
+        "Coupling section identifier to export under coupling/<section-id> (for example boundary.offshore)");
+    app.add_option(
+        "--coupling-patch",
+        coupling_patch,
+        "Boundary patch name backing the coupling section; defaults to --coupling-section");
     app.add_option(
            "--pre-event-free-surface-elevation-m",
            preparation.pre_event_free_surface_elevation_m,
@@ -162,6 +167,19 @@ auto main(int argc, char **argv) -> int
         print_failure(error);
         return 1;
     }
+    if (coupling_patch && !coupling_section) {
+        auto error = tsunami::core::Error{
+            "r2d.file_case.request_invalid",
+            "coupling-patch requires coupling-section",
+            tsunami::core::DiagnosticCategory::validation,
+            tsunami::core::Severity::error};
+        error.add_context("operation", "tsunami_r2d_case")
+            .add_context("stage", "request")
+            .add_context("state_changed", "false")
+            .add_context("coupling_patch", *coupling_patch);
+        print_failure(error);
+        return 1;
+    }
 
     auto result = tsunami::r2d_case::run_regional_case_from_files(
         make_request(
@@ -175,7 +193,9 @@ auto main(int argc, char **argv) -> int
             overwrite,
             coupling_section
                 ? std::optional<tsunami::coupling::RegionalCouplingSectionRequest>{
-                      tsunami::coupling::RegionalCouplingSectionRequest{*coupling_section, *coupling_section}}
+                      tsunami::coupling::RegionalCouplingSectionRequest{
+                          *coupling_section,
+                          coupling_patch.value_or(*coupling_section)}}
                 : std::nullopt));
     if (!result) {
         print_failure(result.error());

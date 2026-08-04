@@ -519,6 +519,48 @@ TEST_CASE("Regional2D geometry preflight accepts a corridor terrain and imported
     CHECK(result.value().terrain_support_bounds.maximum_x == Approx(30.0));
 }
 
+TEST_CASE("Regional2D geometry preflight accepts zero inland extent when target and inland stations coincide", "[r2d][preflight]")
+{
+    auto data = fixture();
+    const auto polygon = tsunami::geo::Polygon2D{
+        {
+            {-10.0, 5.0},
+            {-10.0, -5.0},
+            {20.0, -5.0},
+            {20.0, 5.0},
+            {-10.0, 5.0},
+        },
+        {}};
+    const auto extent = tsunami::geo::BoundingBox2D{-10.0, -5.0, 20.0, 5.0};
+    const auto stations = tsunami::geo::CorridorLongitudinalStations{-10.0, 0.0, 20.0, 20.0};
+    data.corridor.corridor = tsunami::geo::ConstructedCorridor{
+        polygon,
+        extent,
+        data.corridor.corridor.basis(),
+        stations,
+        data.corridor.corridor.sponge_limits(),
+        10.0,
+        10.0,
+        30.0,
+        300.0,
+        80.0};
+    data.corridor.record.inland_extent_m = 0.0;
+    data.corridor.record.total_length_m = 30.0;
+    data.corridor.record.stations = stations;
+    data.corridor.record.polygon = polygon;
+    data.corridor.record.extent = extent;
+    data.corridor.record.area_m2 = 300.0;
+    data.corridor.record.perimeter_m = 80.0;
+    data.corridor.record.diagnostics.analytic_area_m2 = 300.0;
+    data.corridor.record.diagnostics.polygon_area_m2 = 300.0;
+    data.corridor.record.diagnostics.analytic_perimeter_m = 80.0;
+    data.corridor.record.diagnostics.polygon_perimeter_m = 80.0;
+
+    const auto result = tsunami::r2d::validate_regional2d_geometry_preflight(request_for(data));
+    REQUIRE(result.has_value());
+    CHECK(result.value().validation_status == "accepted");
+}
+
 TEST_CASE("Regional2D geometry preflight accepts an actual producer terrain record after readback", "[r2d][preflight][readback]")
 {
     auto data = fixture();
