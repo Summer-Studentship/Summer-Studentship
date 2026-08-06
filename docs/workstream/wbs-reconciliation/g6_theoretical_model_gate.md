@@ -98,7 +98,25 @@ G6 is blocked until every required theoretical-model capability has accepted imp
 
 ## Remaining G6 Gaps
 
-- `G6-L3D-BC-001`: Define the production Local3D lateral open-ocean boundary policy instead of relying only on symmetryPlane test-mode sides.
-- `G6-L3D-BC-002`: Provide boundary-reflection evidence for the selected Local3D outlet/lateral treatment.
-- `G6-L3D-WLF-001`: Record baseline wall-function applicability evidence, including y+ or an approved surrogate rationale.
-- `G6-L3D-TIM-001`: Formally dispose of timestep rejection/recovery and diffusion-constraint coverage under the OpenFOAM adopted backend.
+- `G6-L3D-BC-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
+- `G6-L3D-BC-002`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
+- `G6-L3D-WLF-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
+- `G6-L3D-TIM-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
+
+## R2 Evidence Update
+
+- Replay schemas supported: `1.0.0` legacy `symmetry_test`; `1.1.0` production `open_ocean_damped`.
+- Production boundary policy: patch-type outlet and laterals with `pressureInletOutletVelocity`, `prghTotalPressure`, bounded `variableHeightFlowRate`, ambient `inletOutlet` turbulence and `calculated` `nut`.
+- Production damping: Foundation 11 `isotropicDamping` with `halfCosineRamp` outlet and lateral zones.
+- Production wall policy: `kqRWallFunction`, `omegaWallFunction`, `nutUSpaldingWallFunction`, plus the Foundation 11 `yPlus` function object.
+- Timestep disposition: repository owns pre-run maxDeltaT/maxCo/maxAlphaCo/minimum-timestep policy and post-run acceptance; Foundation 11 owns internal Courant/interface-Courant adaptive reduction and damped increase; exact rollback/retry remains post-G6.
+- Closure evidence index: `docs/workstream/wbs-reconciliation/g6_closure_evidence.json`.
+- Real Kamaishi rerun attempt: `docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json`.
+
+## Current Gate Status
+
+G6 is not marked closed by this branch because the required real no-defence and
+rigid-barrier Local3D 300 s Kamaishi reruns did not complete locally. The
+accepted Regional2D artifacts were not present in the checkout, and fallback
+regeneration was interrupted at Regional2D time `198.1 s` of `1800 s` after the
+runtime indicated a multi-hour prerequisite. Calibration remains unstarted.

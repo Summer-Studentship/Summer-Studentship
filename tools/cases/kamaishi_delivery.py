@@ -234,19 +234,101 @@ def profile_by_name(name: str) -> Profile:
 
 
 def transform_wgs84(lon: float, lat: float) -> Point:
-    from pyproj import Transformer
-
-    transformer = Transformer.from_crs("EPSG:4326", "EPSG:32654", always_xy=True)
-    x, y = transformer.transform(lon, lat)
+    try:
+        from pyproj import Transformer
+    except ModuleNotFoundError:
+        x, y = _utm54_forward(lon, lat)
+    else:
+        transformer = Transformer.from_crs("EPSG:4326", "EPSG:32654", always_xy=True)
+        x, y = transformer.transform(lon, lat)
     return Point(float(x), float(y))
 
 
 def inverse_transform(point: Point) -> tuple[float, float]:
-    from pyproj import Transformer
-
-    transformer = Transformer.from_crs("EPSG:32654", "EPSG:4326", always_xy=True)
-    lon, lat = transformer.transform(point.x, point.y)
+    try:
+        from pyproj import Transformer
+    except ModuleNotFoundError:
+        lon, lat = _utm54_inverse(point.x, point.y)
+    else:
+        transformer = Transformer.from_crs("EPSG:32654", "EPSG:4326", always_xy=True)
+        lon, lat = transformer.transform(point.x, point.y)
     return float(lon), float(lat)
+
+
+def _utm54_forward(lon: float, lat: float) -> tuple[float, float]:
+    a = 6378137.0
+    f = 1.0 / 298.257223563
+    e2 = f * (2.0 - f)
+    ep2 = e2 / (1.0 - e2)
+    k0 = 0.9996
+    lon0 = math.radians(141.0)
+    phi = math.radians(lat)
+    lam = math.radians(lon)
+    sin_phi = math.sin(phi)
+    cos_phi = math.cos(phi)
+    tan_phi = math.tan(phi)
+    n = a / math.sqrt(1.0 - e2 * sin_phi * sin_phi)
+    t = tan_phi * tan_phi
+    c = ep2 * cos_phi * cos_phi
+    aa = cos_phi * (lam - lon0)
+    m = a * (
+        (1.0 - e2 / 4.0 - 3.0 * e2 * e2 / 64.0 - 5.0 * e2 ** 3 / 256.0) * phi
+        - (3.0 * e2 / 8.0 + 3.0 * e2 * e2 / 32.0 + 45.0 * e2 ** 3 / 1024.0) * math.sin(2.0 * phi)
+        + (15.0 * e2 * e2 / 256.0 + 45.0 * e2 ** 3 / 1024.0) * math.sin(4.0 * phi)
+        - (35.0 * e2 ** 3 / 3072.0) * math.sin(6.0 * phi)
+    )
+    x = 500000.0 + k0 * n * (
+        aa
+        + (1.0 - t + c) * aa ** 3 / 6.0
+        + (5.0 - 18.0 * t + t * t + 72.0 * c - 58.0 * ep2) * aa ** 5 / 120.0
+    )
+    y = k0 * (
+        m
+        + n * tan_phi * (
+            aa * aa / 2.0
+            + (5.0 - t + 9.0 * c + 4.0 * c * c) * aa ** 4 / 24.0
+            + (61.0 - 58.0 * t + t * t + 600.0 * c - 330.0 * ep2) * aa ** 6 / 720.0
+        )
+    )
+    return x, y
+
+
+def _utm54_inverse(x: float, y: float) -> tuple[float, float]:
+    a = 6378137.0
+    f = 1.0 / 298.257223563
+    e2 = f * (2.0 - f)
+    ep2 = e2 / (1.0 - e2)
+    k0 = 0.9996
+    lon0 = math.radians(141.0)
+    e1 = (1.0 - math.sqrt(1.0 - e2)) / (1.0 + math.sqrt(1.0 - e2))
+    m = y / k0
+    mu = m / (a * (1.0 - e2 / 4.0 - 3.0 * e2 * e2 / 64.0 - 5.0 * e2 ** 3 / 256.0))
+    phi1 = (
+        mu
+        + (3.0 * e1 / 2.0 - 27.0 * e1 ** 3 / 32.0) * math.sin(2.0 * mu)
+        + (21.0 * e1 * e1 / 16.0 - 55.0 * e1 ** 4 / 32.0) * math.sin(4.0 * mu)
+        + (151.0 * e1 ** 3 / 96.0) * math.sin(6.0 * mu)
+        + (1097.0 * e1 ** 4 / 512.0) * math.sin(8.0 * mu)
+    )
+    sin_phi1 = math.sin(phi1)
+    cos_phi1 = math.cos(phi1)
+    tan_phi1 = math.tan(phi1)
+    c1 = ep2 * cos_phi1 * cos_phi1
+    t1 = tan_phi1 * tan_phi1
+    n1 = a / math.sqrt(1.0 - e2 * sin_phi1 * sin_phi1)
+    r1 = a * (1.0 - e2) / (1.0 - e2 * sin_phi1 * sin_phi1) ** 1.5
+    d = (x - 500000.0) / (n1 * k0)
+    phi = phi1 - (n1 * tan_phi1 / r1) * (
+        d * d / 2.0
+        - (5.0 + 3.0 * t1 + 10.0 * c1 - 4.0 * c1 * c1 - 9.0 * ep2) * d ** 4 / 24.0
+        + (61.0 + 90.0 * t1 + 298.0 * c1 + 45.0 * t1 * t1 - 252.0 * ep2 - 3.0 * c1 * c1) * d ** 6 / 720.0
+    )
+    lam = lon0 + (
+        d
+        - (1.0 + 2.0 * t1 + c1) * d ** 3 / 6.0
+        + (5.0 - 2.0 * c1 + 28.0 * t1 - 3.0 * c1 * c1 + 8.0 * ep2 + 24.0 * t1 * t1) * d ** 5 / 120.0
+    ) / cos_phi1
+    return math.degrees(lam), math.degrees(phi)
 
 
 def _unit_vector(a: Point, b: Point) -> tuple[Point, float]:
@@ -1889,7 +1971,7 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
     if span_max <= span_min:
         span_max = span_min + 1.0
     span_length = span_max - span_min
-    span_cells = max(6, min(20, int(math.ceil(span_length / 500.0))))
+    span_cells = max(60, min(80, int(math.ceil(span_length / 125.0))))
     vertical_cells = max(12, min(20, int(math.ceil(vertical_max / max(vertical_max / 16.0, 1.0)))))
     streamwise_length = max(300.0, min(1500.0, 20.0 * max(representative_depth, 1.0)))
     streamwise_cells = max(40, min(60, int(math.ceil(streamwise_length / 20.0))))
@@ -1913,9 +1995,36 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
     if replay_window:
         peak_shifted_time = float(replay_window["peak_source_time_s"]) - float(replay_window["selected_source_start_s"])
     config = {
-        "schema": {"name": "tsunami.openfoam_replay_configuration", "version": "1.0.0"},
+        "schema": {"name": "tsunami.openfoam_replay_configuration", "version": "1.1.0"},
         "section_id": SECTION_ID,
         "openfoam_patch": "inlet",
+        "boundary_policy": {
+            "mode": "open_ocean_damped",
+            "outlet": "open_ocean",
+            "laterals": "open_ocean",
+            "atmosphere": "open_atmosphere",
+            "policy_version": "1.0.0",
+        },
+        "damping_policy": {
+            "enabled": True,
+            "model": "isotropicDamping",
+            "profile": "halfCosineRamp",
+            "outlet_width_fraction": 0.15,
+            "lateral_width_fraction": 0.10,
+            "target_e_folds": 4.0,
+        },
+        "wall_function_policy": {
+            "mode": "continuous_spalding",
+            "k": "kqRWallFunction",
+            "omega": "omegaWallFunction",
+            "nut": "nutUSpaldingWallFunction",
+        },
+        "timestep_policy": {
+            "adjust_time_step": True,
+            "target_max_co": 0.25,
+            "target_max_alpha_co": 0.25,
+            "minimum_timestep_s": 1.0e-7,
+        },
         "regional": {
             "dry_depth_m": 1.0e-6,
             "eta_consistency_tolerance_m": 1.0e-8,
@@ -1950,8 +2059,10 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
             "vertical_cells": vertical_cells,
             "end_time_s": replay_duration,
             "maximum_timestep_s": timestep["selected_maximum_timestep_s"],
+            "initial_timestep_s": min(0.002, timestep["selected_maximum_timestep_s"]),
             "maximum_courant_number": timestep["target_courant_limit"],
             "maximum_alpha_courant_number": timestep["target_alpha_courant_limit"],
+            "minimum_timestep_s": 1.0e-7,
             "write_interval_s": max(1.0e-6, min(60.0, replay_duration / 5.0)),
             "initial_water_level_m": max(0.05, representative_depth),
             "alpha_tolerance": 5.0e-5,

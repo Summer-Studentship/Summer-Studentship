@@ -1,0 +1,193 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_boundary_policy",
+    "version": "1.0.0"
+  },
+  "replay_schema": {
+    "name": "tsunami.openfoam_replay_configuration",
+    "version": "1.1.0"
+  },
+  "policy_version": "1.0.0",
+  "mode": "open_ocean_damped",
+  "patch_names": [
+    "inlet",
+    "outlet",
+    "sideLeft",
+    "sideRight",
+    "atmosphere",
+    "terrain",
+    "barrier"
+  ],
+  "mesh_patch_types": {
+    "inlet": "patch",
+    "outlet": "patch",
+    "sideLeft": "patch",
+    "sideRight": "patch",
+    "atmosphere": "patch",
+    "terrain": "wall",
+    "barrier": "wall"
+  },
+  "field_boundary_types": {
+    "U": {
+      "inlet": "timeVaryingMappedFixedValue",
+      "outlet": "pressureInletOutletVelocity",
+      "sideLeft": "pressureInletOutletVelocity",
+      "sideRight": "pressureInletOutletVelocity",
+      "atmosphere": "pressureInletOutletVelocity",
+      "terrain": "noSlip",
+      "barrier": "noSlip"
+    },
+    "alpha.water": {
+      "inlet": "timeVaryingMappedFixedValue",
+      "outlet": "variableHeightFlowRate",
+      "sideLeft": "variableHeightFlowRate",
+      "sideRight": "variableHeightFlowRate",
+      "atmosphere": "inletOutlet",
+      "terrain": "zeroGradient",
+      "barrier": "zeroGradient"
+    },
+    "p_rgh": {
+      "inlet": "fixedFluxPressure",
+      "outlet": "prghTotalPressure",
+      "sideLeft": "prghTotalPressure",
+      "sideRight": "prghTotalPressure",
+      "atmosphere": "prghTotalPressure",
+      "terrain": "fixedFluxPressure",
+      "barrier": "fixedFluxPressure"
+    },
+    "k": {
+      "inlet": "fixedValue",
+      "outlet": "inletOutlet",
+      "sideLeft": "inletOutlet",
+      "sideRight": "inletOutlet",
+      "atmosphere": "inletOutlet",
+      "terrain": "kqRWallFunction",
+      "barrier": "kqRWallFunction"
+    },
+    "omega": {
+      "inlet": "fixedValue",
+      "outlet": "inletOutlet",
+      "sideLeft": "inletOutlet",
+      "sideRight": "inletOutlet",
+      "atmosphere": "inletOutlet",
+      "terrain": "omegaWallFunction",
+      "barrier": "omegaWallFunction"
+    },
+    "nut": {
+      "inlet": "calculated",
+      "outlet": "calculated",
+      "sideLeft": "calculated",
+      "sideRight": "calculated",
+      "atmosphere": "calculated",
+      "terrain": "nutUSpaldingWallFunction",
+      "barrier": "nutUSpaldingWallFunction"
+    }
+  },
+  "reference_pressure": {
+    "p_rgh_p0": 0.0,
+    "unit": "Pa relative gauge"
+  },
+  "ambient_turbulence_values": {
+    "k": 0.00023619971885813147,
+    "omega": 0.5611888795027112
+  },
+  "damping_configuration": {
+    "enabled": true,
+    "model": "isotropicDamping",
+    "profile": "halfCosineRamp",
+    "value": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "zones": [
+      {
+        "name": "outlet",
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "origin": [
+          1.7,
+          0.0,
+          0.0
+        ],
+        "direction": [
+          1.0,
+          0.0,
+          0.0
+        ],
+        "width_m": 0.30000000000000004,
+        "cell_count": 6.000000000000001,
+        "characteristic_speed_m_per_s": 1.5795784619749802,
+        "residence_time_s": 0.18992408875017436,
+        "target_e_folds": 4.0,
+        "lambda_per_s": 21.0610461596664,
+        "undamped_core_width_m": 1.7
+      },
+      {
+        "name": "sideLeft",
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "origin": [
+          0.0,
+          0.06,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        "width_m": 0.06,
+        "cell_count": 6.0,
+        "characteristic_speed_m_per_s": 1.5795784619749802,
+        "residence_time_s": 0.037984817750034865,
+        "target_e_folds": 4.0,
+        "lambda_per_s": 105.30523079833202,
+        "undamped_core_width_m": 0.48
+      },
+      {
+        "name": "sideRight",
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "origin": [
+          0.0,
+          0.54,
+          0.0
+        ],
+        "direction": [
+          0.0,
+          1.0,
+          0.0
+        ],
+        "width_m": 0.06,
+        "cell_count": 6.0,
+        "characteristic_speed_m_per_s": 1.5795784619749802,
+        "residence_time_s": 0.037984817750034865,
+        "target_e_folds": 4.0,
+        "lambda_per_s": 105.30523079833202,
+        "undamped_core_width_m": 0.48
+      }
+    ],
+    "damping_does_not_overlap_inlet": true,
+    "damping_does_not_overlap_barrier": true,
+    "damping_does_not_overlap_primary_comparison_probes": true,
+    "limitations": [
+      "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+    ]
+  },
+  "implementation_authority": {
+    "openfoam": "OpenFOAM Foundation 11",
+    "image": "docker.io/openfoam/openfoam11-paraview510:11",
+    "selected_patterns": [
+      "pressureInletOutletVelocity",
+      "prghTotalPressure",
+      "variableHeightFlowRate",
+      "inletOutlet",
+      "isotropicDamping"
+    ]
+  },
+  "limitations": [
+    "Open-ocean damping is a numerical baseline policy, not observational calibration.",
+    "The coupling inlet remains one-way timeVaryingMappedFixedValue reconstruction."
+  ]
+}

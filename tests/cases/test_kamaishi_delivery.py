@@ -117,6 +117,7 @@ class KamaishiDeliveryTests(unittest.TestCase):
         self.assertEqual(float(spec["corridor"]["inland_extent_m"]), 0.0)
         self.assertLessEqual(float(spec["regional_2d"]["maximum_timestep_s"]), 2.0)
         self.assertEqual(spec["nearshore_interface"]["fallback_depth_band_m"], [5.0, 50.0])
+        self.assertGreaterEqual(int(spec["local_3d"]["minimum_span_cells"]), 60)
 
     def test_full_cross_section_wetness_is_required(self):
         preferred = (15.0, 30.0)
@@ -203,12 +204,19 @@ class KamaishiDeliveryTests(unittest.TestCase):
         window = kamaishi.select_replay_window(coupling, selected, (1.0, 0.0))
         config_path = self.tmp / "replay_config.json"
         config = kamaishi.replay_config_from_window(selected, self._trajectory(), config_path)
+        self.assertEqual(config["schema"]["version"], "1.1.0")
         self.assertEqual(config["section_id"], kamaishi.SECTION_ID)
+        self.assertEqual(config["boundary_policy"]["mode"], "open_ocean_damped")
+        self.assertTrue(config["damping_policy"]["enabled"])
+        self.assertEqual(config["wall_function_policy"]["nut"], "nutUSpaldingWallFunction")
+        self.assertEqual(config["timestep_policy"]["target_max_co"], 0.25)
+        self.assertEqual(config["timestep_policy"]["target_max_alpha_co"], 0.25)
         self.assertIn("local_case", config)
         self.assertIn("span_fraction", config["barrier"])
         self.assertEqual(config["local_case"]["end_time_s"], window["shifted_duration_s"])
         self.assertEqual(config["local_case"]["end_time_s"], 300.0)
         self.assertEqual(config["local_case"]["write_interval_s"], 60.0)
+        self.assertGreaterEqual(config["local_case"]["span_cells"], 60)
         self.assertAlmostEqual(config["replay_window"]["peak_shifted_time_s"], window["peak_source_time_s"] - window["selected_source_start_s"])
         self.assertGreater(config["local_case"]["maximum_timestep_s"], 0.005)
         self.assertIn("timestep_derivation", config["local_case"])

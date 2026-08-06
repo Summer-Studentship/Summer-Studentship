@@ -1,0 +1,5 @@
+time,patch,minimum,p05,mean,median,p95,maximum,finite_value_count,non_finite_count,negative_value_count,viscous_affected_fraction,buffer_fraction,log_layer_fraction,high_fraction,source_level
+0.0,terrain,0.0,,0.0,,,0.0,,0,0,,,,,openfoam_min_max_average_table
+0.04,terrain,25.207895073,,186.90913706,,,547.48180676,,0,0,,,,,openfoam_min_max_average_table
+0.08,terrain,35.015868628,,250.86758161,,,606.73356747,,0,0,,,,,openfoam_min_max_average_table
+0.12,terrain,40.88652404,,275.02432069,,,669.54201418,,0,0,,,,,openfoam_min_max_average_table

@@ -25,11 +25,63 @@ class ReplayToolTests(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.tmp, ignore_errors=True)
 
+    def _production_config_path(self, **local_case_overrides) -> Path:
+        config = json.loads(CONFIG.read_text(encoding="utf-8"))
+        config["schema"]["version"] = "1.1.0"
+        config["boundary_policy"] = {
+            "mode": "open_ocean_damped",
+            "outlet": "open_ocean",
+            "laterals": "open_ocean",
+            "atmosphere": "open_atmosphere",
+            "policy_version": "1.0.0",
+        }
+        config["damping_policy"] = {
+            "enabled": True,
+            "model": "isotropicDamping",
+            "profile": "halfCosineRamp",
+            "outlet_width_fraction": 0.15,
+            "lateral_width_fraction": 0.10,
+            "target_e_folds": 4.0,
+        }
+        config["wall_function_policy"] = {
+            "mode": "continuous_spalding",
+            "k": "kqRWallFunction",
+            "omega": "omegaWallFunction",
+            "nut": "nutUSpaldingWallFunction",
+        }
+        config["timestep_policy"] = {
+            "adjust_time_step": True,
+            "target_max_co": 0.25,
+            "target_max_alpha_co": 0.25,
+            "minimum_timestep_s": 1.0e-7,
+        }
+        config["local_case"] = {
+            "streamwise_length_m": 2.0,
+            "streamwise_cells": 40,
+            "span_cells": 60,
+            "vertical_cells": 12,
+            "end_time_s": 0.12,
+            "maximum_timestep_s": 0.02,
+            "write_interval_s": 0.04,
+            "initial_water_level_m": 0.18,
+            **local_case_overrides,
+        }
+        path = self.tmp / "production_config.json"
+        path.write_text(json.dumps(config), encoding="utf-8")
+        return path
+
     def test_valid_coupling_parser(self):
         config = replay.load_replay_config(CONFIG)
         coupling = replay.load_coupling_export(COUPLING, config)
         self.assertEqual(len(coupling.ordered_samples), 3)
         self.assertEqual(coupling.times, [0.0, 0.04, 0.08, 0.12])
+
+    def test_legacy_configuration_normalises_to_symmetry_policy(self):
+        config = replay.load_replay_config(CONFIG)
+        self.assertEqual(config["schema"]["version"], "1.0.0")
+        self.assertEqual(config["boundary_policy"]["mode"], "symmetry_test")
+        self.assertFalse(config["damping_policy"]["enabled"])
+        self.assertEqual(config["wall_function_policy"]["nut"], "nutkWallFunction")
 
     def test_missing_columns_rejected(self):
         work = self.tmp / "bad"
@@ -135,6 +187,72 @@ boundaryField
         summary = json.loads((barrier / "openfoam_case_summary.json").read_text())
         self.assertGreater(summary["k"], 0.0)
         self.assertGreater(summary["omega"], 0.0)
+
+    def test_production_config_generates_open_boundaries_and_records(self):
+        config_path = self._production_config_path()
+        replay.convert_boundary_data(COUPLING, config_path, self.tmp / "replay")
+        case = self.tmp / "production"
+        summary = replay.generate_case(self.tmp / "replay", config_path, case, "simple_rigid_barrier")
+        replay.validate_generated_case(case, "simple_rigid_barrier")
+        boundary = json.loads((case / "boundary_policy.json").read_text(encoding="utf-8"))
+        wall = json.loads((case / "wall_function_policy.json").read_text(encoding="utf-8"))
+        timestep = json.loads((case / "timestep_policy.json").read_text(encoding="utf-8"))
+        self.assertEqual(summary["boundary_mode"], "open_ocean_damped")
+        self.assertEqual(boundary["mesh_patch_types"]["sideLeft"], "patch")
+        self.assertEqual(boundary["field_boundary_types"]["U"]["outlet"], "pressureInletOutletVelocity")
+        self.assertEqual(boundary["field_boundary_types"]["p_rgh"]["sideRight"], "prghTotalPressure")
+        self.assertEqual(boundary["field_boundary_types"]["alpha.water"]["sideLeft"], "variableHeightFlowRate")
+        self.assertEqual(boundary["field_boundary_types"]["k"]["outlet"], "inletOutlet")
+        self.assertTrue(boundary["damping_configuration"]["enabled"])
+        self.assertIn("isotropicDamping", (case / "constant/fvModels").read_text(encoding="utf-8"))
+        self.assertEqual(wall["field_types"]["nut"]["barrier"], "nutUSpaldingWallFunction")
+        self.assertEqual(timestep["maxCo"], 0.25)
+        self.assertEqual(timestep["maxAlphaCo"], 0.25)
+        self.assertIn("yPlus", (case / "system/controlDict").read_text(encoding="utf-8"))
+
+    def test_production_damping_rejects_coarse_lateral_core(self):
+        config_path = self._production_config_path(span_cells=20)
+        replay.convert_boundary_data(COUPLING, config_path, self.tmp / "replay")
+        with self.assertRaisesRegex(replay.ReplayError, "lateral damping"):
+            replay.generate_case(self.tmp / "replay", config_path, self.tmp / "bad-production", "no_defence")
+
+    def test_yplus_evidence_requires_expected_patches_and_non_negative_values(self):
+        samples = [
+            {"time": 0.0, "patch": "terrain", "values": [2.0, 12.0, 44.0]},
+            {"time": 0.12, "patch": "terrain", "values": [4.0, 18.0, 80.0]},
+            {"time": 0.0, "patch": "barrier", "values": [1.0, 9.0, 22.0]},
+            {"time": 0.12, "patch": "barrier", "values": [3.0, 16.0, 55.0]},
+        ]
+        evidence = replay.summarise_yplus_samples(samples, ["terrain", "barrier"], 0.12, None)
+        self.assertEqual(evidence["patches"]["terrain"]["time_count"], 2)
+        with self.assertRaisesRegex(replay.ReplayError, "missing yPlus"):
+            replay.summarise_yplus_samples(samples[:2], ["terrain", "barrier"], 0.12, None)
+        samples[0]["values"] = [-1.0]
+        with self.assertRaisesRegex(replay.ReplayError, "negative"):
+            replay.summarise_yplus_samples(samples, ["terrain", "barrier"], 0.12, None)
+
+    def test_timestep_evidence_records_diffusion_and_rollback_disposition(self):
+        policy = {
+            "minimum_accepted_timestep_s": 1.0e-7,
+            "diagnostic_viscous_timescale_s": 12.0,
+            "diagnostic_diffusive_margin": 600.0,
+            "diffusion_disposition": "implicit diffusion diagnostic only",
+            "rejected_step_disposition": "no exact rollback",
+        }
+        log = """Time = 0
+Courant Number mean: 0 max: 0.1
+Interface Courant Number mean: 0 max: 0.08
+deltaT = 0.02
+Time = 0.02
+Courant Number mean: 0 max: 0.12
+Interface Courant Number mean: 0 max: 0.09
+deltaT = 0.018
+"""
+        rows = replay.parse_timestep_series_from_log(log)
+        evidence = replay.write_timestep_evidence(self.tmp, rows, policy)
+        self.assertAlmostEqual(evidence["minimum_observed_timestep_s"], 0.018)
+        self.assertIn("diffusion", evidence["diffusion_disposition"])
+        self.assertIn("rollback", evidence["rejected_step_disposition"])
 
     def test_generator_rejects_requested_time_beyond_boundary_data(self):
         replay.convert_boundary_data(COUPLING, CONFIG, self.tmp / "replay")

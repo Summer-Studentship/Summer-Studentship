@@ -1,0 +1,52 @@
+{
+  "schema": {
+    "name": "tsunami.g6_kamaishi_rerun_attempt",
+    "version": "1.0.0"
+  },
+  "attempted_at_utc": "2026-08-06T19:44:51Z",
+  "command": "/tmp/g6-kamaishi-venv/bin/python tools/cases/run_kamaishi_hybrid_delivery.py --case-root /tmp/g6-kamaishi/case --output-root /tmp/g6-kamaishi --profile etopo-1000m --offline --overwrite --python /tmp/g6-kamaishi-venv/bin/python",
+  "profile": "etopo-1000m",
+  "source_mode": "offline accepted fallback source inventory",
+  "temporary_python_environment": {
+    "path": "/tmp/g6-kamaishi-venv",
+    "packages_added": [
+      "rasterio",
+      "pyproj",
+      "clawpack==5.14.0"
+    ],
+    "persistence": "temporary /tmp environment, not a repository dependency change"
+  },
+  "completed_stages": [
+    "source inventory verification",
+    "USGS finite-fault source parsing",
+    "Kamaishi interface selection",
+    "conditioned ETOPO terrain generation",
+    "Gmsh regional mesh generation",
+    "GeoClaw finite-fault displacement artifact generation",
+    "Regional2D output began writing snapshots, diagnostics and coupling files"
+  ],
+  "interrupted_stage": "Regional2D fallback regeneration",
+  "interruption_reason": "The available accepted Regional2D artifacts were absent from the checkout. The fallback regeneration reached only 198.1 s of the required 1800 s after roughly fourteen minutes of single-core runtime, implying a multi-hour prerequisite before the required 300 s Local3D rerun could begin.",
+  "regional_partial_progress": {
+    "diagnostics_last_step": 1986,
+    "diagnostics_last_start_time_s": 197.99999999999926,
+    "diagnostics_last_end_time_s": 198.09999999999926,
+    "required_final_time_s": 1800.0,
+    "diagnostics_rows_including_header": 1988,
+    "snapshot_rows_including_header": 96801,
+    "coupling_files_written": [
+      "metadata.json",
+      "samples.csv",
+      "history.csv"
+    ]
+  },
+  "local3d_status": {
+    "no_defence": "not_started",
+    "simple_rigid_barrier": "not_started",
+    "requested_end_time_s": 300.0,
+    "achieved_final_time_s": null,
+    "reason": "Local3D depends on the completed 1800 s Regional2D coupling output and selected 300 s replay window."
+  },
+  "impact_on_g6": "The production Local3D code, synthetic OpenFOAM smoke, and boundary reflection benchmark are implemented and verified, but the prompt's real Kamaishi 300 s Local3D acceptance criterion was not completed locally.",
+  "calibration_status": "not_started"
+}

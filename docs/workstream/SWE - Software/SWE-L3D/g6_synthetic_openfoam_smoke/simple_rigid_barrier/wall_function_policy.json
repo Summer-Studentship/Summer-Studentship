@@ -1,0 +1,33 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_wall_function_policy",
+    "version": "1.0.0"
+  },
+  "replay_schema": {
+    "name": "tsunami.openfoam_replay_configuration",
+    "version": "1.1.0"
+  },
+  "mode": "continuous_spalding",
+  "expected_wall_patches": [
+    "terrain",
+    "barrier"
+  ],
+  "field_types": {
+    "k": {
+      "terrain": "kqRWallFunction",
+      "barrier": "kqRWallFunction"
+    },
+    "omega": {
+      "terrain": "omegaWallFunction",
+      "barrier": "omegaWallFunction"
+    },
+    "nut": {
+      "terrain": "nutUSpaldingWallFunction",
+      "barrier": "nutUSpaldingWallFunction"
+    }
+  },
+  "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+  "limitations": [
+    "This does not eliminate mesh dependence; wall-function convergence remains post-G6."
+  ]
+}

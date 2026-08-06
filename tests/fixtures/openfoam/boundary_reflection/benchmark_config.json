@@ -1,0 +1,46 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_boundary_reflection_benchmark",
+    "version": "1.0.0"
+  },
+  "common": {
+    "depth_m": 2.0,
+    "amplitude_m": 0.02,
+    "pulse_centre_time_s": 0.0,
+    "pulse_sigma_s": 0.35,
+    "window_half_width_sigma": 3.0,
+    "sample_interval_s": 0.01,
+    "end_time_s": 10.0,
+    "maximum_Co": 0.12,
+    "maximum_alpha_Co": 0.08
+  },
+  "cases": [
+    {
+      "case_id": "reflective_control",
+      "boundary_policy_identifier": "g6-reflective-control-wall",
+      "target": "wall",
+      "pulse_direction": "streamwise",
+      "target_boundary_position_m": 20.0,
+      "gauge_position_m": 8.0,
+      "imposed_reflection_coefficient": 0.82
+    },
+    {
+      "case_id": "production_outlet",
+      "boundary_policy_identifier": "g6-open_ocean_damped-outlet-isotropicDamping-halfCosineRamp",
+      "target": "production outlet boundary plus damping zone",
+      "pulse_direction": "streamwise",
+      "target_boundary_position_m": 20.0,
+      "gauge_position_m": 8.0,
+      "imposed_reflection_coefficient": 0.08
+    },
+    {
+      "case_id": "production_lateral",
+      "boundary_policy_identifier": "g6-open_ocean_damped-lateral-isotropicDamping-halfCosineRamp",
+      "target": "production lateral boundary plus damping zone",
+      "pulse_direction": "transverse",
+      "target_boundary_position_m": 12.0,
+      "gauge_position_m": 5.0,
+      "imposed_reflection_coefficient": 0.1
+    }
+  ]
+}
