@@ -1,0 +1,46 @@
+[
+  {
+    "current_evidence": "tools/openfoam/openfoam_replay.py writes symmetryPlane side patches; PR #270/#271 prove runtime acceptance for that mode.",
+    "description": "Define the production Local3D lateral open-ocean boundary policy instead of relying only on symmetryPlane test-mode sides.",
+    "estimated_scope": "small-to-medium documentation and case-generation change",
+    "gap_id": "G6-L3D-BC-001",
+    "required_acceptance": "No ambiguity remains between test symmetry and production lateral-open boundary handling.",
+    "required_change": "Add a documented production lateral boundary configuration or an explicit accepted policy limiting G6 use to symmetry-side geometry.",
+    "required_test": "Automated dictionary/acceptance test that distinguishes production open-ocean mode from symmetry test mode.",
+    "wbs_id": "SWE-L3D-BC",
+    "why_it_blocks_g6": "The G6 Local3D model requires a baseline lateral boundary policy suitable for the theoretical hybrid model, not only a smoke-test symmetry mode."
+  },
+  {
+    "current_evidence": "Runtime boundedness and final-time acceptance exist, but no reflection diagnostic or benchmark is recorded.",
+    "description": "Provide boundary-reflection evidence for the selected Local3D outlet/lateral treatment.",
+    "estimated_scope": "medium",
+    "gap_id": "G6-L3D-BC-002",
+    "required_acceptance": "Reflection behavior is measured and judged acceptable for G6 baseline use.",
+    "required_change": "Add a lightweight reflection diagnostic/benchmark or an evidence note with accepted limits.",
+    "required_test": "Focused boundary-condition benchmark or diagnostic assertion over a known replay/synthetic signal.",
+    "wbs_id": "SWE-L3D-BC",
+    "why_it_blocks_g6": "The theoretical hybrid gate needs evidence that the baseline boundary policy does not invalidate the replayed local model at the interface scale."
+  },
+  {
+    "current_evidence": "Generated OpenFOAM fields use kqRWallFunction, omegaWallFunction and nutkWallFunction and runs complete.",
+    "description": "Record baseline wall-function applicability evidence, including y+ or an approved surrogate rationale.",
+    "estimated_scope": "small-to-medium",
+    "gap_id": "G6-L3D-WLF-001",
+    "required_acceptance": "G6 reviewers can see why the baseline wall treatment is acceptable before calibration.",
+    "required_change": "Add a wall-function applicability note and compute or explicitly bound y+ expectations for the generated baseline.",
+    "required_test": "Automated check that wall-function policy evidence exists for generated cases or that the selected mesh policy reports a valid surrogate.",
+    "wbs_id": "SWE-L3D-WLF",
+    "why_it_blocks_g6": "Wall functions are part of the Local3D theoretical baseline; the repository currently configures them but does not evidence applicability."
+  },
+  {
+    "current_evidence": "Kamaishi delivery derives maxDeltaT from flow speed, gravity wave speed and mesh spacing, and PR #271 records bounded Courant values.",
+    "description": "Formally dispose of timestep rejection/recovery and diffusion-constraint coverage under the OpenFOAM adopted backend.",
+    "estimated_scope": "small",
+    "gap_id": "G6-L3D-TIM-001",
+    "required_acceptance": "The G6 gate can distinguish implemented baseline timestep control from post-G6 convergence study obligations.",
+    "required_change": "Document which constraints are repository-controlled, which are OpenFOAM-controlled, and what rejected-step recovery is or is not exposed.",
+    "required_test": "Focused validator for generated timestep policy and an acceptance note for rejected-step limitations.",
+    "wbs_id": "SWE-L3D-TIM",
+    "why_it_blocks_g6": "The WBS title includes CFL, interface-CFL, gravity-wave and diffusion constraints with rejection; OpenFOAM owns internal adaptation and the repository only configures maxCo/maxAlphaCo/maxDeltaT today."
+  }
+]
