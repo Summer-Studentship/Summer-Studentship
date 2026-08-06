@@ -1,0 +1,270 @@
+{
+  "applied_issue_mutations": [
+    {
+      "action": "add_comment",
+      "issue_number": 56,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 56,
+      "snapshot": {
+        "number": 56,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-L3D-VOF] Bounded compressive VOF transport, phase-state update and mixture-property update.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/56"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 57,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 57,
+      "snapshot": {
+        "number": 57,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-L3D-MOM] Collocated cell-centred URANS momentum-predictor discretisation.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/57"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 58,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 58,
+      "snapshot": {
+        "number": 58,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-L3D-PRS] Rhie--Chow pressure-consistent face fluxes and PISO-like pressure, velocity and flux correction.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/58"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 59,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 59,
+      "snapshot": {
+        "number": 59,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-L3D-SST] `k`--`omega` SST turbulence transport and turbulent-viscosity update.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/59"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 63,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 63,
+      "snapshot": {
+        "number": 63,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-L3D-SOL] Exact transient segregated URANS--VOF solve sequence and field-acceptance loop.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/63"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 65,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 65,
+      "snapshot": {
+        "number": 65,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-CPL-IFC] Regional/local state, coordinate, convention and interface specification.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/65"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 66,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 66,
+      "snapshot": {
+        "number": 66,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-CPL-RPL] Versioned regional-output and local replay-boundary format.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/66"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 67,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 67,
+      "snapshot": {
+        "number": 67,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-CPL-MAP] Spatial mapping and temporal interpolation from regional output to the local interface.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/67"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 68,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "close_issue",
+      "issue_number": 68,
+      "snapshot": {
+        "number": 68,
+        "state": "CLOSED",
+        "stateReason": "COMPLETED",
+        "title": "[SWE-CPL-BC] Reconstruction of three-dimensional local inlet conditions from depth-averaged regional variables.",
+        "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/68"
+      },
+      "status": "skipped_already_closed"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 60,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 61,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 62,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 64,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 69,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 70,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 8,
+      "status": "skipped_existing_exact_comment"
+    },
+    {
+      "action": "add_comment",
+      "issue_number": 9,
+      "status": "skipped_existing_exact_comment"
+    }
+  ],
+  "failed_issue_mutations": [],
+  "gate_issue": {
+    "api_result": {
+      "command": [
+        "gh",
+        "issue",
+        "create",
+        "--repo",
+        "Summer-Studentship/Summer-Studentship",
+        "--title",
+        "[G6] Theoretical 2D\u20133D hybrid model complete",
+        "--body-file",
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md",
+        "--milestone",
+        "G6 \u2014 Theoretical Hybrid Model Complete"
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "https://github.com/Summer-Studentship/Summer-Studentship/issues/273"
+    },
+    "number": 273,
+    "status": "created",
+    "url": "https://github.com/Summer-Studentship/Summer-Studentship/issues/273"
+  },
+  "generated_at_utc": "2026-08-06T18:58:29Z",
+  "milestone": {
+    "api_result": {
+      "command": [
+        "gh",
+        "api",
+        "repos/Summer-Studentship/Summer-Studentship/milestones?state=all",
+        "--paginate",
+        "--jq",
+        "."
+      ],
+      "ok": true,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "[{\"closed_at\":null,\"closed_issues\":57,\"created_at\":\"2026-07-19T18:43:44Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Repository and Build Baseline\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/1\",\"id\":16885720,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/1/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafY\",\"number\":1,\"open_issues\":20,\"state\":\"open\",\"title\":\"G0\",\"updated_at\":\"2026-07-24T21:11:12Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/1\"},{\"closed_at\":null,\"closed_issues\":55,\"created_at\":\"2026-07-19T18:43:45Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Data and Mesh Vertical Slice\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/2\",\"id\":16885724,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/2/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafc\",\"number\":2,\"open_issues\":47,\"state\":\"open\",\"title\":\"G1\",\"updated_at\":\"2026-08-02T16:52:32Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/2\"},{\"closed_at\":null,\"closed_issues\":10,\"created_at\":\"2026-07-19T18:43:47Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Verified Regional 2D Baseline\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/3\",\"id\":16885728,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/3/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafg\",\"number\":3,\"open_issues\":0,\"state\":\"open\",\"title\":\"G2\",\"updated_at\":\"2026-07-30T17:34:34Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/3\"},{\"closed_at\":null,\"closed_issues\":5,\"created_at\":\"2026-07-19T18:43:48Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Verified Local 3D Baseline\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/4\",\"id\":16885732,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/4/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafk\",\"number\":4,\"open_issues\":5,\"state\":\"open\",\"title\":\"G3\",\"updated_at\":\"2026-08-06T18:57:11Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/4\"},{\"closed_at\":null,\"closed_issues\":4,\"created_at\":\"2026-07-19T18:43:49Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Regional-to-Local Replay\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/5\",\"id\":16885734,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/5/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafm\",\"number\":5,\"open_issues\":3,\"state\":\"open\",\"title\":\"G4\",\"updated_at\":\"2026-08-06T18:57:21Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/5\"},{\"closed_at\":null,\"closed_issues\":0,\"created_at\":\"2026-07-19T18:43:51Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Barrier Impact Comparison Baseline\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/6\",\"id\":16885736,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/6/labels\",\"node_id\":\"MI_kwDOTBHCXM4BAafo\",\"number\":6,\"open_issues\":0,\"state\":\"open\",\"title\":\"G5\",\"updated_at\":\"2026-07-19T18:43:51Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/6\"},{\"closed_at\":null,\"closed_issues\":0,\"created_at\":\"2026-08-06T18:56:57Z\",\"creator\":{\"avatar_url\":\"https://avatars.githubusercontent.com/u/247024998?v=4\",\"events_url\":\"https://api.github.com/users/Helios-MEOW/events{/privacy}\",\"followers_url\":\"https://api.github.com/users/Helios-MEOW/followers\",\"following_url\":\"https://api.github.com/users/Helios-MEOW/following{/other_user}\",\"gists_url\":\"https://api.github.com/users/Helios-MEOW/gists{/gist_id}\",\"gravatar_id\":\"\",\"html_url\":\"https://github.com/Helios-MEOW\",\"id\":247024998,\"login\":\"Helios-MEOW\",\"node_id\":\"U_kgDODrlNZg\",\"organizations_url\":\"https://api.github.com/users/Helios-MEOW/orgs\",\"received_events_url\":\"https://api.github.com/users/Helios-MEOW/received_events\",\"repos_url\":\"https://api.github.com/users/Helios-MEOW/repos\",\"site_admin\":false,\"starred_url\":\"https://api.github.com/users/Helios-MEOW/starred{/owner}{/repo}\",\"subscriptions_url\":\"https://api.github.com/users/Helios-MEOW/subscriptions\",\"type\":\"User\",\"url\":\"https://api.github.com/users/Helios-MEOW\",\"user_view_type\":\"public\"},\"description\":\"Theoretical 2D-3D hybrid model complete gate.\",\"due_on\":null,\"html_url\":\"https://github.com/Summer-Studentship/Summer-Studentship/milestone/7\",\"id\":17176858,\"labels_url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/7/labels\",\"node_id\":\"MI_kwDOTBHCXM4BBhka\",\"number\":7,\"open_issues\":0,\"state\":\"open\",\"title\":\"G6 \u2014 Theoretical Hybrid Model Complete\",\"updated_at\":\"2026-08-06T18:56:57Z\",\"url\":\"https://api.github.com/repos/Summer-Studentship/Summer-Studentship/milestones/7\"}]"
+    },
+    "number": 7,
+    "status": "existing",
+    "url": "https://github.com/Summer-Studentship/Summer-Studentship/milestone/7"
+  },
+  "notes": "Generated from validated wbs_mutation_plan.json by apply_wbs_g6_mutations.py.",
+  "project_update": {
+    "api_result": {
+      "command": [
+        "gh",
+        "project",
+        "list",
+        "--owner",
+        "Summer-Studentship",
+        "--format",
+        "json"
+      ],
+      "ok": false,
+      "returncode": 1,
+      "stderr": "error: your authentication token is missing required scopes [read:project]\nTo request it, run:  gh auth refresh -s read:project",
+      "stdout": ""
+    },
+    "required_scope": "project",
+    "status": "blocked_missing_project_scope_or_cli_permission"
+  },
+  "status": "applied",
+  "unsupported_mutations": [
+    {
+      "kind": "projects_v2_fields_and_view",
+      "reason": "The GitHub CLI reports that Project commands require the missing OAuth `project` scope. Manual field and saved-view instructions are preserved in github_project_update.md.",
+      "target": "WBS GitHub Project"
+    }
+  ]
+}

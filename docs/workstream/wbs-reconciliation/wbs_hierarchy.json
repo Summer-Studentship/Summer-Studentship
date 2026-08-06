@@ -1,0 +1,2891 @@
+{
+  "generated_at_utc": "2026-08-06T18:48:47Z",
+  "hierarchy_levels": 5,
+  "nodes": {
+    "SWE": {
+      "children": [
+        "SWE-ARC",
+        "SWE-CPL",
+        "SWE-DAT",
+        "SWE-ENV",
+        "SWE-FVM",
+        "SWE-GEO",
+        "SWE-GUI",
+        "SWE-HPC",
+        "SWE-L3D",
+        "SWE-R2D",
+        "SWE-REL",
+        "SWE-STR",
+        "SWE-VER"
+      ],
+      "github_parent_issue_url": null,
+      "issue_number": 1,
+      "level": "Workstream",
+      "parent_wbs": null,
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE] Software Implementation Workstream",
+      "wbs_id": "SWE"
+    },
+    "SWE-ARC": {
+      "children": [
+        "SWE-ARC-API",
+        "SWE-ARC-CASE",
+        "SWE-ARC-ERR",
+        "SWE-ARC-LAY",
+        "SWE-ARC-SVC",
+        "SWE-ARC-TGT"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 3,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ARC] Architecture and Contracts",
+      "wbs_id": "SWE-ARC"
+    },
+    "SWE-ARC-API": {
+      "children": [
+        "SWE-ARC-API-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 24,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-API] Mesh, field, solver, I/O, coupling and observer interfaces.",
+      "wbs_id": "SWE-ARC-API"
+    },
+    "SWE-ARC-API-WP1": {
+      "children": [
+        "SWE-ARC-API-WP1-T1",
+        "SWE-ARC-API-WP1-T2",
+        "SWE-ARC-API-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/24",
+      "issue_number": 134,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-API",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-API-WP1] Define stable core interface contracts",
+      "wbs_id": "SWE-ARC-API-WP1"
+    },
+    "SWE-ARC-API-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/134",
+      "issue_number": 135,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-API-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-API-WP1-T1] Specify mesh, field, I/O, solver, coupling and observer interface responsibilities.",
+      "wbs_id": "SWE-ARC-API-WP1-T1"
+    },
+    "SWE-ARC-API-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/134",
+      "issue_number": 136,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-API-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-API-WP1-T2] Specify ownership, mutability, lifetime and error contracts.",
+      "wbs_id": "SWE-ARC-API-WP1-T2"
+    },
+    "SWE-ARC-API-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/134",
+      "issue_number": 137,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-API-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-API-WP1-T3] Create interface stubs or headers sufficient for dependent target compilation.",
+      "wbs_id": "SWE-ARC-API-WP1-T3"
+    },
+    "SWE-ARC-CASE": {
+      "children": [
+        "SWE-ARC-CASE-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 23,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-CASE] Simulation-case lifecycle and directory convention.",
+      "wbs_id": "SWE-ARC-CASE"
+    },
+    "SWE-ARC-CASE-WP1": {
+      "children": [
+        "SWE-ARC-CASE-WP1-T1",
+        "SWE-ARC-CASE-WP1-T2",
+        "SWE-ARC-CASE-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/23",
+      "issue_number": 130,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-CASE",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-CASE-WP1] Define the simulation-case lifecycle",
+      "wbs_id": "SWE-ARC-CASE-WP1"
+    },
+    "SWE-ARC-CASE-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/130",
+      "issue_number": 131,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-CASE-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ARC-CASE-WP1-T1] Define case states from creation through validation, execution and archival.",
+      "wbs_id": "SWE-ARC-CASE-WP1-T1"
+    },
+    "SWE-ARC-CASE-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/130",
+      "issue_number": 132,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-CASE-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ARC-CASE-WP1-T2] Define the canonical case-directory and artefact layout.",
+      "wbs_id": "SWE-ARC-CASE-WP1-T2"
+    },
+    "SWE-ARC-CASE-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/130",
+      "issue_number": 133,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-CASE-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ARC-CASE-WP1-T3] Define schema-version, provenance and restart compatibility rules.",
+      "wbs_id": "SWE-ARC-CASE-WP1-T3"
+    },
+    "SWE-ARC-ERR": {
+      "children": [
+        "SWE-ARC-ERR-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 26,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-ERR] Error, status, logging, cancellation and failure-propagation model.",
+      "wbs_id": "SWE-ARC-ERR"
+    },
+    "SWE-ARC-ERR-WP1": {
+      "children": [
+        "SWE-ARC-ERR-WP1-T1",
+        "SWE-ARC-ERR-WP1-T2",
+        "SWE-ARC-ERR-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/26",
+      "issue_number": 142,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-ERR",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-ERR-WP1] Define diagnostics and failure propagation",
+      "wbs_id": "SWE-ARC-ERR-WP1"
+    },
+    "SWE-ARC-ERR-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/142",
+      "issue_number": 143,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-ERR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-ERR-WP1-T1] Define error categories, status objects and severity levels.",
+      "wbs_id": "SWE-ARC-ERR-WP1-T1"
+    },
+    "SWE-ARC-ERR-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/142",
+      "issue_number": 144,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-ERR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-ERR-WP1-T2] Define structured logging, cancellation and contextual diagnostic rules.",
+      "wbs_id": "SWE-ARC-ERR-WP1-T2"
+    },
+    "SWE-ARC-ERR-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/142",
+      "issue_number": 145,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-ERR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-ERR-WP1-T3] Implement a minimal diagnostic path from core to CLI and GUI.",
+      "wbs_id": "SWE-ARC-ERR-WP1-T3"
+    },
+    "SWE-ARC-LAY": {
+      "children": [
+        "SWE-ARC-LAY-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 22,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-LAY] Core, application, adapter and UI layer boundaries.",
+      "wbs_id": "SWE-ARC-LAY"
+    },
+    "SWE-ARC-LAY-WP1": {
+      "children": [
+        "SWE-ARC-LAY-WP1-T1",
+        "SWE-ARC-LAY-WP1-T2",
+        "SWE-ARC-LAY-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/22",
+      "issue_number": 126,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-LAY",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-LAY-WP1] Lock architectural layers and ownership",
+      "wbs_id": "SWE-ARC-LAY-WP1"
+    },
+    "SWE-ARC-LAY-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/126",
+      "issue_number": 127,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-LAY-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-LAY-WP1-T1] Define core, numerical, data, geospatial, application, adapter and UI layers.",
+      "wbs_id": "SWE-ARC-LAY-WP1-T1"
+    },
+    "SWE-ARC-LAY-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/126",
+      "issue_number": 128,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-LAY-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-LAY-WP1-T2] Write dependency rules and prohibited coupling cases.",
+      "wbs_id": "SWE-ARC-LAY-WP1-T2"
+    },
+    "SWE-ARC-LAY-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/126",
+      "issue_number": 129,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-LAY-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-LAY-WP1-T3] Record extension points for regional, local and coupling solvers.",
+      "wbs_id": "SWE-ARC-LAY-WP1-T3"
+    },
+    "SWE-ARC-SVC": {
+      "children": [
+        "SWE-ARC-SVC-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 25,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-SVC] Shared application-service and run-orchestration contract for CLI and GUI.",
+      "wbs_id": "SWE-ARC-SVC"
+    },
+    "SWE-ARC-SVC-WP1": {
+      "children": [
+        "SWE-ARC-SVC-WP1-T1",
+        "SWE-ARC-SVC-WP1-T2",
+        "SWE-ARC-SVC-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/25",
+      "issue_number": 138,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-SVC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-SVC-WP1] Define the shared application-service contract",
+      "wbs_id": "SWE-ARC-SVC-WP1"
+    },
+    "SWE-ARC-SVC-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/138",
+      "issue_number": 139,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-SVC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-SVC-WP1-T1] Specify case validation, run preparation, launch, cancellation and result-discovery operations.",
+      "wbs_id": "SWE-ARC-SVC-WP1-T1"
+    },
+    "SWE-ARC-SVC-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/138",
+      "issue_number": 140,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-SVC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-SVC-WP1-T2] Define identical orchestration entry points for CLI and GUI adapters.",
+      "wbs_id": "SWE-ARC-SVC-WP1-T2"
+    },
+    "SWE-ARC-SVC-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/138",
+      "issue_number": 141,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-SVC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-SVC-WP1-T3] Create a no-solver service stub for smoke testing.",
+      "wbs_id": "SWE-ARC-SVC-WP1-T3"
+    },
+    "SWE-ARC-TGT": {
+      "children": [
+        "SWE-ARC-TGT-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/3",
+      "issue_number": 21,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ARC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-TGT] CMake target and dependency graph.",
+      "wbs_id": "SWE-ARC-TGT"
+    },
+    "SWE-ARC-TGT-WP1": {
+      "children": [
+        "SWE-ARC-TGT-WP1-T1",
+        "SWE-ARC-TGT-WP1-T2",
+        "SWE-ARC-TGT-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/21",
+      "issue_number": 122,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ARC-TGT",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-TGT-WP1] Lock the target and dependency graph",
+      "wbs_id": "SWE-ARC-TGT-WP1"
+    },
+    "SWE-ARC-TGT-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/122",
+      "issue_number": 123,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-TGT-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-TGT-WP1-T1] Define named CMake targets and allowed dependency directions.",
+      "wbs_id": "SWE-ARC-TGT-WP1-T1"
+    },
+    "SWE-ARC-TGT-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/122",
+      "issue_number": 124,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-TGT-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-TGT-WP1-T2] Identify public/private interfaces and adapter boundaries.",
+      "wbs_id": "SWE-ARC-TGT-WP1-T2"
+    },
+    "SWE-ARC-TGT-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/122",
+      "issue_number": 125,
+      "level": "Task",
+      "parent_wbs": "SWE-ARC-TGT-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ARC-TGT-WP1-T3] Add a machine-checkable or reviewable dependency map.",
+      "wbs_id": "SWE-ARC-TGT-WP1-T3"
+    },
+    "SWE-CPL": {
+      "children": [
+        "SWE-CPL-BC",
+        "SWE-CPL-CMP",
+        "SWE-CPL-IFC",
+        "SWE-CPL-MAP",
+        "SWE-CPL-MET",
+        "SWE-CPL-RPL"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 9,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL] Replay Coupling and Impact Analysis",
+      "wbs_id": "SWE-CPL"
+    },
+    "SWE-CPL-BC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 68,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-BC] Reconstruction of three-dimensional local inlet conditions from depth-averaged regional variables.",
+      "wbs_id": "SWE-CPL-BC"
+    },
+    "SWE-CPL-CMP": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 70,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-CMP] Reproducible wall-type versus obstacle/dissipating barrier comparison runner.",
+      "wbs_id": "SWE-CPL-CMP"
+    },
+    "SWE-CPL-IFC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 65,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-IFC] Regional/local state, coordinate, convention and interface specification.",
+      "wbs_id": "SWE-CPL-IFC"
+    },
+    "SWE-CPL-MAP": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 67,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-MAP] Spatial mapping and temporal interpolation from regional output to the local interface.",
+      "wbs_id": "SWE-CPL-MAP"
+    },
+    "SWE-CPL-MET": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 69,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-MET] Run-up, overtopping, transmission, pressure, force, moment, impulse and energy metric implementation.",
+      "wbs_id": "SWE-CPL-MET"
+    },
+    "SWE-CPL-RPL": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/9",
+      "issue_number": 66,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-CPL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-CPL-RPL] Versioned regional-output and local replay-boundary format.",
+      "wbs_id": "SWE-CPL-RPL"
+    },
+    "SWE-DAT": {
+      "children": [
+        "SWE-DAT-CFG",
+        "SWE-DAT-CHK",
+        "SWE-DAT-ING",
+        "SWE-DAT-MAN",
+        "SWE-DAT-SCH",
+        "SWE-DAT-XDMF"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 5,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT] Configuration, Data and I/O",
+      "wbs_id": "SWE-DAT"
+    },
+    "SWE-DAT-CFG": {
+      "children": [
+        "SWE-DAT-CFG-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 33,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-CFG] Versioned simulation-case configuration schema and validation.",
+      "wbs_id": "SWE-DAT-CFG"
+    },
+    "SWE-DAT-CFG-WP1": {
+      "children": [
+        "SWE-DAT-CFG-WP1-T1",
+        "SWE-DAT-CFG-WP1-T2",
+        "SWE-DAT-CFG-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/33",
+      "issue_number": 158,
+      "level": "Work Package",
+      "parent_wbs": "SWE-DAT-CFG",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-CFG-WP1] Implement the versioned case schema",
+      "wbs_id": "SWE-DAT-CFG-WP1"
+    },
+    "SWE-DAT-CFG-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/158",
+      "issue_number": 159,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-CFG-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-CFG-WP1-T1] Define the minimum G1 case structure and schema version.",
+      "wbs_id": "SWE-DAT-CFG-WP1-T1"
+    },
+    "SWE-DAT-CFG-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/158",
+      "issue_number": 160,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-CFG-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-CFG-WP1-T2] Implement parsing, semantic validation and contextual diagnostics.",
+      "wbs_id": "SWE-DAT-CFG-WP1-T2"
+    },
+    "SWE-DAT-CFG-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/158",
+      "issue_number": 161,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-CFG-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-CFG-WP1-T3] Create valid, invalid and migration fixture cases.",
+      "wbs_id": "SWE-DAT-CFG-WP1-T3"
+    },
+    "SWE-DAT-CHK": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 38,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-CHK] Restart/checkpoint read, write and compatibility implementation.",
+      "wbs_id": "SWE-DAT-CHK"
+    },
+    "SWE-DAT-ING": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 35,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-ING] Canonical ingestion records for earthquake-source, observation, gauge, run-up, inundation and other scientific datasets not owned by the geospatial raster/vector adapters.",
+      "wbs_id": "SWE-DAT-ING"
+    },
+    "SWE-DAT-MAN": {
+      "children": [
+        "SWE-DAT-MAN-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 34,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-MAN] Versioned dataset and provenance manifest covering provider, source, licence, resolution, CRS, vertical datum, preprocessing and generated artefacts.",
+      "wbs_id": "SWE-DAT-MAN"
+    },
+    "SWE-DAT-MAN-WP1": {
+      "children": [
+        "SWE-DAT-MAN-WP1-T1",
+        "SWE-DAT-MAN-WP1-T2",
+        "SWE-DAT-MAN-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/34",
+      "issue_number": 162,
+      "level": "Work Package",
+      "parent_wbs": "SWE-DAT-MAN",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-MAN-WP1] Implement the dataset and provenance manifest",
+      "wbs_id": "SWE-DAT-MAN-WP1"
+    },
+    "SWE-DAT-MAN-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/162",
+      "issue_number": 163,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-MAN-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-MAN-WP1-T1] Define source, provider, licence, CRS, vertical datum, resolution and processing records.",
+      "wbs_id": "SWE-DAT-MAN-WP1-T1"
+    },
+    "SWE-DAT-MAN-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/162",
+      "issue_number": 164,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-MAN-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-MAN-WP1-T2] Implement manifest validation and generated-artefact lineage.",
+      "wbs_id": "SWE-DAT-MAN-WP1-T2"
+    },
+    "SWE-DAT-MAN-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/162",
+      "issue_number": 165,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-MAN-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-DAT-MAN-WP1-T3] Create a sample Tohoku/corridor manifest fixture.",
+      "wbs_id": "SWE-DAT-MAN-WP1-T3"
+    },
+    "SWE-DAT-SCH": {
+      "children": [
+        "SWE-DAT-SCH-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 36,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-SCH] Versioned HDF5 result, diagnostic and checkpoint schema.",
+      "wbs_id": "SWE-DAT-SCH"
+    },
+    "SWE-DAT-SCH-WP1": {
+      "children": [
+        "SWE-DAT-SCH-WP1-T1",
+        "SWE-DAT-SCH-WP1-T2",
+        "SWE-DAT-SCH-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/36",
+      "issue_number": 166,
+      "level": "Work Package",
+      "parent_wbs": "SWE-DAT-SCH",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-SCH-WP1] Define and implement the G1 HDF5 schema",
+      "wbs_id": "SWE-DAT-SCH-WP1"
+    },
+    "SWE-DAT-SCH-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/166",
+      "issue_number": 167,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-SCH-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-SCH-WP1-T1] Define mesh, patch, field, metadata and provenance groups.",
+      "wbs_id": "SWE-DAT-SCH-WP1-T1"
+    },
+    "SWE-DAT-SCH-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/166",
+      "issue_number": 168,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-SCH-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-SCH-WP1-T2] Implement write/read adapters for the G1 topology and sample fields.",
+      "wbs_id": "SWE-DAT-SCH-WP1-T2"
+    },
+    "SWE-DAT-SCH-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/166",
+      "issue_number": 169,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-SCH-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-SCH-WP1-T3] Version the schema and create compatibility checks.",
+      "wbs_id": "SWE-DAT-SCH-WP1-T3"
+    },
+    "SWE-DAT-XDMF": {
+      "children": [
+        "SWE-DAT-XDMF-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/5",
+      "issue_number": 37,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-DAT",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-XDMF] XDMF descriptors for ParaView-compatible inspection.",
+      "wbs_id": "SWE-DAT-XDMF"
+    },
+    "SWE-DAT-XDMF-WP1": {
+      "children": [
+        "SWE-DAT-XDMF-WP1-T1",
+        "SWE-DAT-XDMF-WP1-T2",
+        "SWE-DAT-XDMF-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/37",
+      "issue_number": 170,
+      "level": "Work Package",
+      "parent_wbs": "SWE-DAT-XDMF",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-XDMF-WP1] Generate XDMF descriptors for G1 outputs",
+      "wbs_id": "SWE-DAT-XDMF-WP1"
+    },
+    "SWE-DAT-XDMF-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/170",
+      "issue_number": 171,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-XDMF-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-XDMF-WP1-T1] Map HDF5 topology, geometry and field datasets into XDMF.",
+      "wbs_id": "SWE-DAT-XDMF-WP1-T1"
+    },
+    "SWE-DAT-XDMF-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/170",
+      "issue_number": 172,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-XDMF-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-XDMF-WP1-T2] Generate temporal/static metadata required by ParaView.",
+      "wbs_id": "SWE-DAT-XDMF-WP1-T2"
+    },
+    "SWE-DAT-XDMF-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/170",
+      "issue_number": 173,
+      "level": "Task",
+      "parent_wbs": "SWE-DAT-XDMF-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-DAT-XDMF-WP1-T3] Validate the descriptor against the sample HDF5 case.",
+      "wbs_id": "SWE-DAT-XDMF-WP1-T3"
+    },
+    "SWE-ENV": {
+      "children": [
+        "SWE-ENV-BLD",
+        "SWE-ENV-DEP",
+        "SWE-ENV-LIC",
+        "SWE-ENV-PRS",
+        "SWE-ENV-SMK",
+        "SWE-ENV-STACK"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 2,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV] Toolchain, Packages and Builds",
+      "wbs_id": "SWE-ENV"
+    },
+    "SWE-ENV-BLD": {
+      "children": [
+        "SWE-ENV-BLD-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 16,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-BLD] Target-based CMake build system.",
+      "wbs_id": "SWE-ENV-BLD"
+    },
+    "SWE-ENV-BLD-WP1": {
+      "children": [
+        "SWE-ENV-BLD-WP1-T1",
+        "SWE-ENV-BLD-WP1-T2",
+        "SWE-ENV-BLD-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/16",
+      "issue_number": 102,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-BLD",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-BLD-WP1] Create the target-based CMake scaffold",
+      "wbs_id": "SWE-ENV-BLD-WP1"
+    },
+    "SWE-ENV-BLD-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/102",
+      "issue_number": 103,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-BLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-BLD-WP1-T1] Define the CMake/C++20 baseline and root project configuration.",
+      "wbs_id": "SWE-ENV-BLD-WP1-T1"
+    },
+    "SWE-ENV-BLD-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/102",
+      "issue_number": 104,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-BLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-BLD-WP1-T2] Create library, CLI, Qt application and test target skeletons.",
+      "wbs_id": "SWE-ENV-BLD-WP1-T2"
+    },
+    "SWE-ENV-BLD-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/102",
+      "issue_number": 105,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-BLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-BLD-WP1-T3] Apply target-scoped include paths, compile features and warnings.",
+      "wbs_id": "SWE-ENV-BLD-WP1-T3"
+    },
+    "SWE-ENV-DEP": {
+      "children": [
+        "SWE-ENV-DEP-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 17,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-DEP] Reproducible dependency manifest and version baseline.",
+      "wbs_id": "SWE-ENV-DEP"
+    },
+    "SWE-ENV-DEP-WP1": {
+      "children": [
+        "SWE-ENV-DEP-WP1-T1",
+        "SWE-ENV-DEP-WP1-T2",
+        "SWE-ENV-DEP-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/17",
+      "issue_number": 106,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-DEP",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-DEP-WP1] Establish reproducible dependency acquisition",
+      "wbs_id": "SWE-ENV-DEP-WP1"
+    },
+    "SWE-ENV-DEP-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/106",
+      "issue_number": 107,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-DEP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-DEP-WP1-T1] Create the dependency manifest and pinned baseline.",
+      "wbs_id": "SWE-ENV-DEP-WP1-T1"
+    },
+    "SWE-ENV-DEP-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/106",
+      "issue_number": 108,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-DEP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-DEP-WP1-T2] Separate mandatory, GUI, geospatial, test and optional feature groups.",
+      "wbs_id": "SWE-ENV-DEP-WP1-T2"
+    },
+    "SWE-ENV-DEP-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/106",
+      "issue_number": 109,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-DEP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-DEP-WP1-T3] Document supported acquisition and cache behaviour.",
+      "wbs_id": "SWE-ENV-DEP-WP1-T3"
+    },
+    "SWE-ENV-LIC": {
+      "children": [
+        "SWE-ENV-LIC-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 19,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-LIC] Dependency licence and redistribution register.",
+      "wbs_id": "SWE-ENV-LIC"
+    },
+    "SWE-ENV-LIC-WP1": {
+      "children": [
+        "SWE-ENV-LIC-WP1-T1",
+        "SWE-ENV-LIC-WP1-T2",
+        "SWE-ENV-LIC-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/19",
+      "issue_number": 114,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-LIC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-LIC-WP1] Create the dependency licence register",
+      "wbs_id": "SWE-ENV-LIC-WP1"
+    },
+    "SWE-ENV-LIC-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/114",
+      "issue_number": 115,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-LIC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-LIC-WP1-T1] Capture licence identifier, source and notice requirements for each dependency.",
+      "wbs_id": "SWE-ENV-LIC-WP1-T1"
+    },
+    "SWE-ENV-LIC-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/114",
+      "issue_number": 116,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-LIC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-LIC-WP1-T2] Record linking, redistribution and runtime-library implications.",
+      "wbs_id": "SWE-ENV-LIC-WP1-T2"
+    },
+    "SWE-ENV-LIC-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/114",
+      "issue_number": 117,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-LIC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-LIC-WP1-T3] Define release-time licence verification.",
+      "wbs_id": "SWE-ENV-LIC-WP1-T3"
+    },
+    "SWE-ENV-PRS": {
+      "children": [
+        "SWE-ENV-PRS-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 18,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-PRS] Shared configure, build and test presets.",
+      "wbs_id": "SWE-ENV-PRS"
+    },
+    "SWE-ENV-PRS-WP1": {
+      "children": [
+        "SWE-ENV-PRS-WP1-T1",
+        "SWE-ENV-PRS-WP1-T2",
+        "SWE-ENV-PRS-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/18",
+      "issue_number": 110,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-PRS",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-PRS-WP1] Define shared configure, build and test presets",
+      "wbs_id": "SWE-ENV-PRS-WP1"
+    },
+    "SWE-ENV-PRS-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/110",
+      "issue_number": 111,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-PRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-PRS-WP1-T1] Create developer, release and CI configure presets.",
+      "wbs_id": "SWE-ENV-PRS-WP1-T1"
+    },
+    "SWE-ENV-PRS-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/110",
+      "issue_number": 112,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-PRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-PRS-WP1-T2] Create matching build and test presets with platform inheritance.",
+      "wbs_id": "SWE-ENV-PRS-WP1-T2"
+    },
+    "SWE-ENV-PRS-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/110",
+      "issue_number": 113,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-PRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-PRS-WP1-T3] Document preset selection and local override rules.",
+      "wbs_id": "SWE-ENV-PRS-WP1-T3"
+    },
+    "SWE-ENV-SMK": {
+      "children": [
+        "SWE-ENV-SMK-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 20,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV-SMK] Clean-clone dependency and build smoke test.",
+      "wbs_id": "SWE-ENV-SMK"
+    },
+    "SWE-ENV-SMK-WP1": {
+      "children": [
+        "SWE-ENV-SMK-WP1-T1",
+        "SWE-ENV-SMK-WP1-T2",
+        "SWE-ENV-SMK-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/20",
+      "issue_number": 118,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-SMK",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV-SMK-WP1] Implement the clean-clone smoke test",
+      "wbs_id": "SWE-ENV-SMK-WP1"
+    },
+    "SWE-ENV-SMK-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/118",
+      "issue_number": 119,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-SMK-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV-SMK-WP1-T1] Define a clean environment and dependency restoration procedure.",
+      "wbs_id": "SWE-ENV-SMK-WP1-T1"
+    },
+    "SWE-ENV-SMK-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/118",
+      "issue_number": 120,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-SMK-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV-SMK-WP1-T2] Build the core, CLI, Qt shell and test targets from that environment.",
+      "wbs_id": "SWE-ENV-SMK-WP1-T2"
+    },
+    "SWE-ENV-SMK-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/118",
+      "issue_number": 121,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-SMK-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-ENV-SMK-WP1-T3] Record pass/fail evidence and remediate undocumented prerequisites.",
+      "wbs_id": "SWE-ENV-SMK-WP1-T3"
+    },
+    "SWE-ENV-STACK": {
+      "children": [
+        "SWE-ENV-STACK-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/2",
+      "issue_number": 15,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-ENV",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-STACK] Software stack and dependency decision register.",
+      "wbs_id": "SWE-ENV-STACK"
+    },
+    "SWE-ENV-STACK-WP1": {
+      "children": [
+        "SWE-ENV-STACK-WP1-T1",
+        "SWE-ENV-STACK-WP1-T2",
+        "SWE-ENV-STACK-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/15",
+      "issue_number": 98,
+      "level": "Work Package",
+      "parent_wbs": "SWE-ENV-STACK",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-STACK-WP1] Confirm the production software stack",
+      "wbs_id": "SWE-ENV-STACK-WP1"
+    },
+    "SWE-ENV-STACK-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/98",
+      "issue_number": 99,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-STACK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-STACK-WP1-T1] Map required capabilities to mandatory and optional dependencies.",
+      "wbs_id": "SWE-ENV-STACK-WP1-T1"
+    },
+    "SWE-ENV-STACK-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/98",
+      "issue_number": 100,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-STACK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-STACK-WP1-T2] Record selected libraries, versions, alternatives and deferred components.",
+      "wbs_id": "SWE-ENV-STACK-WP1-T2"
+    },
+    "SWE-ENV-STACK-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/98",
+      "issue_number": 101,
+      "level": "Task",
+      "parent_wbs": "SWE-ENV-STACK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-ENV-STACK-WP1-T3] Approve the stack decision register and downstream ownership.",
+      "wbs_id": "SWE-ENV-STACK-WP1-T3"
+    },
+    "SWE-FVM": {
+      "children": [
+        "SWE-FVM-BC",
+        "SWE-FVM-CTL",
+        "SWE-FVM-FLD",
+        "SWE-FVM-LIN",
+        "SWE-FVM-MSH",
+        "SWE-FVM-NUM"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 4,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM] Shared Finite-Volume Core",
+      "wbs_id": "SWE-FVM"
+    },
+    "SWE-FVM-BC": {
+      "children": [
+        "SWE-FVM-BC-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 29,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-BC] Generic boundary-patch and boundary-condition framework.",
+      "wbs_id": "SWE-FVM-BC"
+    },
+    "SWE-FVM-BC-WP1": {
+      "children": [
+        "SWE-FVM-BC-WP1-T1",
+        "SWE-FVM-BC-WP1-T2",
+        "SWE-FVM-BC-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/29",
+      "issue_number": 182,
+      "level": "Work Package",
+      "parent_wbs": "SWE-FVM-BC",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-BC-WP1] Implement the boundary-patch framework",
+      "wbs_id": "SWE-FVM-BC-WP1"
+    },
+    "SWE-FVM-BC-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/182",
+      "issue_number": 183,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-BC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-BC-WP1-T1] Define patch identity, type, entity membership and metadata.",
+      "wbs_id": "SWE-FVM-BC-WP1-T1"
+    },
+    "SWE-FVM-BC-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/182",
+      "issue_number": 184,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-BC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-BC-WP1-T2] Define a generic boundary-condition interface without solver-specific equations.",
+      "wbs_id": "SWE-FVM-BC-WP1-T2"
+    },
+    "SWE-FVM-BC-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/182",
+      "issue_number": 185,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-BC-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-BC-WP1-T3] Create fixed-value, zero-gradient and named-placeholder fixtures.",
+      "wbs_id": "SWE-FVM-BC-WP1-T3"
+    },
+    "SWE-FVM-CTL": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 32,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-CTL] Common residual, corrector, timestep-control and accept/reject infrastructure.",
+      "wbs_id": "SWE-FVM-CTL"
+    },
+    "SWE-FVM-FLD": {
+      "children": [
+        "SWE-FVM-FLD-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 28,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-FLD] Typed scalar, vector and tensor field containers with cell-, face- and patch-location semantics.",
+      "wbs_id": "SWE-FVM-FLD"
+    },
+    "SWE-FVM-FLD-WP1": {
+      "children": [
+        "SWE-FVM-FLD-WP1-T1",
+        "SWE-FVM-FLD-WP1-T2",
+        "SWE-FVM-FLD-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/28",
+      "issue_number": 178,
+      "level": "Work Package",
+      "parent_wbs": "SWE-FVM-FLD",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-FLD-WP1] Implement typed field containers",
+      "wbs_id": "SWE-FVM-FLD-WP1"
+    },
+    "SWE-FVM-FLD-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/178",
+      "issue_number": 179,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-FLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-FLD-WP1-T1] Define scalar/vector field storage with cell, face and patch locations.",
+      "wbs_id": "SWE-FVM-FLD-WP1-T1"
+    },
+    "SWE-FVM-FLD-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/178",
+      "issue_number": 180,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-FLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-FLD-WP1-T2] Implement sizing, metadata, access and topology-compatibility checks.",
+      "wbs_id": "SWE-FVM-FLD-WP1-T2"
+    },
+    "SWE-FVM-FLD-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/178",
+      "issue_number": 181,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-FLD-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-FLD-WP1-T3] Populate deterministic sample fields on the reference mesh.",
+      "wbs_id": "SWE-FVM-FLD-WP1-T3"
+    },
+    "SWE-FVM-LIN": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 31,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-LIN] Sparse linear-system, solver and preconditioner abstraction.",
+      "wbs_id": "SWE-FVM-LIN"
+    },
+    "SWE-FVM-MSH": {
+      "children": [
+        "SWE-FVM-MSH-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 27,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-MSH] Dimension-independent control-volume topology and discrete geometry model, including cells, faces, owner/neighbour connectivity, patches, centroids, volumes, face areas and normals.",
+      "wbs_id": "SWE-FVM-MSH"
+    },
+    "SWE-FVM-MSH-WP1": {
+      "children": [
+        "SWE-FVM-MSH-WP1-T1",
+        "SWE-FVM-MSH-WP1-T2",
+        "SWE-FVM-MSH-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/27",
+      "issue_number": 174,
+      "level": "Work Package",
+      "parent_wbs": "SWE-FVM-MSH",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-MSH-WP1] Implement the shared control-volume topology",
+      "wbs_id": "SWE-FVM-MSH-WP1"
+    },
+    "SWE-FVM-MSH-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/174",
+      "issue_number": 175,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-MSH-WP1-T1] Define cell, face, owner/neighbour, patch and discrete-geometry records.",
+      "wbs_id": "SWE-FVM-MSH-WP1-T1"
+    },
+    "SWE-FVM-MSH-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/174",
+      "issue_number": 176,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-MSH-WP1-T2] Implement topology construction and invariant checks from imported mesh data.",
+      "wbs_id": "SWE-FVM-MSH-WP1-T2"
+    },
+    "SWE-FVM-MSH-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/174",
+      "issue_number": 177,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-MSH-WP1-T3] Create a small tagged reference mesh fixture.",
+      "wbs_id": "SWE-FVM-MSH-WP1-T3"
+    },
+    "SWE-FVM-NUM": {
+      "children": [
+        "SWE-FVM-NUM-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/4",
+      "issue_number": 30,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-FVM",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-FVM-NUM] Shared interpolation, reconstruction, limiter, gradient, divergence and Laplacian infrastructure.",
+      "wbs_id": "SWE-FVM-NUM"
+    },
+    "SWE-FVM-NUM-WP1": {
+      "children": [
+        "SWE-FVM-NUM-WP1-T1",
+        "SWE-FVM-NUM-WP1-T2",
+        "SWE-FVM-NUM-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/30",
+      "issue_number": 186,
+      "level": "Work Package",
+      "parent_wbs": "SWE-FVM-NUM",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-NUM-WP1] Implement G1 interpolation and gradient primitives",
+      "wbs_id": "SWE-FVM-NUM-WP1"
+    },
+    "SWE-FVM-NUM-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/186",
+      "issue_number": 187,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-NUM-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-NUM-WP1-T1] Implement cell-to-face interpolation required for inspection fixtures.",
+      "wbs_id": "SWE-FVM-NUM-WP1-T1"
+    },
+    "SWE-FVM-NUM-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/186",
+      "issue_number": 188,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-NUM-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-NUM-WP1-T2] Implement a basic gradient operator on the reference mesh.",
+      "wbs_id": "SWE-FVM-NUM-WP1-T2"
+    },
+    "SWE-FVM-NUM-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/186",
+      "issue_number": 189,
+      "level": "Task",
+      "parent_wbs": "SWE-FVM-NUM-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-FVM-NUM-WP1-T3] Verify exactness/consistency using constant and linear manufactured fields.",
+      "wbs_id": "SWE-FVM-NUM-WP1-T3"
+    },
+    "SWE-GEO": {
+      "children": [
+        "SWE-GEO-BAR",
+        "SWE-GEO-CHK",
+        "SWE-GEO-COR",
+        "SWE-GEO-CRS",
+        "SWE-GEO-IMP",
+        "SWE-GEO-MSH",
+        "SWE-GEO-TAG",
+        "SWE-GEO-TER"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 6,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO] Geospatial, Terrain and Geometry Pipeline",
+      "wbs_id": "SWE-GEO"
+    },
+    "SWE-GEO-BAR": {
+      "children": [
+        "SWE-GEO-BAR-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 45,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-BAR] Method-neutral fixed terrain and rigid barrier-class descriptors, placement and computational representation.",
+      "wbs_id": "SWE-GEO-BAR"
+    },
+    "SWE-GEO-BAR-WP1": {
+      "children": [
+        "SWE-GEO-BAR-WP1-T1",
+        "SWE-GEO-BAR-WP1-T2",
+        "SWE-GEO-BAR-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/45",
+      "issue_number": 214,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-BAR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-BAR-WP1] Implement method-neutral rigid barrier descriptors",
+      "wbs_id": "SWE-GEO-BAR-WP1"
+    },
+    "SWE-GEO-BAR-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/214",
+      "issue_number": 215,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-BAR-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-BAR-WP1-T1] Define wall-type and obstacle/dissipating-class descriptors.",
+      "wbs_id": "SWE-GEO-BAR-WP1-T1"
+    },
+    "SWE-GEO-BAR-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/214",
+      "issue_number": 216,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-BAR-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-BAR-WP1-T2] Define placement, orientation, dimensions and case-reference metadata.",
+      "wbs_id": "SWE-GEO-BAR-WP1-T2"
+    },
+    "SWE-GEO-BAR-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/214",
+      "issue_number": 217,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-BAR-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-BAR-WP1-T3] Attach a sample rigid barrier descriptor to the G1 case without selecting IBM/cut-cell methods.",
+      "wbs_id": "SWE-GEO-BAR-WP1-T3"
+    },
+    "SWE-GEO-CHK": {
+      "children": [
+        "SWE-GEO-CHK-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 46,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-CHK] Corridor, terrain, geometry and mesh-validity/quality checks.",
+      "wbs_id": "SWE-GEO-CHK"
+    },
+    "SWE-GEO-CHK-WP1": {
+      "children": [
+        "SWE-GEO-CHK-WP1-T1",
+        "SWE-GEO-CHK-WP1-T2",
+        "SWE-GEO-CHK-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/46",
+      "issue_number": 218,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-CHK",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CHK-WP1] Implement corridor, geometry and mesh checks",
+      "wbs_id": "SWE-GEO-CHK-WP1"
+    },
+    "SWE-GEO-CHK-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/218",
+      "issue_number": 219,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CHK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CHK-WP1-T1] Check corridor validity, raster coverage and CRS consistency.",
+      "wbs_id": "SWE-GEO-CHK-WP1-T1"
+    },
+    "SWE-GEO-CHK-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/218",
+      "issue_number": 220,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CHK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CHK-WP1-T2] Check mesh topology, face orientation, positive measures and required patches.",
+      "wbs_id": "SWE-GEO-CHK-WP1-T2"
+    },
+    "SWE-GEO-CHK-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/218",
+      "issue_number": 221,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CHK-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CHK-WP1-T3] Emit structured diagnostics consumable by CLI and Qt.",
+      "wbs_id": "SWE-GEO-CHK-WP1-T3"
+    },
+    "SWE-GEO-COR": {
+      "children": [
+        "SWE-GEO-COR-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 41,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-COR] Evidence-driven Kamaishi and Sendai trajectory/corridor construction, clipping and intermediate-artefact export.",
+      "wbs_id": "SWE-GEO-COR"
+    },
+    "SWE-GEO-COR-WP1": {
+      "children": [
+        "SWE-GEO-COR-WP1-T1",
+        "SWE-GEO-COR-WP1-T2",
+        "SWE-GEO-COR-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/41",
+      "issue_number": 198,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-COR",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-COR-WP1] Implement evidence-driven corridor construction",
+      "wbs_id": "SWE-GEO-COR-WP1"
+    },
+    "SWE-GEO-COR-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/198",
+      "issue_number": 199,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-COR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-COR-WP1-T1] Create epicentre/target centreline and local rotated basis construction.",
+      "wbs_id": "SWE-GEO-COR-WP1-T1"
+    },
+    "SWE-GEO-COR-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/198",
+      "issue_number": 200,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-COR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-COR-WP1-T2] Apply L_pre, L_inland, width and flat-ended buffering parameters.",
+      "wbs_id": "SWE-GEO-COR-WP1-T2"
+    },
+    "SWE-GEO-COR-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/198",
+      "issue_number": 201,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-COR-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-COR-WP1-T3] Export Kamaishi and Sendai sample corridor polygons with provenance.",
+      "wbs_id": "SWE-GEO-COR-WP1-T3"
+    },
+    "SWE-GEO-CRS": {
+      "children": [
+        "SWE-GEO-CRS-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 40,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CRS] Horizontal CRS, vertical datum and coordinate-transformation handling with provenance.",
+      "wbs_id": "SWE-GEO-CRS"
+    },
+    "SWE-GEO-CRS-WP1": {
+      "children": [
+        "SWE-GEO-CRS-WP1-T1",
+        "SWE-GEO-CRS-WP1-T2",
+        "SWE-GEO-CRS-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/40",
+      "issue_number": 194,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-CRS",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CRS-WP1] Implement coordinate and datum transformation handling",
+      "wbs_id": "SWE-GEO-CRS-WP1"
+    },
+    "SWE-GEO-CRS-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/194",
+      "issue_number": 195,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CRS-WP1-T1] Define the WGS84-to-metric corridor transformation workflow.",
+      "wbs_id": "SWE-GEO-CRS-WP1-T1"
+    },
+    "SWE-GEO-CRS-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/194",
+      "issue_number": 196,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CRS-WP1-T2] Apply transformations while retaining source/target CRS provenance.",
+      "wbs_id": "SWE-GEO-CRS-WP1-T2"
+    },
+    "SWE-GEO-CRS-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/194",
+      "issue_number": 197,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-CRS-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-CRS-WP1-T3] Create round-trip and known-point transformation tests.",
+      "wbs_id": "SWE-GEO-CRS-WP1-T3"
+    },
+    "SWE-GEO-IMP": {
+      "children": [
+        "SWE-GEO-IMP-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 39,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-IMP] GeoTIFF, NetCDF and vector-source import adapters.",
+      "wbs_id": "SWE-GEO-IMP"
+    },
+    "SWE-GEO-IMP-WP1": {
+      "children": [
+        "SWE-GEO-IMP-WP1-T1",
+        "SWE-GEO-IMP-WP1-T2",
+        "SWE-GEO-IMP-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/39",
+      "issue_number": 190,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-IMP",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-IMP-WP1] Implement sample raster/vector import adapters",
+      "wbs_id": "SWE-GEO-IMP-WP1"
+    },
+    "SWE-GEO-IMP-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/190",
+      "issue_number": 191,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-IMP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-IMP-WP1-T1] Read the selected G1 raster and vector fixture formats.",
+      "wbs_id": "SWE-GEO-IMP-WP1-T1"
+    },
+    "SWE-GEO-IMP-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/190",
+      "issue_number": 192,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-IMP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-IMP-WP1-T2] Extract CRS, extent, resolution, nodata and source metadata.",
+      "wbs_id": "SWE-GEO-IMP-WP1-T2"
+    },
+    "SWE-GEO-IMP-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/190",
+      "issue_number": 193,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-IMP-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-IMP-WP1-T3] Emit canonical import records linked to the dataset manifest.",
+      "wbs_id": "SWE-GEO-IMP-WP1-T3"
+    },
+    "SWE-GEO-MSH": {
+      "children": [
+        "SWE-GEO-MSH-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 43,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-MSH] Reproducible mesh-generation/import workflow and transfer into `SWE-FVM-MSH`.",
+      "wbs_id": "SWE-GEO-MSH"
+    },
+    "SWE-GEO-MSH-WP1": {
+      "children": [
+        "SWE-GEO-MSH-WP1-T1",
+        "SWE-GEO-MSH-WP1-T2",
+        "SWE-GEO-MSH-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/43",
+      "issue_number": 206,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-MSH",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-MSH-WP1] Implement the tagged Gmsh import workflow",
+      "wbs_id": "SWE-GEO-MSH-WP1"
+    },
+    "SWE-GEO-MSH-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/206",
+      "issue_number": 207,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-MSH-WP1-T1] Define the G1 Gmsh physical-group naming convention.",
+      "wbs_id": "SWE-GEO-MSH-WP1-T1"
+    },
+    "SWE-GEO-MSH-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/206",
+      "issue_number": 208,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-MSH-WP1-T2] Import nodes, elements and physical tags into canonical adapter records.",
+      "wbs_id": "SWE-GEO-MSH-WP1-T2"
+    },
+    "SWE-GEO-MSH-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/206",
+      "issue_number": 209,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-MSH-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-MSH-WP1-T3] Transfer the fixture into the shared FVM topology.",
+      "wbs_id": "SWE-GEO-MSH-WP1-T3"
+    },
+    "SWE-GEO-TAG": {
+      "children": [
+        "SWE-GEO-TAG-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 44,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-TAG] Boundary, terrain, barrier, material and region tagging.",
+      "wbs_id": "SWE-GEO-TAG"
+    },
+    "SWE-GEO-TAG-WP1": {
+      "children": [
+        "SWE-GEO-TAG-WP1-T1",
+        "SWE-GEO-TAG-WP1-T2",
+        "SWE-GEO-TAG-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/44",
+      "issue_number": 210,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-TAG",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-TAG-WP1] Implement canonical region and boundary tagging",
+      "wbs_id": "SWE-GEO-TAG-WP1"
+    },
+    "SWE-GEO-TAG-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/210",
+      "issue_number": 211,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TAG-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-TAG-WP1-T1] Define terrain, inlet, outlet, side, top, barrier and material tag semantics.",
+      "wbs_id": "SWE-GEO-TAG-WP1-T1"
+    },
+    "SWE-GEO-TAG-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/210",
+      "issue_number": 212,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TAG-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-TAG-WP1-T2] Validate required/forbidden tag combinations for 2D and 3D meshes.",
+      "wbs_id": "SWE-GEO-TAG-WP1-T2"
+    },
+    "SWE-GEO-TAG-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/210",
+      "issue_number": 213,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TAG-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GEO-TAG-WP1-T3] Persist tags through HDF5/XDMF export.",
+      "wbs_id": "SWE-GEO-TAG-WP1-T3"
+    },
+    "SWE-GEO-TER": {
+      "children": [
+        "SWE-GEO-TER-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/6",
+      "issue_number": 42,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GEO",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-TER] Bathymetry/topography conditioning, merging, resampling and interpolation to the computational representation.",
+      "wbs_id": "SWE-GEO-TER"
+    },
+    "SWE-GEO-TER-WP1": {
+      "children": [
+        "SWE-GEO-TER-WP1-T1",
+        "SWE-GEO-TER-WP1-T2",
+        "SWE-GEO-TER-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/42",
+      "issue_number": 202,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GEO-TER",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-TER-WP1] Implement G1 terrain conditioning",
+      "wbs_id": "SWE-GEO-TER-WP1"
+    },
+    "SWE-GEO-TER-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/202",
+      "issue_number": 203,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TER-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-TER-WP1-T1] Clip sample bathymetry/topography to the corridor.",
+      "wbs_id": "SWE-GEO-TER-WP1-T1"
+    },
+    "SWE-GEO-TER-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/202",
+      "issue_number": 204,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TER-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-TER-WP1-T2] Handle nodata, merging and resampling with explicit policies.",
+      "wbs_id": "SWE-GEO-TER-WP1-T2"
+    },
+    "SWE-GEO-TER-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/202",
+      "issue_number": 205,
+      "level": "Task",
+      "parent_wbs": "SWE-GEO-TER-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GEO-TER-WP1-T3] Export a conditioned terrain fixture with lineage metadata.",
+      "wbs_id": "SWE-GEO-TER-WP1-T3"
+    },
+    "SWE-GUI": {
+      "children": [
+        "SWE-GUI-CAS",
+        "SWE-GUI-LOG",
+        "SWE-GUI-POST",
+        "SWE-GUI-RUN",
+        "SWE-GUI-SHL",
+        "SWE-GUI-VIS"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 10,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI] Application and Visualisation",
+      "wbs_id": "SWE-GUI"
+    },
+    "SWE-GUI-CAS": {
+      "children": [
+        "SWE-GUI-CAS-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 72,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-CAS] Data, corridor, domain, mesh, physics, solver and output case editor.",
+      "wbs_id": "SWE-GUI-CAS"
+    },
+    "SWE-GUI-CAS-WP1": {
+      "children": [
+        "SWE-GUI-CAS-WP1-T1",
+        "SWE-GUI-CAS-WP1-T2",
+        "SWE-GUI-CAS-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/72",
+      "issue_number": 222,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GUI-CAS",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-CAS-WP1] Expose G1 case and manifest inspection",
+      "wbs_id": "SWE-GUI-CAS-WP1"
+    },
+    "SWE-GUI-CAS-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/222",
+      "issue_number": 223,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-CAS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-CAS-WP1-T1] Load and display case-schema and dataset-manifest summaries.",
+      "wbs_id": "SWE-GUI-CAS-WP1-T1"
+    },
+    "SWE-GUI-CAS-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/222",
+      "issue_number": 224,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-CAS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-CAS-WP1-T2] Present validation errors with field and source context.",
+      "wbs_id": "SWE-GUI-CAS-WP1-T2"
+    },
+    "SWE-GUI-CAS-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/222",
+      "issue_number": 225,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-CAS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-CAS-WP1-T3] Expose generated artefact locations without implementing full editing.",
+      "wbs_id": "SWE-GUI-CAS-WP1-T3"
+    },
+    "SWE-GUI-LOG": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 74,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-LOG] Structured log, warning, residual and diagnostic presentation.",
+      "wbs_id": "SWE-GUI-LOG"
+    },
+    "SWE-GUI-POST": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 76,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-POST] Result catalogue, case comparison and metric-history views.",
+      "wbs_id": "SWE-GUI-POST"
+    },
+    "SWE-GUI-RUN": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 73,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-RUN] Headless-process launch, monitoring, cancellation and run-state control.",
+      "wbs_id": "SWE-GUI-RUN"
+    },
+    "SWE-GUI-SHL": {
+      "children": [
+        "SWE-GUI-SHL-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 71,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GUI-SHL] Qt Quick/QML application shell and navigation structure.",
+      "wbs_id": "SWE-GUI-SHL"
+    },
+    "SWE-GUI-SHL-WP1": {
+      "children": [
+        "SWE-GUI-SHL-WP1-T1",
+        "SWE-GUI-SHL-WP1-T2",
+        "SWE-GUI-SHL-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/71",
+      "issue_number": 146,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GUI-SHL",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GUI-SHL-WP1] Create the Qt Quick application shell",
+      "wbs_id": "SWE-GUI-SHL-WP1"
+    },
+    "SWE-GUI-SHL-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/146",
+      "issue_number": 147,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-SHL-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GUI-SHL-WP1-T1] Create the Qt Quick/QML application target and resource structure.",
+      "wbs_id": "SWE-GUI-SHL-WP1-T1"
+    },
+    "SWE-GUI-SHL-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/146",
+      "issue_number": 148,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-SHL-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GUI-SHL-WP1-T2] Implement navigation placeholders for data, domain, mesh, physics, solver, run and post-processing.",
+      "wbs_id": "SWE-GUI-SHL-WP1-T2"
+    },
+    "SWE-GUI-SHL-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/146",
+      "issue_number": 149,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-SHL-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-GUI-SHL-WP1-T3] Connect the shell to the application-service and diagnostic stubs.",
+      "wbs_id": "SWE-GUI-SHL-WP1-T3"
+    },
+    "SWE-GUI-VIS": {
+      "children": [
+        "SWE-GUI-VIS-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/10",
+      "issue_number": 75,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-GUI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-VIS] Lightweight terrain/mesh/field preview and ParaView hand-off.",
+      "wbs_id": "SWE-GUI-VIS"
+    },
+    "SWE-GUI-VIS-WP1": {
+      "children": [
+        "SWE-GUI-VIS-WP1-T1",
+        "SWE-GUI-VIS-WP1-T2",
+        "SWE-GUI-VIS-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/75",
+      "issue_number": 226,
+      "level": "Work Package",
+      "parent_wbs": "SWE-GUI-VIS",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-VIS-WP1] Expose the G1 mesh/field result",
+      "wbs_id": "SWE-GUI-VIS-WP1"
+    },
+    "SWE-GUI-VIS-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/226",
+      "issue_number": 227,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-VIS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-VIS-WP1-T1] Catalogue the generated HDF5/XDMF result.",
+      "wbs_id": "SWE-GUI-VIS-WP1-T1"
+    },
+    "SWE-GUI-VIS-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/226",
+      "issue_number": 228,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-VIS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-VIS-WP1-T2] Display a lightweight metadata/mesh summary in the Qt shell.",
+      "wbs_id": "SWE-GUI-VIS-WP1-T2"
+    },
+    "SWE-GUI-VIS-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/226",
+      "issue_number": 229,
+      "level": "Task",
+      "parent_wbs": "SWE-GUI-VIS-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-GUI-VIS-WP1-T3] Provide a controlled ParaView hand-off for the XDMF output.",
+      "wbs_id": "SWE-GUI-VIS-WP1-T3"
+    },
+    "SWE-HPC": {
+      "children": [
+        "SWE-HPC-AIO",
+        "SWE-HPC-GPU",
+        "SWE-HPC-MPI",
+        "SWE-HPC-OMP",
+        "SWE-HPC-PROF",
+        "SWE-HPC-SIMD"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 12,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC] Performance and Parallelism",
+      "wbs_id": "SWE-HPC"
+    },
+    "SWE-HPC-AIO": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 88,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-AIO] Bounded asynchronous and parallel I/O optimisation.",
+      "wbs_id": "SWE-HPC-AIO"
+    },
+    "SWE-HPC-GPU": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 87,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-GPU] GPU execution backend after profiling and interface stabilisation.",
+      "wbs_id": "SWE-HPC-GPU"
+    },
+    "SWE-HPC-MPI": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 86,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-MPI] Distributed-memory decomposition and execution.",
+      "wbs_id": "SWE-HPC-MPI"
+    },
+    "SWE-HPC-OMP": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 85,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-OMP] Shared-memory parallel execution.",
+      "wbs_id": "SWE-HPC-OMP"
+    },
+    "SWE-HPC-PROF": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 83,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-PROF] Serial performance, memory and scalability baseline.",
+      "wbs_id": "SWE-HPC-PROF"
+    },
+    "SWE-HPC-SIMD": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/12",
+      "issue_number": 84,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-HPC",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-HPC-SIMD] Vectorisation and data-layout optimisation.",
+      "wbs_id": "SWE-HPC-SIMD"
+    },
+    "SWE-L3D": {
+      "children": [
+        "SWE-L3D-BC",
+        "SWE-L3D-FRC",
+        "SWE-L3D-MOM",
+        "SWE-L3D-PRS",
+        "SWE-L3D-SOL",
+        "SWE-L3D-SST",
+        "SWE-L3D-TIM",
+        "SWE-L3D-VOF",
+        "SWE-L3D-WLF"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 8,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D] Local 3D Solver",
+      "wbs_id": "SWE-L3D"
+    },
+    "SWE-L3D-BC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 61,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-BC] Regional-forced inlet, open/radiation outlet, lateral open-ocean, atmospheric-top, terrain and barrier boundary conditions.",
+      "wbs_id": "SWE-L3D-BC"
+    },
+    "SWE-L3D-FRC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 64,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-FRC] Barrier pressure, shear, traction, force and moment integration.",
+      "wbs_id": "SWE-L3D-FRC"
+    },
+    "SWE-L3D-MOM": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 57,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-MOM] Collocated cell-centred URANS momentum-predictor discretisation.",
+      "wbs_id": "SWE-L3D-MOM"
+    },
+    "SWE-L3D-PRS": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 58,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-PRS] Rhie--Chow pressure-consistent face fluxes and PISO-like pressure, velocity and flux correction.",
+      "wbs_id": "SWE-L3D-PRS"
+    },
+    "SWE-L3D-SOL": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 63,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-SOL] Exact transient segregated URANS--VOF solve sequence and field-acceptance loop.",
+      "wbs_id": "SWE-L3D-SOL"
+    },
+    "SWE-L3D-SST": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 59,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-SST] `k`--`omega` SST turbulence transport and turbulent-viscosity update.",
+      "wbs_id": "SWE-L3D-SST"
+    },
+    "SWE-L3D-TIM": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 62,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-TIM] CFL, interface-CFL, gravity-wave and diffusion timestep constraints with timestep rejection.",
+      "wbs_id": "SWE-L3D-TIM"
+    },
+    "SWE-L3D-VOF": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 56,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-VOF] Bounded compressive VOF transport, phase-state update and mixture-property update.",
+      "wbs_id": "SWE-L3D-VOF"
+    },
+    "SWE-L3D-WLF": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/8",
+      "issue_number": 60,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-L3D",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-L3D-WLF] Scalable wall-function treatment for terrain and barrier walls.",
+      "wbs_id": "SWE-L3D-WLF"
+    },
+    "SWE-R2D": {
+      "children": [
+        "SWE-R2D-BC",
+        "SWE-R2D-EQK",
+        "SWE-R2D-FLX",
+        "SWE-R2D-SOL",
+        "SWE-R2D-SRC",
+        "SWE-R2D-STA",
+        "SWE-R2D-TIM",
+        "SWE-R2D-WB",
+        "SWE-R2D-WD"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 7,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D] Regional 2D Solver",
+      "wbs_id": "SWE-R2D"
+    },
+    "SWE-R2D-BC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 52,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-BC] Open/radiation boundaries and sponge/relaxation layers.",
+      "wbs_id": "SWE-R2D-BC"
+    },
+    "SWE-R2D-EQK": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 54,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-EQK] Earthquake, finite-fault and seabed-deformation initialisation interface.",
+      "wbs_id": "SWE-R2D-EQK"
+    },
+    "SWE-R2D-FLX": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 48,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-FLX] Rusanov baseline numerical flux with controlled HLL/HLLC extension points.",
+      "wbs_id": "SWE-R2D-FLX"
+    },
+    "SWE-R2D-SOL": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 55,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-SOL] Integrated regional solve loop, diagnostics and regional-output production.",
+      "wbs_id": "SWE-R2D-SOL"
+    },
+    "SWE-R2D-SRC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 51,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-SRC] Bathymetry, Manning friction, Coriolis and accepted optional source terms.",
+      "wbs_id": "SWE-R2D-SRC"
+    },
+    "SWE-R2D-STA": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 47,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-STA] Conservative state, primitive-variable recovery and state admissibility.",
+      "wbs_id": "SWE-R2D-STA"
+    },
+    "SWE-R2D-TIM": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 53,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-TIM] Regional CFL control and accepted explicit time integration.",
+      "wbs_id": "SWE-R2D-TIM"
+    },
+    "SWE-R2D-WB": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 49,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-WB] Hydrostatic reconstruction and lake-at-rest well balancing.",
+      "wbs_id": "SWE-R2D-WB"
+    },
+    "SWE-R2D-WD": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/7",
+      "issue_number": 50,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-R2D",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-R2D-WD] Positivity preservation and wetting--drying treatment.",
+      "wbs_id": "SWE-R2D-WD"
+    },
+    "SWE-REL": {
+      "children": [
+        "SWE-REL-CI",
+        "SWE-REL-DOC",
+        "SWE-REL-PKG",
+        "SWE-REL-REP"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 14,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL] CI, Documentation and Deployment",
+      "wbs_id": "SWE-REL"
+    },
+    "SWE-REL-CI": {
+      "children": [
+        "SWE-REL-CI-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/14",
+      "issue_number": 94,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-REL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-CI] Automated configure, build, test and artefact workflows.",
+      "wbs_id": "SWE-REL-CI"
+    },
+    "SWE-REL-CI-WP1": {
+      "children": [
+        "SWE-REL-CI-WP1-T1",
+        "SWE-REL-CI-WP1-T2",
+        "SWE-REL-CI-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/94",
+      "issue_number": 154,
+      "level": "Work Package",
+      "parent_wbs": "SWE-REL-CI",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-CI-WP1] Create the baseline CI workflow",
+      "wbs_id": "SWE-REL-CI-WP1"
+    },
+    "SWE-REL-CI-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/154",
+      "issue_number": 155,
+      "level": "Task",
+      "parent_wbs": "SWE-REL-CI-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-CI-WP1-T1] Configure clean checkout, dependency restore and preset-based build.",
+      "wbs_id": "SWE-REL-CI-WP1-T1"
+    },
+    "SWE-REL-CI-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/154",
+      "issue_number": 156,
+      "level": "Task",
+      "parent_wbs": "SWE-REL-CI-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-CI-WP1-T2] Run smoke/unit tests and retain diagnostic artefacts on failure.",
+      "wbs_id": "SWE-REL-CI-WP1-T2"
+    },
+    "SWE-REL-CI-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/154",
+      "issue_number": 157,
+      "level": "Task",
+      "parent_wbs": "SWE-REL-CI-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-CI-WP1-T3] Document branch and pull-request quality gates.",
+      "wbs_id": "SWE-REL-CI-WP1-T3"
+    },
+    "SWE-REL-DOC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/14",
+      "issue_number": 96,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-REL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-DOC] Developer, user, case-schema and scientific-software documentation.",
+      "wbs_id": "SWE-REL-DOC"
+    },
+    "SWE-REL-PKG": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/14",
+      "issue_number": 95,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-REL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-PKG] Cross-platform application and runtime packaging.",
+      "wbs_id": "SWE-REL-PKG"
+    },
+    "SWE-REL-REP": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/14",
+      "issue_number": 97,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-REL",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-REL-REP] Versioned reproducibility bundle containing configuration, manifests, environment, test evidence and release artefacts.",
+      "wbs_id": "SWE-REL-REP"
+    },
+    "SWE-STR": {
+      "children": [
+        "SWE-STR-DMG",
+        "SWE-STR-FEM",
+        "SWE-STR-FSI",
+        "SWE-STR-LOD",
+        "SWE-STR-MAT"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 13,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR] Structural Response and FSI",
+      "wbs_id": "SWE-STR"
+    },
+    "SWE-STR-DMG": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/13",
+      "issue_number": 92,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-STR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR-DMG] Damage, failure and material-response extension.",
+      "wbs_id": "SWE-STR-DMG"
+    },
+    "SWE-STR-FEM": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/13",
+      "issue_number": 91,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-STR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR-FEM] Deformable structural discretisation and solver.",
+      "wbs_id": "SWE-STR-FEM"
+    },
+    "SWE-STR-FSI": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/13",
+      "issue_number": 93,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-STR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR-FSI] Two-way fluid--structure coupling and feedback.",
+      "wbs_id": "SWE-STR-FSI"
+    },
+    "SWE-STR-LOD": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/13",
+      "issue_number": 89,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-STR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR-LOD] Fluid-to-structure hydrodynamic load-transfer interface.",
+      "wbs_id": "SWE-STR-LOD"
+    },
+    "SWE-STR-MAT": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/13",
+      "issue_number": 90,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-STR",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-STR-MAT] Material and structural-model adapter.",
+      "wbs_id": "SWE-STR-MAT"
+    },
+    "SWE-VER": {
+      "children": [
+        "SWE-VER-ACC",
+        "SWE-VER-BMK",
+        "SWE-VER-CONV",
+        "SWE-VER-REG",
+        "SWE-VER-UNIT",
+        "SWE-VER-VAL"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/1",
+      "issue_number": 11,
+      "level": "Domain",
+      "parent_wbs": "SWE",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER] Verification and Validation Support",
+      "wbs_id": "SWE-VER"
+    },
+    "SWE-VER-ACC": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 78,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-ACC] Runtime acceptance checks for mass conservation, bounded volume fraction, positive turbulence variables, residual tolerances, CFL limits and timestep acceptance.",
+      "wbs_id": "SWE-VER-ACC"
+    },
+    "SWE-VER-BMK": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 79,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-BMK] Regional and local solver-capability benchmark suite.",
+      "wbs_id": "SWE-VER-BMK"
+    },
+    "SWE-VER-CONV": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 81,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-CONV] Mesh- and timestep-convergence study harness.",
+      "wbs_id": "SWE-VER-CONV"
+    },
+    "SWE-VER-REG": {
+      "children": [
+        "SWE-VER-REG-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 80,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-REG] Regression, restart reproducibility, schema round-trip and reference-result tests.",
+      "wbs_id": "SWE-VER-REG"
+    },
+    "SWE-VER-REG-WP1": {
+      "children": [
+        "SWE-VER-REG-WP1-T1",
+        "SWE-VER-REG-WP1-T2",
+        "SWE-VER-REG-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/80",
+      "issue_number": 230,
+      "level": "Work Package",
+      "parent_wbs": "SWE-VER-REG",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-REG-WP1] Implement G1 round-trip and regression tests",
+      "wbs_id": "SWE-VER-REG-WP1"
+    },
+    "SWE-VER-REG-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/230",
+      "issue_number": 231,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-REG-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-REG-WP1-T1] Create case/manifest/schema round-trip tests.",
+      "wbs_id": "SWE-VER-REG-WP1-T1"
+    },
+    "SWE-VER-REG-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/230",
+      "issue_number": 232,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-REG-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-REG-WP1-T2] Create mesh/tag/field HDF5 reference checks.",
+      "wbs_id": "SWE-VER-REG-WP1-T2"
+    },
+    "SWE-VER-REG-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/230",
+      "issue_number": 233,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-REG-WP1",
+      "state": "closed",
+      "state_reason": "completed",
+      "title": "[SWE-VER-REG-WP1-T3] Create a deterministic vertical-slice regression fixture.",
+      "wbs_id": "SWE-VER-REG-WP1-T3"
+    },
+    "SWE-VER-UNIT": {
+      "children": [
+        "SWE-VER-UNIT-WP1"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 77,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-UNIT] Unit tests for data structures, geometry, operators, schemas and solver components.",
+      "wbs_id": "SWE-VER-UNIT"
+    },
+    "SWE-VER-UNIT-WP1": {
+      "children": [
+        "SWE-VER-UNIT-WP1-T1",
+        "SWE-VER-UNIT-WP1-T2",
+        "SWE-VER-UNIT-WP1-T3"
+      ],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/77",
+      "issue_number": 150,
+      "level": "Work Package",
+      "parent_wbs": "SWE-VER-UNIT",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-UNIT-WP1] Establish the unit and smoke-test framework",
+      "wbs_id": "SWE-VER-UNIT-WP1"
+    },
+    "SWE-VER-UNIT-WP1-T1": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/150",
+      "issue_number": 151,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-UNIT-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-UNIT-WP1-T1] Select and integrate the C++ test framework.",
+      "wbs_id": "SWE-VER-UNIT-WP1-T1"
+    },
+    "SWE-VER-UNIT-WP1-T2": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/150",
+      "issue_number": 152,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-UNIT-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-UNIT-WP1-T2] Create representative core, configuration and adapter smoke tests.",
+      "wbs_id": "SWE-VER-UNIT-WP1-T2"
+    },
+    "SWE-VER-UNIT-WP1-T3": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/150",
+      "issue_number": 153,
+      "level": "Task",
+      "parent_wbs": "SWE-VER-UNIT-WP1",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-UNIT-WP1-T3] Register tests through CTest and presets.",
+      "wbs_id": "SWE-VER-UNIT-WP1-T3"
+    },
+    "SWE-VER-VAL": {
+      "children": [],
+      "github_parent_issue_url": "https://api.github.com/repos/Summer-Studentship/Summer-Studentship/issues/11",
+      "issue_number": 82,
+      "level": "Deliverable",
+      "parent_wbs": "SWE-VER",
+      "state": "open",
+      "state_reason": null,
+      "title": "[SWE-VER-VAL] Observation, Tohoku hydrodynamic and impact/loading comparison harness; execution and acceptance remain governed by `RES-VER`.",
+      "wbs_id": "SWE-VER-VAL"
+    }
+  },
+  "root_wbs_ids": [
+    "SWE"
+  ],
+  "source": {
+    "issue_map": "tools/project-management/github-wbs-import/output/github_software_issue_map.json",
+    "manifest": "tools/project-management/github-wbs-import/github_software_issue_manifest_v0.1.csv",
+    "repository": "Summer-Studentship/Summer-Studentship"
+  }
+}
