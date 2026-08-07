@@ -1,0 +1,8 @@
+flowchart TD
+  A[Observed error] --> B{Offshore timing wrong?}
+  B -- yes --> C[Check source geometry and bathymetry]
+  B -- no --> D{Offshore amplitude wrong?}
+  D -- yes --> E[Check source model and kinematics]
+  D -- no --> F{Nearshore amplitude wrong?}
+  F -- yes --> G[Check Manning n and terrain fidelity]
+  F -- no --> H[Check Local3D coupling, turbulence and geometry]

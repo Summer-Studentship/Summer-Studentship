@@ -1,0 +1,7 @@
+flowchart TD
+  A[Candidate observation] --> B[Source provenance check]
+  B --> C[Quantity and datum classification]
+  C --> D[Spatial and temporal coverage review]
+  D --> E{Approved for use?}
+  E -- yes --> F[Calibration or validation bundle]
+  E -- no --> G[Context or rejected record]

@@ -1,0 +1,138 @@
+\section{Local3D URANS--VOF Model}
+
+Local3D hydrodynamics are implemented through the adopted OpenFOAM Foundation 11 incompressible two-phase URANS--VOF backend. The repository owns the case-generation policy and validation wrapper; it does not reimplement OpenFOAM solver internals.
+
+The local continuity equation is
+
+\begin{equation}
+\label{eq:local-continuity}
+\nabla\cdot\mathbf u=0.
+\end{equation}
+
+The two-phase URANS momentum equation is represented as
+
+\begin{equation}
+\label{eq:urans-momentum}
+\frac{\partial \rho\mathbf u}{\partial t}
++
+\nabla\cdot(\rho\mathbf u\otimes\mathbf u)
+=
+-
+\nabla p
++
+\nabla\cdot\left[
+(\mu+\mu_t)
+\left(\nabla\mathbf u+\nabla\mathbf u^{T}\right)
+\right]
++
+\rho\mathbf g .
+\end{equation}
+
+The VOF phase-fraction equation is
+
+\begin{equation}
+\label{eq:vof-transport}
+\frac{\partial\alpha}{\partial t}
++
+\nabla\cdot(\alpha\mathbf u)
++
+\nabla\cdot
+\left[
+\alpha(1-\alpha)\mathbf u_c
+\right]
+=
+0 .
+\end{equation}
+
+Mixture properties are
+
+\begin{equation}
+\label{eq:mixture-density}
+\rho(\alpha)=\alpha\rho_w+(1-\alpha)\rho_a
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:mixture-viscosity}
+\mu(\alpha)=\alpha\mu_w+(1-\alpha)\mu_a .
+\end{equation}
+
+The SST turbulence model is represented by transport equations for \(k\) and \(\omega\), with the adopted backend supplying the detailed coefficients \autocite{menter1994twoequation}:
+
+\begin{equation}
+\label{eq:sst-k}
+\frac{\partial k}{\partial t}
++
+\mathbf u\cdot\nabla k
+=
+P_k-\beta^\ast k\omega
++
+\nabla\cdot\left[(\nu+\sigma_k\nu_t)\nabla k\right]
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:sst-omega}
+\frac{\partial \omega}{\partial t}
++
+\mathbf u\cdot\nabla\omega
+=
+\gamma\frac{\omega}{k}P_k-\beta\omega^2
++
+\nabla\cdot\left[(\nu+\sigma_\omega\nu_t)\nabla\omega\right]
++D_\omega .
+\end{equation}
+
+The eddy viscosity closure is
+
+\begin{equation}
+\label{eq:eddy-viscosity}
+\nu_t=\frac{a_1k}{\max(a_1\omega,SF_2)} .
+\end{equation}
+
+Barrier traction combines pressure and viscous stress:
+
+\begin{equation}
+\label{eq:barrier-traction}
+\mathbf t=
+\boldsymbol\sigma\mathbf n_b
+=
+\left[-p\mathbf I+\boldsymbol\tau_v\right]\mathbf n_b .
+\end{equation}
+
+The force is
+
+\begin{equation}
+\label{eq:barrier-force}
+\mathbf F
+=
+\int_{\Gamma_b}
+\mathbf t\,\mathrm dA
+\end{equation}
+
+and the moment is
+
+\begin{equation}
+\label{eq:barrier-moment}
+\mathbf M
+=
+\int_{\Gamma_b}
+(\mathbf x-\mathbf x_0)
+\times
+\mathbf t
+\,\mathrm dA .
+\end{equation}
+
+The future impulse metric is
+
+\begin{equation}
+\label{eq:future-impulse}
+\mathbf J
+=
+\int_{t_1}^{t_2}
+\mathbf F(t)\,\mathrm dt .
+\end{equation}
+
+Local3D turbulence-model sensitivity is methodology-relevant \autocite{kozelkov2022turbulence,watanabe2022validation}, but physical calibration has not started.

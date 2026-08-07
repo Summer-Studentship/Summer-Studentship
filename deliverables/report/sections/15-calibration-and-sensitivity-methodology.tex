@@ -1,0 +1,107 @@
+\section{Calibration and Sensitivity Methodology}
+
+Calibration is hierarchical and diagnostics-led rather than blind optimisation. The formal target can be written as
+
+\begin{equation}
+\label{eq:calibration-optimisation-target}
+\boldsymbol{\theta}^{*}
+=
+\arg\min_{\boldsymbol{\theta}\in\Theta}
+J
+\left(
+\mathbf y_s(\boldsymbol{\theta}),
+\mathbf y_o
+\right),
+\end{equation}
+
+but parameter changes are only admissible when an error pattern, physical hypothesis and expected directional effect are recorded.
+
+\begin{table}[H]
+\centering
+\caption{Calibration parameter taxonomy.}
+\label{tab:calibration-taxonomy}
+\begin{tabularx}{\textwidth}{p{0.34\textwidth}p{0.12\textwidth}X}
+\toprule
+Parameter or model choice & Class & Status \\
+\midrule
+Earthquake source model & D & source sensitivity candidate \\
+Source amplitude multiplier & C & conditional; only with source-evidence support \\
+Manning \(n\) & C & regional friction calibration candidate \\
+Bathymetric dataset & F & fidelity/model-form choice \\
+Mesh resolution & V/F & verification first, fidelity second \\
+Astronomical tide & M & measured physical input \\
+Coriolis & M & measured/model-form physical input \\
+Sponge/damping & V & numerical boundary verification parameter \\
+Local3D turbulence intensity \(I\) & C & local inlet/turbulence candidate \\
+Turbulence length scale \(L_t\) & C & local turbulence candidate \\
+Wall roughness \(k_s\) & future C & future roughness calibration \\
+Coupling vertical velocity profile & D/F & model-form sensitivity \\
+Porous resistance parameters & future work & not in current calibration vector \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Cause--change--effect--rationale register examples.}
+\label{tab:cause-change-register}
+\begin{tabularx}{\textwidth}{p{0.20\textwidth}p{0.20\textwidth}p{0.18\textwidth}X}
+\toprule
+Trigger & Hypothesised cause & Candidate change & Conditions \\
+\midrule
+Offshore timing wrong & source geometry or bathymetry error & investigate source model or terrain fidelity & do not tune friction first. \\
+Offshore timing good but amplitude wrong & earthquake source amplitude/kinematics & source-model sensitivity & require source citation and observation approval. \\
+Offshore waveform good but nearshore amplitude high & friction or bathymetric transformation & Manning \(n\) study & only after convergence checks. \\
+Regional2D forcing accepted but 3D free surface wrong & coupling, turbulence or local geometry & vertical profile/turbulence/local geometry sensitivity & preserve forcing provenance. \\
+3D surface credible but loads wrong & turbulence, roughness or geometry & turbulence/roughness/geometry investigation & no arbitrary load multiplier. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The sensitivity coefficient is
+
+\begin{equation}
+\label{eq:sensitivity-coefficient}
+S_{ij}
+=
+\frac{\theta_j}{y_i}
+\frac{\partial y_i}{\partial\theta_j}.
+\end{equation}
+
+A centred finite difference estimate is
+
+\begin{equation}
+\label{eq:sensitivity-centred-difference}
+\frac{\partial y_i}{\partial\theta_j}
+\approx
+\frac{
+y_i(\theta_j+\Delta\theta_j)
+-
+y_i(\theta_j-\Delta\theta_j)
+}{
+2\Delta\theta_j
+}.
+\end{equation}
+
+Parameter identifiability requires that multiple observables respond in distinguishable directions. Tohoku-specific literature motivates source representation as an early sensitivity target; project-specific sensitivity testing is still required before calibration \autocite{saito2014dispersion,baba2017farfield,wei2013japan}.
+
+Every calibration iteration is recorded as
+
+\begin{equation}
+\label{eq:calibration-audit-record}
+\mathcal C_k
+=
+\{
+\theta_{\mathrm{old}},
+\theta_{\mathrm{new}},
+H_k,
+E_k,
+R_k
+\},
+\end{equation}
+
+where \(H_k\) is the physical hypothesis, \(E_k\) is the expected effect and \(R_k\) is the realised effect. Each run record must include run ID, parent run, baseline commit, parameter, old and new value, unit, reason, error pattern, hypothesis, expected effect, metrics before and after, actual effect, retain/revert decision and citation basis.
+
+The following are numerical controls, not physical calibration variables: CFL limit, alpha-CFL limit, minimum timestep, solver tolerance, positivity limiter, dry-depth numerical tolerance, arbitrary time shift and arbitrary output amplitude multiplier. Mesh and timestep are selected through verification/convergence.
+
+The porous-breakwater calibration literature is retained only for Future Work. Parameters such as \(\alpha_p\), \(\beta_p\), \(\phi\) and \(D_{50}\) may be introduced after an actual porous/rubble-mound barrier formulation is adopted \autocite{deljesus2012porous}.

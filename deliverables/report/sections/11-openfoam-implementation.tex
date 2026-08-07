@@ -1,0 +1,5 @@
+\section{OpenFOAM Implementation}
+
+The accepted backend is OpenFOAM Foundation 11, executed through the image \texttt{docker.io/openfoam/openfoam11-paraview510:11}. The repository generates OpenFOAM dictionaries, boundary data, wall-function policies, timestep policies and evidence summaries. The solver authority remains OpenFOAM; the repository authority is the case-generation and acceptance contract.
+
+The Local3D replay schema is 1.1.0. Legacy schema 1.0.0 remains retained for historical synthetic fixtures, while production cases use the \texttt{open\_ocean\_damped} boundary policy. The G6 accepted implementation includes no-defence and simple-rigid-barrier variants.

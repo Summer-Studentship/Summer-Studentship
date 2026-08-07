@@ -1,0 +1,55 @@
+{
+  "schema": {
+    "name": "tsunami.diagram_citation_mapping",
+    "version": "1.0.0"
+  },
+  "calibration-sequence.mmd": {
+    "source sensitivity": [
+      "saito2014dispersion",
+      "baba2017farfield",
+      "wei2013japan"
+    ],
+    "validation methodology": [
+      "mori2012nationwide",
+      "watanabe2022validation"
+    ]
+  },
+  "error-diagnosis-flow.mmd": {
+    "bathymetric fidelity": [
+      "noaa2022etopo",
+      "gebco2026grid"
+    ],
+    "turbulence-model sensitivity": [
+      "kozelkov2022turbulence",
+      "menter1994twoequation"
+    ]
+  },
+  "hybrid-system-architecture.mmd": {
+    "hybrid modelling": [
+      "fujima2002hybrid",
+      "takase2016hybrid",
+      "qin2018comparison"
+    ]
+  },
+  "observation-approval-flow.mmd": {
+    "observation provenance": [
+      "mori2012nationwide",
+      "fine2013japan"
+    ]
+  },
+  "calibration-iteration-flow.mmd": {
+    "diagnostics-led calibration": [
+      "wei2013japan",
+      "watanabe2022validation"
+    ]
+  },
+  "results-provenance-architecture.mmd": {
+    "future archive policy": [
+      "noaa2022etopo",
+      "usgs2011tohokuEvent"
+    ],
+    "porous future work": [
+      "deljesus2012porous"
+    ]
+  }
+}

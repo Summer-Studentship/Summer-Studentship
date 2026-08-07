@@ -1,0 +1,17 @@
+\section{G6 Verification and Model Closure}
+
+The frozen G6 baseline is:
+
+\begin{itemize}
+  \item commit: \texttt{319d347644f0fe057ca2faa66ca5e324e10b5a21};
+  \item OpenFOAM: Foundation 11;
+  \item image: \texttt{docker.io/openfoam/openfoam11-paraview510:11};
+  \item replay schema: 1.1.0;
+  \item production boundary mode: \texttt{open\_ocean\_damped};
+  \item accepted Regional2D source window: 245--545 s;
+  \item Local3D replay: 0--300 s.
+\end{itemize}
+
+The metric-scope correction is part of the accepted evidence. The historical full-history normal-momentum maximum is \(4.779893640553428~\si{\metre\squared\per\second}\) over 0--1800 s. The selected coupling-window normal-momentum maximum is \(4.2421347278949835~\si{\metre\squared\per\second}\) over 245--545 s. These are not equivalent quantities because they are computed over different temporal scopes.
+
+Both accepted Local3D cases reached 300 s. The no-defence case and the simple-rigid-barrier case passed runtime boundedness, final-time, boundary-data, VTK and probe/force evidence checks.

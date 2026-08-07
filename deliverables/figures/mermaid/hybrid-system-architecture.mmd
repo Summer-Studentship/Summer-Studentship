@@ -1,0 +1,8 @@
+flowchart LR
+  A[Finite-fault source] --> B[Seabed displacement]
+  B --> C[Regional2D NLSWE]
+  C --> D[Coupling interface]
+  D --> E[Replay boundary data]
+  E --> F[OpenFOAM Local3D URANS-VOF]
+  F --> G[Probes, fields, forces and moments]
+  G --> H[Evidence and provenance]
