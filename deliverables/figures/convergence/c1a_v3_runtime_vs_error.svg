@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+<title id="title">C1A-R3 Runtime vs Forcing Error</title>
+<desc id="desc">Waveform NRMSE against the next coarser Regional2D level plotted against full-run wall time.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="82" y="31" font-family="Arial, sans-serif" font-size="22" fill="#222">C1A-R3 Runtime vs Forcing Error</text>
+<line x1="82.00" y1="58" x2="82.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="82.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2081</text>
+<line x1="222.67" y1="58" x2="222.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="222.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2247</text>
+<line x1="363.33" y1="58" x2="363.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="363.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2413</text>
+<line x1="504.00" y1="58" x2="504.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="504.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2580</text>
+<line x1="644.67" y1="58" x2="644.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="644.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2746</text>
+<line x1="785.33" y1="58" x2="785.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="785.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">2912</text>
+<line x1="926.00" y1="58" x2="926.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="926.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">3078</text>
+<line x1="82" y1="464.00" x2="926" y2="464.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="468.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">5.58</text>
+<line x1="82" y1="382.80" x2="926" y2="382.80" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="386.80" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">21.2</text>
+<line x1="82" y1="301.60" x2="926" y2="301.60" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="305.60" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">36.7</text>
+<line x1="82" y1="220.40" x2="926" y2="220.40" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="224.40" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">52.3</text>
+<line x1="82" y1="139.20" x2="926" y2="139.20" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="143.20" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">67.9</text>
+<line x1="82" y1="58.00" x2="926" y2="58.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="62.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">83.4</text>
+<line x1="82" y1="464" x2="926" y2="464" stroke="#333" stroke-width="1.4"/>
+<line x1="82" y1="58" x2="82" y2="464" stroke="#333" stroke-width="1.4"/>
+<polyline fill="none" stroke="#4c78a8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,430.71 926.00,436.00"/>
+<polyline fill="none" stroke="#f58518" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,86.00 926.00,153.38"/>
+<polyline fill="none" stroke="#54a24b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,308.64 926.00,396.77"/>
+<line x1="102" y1="76" x2="130" y2="76" stroke="#4c78a8" stroke-width="4"/>
+<text x="140" y="81" font-family="Arial, sans-serif" font-size="14" fill="#222">eta</text>
+<line x1="102" y1="100" x2="130" y2="100" stroke="#f58518" stroke-width="4"/>
+<text x="140" y="105" font-family="Arial, sans-serif" font-size="14" fill="#222">qn</text>
+<line x1="102" y1="124" x2="130" y2="124" stroke="#54a24b" stroke-width="4"/>
+<text x="140" y="129" font-family="Arial, sans-serif" font-size="14" fill="#222">Qn</text>
+<text x="504.0" y="512" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Fine-level wall clock (s)</text>
+<text transform="translate(25 261.0) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Waveform NRMSE (%)</text>
+<text x="82" y="532" font-family="Arial, sans-serif" font-size="12" fill="#666">2% target exceeded by the h800 vs h900 medium-to-fine forcing comparison.</text>
+</svg>

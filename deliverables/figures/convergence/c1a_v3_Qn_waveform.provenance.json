@@ -1,0 +1,38 @@
+{
+  "common_support_point_count": 401,
+  "figure": "deliverables/figures/convergence/c1a_v3_Qn_waveform.svg",
+  "forcing_window_s": [
+    245.0,
+    545.0
+  ],
+  "generated_at_utc": "2026-08-07T14:27:29.621696Z",
+  "quantity": "Qn waveform",
+  "renderer": "stdlib_svg",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "section_width_m": 8000.0,
+  "source_inputs": {
+    "h1000": {
+      "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/spatial/L0/case",
+      "mesh_msh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+      "metadata_json_sha256": "aa9dd019d513715f5d61f12bda06e8b3dbb168ed064de069228e7bf9cf3df847",
+      "samples_csv_sha256": "6660e2c7aa0efb3df5aeef86a6a34189c70868246e61847e93b09917dd2b9c1b"
+    },
+    "h800": {
+      "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-fine-resolution-v3/spatial/h800/case",
+      "mesh_msh_sha256": "9f4ebc5417425299fb513093376225a7bdf850f27e4e27813228fb60f333e072",
+      "metadata_json_sha256": "3a8c6dbc0cf2833b64cc8ace4969bc9aaf52105eb343e4d54b2b4c92810106ba",
+      "samples_csv_sha256": "5c33457ac9d98cbc5f1de0279a1521a2542075cebe2ec2476c8687b15101f4e0"
+    },
+    "h900": {
+      "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-fine-resolution-v3/spatial/h900/case",
+      "mesh_msh_sha256": "8e8d9397b73253c50f613b6014f1a387260ee232b32e824c3cdf9083eed30125",
+      "metadata_json_sha256": "ec8d4a4470dc4e545c9188cf8b8e1aced3f8e6d35f33b30b4d812658ffd3f8ae",
+      "samples_csv_sha256": "86667734a859d0e7f8a7a4f56ae6a82cc36700185698c6440db705a51d4bb447"
+    }
+  },
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-fine-resolution-v3/fine_resolution_v3_metrics.json",
+  "study_id": "regional-spatial-fine-resolution-v3"
+}

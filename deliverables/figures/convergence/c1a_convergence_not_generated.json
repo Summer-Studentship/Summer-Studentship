@@ -1,12 +1,12 @@
 {
-  "classification": "not_spatially_qualified_resource_aware",
-  "figure": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.svg",
-  "generated_at_utc": "2026-08-07T12:24:29.925776Z",
-  "provenance": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.provenance.json",
+  "classification": "not_spatially_qualified",
+  "generated_at_utc": "2026-08-07T14:27:29.628090Z",
+  "legacy_resource_aware_figure": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.svg",
+  "manifest": "deliverables/figures/convergence/c1a_v3_figure_manifest.json",
   "schema": {
     "name": "tsunami.c1a_convergence_figure_provenance",
-    "version": "1.1.0"
+    "version": "1.2.0"
   },
-  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/spatial_convergence_metrics.json",
-  "status": "generated_resource_aware_spatial_figure"
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-fine-resolution-v3/fine_resolution_v3_metrics.json",
+  "status": "generated_fine_resolution_v3_figures"
 }

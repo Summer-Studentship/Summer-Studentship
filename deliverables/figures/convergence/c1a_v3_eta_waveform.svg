@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+<title id="title">C1A-R3 eta Waveform Convergence</title>
+<desc id="desc">Maximum signed free-surface perturbation over the coupling section.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="82" y="31" font-family="Arial, sans-serif" font-size="22" fill="#222">C1A-R3 eta Waveform Convergence</text>
+<line x1="82.00" y1="58" x2="82.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="82.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">245</text>
+<line x1="222.67" y1="58" x2="222.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="222.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">295</text>
+<line x1="363.33" y1="58" x2="363.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="363.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">345</text>
+<line x1="504.00" y1="58" x2="504.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="504.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">395</text>
+<line x1="644.67" y1="58" x2="644.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="644.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">445</text>
+<line x1="785.33" y1="58" x2="785.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="785.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">495</text>
+<line x1="926.00" y1="58" x2="926.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="926.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">545</text>
+<line x1="82" y1="464.00" x2="926" y2="464.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="468.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.6</text>
+<line x1="82" y1="382.80" x2="926" y2="382.80" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="386.80" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.68</text>
+<line x1="82" y1="301.60" x2="926" y2="301.60" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="305.60" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.76</text>
+<line x1="82" y1="220.40" x2="926" y2="220.40" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="224.40" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.83</text>
+<line x1="82" y1="139.20" x2="926" y2="139.20" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="143.20" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.91</text>
+<line x1="82" y1="58.00" x2="926" y2="58.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="62.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.98</text>
+<line x1="82" y1="464" x2="926" y2="464" stroke="#333" stroke-width="1.4"/>
+<line x1="82" y1="58" x2="82" y2="464" stroke="#333" stroke-width="1.4"/>
+<polyline fill="none" stroke="#4c78a8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,436.00 96.07,423.12 110.13,410.89 124.20,399.28 138.27,388.24 152.33,377.74 166.40,367.76 180.47,358.26 194.53,349.21 208.60,340.57 222.67,332.32 236.73,324.43 250.80,316.87 264.87,309.62 278.93,302.65 293.00,295.96 307.07,289.51 321.13,283.30 335.20,277.32 349.27,271.54 363.33,265.96 377.40,260.57 391.47,255.37 405.53,250.35 419.60,245.52 433.67,240.86 447.73,236.38 461.80,232.08 475.87,227.97 489.93,224.03 504.00,220.28 518.07,216.71 532.13,213.34 546.20,210.16 560.27,207.17 574.33,204.38 588.40,201.80 602.47,199.42 616.53,197.25 630.60,195.28 644.67,193.52 658.73,191.97 672.80,190.63 686.87,189.50 700.93,188.57 715.00,187.85 729.07,187.33 743.13,187.01 757.20,186.88 771.27,186.94 785.33,187.19 799.40,187.62 813.47,188.21 827.53,188.97 841.60,189.89 855.67,190.96 869.73,192.17 883.80,193.53 897.87,195.01 911.93,196.61 926.00,198.32"/>
+<polyline fill="none" stroke="#f58518" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,410.33 96.07,407.52 110.13,404.68 124.20,401.82 138.27,398.93 152.33,396.00 166.40,393.02 180.47,389.99 194.53,386.89 208.60,383.74 222.67,380.52 236.73,377.23 250.80,373.87 264.87,370.44 278.93,366.13 293.00,361.68 307.07,357.16 321.13,348.23 335.20,339.39 349.27,330.87 363.33,322.65 377.40,314.73 391.47,307.09 405.53,299.72 419.60,292.62 433.67,285.79 447.73,279.23 461.80,272.93 475.87,262.56 489.93,252.64 504.00,243.20 518.07,234.24 532.13,225.74 546.20,217.70 560.27,210.11 574.33,202.95 588.40,196.22 602.47,189.90 616.53,184.00 630.60,178.49 644.67,173.37 658.73,168.64 672.80,164.29 686.87,160.30 700.93,156.68 715.00,150.57 729.07,143.26 743.13,136.41 757.20,130.01 771.27,124.07 785.33,118.57 799.40,113.50 813.47,108.85 827.53,104.63 841.60,100.81 855.67,97.39 869.73,94.36 883.80,91.72 897.87,89.45 911.93,87.55 926.00,86.00"/>
+<polyline fill="none" stroke="#54a24b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,399.96 96.07,386.24 110.13,373.40 124.20,361.40 138.27,350.18 152.33,339.70 166.40,329.90 180.47,320.73 194.53,312.14 208.60,304.07 222.67,296.47 236.73,289.31 250.80,282.54 264.87,276.11 278.93,270.00 293.00,264.16 307.07,258.58 321.13,253.23 335.20,248.08 349.27,243.12 363.33,238.32 377.40,233.69 391.47,229.20 405.53,224.86 419.60,220.66 433.67,216.59 447.73,212.67 461.80,208.90 475.87,205.27 489.93,201.80 504.00,198.49 518.07,195.35 532.13,192.40 546.20,189.63 560.27,187.06 574.33,184.69 588.40,182.54 602.47,180.61 616.53,178.90 630.60,177.43 644.67,176.19 658.73,175.19 672.80,174.44 686.87,173.92 700.93,173.65 715.00,173.62 729.07,173.83 743.13,174.28 757.20,174.95 771.27,175.85 785.33,176.96 799.40,178.28 813.47,179.81 827.53,181.53 841.60,183.43 855.67,185.50 869.73,187.74 883.80,190.12 897.87,192.64 911.93,195.29 926.00,190.30"/>
+<line x1="102" y1="76" x2="130" y2="76" stroke="#4c78a8" stroke-width="4"/>
+<text x="140" y="81" font-family="Arial, sans-serif" font-size="14" fill="#222">h1000</text>
+<line x1="102" y1="100" x2="130" y2="100" stroke="#f58518" stroke-width="4"/>
+<text x="140" y="105" font-family="Arial, sans-serif" font-size="14" fill="#222">h900</text>
+<line x1="102" y1="124" x2="130" y2="124" stroke="#54a24b" stroke-width="4"/>
+<text x="140" y="129" font-family="Arial, sans-serif" font-size="14" fill="#222">h800</text>
+<text x="504.0" y="512" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Time since event start (s)</text>
+<text transform="translate(25 261.0) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">eta perturbation (m)</text>
+<text x="82" y="532" font-family="Arial, sans-serif" font-size="12" fill="#666">Classification: not_spatially_qualified; formal window 245-545 s.</text>
+</svg>

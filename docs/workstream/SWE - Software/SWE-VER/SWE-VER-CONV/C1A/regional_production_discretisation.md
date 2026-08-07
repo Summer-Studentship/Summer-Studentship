@@ -1,13 +1,15 @@
-# C1A-R2 Regional2D Production Discretisation Decision
+# C1A-R3 Regional2D Production Discretisation Decision
 
 Status: not selected.
 
-C1A-R2 diagnosed the abnormal C1A-R1 mesh scaling and completed a resource-aware Regional2D spatial attempt using h2000, h1400, and the reused h1000 fine run. The original L1 anomaly was caused by mixing a 750 m terrain request with a 500 m mesh size; the observed active-cell ratio was 3.85124, close to the 1000/500 mesh-size area ratio of 4, not the requested 1000/750 spacing ratio of 1.77778. The physical corridor/domain remained invariant.
+C1A-R3 corrected the fine-mesh construction path by separating terrain source resolution, terrain processing resolution, solver mesh target size, and actual characteristic mesh size. The previous nominal 750 m anomaly was traced to an explicit external profile with `profile.spacing_m = 750.0` and `profile.mesh_size_m = 500.0`; it was not Gmsh rounding or snapping.
 
-The resource-aware ladder was h2000, h1400, and h1000. h2000 and h1400 completed 600 s solves in 172.468 s and 319.642 s, respectively; h1000 reused the prior completed L0 evidence after mesh, source, case-spec, and binary hash checks. h1800, h1600, and h1500 failed the Regional2D C++ geometry preflight with `r2d.preflight.terrain_support_missing` and were not used as convergence levels.
+The new study identity is `regional-spatial-fine-resolution-v3`. Corrected mesh-only candidates preserved the requested solver target: h900, h850, h800, h750, h700, h650, and h600. The h750 candidate produced 4008 active cells, close to the expected 4302 active cells from h1000 scaling and far from the previous 9320-cell 500 m solve.
 
-The fixed 245-545 s forcing-window comparison did not qualify spatial convergence. For h1400 versus h1000, eta NRMSE was 0.220214, qn NRMSE was 0.387176, and the three-support section mean normal-momentum NRMSE was 0.42437; all exceed the recorded qualification thresholds. Richardson/GCI was computable only for peak eta, while qn and section mean qn were non-monotone.
+The completed spatial ladder is h1000 reused from C1A-R1 plus new h900 and h800 full 600 s Regional2D runs. Actual characteristic mesh sizes are 638.487 m, 595.928 m, and 514.563 m. The h900 and h800 runs completed in 2080.960 s and 3078.419 s.
 
-No temporal convergence was run because the spatial gate did not pass. No physical calibration was performed. No observational data were used. No Local3D convergence was started.
+Spatial convergence did not qualify. For the medium-to-fine h900 to h800 pair, eta waveform NRMSE is 0.109513, qn waveform NRMSE is 0.651349, and integrated Qn waveform NRMSE is 0.184731; all exceed the 2% forcing-waveform target. The dominant residual mechanisms are bathymetric_discretisation_dominated, phase_timing_component, distributed_forcing_waveform_unresolved.
+
+No production Regional2D mesh or timestep policy is selected. Temporal convergence remains gated. No observations were used, no physics calibration was performed, and no Local3D convergence was started.
 
 ETOPO caveat: these mesh changes measure discretisation behaviour of the interpolated ETOPO-derived terrain representation; they do not add bathymetric information beyond the source product.

@@ -1,0 +1,36 @@
+{
+  "classification": "not_spatially_qualified",
+  "generated_at_utc": "2026-08-07T14:27:29.628024Z",
+  "outputs": [
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_eta_waveform.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_eta_waveform.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_qn_waveform.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_qn_waveform.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_Qn_waveform.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_Qn_waveform.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_section_profile_principal_crest.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_section_profile_principal_crest.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_bed_profile.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_bed_profile.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_v3_runtime_vs_error.svg",
+      "provenance": "deliverables/figures/convergence/c1a_v3_runtime_vs_error.provenance.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_v3_figure_manifest",
+    "version": "1.0.0"
+  },
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-fine-resolution-v3/fine_resolution_v3_metrics.json",
+  "study_id": "regional-spatial-fine-resolution-v3"
+}
