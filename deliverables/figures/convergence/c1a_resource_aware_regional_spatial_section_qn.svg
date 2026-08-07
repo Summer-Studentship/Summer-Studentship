@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+<title id="title">C1A Resource-Aware Regional2D Spatial Check</title>
+<desc id="desc">Mean normal momentum change over the fixed 245 to 545 second forcing window for h2000, h1400 and reused h1000 Regional2D levels.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="80" y="30" font-family="Arial, sans-serif" font-size="22" fill="#222">C1A Resource-Aware Regional2D Spatial Check</text>
+<line x1="80.00" y1="52" x2="80.00" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="80.00" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">245</text>
+<line x1="221.33" y1="52" x2="221.33" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="221.33" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">295</text>
+<line x1="362.67" y1="52" x2="362.67" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="362.67" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">345</text>
+<line x1="504.00" y1="52" x2="504.00" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="504.00" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">395</text>
+<line x1="645.33" y1="52" x2="645.33" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="645.33" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">445</text>
+<line x1="786.67" y1="52" x2="786.67" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="786.67" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">495</text>
+<line x1="928.00" y1="52" x2="928.00" y2="468" stroke="#dddddd" stroke-width="1"/>
+<text x="928.00" y="492" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">545</text>
+<line x1="80" y1="468.00" x2="928" y2="468.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="472.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.2</text>
+<line x1="80" y1="384.80" x2="928" y2="384.80" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="388.80" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">0.8</text>
+<line x1="80" y1="301.60" x2="928" y2="301.60" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="305.60" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">1.4</text>
+<line x1="80" y1="218.40" x2="928" y2="218.40" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="222.40" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">2.0</text>
+<line x1="80" y1="135.20" x2="928" y2="135.20" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="139.20" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">2.6</text>
+<line x1="80" y1="52.00" x2="928" y2="52.00" stroke="#e6e6e6" stroke-width="1"/>
+<text x="70" y="56.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">3.2</text>
+<line x1="80" y1="468" x2="928" y2="468" stroke="#333" stroke-width="1.4"/>
+<line x1="80" y1="52" x2="80" y2="468" stroke="#333" stroke-width="1.4"/>
+<polyline fill="none" stroke="#4c78a8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="80.00,271.19 94.13,268.28 108.27,265.28 122.40,262.18 136.53,258.99 150.67,255.70 164.80,252.33 178.93,248.87 193.07,245.32 207.20,241.70 221.33,238.01 235.47,234.25 249.60,230.43 263.73,226.56 277.87,222.63 292.00,218.67 306.13,214.66 320.27,210.63 334.40,206.57 348.53,202.50 362.67,198.42 376.80,194.34 390.93,190.26 405.07,186.19 419.20,182.15 433.33,178.13 447.47,174.14 461.60,170.19 475.73,166.29 489.87,162.44 504.00,158.65 518.13,154.92 532.27,151.27 546.40,147.69 560.53,144.19 574.67,140.77 588.80,137.45 602.93,134.22 617.07,131.09 631.20,128.06 645.33,125.14 659.47,122.32 673.60,119.62 687.73,117.03 701.87,114.56 716.00,112.21 730.13,109.98 744.27,107.87 758.40,105.88 772.53,104.01 786.67,102.26 800.80,100.64 814.93,99.14 829.07,97.77 843.20,96.52 857.33,95.38 871.47,94.37 885.60,93.48 899.73,92.70 913.87,92.04 928.00,91.49"/>
+<polyline fill="none" stroke="#f58518" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="80.00,439.31 94.13,438.15 108.27,436.85 122.40,435.41 136.53,433.83 150.67,432.09 164.80,430.20 178.93,428.16 193.07,425.95 207.20,423.59 221.33,421.06 235.47,418.38 249.60,415.55 263.73,412.56 277.87,409.42 292.00,406.14 306.13,402.71 320.27,399.16 334.40,395.47 348.53,391.67 362.67,387.75 376.80,383.73 390.93,379.61 405.07,375.40 419.20,371.11 433.33,366.75 447.47,362.33 461.60,357.85 475.73,353.34 489.87,348.78 504.00,344.20 518.13,339.61 532.27,335.00 546.40,330.40 560.53,325.80 574.67,321.22 588.80,316.67 602.93,312.14 617.07,307.66 631.20,303.22 645.33,298.84 659.47,294.51 673.60,290.26 687.73,286.07 701.87,281.96 716.00,277.93 730.13,273.98 744.27,270.13 758.40,266.37 772.53,262.70 786.67,259.14 800.80,255.68 814.93,252.33 829.07,249.08 843.20,245.95 857.33,242.93 871.47,240.02 885.60,237.22 899.73,234.54 913.87,231.97 928.00,229.52"/>
+<polyline fill="none" stroke="#54a24b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="80.00,349.71 94.13,348.72 108.27,347.62 122.40,346.41 136.53,345.04 150.67,343.52 164.80,341.83 178.93,339.94 193.07,337.85 207.20,335.55 221.33,333.02 235.47,330.26 249.60,327.27 263.73,324.03 277.87,320.55 292.00,316.82 306.13,312.86 320.27,308.66 334.40,304.23 348.53,299.57 362.67,294.70 376.80,289.62 390.93,284.35 405.07,278.91 419.20,273.29 433.33,267.53 447.47,261.63 461.60,255.61 475.73,249.49 489.87,243.28 504.00,237.00 518.13,230.67 532.27,224.30 546.40,217.91 560.53,211.52 574.67,205.13 588.80,198.78 602.93,192.47 617.07,186.21 631.20,180.01 645.33,173.90 659.47,167.88 673.60,161.96 687.73,156.15 701.87,150.46 716.00,144.90 730.13,139.47 744.27,134.20 758.40,129.07 772.53,124.10 786.67,119.29 800.80,114.64 814.93,110.17 829.07,105.86 843.20,101.73 857.33,97.78 871.47,94.00 885.60,90.41 899.73,86.99 913.87,83.75 928.00,80.69"/>
+<line x1="98" y1="70" x2="126" y2="70" stroke="#4c78a8" stroke-width="4"/>
+<text x="136" y="75" font-family="Arial, sans-serif" font-size="14" fill="#222">h2000 coarse</text>
+<line x1="98" y1="94" x2="126" y2="94" stroke="#f58518" stroke-width="4"/>
+<text x="136" y="99" font-family="Arial, sans-serif" font-size="14" fill="#222">h1400 medium</text>
+<line x1="98" y1="118" x2="126" y2="118" stroke="#54a24b" stroke-width="4"/>
+<text x="136" y="123" font-family="Arial, sans-serif" font-size="14" fill="#222">h1000 fine reused</text>
+<text x="504.0" y="516" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Time since event start (s)</text>
+<text transform="translate(24 260.0) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Mean normal momentum change (m^2/s)</text>
+<text x="80" y="532" font-family="Arial, sans-serif" font-size="12" fill="#666">Classification: not_spatially_qualified_resource_aware</text>
+</svg>

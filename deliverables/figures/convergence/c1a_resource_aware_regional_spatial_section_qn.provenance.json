@@ -1,0 +1,22 @@
+{
+  "classification": "not_spatially_qualified_resource_aware",
+  "figure": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.svg",
+  "forcing_window_s": [
+    245.0,
+    545.0
+  ],
+  "generated_at_utc": "2026-08-07T12:23:09.915123Z",
+  "levels": [
+    "h2000",
+    "h1400",
+    "h1000"
+  ],
+  "quantity": "section_mean_normal_momentum_change_m2_per_s",
+  "renderer": "stdlib_svg",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_external_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2",
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/spatial_convergence_metrics.json"
+}

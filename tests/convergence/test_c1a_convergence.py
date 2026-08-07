@@ -8,8 +8,10 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/verification/convergence"))
+sys.path.insert(0, str(ROOT / "tools/cases"))
 
 import c1a_convergence as c1a
+import kamaishi_delivery as kd
 
 
 class C1AConvergenceTests(unittest.TestCase):
@@ -60,6 +62,68 @@ class C1AConvergenceTests(unittest.TestCase):
         self.assertEqual(result["status"], "computed")
         self.assertGreater(result["observed_order"], 0.0)
         self.assertGreater(result["gci21_percent"], 0.0)
+
+    def test_corridor_domain_is_invariant_to_grid_resolution(self):
+        spec = {
+            "corridor": {
+                "width_m": 8000.0,
+                "source_side_pre_extent_m": 15000.0,
+                "inland_extent_m": 500.0,
+                "offshore_sponge_width_m": 10000.0,
+                "side_sponge_width_m": 1000.0,
+            }
+        }
+        trajectory = kd.Trajectory(
+            epicentre_wgs84=(142.373, 38.297),
+            proxy_wgs84=(141.8858, 39.2757),
+            epicentre=kd.Point(1000.0, 2000.0),
+            proxy=kd.Point(9000.0, 12000.0),
+            selected=kd.Point(11000.0, 2000.0),
+            selected_wgs84=(141.9207, 39.2065),
+            unit=kd.Point(1.0, 0.0),
+            left=kd.Point(0.0, 1.0),
+            distance_m=10000.0,
+            proxy_distance_to_interface_m=2500.0,
+            bearing_degrees=90.0,
+            selected_bed_elevation_m=-8.0,
+            selected_depth_m=8.0,
+            selection_fallback=True,
+            selection_reason="synthetic unit-test trajectory",
+            cross_section_sample_count=8,
+            cross_section_min_depth_m=5.0,
+            cross_section_max_depth_m=50.0,
+            cross_section_min_bed_elevation_m=-50.0,
+            cross_section_max_bed_elevation_m=-5.0,
+        )
+
+        def grid(spacing_m: float) -> kd.Grid:
+            return kd.Grid(
+                width=int(32000 / spacing_m),
+                height=int(8000 / spacing_m),
+                spacing_m=spacing_m,
+                xi_min_m=-15000.0,
+                xi_max_m=10500.0,
+                eta_bottom_m=-4000.0,
+                eta_top_m=4000.0,
+                affine=(0.0, spacing_m, 0.0, 0.0, 0.0, spacing_m),
+                extent={"minimum_x": 0.0, "minimum_y": 0.0, "maximum_x": 1.0, "maximum_y": 1.0},
+            )
+
+        coarse = self.tmp / "coarse"
+        fine = self.tmp / "fine"
+        kd.write_corridor_record(coarse, trajectory, spec, grid(2000.0), "2026-08-07T00:00:00Z")
+        kd.write_corridor_record(fine, trajectory, spec, grid(1000.0), "2026-08-07T00:00:00Z")
+
+        coarse_record = json.loads((coarse / "manifests/corridors/tohoku-kamaishi-centreline.json").read_text(encoding="utf-8"))
+        fine_record = json.loads((fine / "manifests/corridors/tohoku-kamaishi-centreline.json").read_text(encoding="utf-8"))
+        for key in ("area_m2", "perimeter_m", "extent", "polygon", "local_basis", "stations"):
+            self.assertEqual(coarse_record[key], fine_record[key])
+
+        coarse_evidence = json.loads((coarse / "manifests/corridors/kamaishi-delivery-corridor-evidence.json").read_text(encoding="utf-8"))
+        fine_evidence = json.loads((fine / "manifests/corridors/kamaishi-delivery-corridor-evidence.json").read_text(encoding="utf-8"))
+        self.assertEqual(coarse_evidence["corridor"], fine_evidence["corridor"])
+        self.assertEqual(coarse_evidence["basis"], fine_evidence["basis"])
+        self.assertNotEqual(coarse_evidence["grid"]["profile"], fine_evidence["grid"]["profile"])
 
 
 if __name__ == "__main__":

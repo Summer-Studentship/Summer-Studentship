@@ -1,49 +1,390 @@
 {
-  "schema": {
-    "name": "tsunami.c1a_regional_convergence_summary",
-    "version": "1.0.0"
-  },
-  "generated_at_utc": "2026-08-07T11:36:00Z",
-  "repository_parent": "d01631d0d36ee89bbce13f194811de364be02de3",
-  "model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
   "c1a_harness_commit": "991d63a",
-  "external_summary": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/regional_convergence_summary.json",
-  "spatial": {
-    "classification": "resource_limited",
-    "valid_level_count": 1,
-    "valid_levels": [
-      "L0"
+  "candidate_scan": {
+    "candidates": [
+      {
+        "active_cells": 2420,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 638.4873841390533,
+        "level_id": "h1000",
+        "mesh_size_m": 1000,
+        "requested_spacing_m": 1000,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1000.0
+      },
+      {
+        "active_cells": 1952,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 710.9189598412804,
+        "level_id": "h1100",
+        "mesh_size_m": 1100,
+        "requested_spacing_m": 1100,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1100.0
+      },
+      {
+        "active_cells": 1688,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 764.4934737312253,
+        "level_id": "h1200",
+        "mesh_size_m": 1200,
+        "requested_spacing_m": 1200,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1200.0
+      },
+      {
+        "active_cells": 1526,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 804.0494082504482,
+        "level_id": "h1250",
+        "mesh_size_m": 1250,
+        "requested_spacing_m": 1250,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1250.0
+      },
+      {
+        "active_cells": 1212,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 902.2121959966825,
+        "level_id": "h1400",
+        "mesh_size_m": 1400,
+        "requested_spacing_m": 1400,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1400.0
+      },
+      {
+        "active_cells": 1098,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 947.8919464550405,
+        "level_id": "h1500",
+        "mesh_size_m": 1500,
+        "requested_spacing_m": 1500,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1500.0
+      },
+      {
+        "active_cells": 946,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 1021.2085335582066,
+        "level_id": "h1600",
+        "mesh_size_m": 1600,
+        "requested_spacing_m": 1600,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1600.0
+      },
+      {
+        "active_cells": 792,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 1116.0853632167561,
+        "level_id": "h1800",
+        "mesh_size_m": 1800,
+        "requested_spacing_m": 1800,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 1800.0
+      },
+      {
+        "active_cells": 644,
+        "domain_invariant_to_scan_base": true,
+        "h_area_common_corridor_m": 1237.7047845399395,
+        "level_id": "h2000",
+        "mesh_size_m": 2000,
+        "requested_spacing_m": 2000,
+        "status": "preflight_passed",
+        "terrain_spacing_m": 2000.0
+      }
     ],
-    "resource_limited_levels": [
-      "L1"
-    ],
-    "not_started_levels": [
-      "L2",
-      "candidate-250m"
-    ],
-    "principal_reason": "L1 reached only 3.88489347290889 s of the 600 s horizon before being stopped as resource-limited; its observed mean timestep was 0.026978426895200622 s, projecting to hours for one level.",
-    "pairwise_metrics_available": false,
-    "richardson_gci_status": "not_applicable_fewer_than_three_valid_levels"
+    "external_record": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/candidate_scan/candidate_scan.json"
   },
-  "temporal": {
-    "status": "not_started",
-    "reason": "Temporal convergence is gated until Regional spatial convergence has three valid levels and a defensible selected mesh."
+  "external_summary": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/spatial_convergence_metrics.json",
+  "fabricated_results": false,
+  "fine_level_reuse_proof": {
+    "binary_sha256": "39bcb8ce95c458b4527ea070b125ec7351c97c866f283322b81134afd7593038",
+    "binary_sha256_matches_h1400_h2000": true,
+    "case_spec_sha256": "e5268fdd4da9562e70afbbdfe9b7119a43d6212874d6a809ff09263ad3430cd5",
+    "earthquake_producer_sha256": "12a2ed0ce0897f9275f24ed6aa09253ee91fe6b2e30edf90f9b89e3e59ab0209",
+    "final_time_s": 600.0,
+    "fine_level": "h1000",
+    "finite_fault_source_sha256": "9632217695585cc562b4ac87f64b9ceb6c35a9fd30e050271628a472510228bb",
+    "mesh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+    "mesh_sha256_matches_candidate_scan": true,
+    "reused_from": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/spatial/L0",
+    "terrain_source_sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+  },
+  "generated_at_utc": "2026-08-07T12:24:29.925304Z",
+  "local3d_not_started": true,
+  "mesh_scaling_diagnosis": {
+    "cause": "L1 used mesh_size_m=500 while L0 used mesh_size_m=1000; active-cell ratio 3.85 is close to the mesh-size area ratio 4.0, not the requested terrain-spacing ratio 1.78.",
+    "domain_changed": false,
+    "domain_invariance": {
+      "bearing_difference_degrees": 0.0,
+      "corridor_area_relative_difference": 0.0,
+      "corridor_length_difference_m": 0.0,
+      "corridor_width_difference_m": 0.0,
+      "mesh_bbox_max_abs_difference_m": 1.3017295552417636
+    },
+    "expected_mesh_size_ratio_1000_to_500": 4.0,
+    "expected_spacing_ratio_1000_to_750": 1.7777777777777777,
+    "external_record": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/mesh_scaling_diagnosis.json",
+    "mean_dt_ratio_L0_over_L1": 3.7011136731903926,
+    "observed_active_cell_ratio_L1_over_L0": 3.8512396694214877,
+    "work_proxy_ratio_L1_over_L0": 14.253875799229114
+  },
+  "model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+  "no_calibration_performed": true,
+  "no_observations_used": true,
+  "physical_parameter_invariance": {
+    "domain_invariant_across_candidate_scan": true,
+    "domain_invariant_across_selected_ladder": true
+  },
+  "pilots": {
+    "failed_preflight_terrain_support_missing": [
+      "h1800",
+      "h1600",
+      "h1500"
+    ],
+    "passed": [
+      "h2000",
+      "h1400"
+    ],
+    "pilot_records": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/pilots"
   },
   "production_discretisation": {
-    "selected": false,
-    "reason": "No Regional2D production mesh or timestep policy is selected by C1A-R1 because spatial convergence remains unresolved."
+    "reason": "Resource-aware Regional2D spatial convergence did not qualify; no production mesh/timestep is selected and temporal convergence remains gated.",
+    "selected": false
+  },
+  "repository_parent": "d01631d0d36ee89bbce13f194811de364be02de3",
+  "schema": {
+    "name": "tsunami.c1a_regional_convergence_summary",
+    "version": "1.1.0"
   },
   "source_window_identity": {
     "fixed_source_window_s": [
       245.0,
       545.0
     ],
-    "expected_output_times": 61,
-    "l0_fixed_window_sample_rows": 488
+    "fixed_support_offsets_m": {
+      "q25": -2000.0,
+      "q50": 0.0,
+      "q75": 2000.0
+    },
+    "sample_rows_per_level": {
+      "h1000": 183,
+      "h1400": 183,
+      "h2000": 183
+    }
   },
-  "physical_parameter_invariance": {
-    "L0": true,
-    "L1": "not_applicable_partial_run"
+  "spatial": {
+    "classification": "not_spatially_qualified_resource_aware",
+    "comparisons": {
+      "h1400_vs_h1000": {
+        "eta_nrmse": 0.2202143796463868,
+        "peak_eta_relative_change": 0.011037729029821154,
+        "peak_qn_relative_change": 0.43638535718645494,
+        "qn_nrmse": 0.38717614517697835,
+        "section_mean_qn_nrmse": 0.4243704422342331,
+        "section_peak_relative_change": 0.35591145884721626
+      },
+      "h2000_vs_h1000": {
+        "eta_nrmse": 0.14650426998304664,
+        "peak_eta_relative_change": 0.07603898896179265,
+        "peak_qn_relative_change": 0.21464775715335813,
+        "qn_nrmse": 0.2563076059176433,
+        "section_mean_qn_nrmse": 0.2639803644489249,
+        "section_peak_relative_change": 0.025831838316303684
+      },
+      "h2000_vs_h1400": {
+        "eta_nrmse": 0.11783520172757503,
+        "peak_eta_relative_change": 0.06572673380977902,
+        "peak_qn_relative_change": 0.3934205806403295,
+        "qn_nrmse": 0.5718827072639888,
+        "section_mean_qn_nrmse": 0.8312689225765628,
+        "section_peak_relative_change": 0.5124755362673261
+      }
+    },
+    "figure": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.svg",
+    "levels": {
+      "h1000": {
+        "active_cells": 2420,
+        "qoi": {
+          "fixed_support_count": 3,
+          "forcing_window_s": [
+            245.0,
+            545.0
+          ],
+          "peak_eta_abs_m": 0.8627431707728945,
+          "peak_eta_perturbation_m": 0.8627431707728945,
+          "peak_eta_time_s": 485.0,
+          "peak_qn_abs_m2_per_s": 4.2421347278949835,
+          "peak_qn_change_m2_per_s": 4.2421347278949835,
+          "peak_qn_time_s": 545.0,
+          "peak_section_mean_qn_abs_m2_per_s": 2.960621653826108,
+          "peak_section_mean_qn_change_m2_per_s": 2.960621653826108,
+          "peak_section_mean_qn_time_s": 545.0,
+          "sample_rows_in_window": 183
+        },
+        "timestep": {
+          "diagnostics_rows": 6009,
+          "maximum_dt_s": 0.1,
+          "mean_dt_s": 0.09985022466299447,
+          "median_dt_s": 0.1,
+          "minimum_dt_s": 1.1368683772161603e-12,
+          "rms_dt_s": 0.09992508426965674,
+          "step_count": 6009
+        },
+        "wall_clock_s": null
+      },
+      "h1400": {
+        "active_cells": 1212,
+        "qoi": {
+          "fixed_support_count": 3,
+          "forcing_window_s": [
+            245.0,
+            545.0
+          ],
+          "peak_eta_abs_m": 0.8532204454315746,
+          "peak_eta_perturbation_m": 0.8532204454315746,
+          "peak_eta_time_s": 545.0,
+          "peak_qn_abs_m2_per_s": 2.3909292494294663,
+          "peak_qn_change_m2_per_s": 2.3909292494294663,
+          "peak_qn_time_s": 545.0,
+          "peak_section_mean_qn_abs_m2_per_s": 1.9069024819181999,
+          "peak_section_mean_qn_change_m2_per_s": 1.9069024819181999,
+          "peak_section_mean_qn_time_s": 545.0,
+          "sample_rows_in_window": 183
+        },
+        "timestep": {
+          "diagnostics_rows": 6009,
+          "maximum_dt_s": 0.1,
+          "mean_dt_s": 0.09985022466299447,
+          "median_dt_s": 0.1,
+          "minimum_dt_s": 1.1368683772161603e-12,
+          "rms_dt_s": 0.09992508426965674,
+          "step_count": 6009
+        },
+        "wall_clock_s": 319.6422773089871
+      },
+      "h2000": {
+        "active_cells": 644,
+        "qoi": {
+          "fixed_support_count": 3,
+          "forcing_window_s": [
+            245.0,
+            545.0
+          ],
+          "peak_eta_abs_m": 0.7971410523336324,
+          "peak_eta_perturbation_m": 0.7971410523336324,
+          "peak_eta_time_s": 545.0,
+          "peak_qn_abs_m2_per_s": 3.331570023009954,
+          "peak_qn_change_m2_per_s": 3.331570023009954,
+          "peak_qn_time_s": 535.0,
+          "peak_section_mean_qn_abs_m2_per_s": 2.8841433539487245,
+          "peak_section_mean_qn_change_m2_per_s": 2.8841433539487245,
+          "peak_section_mean_qn_time_s": 545.0,
+          "sample_rows_in_window": 183
+        },
+        "timestep": {
+          "diagnostics_rows": 6009,
+          "maximum_dt_s": 0.1,
+          "mean_dt_s": 0.09985022466299447,
+          "median_dt_s": 0.1,
+          "minimum_dt_s": 1.1368683772161603e-12,
+          "rms_dt_s": 0.09992508426965674,
+          "step_count": 6009
+        },
+        "wall_clock_s": 172.4682194460038
+      }
+    },
+    "qualification_reason": [
+      "h1400_vs_h1000 eta NRMSE exceeds 0.10",
+      "h1400_vs_h1000 qn NRMSE exceeds 0.15",
+      "h1400_vs_h1000 section mean qn NRMSE exceeds 0.15"
+    ],
+    "qualification_thresholds": {
+      "eta_nrmse_max": 0.1,
+      "qn_nrmse_max": 0.15,
+      "required_richardson_status": "computed",
+      "section_mean_qn_nrmse_max": 0.15
+    },
+    "richardson_gci": {
+      "peak_eta_abs_m": {
+        "difference_ratio": 5.889006674865321,
+        "gci21_percent": 0.2230768044504527,
+        "h_fine_to_coarse_m": [
+          638.4873841390533,
+          902.2121959966825,
+          1237.7047845399395
+        ],
+        "observed_order": 5.703540827117854,
+        "richardson_extrapolated": 0.8642828346896743,
+        "status": "computed",
+        "values_fine_to_coarse": [
+          0.8627431707728945,
+          0.8532204454315746,
+          0.7971410523336324
+        ]
+      },
+      "peak_qn_abs_m2_per_s": {
+        "h_fine_to_coarse_m": [
+          638.4873841390533,
+          902.2121959966825,
+          1237.7047845399395
+        ],
+        "status": "not_computed_non_monotone_or_zero_difference",
+        "values_fine_to_coarse": [
+          4.2421347278949835,
+          2.3909292494294663,
+          3.331570023009954
+        ]
+      },
+      "peak_section_mean_qn_abs_m2_per_s": {
+        "h_fine_to_coarse_m": [
+          638.4873841390533,
+          902.2121959966825,
+          1237.7047845399395
+        ],
+        "status": "not_computed_non_monotone_or_zero_difference",
+        "values_fine_to_coarse": [
+          2.960621653826108,
+          1.9069024819181999,
+          2.8841433539487245
+        ]
+      }
+    },
+    "section_metric": {
+      "definition": "arithmetic mean of normal momentum change over the three fixed physical support offsets; not an integrated discharge",
+      "name": "section_mean_normal_momentum_change",
+      "units": "m^2/s"
+    },
+    "selected_ladder": {
+      "h_area_common_corridor_m": {
+        "h1000": 638.4873841390533,
+        "h1400": 902.2121959966825,
+        "h2000": 1237.7047845399395
+      },
+      "levels_fine_to_coarse": [
+        "h1000",
+        "h1400",
+        "h2000"
+      ],
+      "ratios_coarse_over_fine": {
+        "h1400_over_h1000": 1.413046237731447,
+        "h2000_over_h1400": 1.3718555236028873
+      },
+      "spacing_m": {
+        "h1000": 1000,
+        "h1400": 1400,
+        "h2000": 2000
+      }
+    },
+    "valid_level_count": 3,
+    "valid_levels_fine_to_coarse": [
+      "h1000",
+      "h1400",
+      "h2000"
+    ]
   },
-  "fabricated_results": false
+  "temporal": {
+    "reason": "Temporal convergence remains gated because resource-aware spatial qualification did not pass.",
+    "status": "not_started"
+  }
 }

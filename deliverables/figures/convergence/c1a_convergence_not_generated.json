@@ -1,9 +1,12 @@
 {
-  "generated_at_utc": "2026-08-07T11:36:00Z",
-  "reason": "Regional convergence figures were not generated because only one valid Regional spatial level completed; pairwise convergence metrics and figure inputs are not available.",
+  "classification": "not_spatially_qualified_resource_aware",
+  "figure": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.svg",
+  "generated_at_utc": "2026-08-07T12:24:29.925776Z",
+  "provenance": "deliverables/figures/convergence/c1a_resource_aware_regional_spatial_section_qn.provenance.json",
   "schema": {
     "name": "tsunami.c1a_convergence_figure_provenance",
-    "version": "1.0.0"
+    "version": "1.1.0"
   },
-  "status": "not_generated_insufficient_valid_levels"
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/resource_aware_v2/spatial_convergence_metrics.json",
+  "status": "generated_resource_aware_spatial_figure"
 }

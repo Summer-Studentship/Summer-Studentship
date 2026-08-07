@@ -1,4 +1,4 @@
 level_id,status,cfl_target,maximum_timestep_s,reason
-T0,not_started,,,Regional spatial convergence produced fewer than three valid levels.
-T1,not_started,,,Regional spatial convergence produced fewer than three valid levels.
-T2,not_started,,,Regional spatial convergence produced fewer than three valid levels.
+T0,not_started,,,Temporal convergence remains gated because resource-aware Regional2D spatial convergence did not qualify.
+T1,not_started,,,Temporal convergence remains gated because resource-aware Regional2D spatial convergence did not qualify.
+T2,not_started,,,Temporal convergence remains gated because resource-aware Regional2D spatial convergence did not qualify.
