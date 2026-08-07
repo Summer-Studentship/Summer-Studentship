@@ -1,0 +1,29 @@
+{
+  "schema": {
+    "name": "tsunami.c1a_physical_parameter_invariance_summary",
+    "version": "1.0.0"
+  },
+  "repository_baseline": "d01631d0d36ee89bbce13f194811de364be02de3",
+  "g6_physical_model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+  "full_record_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/physical_parameter_invariance.json",
+  "case_spec_path": "/home/helios/Projects/Summer-Studentship/cases/kamaishi_delivery/case_spec.json",
+  "case_spec_sha256": "e5268fdd4da9562e70afbbdfe9b7119a43d6212874d6a809ff09263ad3430cd5",
+  "replay_config_path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/replay/replay_config.json",
+  "replay_config_sha256": "aeed6573336436ab9bb2376da2f6d7861b3958e03336def442bb3941bb758d8a",
+  "physical_payload_sha256": "b6357315a63c354b70e3701efe41f77f615ca20a3e8a6d00241f162ce8f7ec4b",
+  "allowed_variation_classes": [
+    "regional mesh/profile spacing",
+    "regional Courant and timestep controls",
+    "local cell counts",
+    "local Courant and timestep controls"
+  ],
+  "forbidden_variation_classes": [
+    "earthquake source or amplitude",
+    "Manning roughness",
+    "bathymetry/topography source identity",
+    "vertical datum/MSL convention",
+    "Local3D turbulence intensity or length scale",
+    "wall-function and roughness-facing policy",
+    "barrier geometry"
+  ]
+}

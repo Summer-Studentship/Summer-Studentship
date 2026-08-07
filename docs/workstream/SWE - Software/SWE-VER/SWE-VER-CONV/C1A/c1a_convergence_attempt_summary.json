@@ -1,0 +1,49 @@
+{
+  "schema": {
+    "name": "tsunami.c1a_convergence_attempt_summary",
+    "version": "1.0.0"
+  },
+  "recorded_at_utc": "2026-08-07T10:29:04Z",
+  "repository_baseline": "d01631d0d36ee89bbce13f194811de364be02de3",
+  "g6_physical_model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+  "results_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a",
+  "summary_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/summary.json",
+  "qualification_status": "insufficient_real_results",
+  "fabricated_results": false,
+  "source_metric_rows": 0,
+  "persistent_records_written": [
+    "manifest.json",
+    "hardware.json",
+    "physical_parameter_invariance.json",
+    "regional/spatial/r2d-h1000/record.json",
+    "regional/spatial/r2d-h500/record.json",
+    "regional/temporal/r2d-cfl010/record.json",
+    "regional/temporal/r2d-cfl005/record.json",
+    "regional/temporal/r2d-cfl0025/record.json",
+    "local/spatial/l3d-h1/record.json",
+    "local/spatial/l3d-h0p75/record.json",
+    "local/spatial/l3d-h0p5/record.json",
+    "local/temporal/l3d-co025/record.json",
+    "local/temporal/l3d-co0125/record.json",
+    "local/temporal/l3d-co00625/record.json",
+    "summary.json"
+  ],
+  "blocking_condition": {
+    "stage": "Regional2D preprocessing",
+    "reason": "The historical producer Python environment /tmp/tsunami-g3-producer-venv/bin/python is absent, and the default python3 lacks rasterio.",
+    "required_to_resume": [
+      "Restore or recreate the producer Python environment with numpy, rasterio and pyproj.",
+      "Rerun regional-spatial with --execute or attach real metrics from completed runs.",
+      "Proceed to regional-temporal only after regional spatial evidence is inspected."
+    ]
+  },
+  "preflight_snapshot": {
+    "r2d_binary_executable": true,
+    "terrain_source_present": true,
+    "earthquake_source_present": true,
+    "g6_replay_config_present": true,
+    "openfoam_wrapper_executable": true,
+    "producer_python_executable_present": false,
+    "producer_python_has_preprocessing_imports": false
+  }
+}
