@@ -1,0 +1,14 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{studentship-math-conventions}[2026/08/07 Studentship mathematics presentation conventions]
+
+\RequirePackage{amsmath}
+
+\numberwithin{equation}{section}
+\newcommand{\studentshipmathapplydisplayspacing}{%
+  \setlength{\abovedisplayskip}{12pt plus 3pt minus 2pt}%
+  \setlength{\belowdisplayskip}{12pt plus 3pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{8pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayshortskip}{8pt plus 2pt minus 2pt}%
+}
+\studentshipmathapplydisplayspacing
+\AtBeginDocument{\studentshipmathapplydisplayspacing}
