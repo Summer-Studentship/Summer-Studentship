@@ -4,7 +4,11 @@
 \RequirePackage{amsmath}
 
 \numberwithin{equation}{section}
-\setlength{\abovedisplayskip}{12pt plus 3pt minus 2pt}
-\setlength{\belowdisplayskip}{12pt plus 3pt minus 2pt}
-\setlength{\abovedisplayshortskip}{8pt plus 2pt minus 2pt}
-\setlength{\belowdisplayshortskip}{8pt plus 2pt minus 2pt}
+\newcommand{\studentshipmathapplydisplayspacing}{%
+  \setlength{\abovedisplayskip}{12pt plus 3pt minus 2pt}%
+  \setlength{\belowdisplayskip}{12pt plus 3pt minus 2pt}%
+  \setlength{\abovedisplayshortskip}{8pt plus 2pt minus 2pt}%
+  \setlength{\belowdisplayshortskip}{8pt plus 2pt minus 2pt}%
+}
+\studentshipmathapplydisplayspacing
+\AtBeginDocument{\studentshipmathapplydisplayspacing}
