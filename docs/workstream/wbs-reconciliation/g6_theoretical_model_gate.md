@@ -4,7 +4,7 @@ Suggested GitHub issue title: `[G6] Theoretical 2D-3D hybrid model complete`.
 
 ## Gate Rule
 
-G6 is blocked until every required theoretical-model capability has accepted implementation evidence and each remaining G6 gap below is resolved. Calibration, observational validation and convergence studies are explicitly outside this gate.
+G6 is merge-ready once every required theoretical-model capability has accepted implementation evidence and each G6 baseline gap below is resolved. Calibration, observational validation and convergence studies are explicitly outside this gate.
 
 ## Required Capabilities
 
@@ -96,12 +96,12 @@ G6 is blocked until every required theoretical-model capability has accepted imp
 - machine learning
 - publication figures
 
-## Remaining G6 Gaps
+## Resolved G6 Baseline Gaps
 
-- `G6-L3D-BC-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
-- `G6-L3D-BC-002`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
-- `G6-L3D-WLF-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
-- `G6-L3D-TIM-001`: status `implementation_complete`; acceptance `real_kamaishi_acceptance_pending`.
+- `G6-L3D-BC-001`: status `resolved`; acceptance `real_kamaishi_acceptance_passed`.
+- `G6-L3D-BC-002`: status `resolved`; acceptance `real_kamaishi_acceptance_passed`.
+- `G6-L3D-WLF-001`: status `resolved`; acceptance `real_kamaishi_acceptance_passed`.
+- `G6-L3D-TIM-001`: status `resolved_for_g6_baseline`; acceptance `real_kamaishi_acceptance_passed`.
 
 ## R2 Evidence Update
 
@@ -111,12 +111,11 @@ G6 is blocked until every required theoretical-model capability has accepted imp
 - Production wall policy: `kqRWallFunction`, `omegaWallFunction`, `nutUSpaldingWallFunction`, plus the Foundation 11 `yPlus` function object.
 - Timestep disposition: repository owns pre-run maxDeltaT/maxCo/maxAlphaCo/minimum-timestep policy and post-run acceptance; Foundation 11 owns internal Courant/interface-Courant adaptive reduction and damped increase; exact rollback/retry remains post-G6.
 - Closure evidence index: `docs/workstream/wbs-reconciliation/g6_closure_evidence.json`.
-- Real Kamaishi rerun attempt: `docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json`.
+- Real Kamaishi acceptance: `/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json`.
 
 ## Current Gate Status
 
-G6 is not marked closed by this branch because the required real no-defence and
-rigid-barrier Local3D 300 s Kamaishi reruns did not complete locally. The
-accepted Regional2D artifacts were not present in the checkout, and fallback
-regeneration was interrupted at Regional2D time `198.1 s` of `1800 s` after the
-runtime indicated a multi-hour prerequisite. Calibration remains unstarted.
+G6 is merge-ready but is not closed by this branch before PR #274 merges. The
+accepted evidence includes exact G5/G6 Regional2D prefix equivalence over
+`0-600 s` and complete `300 s` no-defence and simple rigid barrier Local3D
+acceptance. Calibration remains unstarted.

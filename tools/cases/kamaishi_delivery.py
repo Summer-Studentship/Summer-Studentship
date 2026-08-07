@@ -17,7 +17,7 @@ import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any, Iterable, Sequence
+from typing import Any, Sequence
 
 
 CASE_ID = "kamaishi-etopo-usgs"
@@ -2097,6 +2097,10 @@ def select_fixed_replay_window(
     signal = coupling_signal_metrics(selected_samples, inward_normal, baseline_samples=by_time[source_times[0]])
     peak_shifted = float(signal["peak_free_surface_perturbation_time_s"])
     peak_source = source_start + peak_shifted
+    if abs(expected_peak_source - 485.0) > 1.0e-7 or abs(expected_peak_shifted - 240.0) > 1.0e-7:
+        raise DeliveryError("fixed replay reference peak times do not match the accepted G5 contract")
+    if abs(peak_source - expected_peak_source) > 1.0e-7 or abs(peak_shifted - expected_peak_shifted) > 1.0e-7:
+        raise DeliveryError("fixed replay extracted peak times differ from the accepted G5 reference")
     depths = [float(row["depth"]) for row in selected_samples]
     positive_depths = sorted(depth for depth in depths if depth > 1.0e-6)
     representative_depth = positive_depths[len(positive_depths) // 2] if positive_depths else max(depths)

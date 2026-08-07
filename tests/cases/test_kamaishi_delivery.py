@@ -234,6 +234,22 @@ class KamaishiDeliveryTests(unittest.TestCase):
         self.assertEqual(float(samples[0]["time"]), 0.0)
         self.assertEqual(float(samples[-1]["time"]), 300.0)
 
+    def test_fixed_g6_window_rejects_changed_reference_peak_times(self):
+        coupling = self.tmp / "fixed-coupling"
+        self._write_coupling(
+            coupling,
+            [float(value) for value in range(0, 601, 5)],
+            sample_count=8,
+            arrival_time=245.0,
+            peak_time=485.0,
+            peak_eta=0.8627431707728945,
+            peak_qn=4.2421347278949835,
+        )
+        reference = kamaishi.load_g5_accepted_replay_reference()
+        reference["source_peak_time_s"] = 490.0
+        with self.assertRaisesRegex(kamaishi.DeliveryError, "accepted G5 contract"):
+            kamaishi.select_fixed_replay_window(coupling, self.tmp / "fixed-selected", (1.0, 0.0), reference)
+
     def test_full_history_normal_momentum_is_not_selected_window_comparator(self):
         coupling = self.tmp / "scope-coupling"
         self._write_coupling(

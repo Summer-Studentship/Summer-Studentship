@@ -1941,7 +1941,8 @@ def _latest_time(case_root: Path) -> float:
             try:
                 times.append(float(child.name))
             except ValueError:
-                pass
+                # OpenFOAM case directories also include non-time names such as VTK.
+                continue
     return max(times) if times else 0.0
 
 
@@ -2005,8 +2006,8 @@ def _assert_finite_field(path: Path, label: str) -> None:
 
 def _maximum_log_value(log_text: str, prefix: str) -> float | None:
     maximum: float | None = None
-    for line in log_text.splitlines():
-        stripped = line.strip()
+    for log_line in log_text.splitlines():
+        stripped = log_line.strip()
         if not stripped.startswith(prefix) or "max:" not in stripped:
             continue
         try:
@@ -2149,8 +2150,8 @@ def _read_yplus_dat_samples(case_root: Path) -> list[dict]:
         if not path.is_file():
             continue
         header = ""
-        for line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
-            stripped = line.strip()
+        for data_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            stripped = data_line.strip()
             if not stripped:
                 continue
             if stripped.startswith("#"):
@@ -2169,7 +2170,8 @@ def _read_yplus_dat_samples(case_root: Path) -> list[dict]:
                 try:
                     values.append(float(token))
                 except ValueError:
-                    pass
+                    # Some OpenFOAM table rows carry labels beside numeric columns.
+                    continue
             if values:
                 if "min" in header and "max" in header and "average" in header and len(values) >= 3:
                     samples.append({
@@ -2196,11 +2198,11 @@ def _read_yplus_log_samples(log_text: str) -> list[dict]:
         rf"(?:max(?:imum)?|Max)\s*[:=]\s*(?P<max>{number}).*?"
         rf"(?:average|mean|Average|Mean)\s*[:=]\s*(?P<mean>{number})"
     )
-    for line in log_text.splitlines():
-        time_match = re.match(r"\s*Time\s*=\s*(" + number + r")", line)
+    for log_line in log_text.splitlines():
+        time_match = re.match(r"\s*Time\s*=\s*(" + number + r")", log_line)
         if time_match:
             current_time = float(time_match.group(1))
-        match = pattern.search(line)
+        match = pattern.search(log_line)
         if match and current_time is not None:
             samples.append({
                 "time": current_time,
@@ -2216,8 +2218,8 @@ def _read_yplus_log_samples(log_text: str) -> list[dict]:
 
 def _extract_boundary_block(text: str, patch: str) -> str | None:
     lines = text.splitlines()
-    for index, line in enumerate(lines):
-        if line.strip() != patch:
+    for index, patch_line in enumerate(lines):
+        if patch_line.strip() != patch:
             continue
         cursor = index + 1
         while cursor < len(lines) and "{" not in lines[cursor]:
@@ -2226,11 +2228,11 @@ def _extract_boundary_block(text: str, patch: str) -> str | None:
             return None
         depth = 0
         collected = []
-        for line in lines[cursor:]:
-            depth += line.count("{")
-            depth -= line.count("}")
-            collected.append(line)
-            if depth == 0 and "}" in line:
+        for block_line in lines[cursor:]:
+            depth += block_line.count("{")
+            depth -= block_line.count("}")
+            collected.append(block_line)
+            if depth == 0 and "}" in block_line:
                 return "\n".join(collected)
     return None
 
@@ -2240,12 +2242,12 @@ def _read_patch_values_from_field(path: Path, patch: str) -> list[float]:
     if block is None:
         return []
     lines = block.splitlines()
-    for index, line in enumerate(lines):
-        if "value" not in line:
+    for index, field_line in enumerate(lines):
+        if "value" not in field_line:
             continue
-        if "uniform" in line and "nonuniform" not in line:
-            return _parse_numbers(line.split("uniform", 1)[1])
-        if "nonuniform" not in line:
+        if "uniform" in field_line and "nonuniform" not in field_line:
+            return _parse_numbers(field_line.split("uniform", 1)[1])
+        if "nonuniform" not in field_line:
             continue
         cursor = index + 1
         while cursor < len(lines) and not lines[cursor].strip():

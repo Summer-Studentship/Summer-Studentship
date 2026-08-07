@@ -6,7 +6,7 @@ from __future__ import annotations
 import struct
 import zlib
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Sequence
 
 
 Color = tuple[int, int, int]
