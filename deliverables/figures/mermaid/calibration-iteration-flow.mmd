@@ -1,0 +1,9 @@
+flowchart TD
+  A[Error pattern] --> B[Physical hypothesis]
+  B --> C[Admissible parameter change]
+  C --> D[Expected directional effect]
+  D --> E[Run from baseline descendant]
+  E --> F[Metrics before and after]
+  F --> G{Effect consistent?}
+  G -- yes --> H[Retain with audit record]
+  G -- no --> I[Revert or redesign hypothesis]

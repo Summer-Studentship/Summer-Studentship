@@ -1,0 +1,31 @@
+\section{Hybrid System Architecture}
+
+The architecture is a one-way pipeline:
+
+\begin{enumerate}
+  \item finite-fault source and terrain preprocessing;
+  \item Regional2D finite-volume propagation;
+  \item extraction of a nearshore coupling interface;
+  \item mapping to Local3D OpenFOAM replay boundary data;
+  \item local no-defence and rigid-barrier hydrodynamic runs;
+  \item evidence and provenance capture.
+\end{enumerate}
+
+\begin{table}[H]
+\centering
+\caption{Traceability classification for major mathematical components.}
+\label{tab:traceability-classification}
+\begin{tabularx}{\textwidth}{p{0.24\textwidth}p{0.22\textwidth}X}
+\toprule
+Component & Implementation route & Evidence and limitation \\
+\midrule
+Regional NLSWE & Repository-native & Research authority in RES-MOD/RES-NUM; G6 prefix equivalence accepted. \\
+Earthquake preprocessing & Repository-owned preprocessing & Approved finite-fault input; source alternatives remain calibration sensitivity candidates. \\
+Corridor/geospatial preprocessing & Repository-owned & EPSG:32654 corridor and conditioned terrain; higher-resolution products remain post-G6. \\
+2D to 3D coupling & Repository-native replay/mapping & Fixed accepted source window 245--545 s mapped to 0--300 s. \\
+Local3D URANS--VOF & Adopted OpenFOAM Foundation 11 backend & Repository defines dictionaries and evidence; OpenFOAM internals are adopted, not repository-native. \\
+Wall functions & OpenFOAM-adopted with project policy & Continuous Spalding baseline; formal wall/mesh convergence remains post-G6. \\
+Boundary treatment & Project-defined OpenFOAM configuration & \texttt{open\_ocean\_damped} policy accepted by reflection benchmark and real replay. \\
+\bottomrule
+\end{tabularx}
+\end{table}

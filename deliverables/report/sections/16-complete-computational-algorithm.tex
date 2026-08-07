@@ -1,0 +1,31 @@
+\section{Complete Computational Algorithm}
+
+\begin{algorithm}[H]
+\caption{End-to-end hybrid tsunami reconstruction and future calibration workflow.}
+\label{alg:complete-workflow}
+\begin{algorithmic}[1]
+\State Establish source provenance governance and approved observation registry.
+\State Ingest candidate offshore, nearshore, run-up and inundation observations after approval.
+\State Define numerical convergence plan for Regional2D and Local3D mesh/timestep controls.
+\State Acquire and verify terrain, bathymetry and finite-fault source artefacts.
+\State Transform event and corridor geometry to EPSG:32654.
+\State Generate earthquake displacement \(\Delta z_b\) and initialise Regional2D free surface.
+\State Solve the Regional2D finite-volume model with wet/dry, friction and boundary treatments.
+\State Extract virtual gauges and nearshore coupling histories.
+\State Perform source-model sensitivity after convergence and observation approval.
+\State Calibrate Regional2D physical parameters only through documented hypotheses.
+\State Execute Regional holdout validation without arbitrary time shifts.
+\State Select accepted coupling window and project normal/tangential momentum.
+\State Reconstruct 3D inlet velocity and VOF boundary data.
+\State Generate Local3D geometry, mesh, OpenFOAM dictionaries and provenance records.
+\State Run URANS--VOF no-defence and defence cases.
+\State Extract free surface, probes, forces and moments.
+\State Perform Local3D turbulence, roughness and geometry sensitivity as authorised.
+\State Calibrate Local3D physical parameters only after Regional forcing is accepted.
+\State Execute hybrid holdout validation.
+\State Archive HDF5/VTKHDF results, publication figures and provenance.
+\State Record retain/revert decisions and update the evidence ledger.
+\end{algorithmic}
+\end{algorithm}
+
+The G6 work completed the implementation and real-event integration path through Local3D acceptance. The remaining algorithmic steps define validation, calibration, archive and publication work.

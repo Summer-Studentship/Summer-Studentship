@@ -1,0 +1,17 @@
+\section{Earthquake Tsunami Generation}
+
+The source operator maps finite-fault earthquake parameters into vertical seabed displacement. The final G6 baseline uses repository-owned preprocessing with an approved finite-fault artifact; alternative source inversions are sensitivity candidates, not hidden calibration offsets.
+
+\begin{equation}
+\label{eq:earthquake-displacement-operator}
+\Delta z_b(x,y)=\mathcal O(\mathcal E)
+\end{equation}
+
+The initial free-surface condition applies passive transfer of the seabed displacement to the water surface:
+
+\begin{equation}
+\label{eq:passive-free-surface-transfer}
+\eta(x,y,0^+)=\eta_0+\Delta z_b(x,y)
+\end{equation}
+
+This is the accepted G6 source-transfer assumption. Dispersive or fully three-dimensional source-generation effects remain model-form sensitivity topics motivated by the Tohoku literature \autocite{saito2014dispersion,baba2017farfield}.

@@ -1,0 +1,7 @@
+\section{Kamaishi Corridor and Terrain}
+
+The G6 case constructs a Tohoku--Kamaishi corridor in projected coordinates. The accepted CRS is EPSG:32654. Terrain conditioning uses the available ETOPO 2022 source for the G6 baseline; this supports the theoretical hybrid closure but does not complete high-resolution local validation.
+
+The nearshore coupling interface is tagged as a Regional2D export boundary. The accepted source replay window is 245--545 s in the Regional2D history. That interval is shifted to the Local3D replay interval 0--300 s, with the major shifted peak at 240 s.
+
+Bathymetry and topography are fidelity inputs. They may trigger model-form investigation when timing is correct but nearshore amplitude or inundation extent is wrong, yet they must not be adjusted without approved data provenance \autocite{noaa2022etopo,gebco2026grid}.

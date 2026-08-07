@@ -1,0 +1,44 @@
+\section{Regional-to-Local Coupling}
+
+The coupling maps Regional2D free-surface elevation and depth-averaged momentum to the Local3D inlet. For a local inward normal \(\mathbf n=(n_x,n_y)\) and tangent \(\boldsymbol\tau=(\tau_x,\tau_y)\),
+
+\begin{equation}
+\label{eq:normal-momentum}
+q_n=q_xn_x+q_yn_y
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:tangential-momentum}
+q_\tau=q_x\tau_x+q_y\tau_y .
+\end{equation}
+
+The reconstructed velocities are
+
+\begin{equation}
+\label{eq:normal-velocity}
+u_n=\frac{q_n}{h}
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:tangential-velocity}
+u_\tau=\frac{q_\tau}{h}.
+\end{equation}
+
+Discrete discharge preservation is checked by comparing the Regional2D interface flux with the Local3D boundary flux:
+
+\begin{equation}
+\label{eq:discharge-preservation}
+Q_{2D}
+=
+\sum_{j=1}^{N_s} q_{n,j}\,\Delta s_j
+\approx
+\int_{\Gamma_{\mathrm{in}}}\mathbf u\cdot\mathbf n\,\mathrm dA
+=
+Q_{3D}.
+\end{equation}
+
+The G5/G6 prefix-equivalence evidence demonstrates that the accepted G6 forcing prefix is identical to the accepted G5 prefix over 0--600 s.

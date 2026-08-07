@@ -1,0 +1,123 @@
+\section{Validation Methodology}
+
+Validation will compare simulated signals \(\eta_s\) against approved observations \(\eta_o\), without arbitrary timing shifts in the primary metrics. The point error is
+
+\begin{equation}
+\label{eq:validation-point-error}
+e_i=
+\eta_s(t_i)-\eta_o(t_i).
+\end{equation}
+
+The RMSE is
+
+\begin{equation}
+\label{eq:validation-rmse}
+\mathrm{RMSE}
+=
+\sqrt{
+\frac{1}{N}
+\sum_i e_i^2
+}.
+\end{equation}
+
+The MAE is
+
+\begin{equation}
+\label{eq:validation-mae}
+\mathrm{MAE}
+=
+\frac{1}{N}
+\sum_i|e_i|
+\end{equation}
+
+and the bias is
+
+\begin{equation}
+\label{eq:validation-bias}
+\mathrm{Bias}
+=
+\frac{1}{N}
+\sum_i e_i .
+\end{equation}
+
+Peak amplitude and timing errors are
+
+\begin{equation}
+\label{eq:validation-peak-amplitude-error}
+E_{\eta,\max}
+=
+\eta_{s,\max}
+-
+\eta_{o,\max}
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:validation-peak-timing-error}
+E_{t,\max}
+=
+t_{s,\max}
+-
+t_{o,\max}.
+\end{equation}
+
+A relative peak error is
+
+\begin{equation}
+\label{eq:validation-relative-peak-error}
+E_{\eta,\mathrm{rel}}
+=
+\frac{\eta_{s,\max}-\eta_{o,\max}}{\eta_{o,\max}}
+\end{equation}
+
+and correlation is
+
+\begin{equation}
+\label{eq:validation-correlation}
+r
+=
+\frac{\sum_i(\eta_s(t_i)-\bar{\eta}_s)(\eta_o(t_i)-\bar{\eta}_o)}
+{\sqrt{\sum_i(\eta_s(t_i)-\bar{\eta}_s)^2}\sqrt{\sum_i(\eta_o(t_i)-\bar{\eta}_o)^2}} .
+\end{equation}
+
+Time-dependent diagnostics are
+
+\begin{equation}
+\label{eq:validation-rmse-time}
+\mathrm{RMSE}(T)
+=
+\sqrt{
+\frac{
+\sum_{t_i\le T}e_i^2
+}{
+N(T)
+}
+},
+\end{equation}
+
+\begin{equation}
+\label{eq:validation-mae-time}
+\mathrm{MAE}(T)
+=
+\frac{
+\sum_{t_i\le T}|e_i|
+}{
+N(T)
+},
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:validation-bias-time}
+\mathrm{Bias}(T)
+=
+\frac{
+\sum_{t_i\le T}e_i
+}{
+N(T)
+}.
+\end{equation}
+
+Cross-correlation lag may be recorded as a diagnostic, but physical timing remains unshifted for primary validation.

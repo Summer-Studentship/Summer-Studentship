@@ -1,0 +1,19 @@
+\section{Regional2D Numerical Formulation}
+
+The accepted repository implementation is finite-volume based. The numerical formulation follows the Research workstream's conservative-update intent while the final implementation is defined by the repository code and G6 evidence rather than by any stale intermediate note.
+
+For cell \(K_i\), the semi-discrete update can be written as
+
+\begin{equation}
+\label{eq:finite-volume-update}
+\frac{\mathrm d\mathbf U_i}{\mathrm dt}
+=
+-
+\frac{1}{|K_i|}
+\sum_{e\in\partial K_i}
+|e|\,\widehat{\mathbf H}_{ie}
++
+\mathbf S_i .
+\end{equation}
+
+Well-balanced, positivity-aware shallow-water finite-volume methods motivate the treatment of wetting, drying and bed slopes \autocite{kurganov2007wellbalanced,dutykh2011volna}. The G6 status is implementation verification, not formal convergence closure; mesh and timestep convergence remain post-G6 verification work.

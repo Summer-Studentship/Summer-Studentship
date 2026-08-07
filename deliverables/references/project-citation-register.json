@@ -1,0 +1,1462 @@
+{
+  "audit": {
+    "citation_key_conflicts": 0,
+    "duplicate_entries_resolved": 20,
+    "duplicate_records": [
+      {
+        "alias_key": "mori2012nationwide",
+        "canonical_key": "mori2012nationwide",
+        "identity": [
+          "doi",
+          "10.1142/s0578563412500015"
+        ]
+      },
+      {
+        "alias_key": "watanabe2022validation",
+        "canonical_key": "watanabe2022validation",
+        "identity": [
+          "doi",
+          "10.1080/21664250.2022.2072611"
+        ]
+      },
+      {
+        "alias_key": "deljesus2012porous",
+        "canonical_key": "deljesus2012porous",
+        "identity": [
+          "doi",
+          "10.1155/2012/263839"
+        ]
+      },
+      {
+        "alias_key": "wei2013japan",
+        "canonical_key": "wei2013japan",
+        "identity": [
+          "doi",
+          "10.1007/s00024-012-0519-z"
+        ]
+      },
+      {
+        "alias_key": "takase2016hybrid",
+        "canonical_key": "takase2016hybrid",
+        "identity": [
+          "doi",
+          "10.1007/s00466-016-1300-4"
+        ]
+      },
+      {
+        "alias_key": "romano2025coupling",
+        "canonical_key": "romano2025coupling",
+        "identity": [
+          "doi",
+          "10.1029/2025jc023042"
+        ]
+      },
+      {
+        "alias_key": "menter1994twoequation",
+        "canonical_key": "menter1994twoequation",
+        "identity": [
+          "doi",
+          "10.2514/3.12149"
+        ]
+      },
+      {
+        "alias_key": "higuera2013realistic",
+        "canonical_key": "higuera2013realistic",
+        "identity": [
+          "doi",
+          "10.1016/j.coastaleng.2012.07.002"
+        ]
+      },
+      {
+        "alias_key": "fujii2011tsunamisource",
+        "canonical_key": "fujii2011tsunamisource",
+        "identity": [
+          "doi",
+          "10.5047/eps.2011.06.010"
+        ]
+      },
+      {
+        "alias_key": "mori2012nationwide",
+        "canonical_key": "mori2012nationwide",
+        "identity": [
+          "doi",
+          "10.1142/s0578563412500015"
+        ]
+      },
+      {
+        "alias_key": "usgs2011tohokuEvent",
+        "canonical_key": "usgs2011tohokuEvent",
+        "identity": [
+          "url",
+          "https://earthquake.usgs.gov/earthquakes/eventpage/official20110311054624120_30/executive"
+        ]
+      },
+      {
+        "alias_key": "qin2018comparison",
+        "canonical_key": "qin2018comparison",
+        "identity": [
+          "doi",
+          "10.5194/nhess-18-2489-2018"
+        ]
+      },
+      {
+        "alias_key": "watanabe2022validation",
+        "canonical_key": "watanabe2022validation",
+        "identity": [
+          "doi",
+          "10.1080/21664250.2022.2072611"
+        ]
+      },
+      {
+        "alias_key": "kozelkov2022turbulence",
+        "canonical_key": "kozelkov2022turbulence",
+        "identity": [
+          "doi",
+          "10.3390/fluids7030117"
+        ]
+      },
+      {
+        "alias_key": "deljesus2012porous",
+        "canonical_key": "deljesus2012porous",
+        "identity": [
+          "doi",
+          "10.1155/2012/263839"
+        ]
+      },
+      {
+        "alias_key": "istrati2019trappedair",
+        "canonical_key": "istrati2019trappedair",
+        "identity": [
+          "doi",
+          "10.3390/geosciences9040191"
+        ]
+      },
+      {
+        "alias_key": "romano2025coupling",
+        "canonical_key": "romano2025coupling",
+        "identity": [
+          "doi",
+          "10.1029/2025jc023042"
+        ]
+      },
+      {
+        "alias_key": "wei2013japan",
+        "canonical_key": "wei2013japan",
+        "identity": [
+          "doi",
+          "10.1007/s00024-012-0519-z"
+        ]
+      },
+      {
+        "alias_key": "qin2018comparison",
+        "canonical_key": "qin2018comparison",
+        "identity": [
+          "doi",
+          "10.5194/nhess-18-2489-2018"
+        ]
+      },
+      {
+        "alias_key": "watanabe2022validation",
+        "canonical_key": "watanabe2022validation",
+        "identity": [
+          "doi",
+          "10.1080/21664250.2022.2072611"
+        ]
+      }
+    ],
+    "metadata_conflicts": 0,
+    "raw_entry_count": 67,
+    "research_bibliography_count": 10,
+    "unique_citation_count": 47,
+    "unique_doi_count": 34
+  },
+  "generated_from": [
+    "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib",
+    "docs/workstream/RES - Research/RES-GEO - Barrier Geometry and Spatial Representation/res-geo.bib",
+    "docs/workstream/RES - Research/RES-ML - Machine-Learning Methodology/res-ml.bib",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+    "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib",
+    "docs/workstream/RES - Research/RES-OPT - Design Optimisation/res-opt.bib",
+    "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib",
+    "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib",
+    "docs/workstream/RES - Research/RES-SUS - Sustainability and Environmental Impact/res-sus.bib",
+    "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+  ],
+  "records": [
+    {
+      "aliases": [],
+      "authors": "Baba, Toshitaka and Allgeyer, Sebastien and Hossen, Jakir and Cummins, Phil R. and Tsushima, Hiroaki and Imai, Kentaro and Yamashita, Kei and Kato, Toshihiro",
+      "calibration_use": false,
+      "citation_key": "baba2017farfield",
+      "doi": "10.1016/j.ocemod.2017.01.002",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Accurate numerical simulation of the far-field tsunami caused by the 2011 Tohoku earthquake.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib"
+      ],
+      "title": "Accurate Numerical Simulation of the Far-Field Tsunami Caused by the 2011 {Tohoku} Earthquake, Including the Effects of {Boussinesq} Dispersion, Seawater Density Stratification, Elastic Loading, and Gravitational Potential Change",
+      "validation_use": false,
+      "year": "2017"
+    },
+    {
+      "aliases": [],
+      "authors": "Baragamage, Dilshan S. P. Amarasinghe and Wu, Weiming",
+      "calibration_use": "future_only",
+      "citation_key": "baragamage2024fullycoupled",
+      "doi": "10.3390/w16010189",
+      "entry_type": "article",
+      "future_work": true,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-FSI - Fluid\u2013Structure Interaction and Coupling Fidelity/A Three-Dimensional Fully-Coupled Fluid-Structure Model for Tsunami Loading on Coastal Bridges .pdf"
+      ],
+      "review_status": "approved_future_work",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "A Three-Dimensional Fully-Coupled Fluid-Structure Model for Tsunami Loading on Coastal Bridges",
+      "validation_use": false,
+      "year": "2024"
+    },
+    {
+      "aliases": [],
+      "authors": "Casulli, Vincenzo and Cheng, Ralph T.",
+      "calibration_use": false,
+      "citation_key": "casulli1992semiimplicit",
+      "doi": "10.1002/fld.1650150602",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FDM/Numerical Methods in Fluids - 30 September 1992 - Casulli - Semi\u2010implicit finite difference methods for three\u2010dimensional.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Semi-Implicit Finite Difference Methods for Three-Dimensional Shallow Water Flow",
+      "validation_use": false,
+      "year": "1992"
+    },
+    {
+      "aliases": [],
+      "authors": "Chung, J. and Hulbert, G. M.",
+      "calibration_use": false,
+      "citation_key": "chung1993",
+      "doi": "10.1115/1.2900803",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "A Time Integration Algorithm for Structural Dynamics with Improved Numerical Dissipation: The Generalized-Alpha Method",
+      "validation_use": false,
+      "year": "1993"
+    },
+    {
+      "aliases": [],
+      "authors": "{Copernicus Climate Change Service}",
+      "calibration_use": false,
+      "citation_key": "copernicusEra5",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "{ERA5} Climate Reanalysis",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "{del Jesus}, Manuel and Lara, Javier L. and Losada, Inigo J.",
+      "calibration_use": "future_only",
+      "citation_key": "deljesus2012porous",
+      "doi": "10.1155/2012/263839",
+      "entry_type": "article",
+      "future_work": true,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "barrier geometry and representation context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical Modeling of Tsunami Waves Interaction with Porous and Impermeable Vertical Barriers.pdf"
+      ],
+      "review_status": "approved_future_work",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-GEO - Barrier Geometry and Spatial Representation/res-geo.bib",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib"
+      ],
+      "title": "Numerical Modeling of Tsunami Waves Interaction with Porous and Impermeable Vertical Barriers",
+      "validation_use": false,
+      "year": "2012"
+    },
+    {
+      "aliases": [],
+      "authors": "Dutykh, Denys and Poncet, Rapha{\\\"e}l and Dias, Fr{\\'e}d{\\'e}ric",
+      "calibration_use": false,
+      "citation_key": "dutykh2011volna",
+      "doi": "10.1016/j.euromechflu.2011.05.005",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FVM/The VOLNA code for the numerical modeling of tsunami waves_ Generation, propogation and innundation.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "The {VOLNA} Code for the Numerical Modeling of Tsunami Waves: Generation, Propagation and Inundation",
+      "validation_use": false,
+      "year": "2011"
+    },
+    {
+      "aliases": [],
+      "authors": "Erlicher, Silvano and Bonaventura, Luca and Bursi, Oreste S.",
+      "calibration_use": false,
+      "citation_key": "erlicher2002generalizedalpha",
+      "doi": "10.1007/s00466-001-0273-z",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/The analysis of the Generalized-\u03b1 method for non-linear dynamic problems.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "The Analysis of the Generalized-Alpha Method for Non-Linear Dynamic Problems",
+      "validation_use": false,
+      "year": "2002"
+    },
+    {
+      "aliases": [],
+      "authors": "Fine, Isaac V. and Kulikov, Evgueni A. and Cherniawsky, Josef Y.",
+      "calibration_use": false,
+      "citation_key": "fine2013japan",
+      "doi": "10.1007/s00024-012-0555-8",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/Japan\u2019s 2011 Tsunami: Characteristics of Wave Propagation from Observations and Numerical Modelling.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "Japan's 2011 Tsunami: Characteristics of Wave Propagation from Observations and Numerical Modelling",
+      "validation_use": "methodology",
+      "year": "2013"
+    },
+    {
+      "aliases": [],
+      "authors": "Fujii, Yushiro and Satake, Kenji and Sakai, Shin'ichi and Shinohara, Masanao and Kanazawa, Toshihiko",
+      "calibration_use": "methodology",
+      "citation_key": "fujii2011tsunamisource",
+      "doi": "10.5047/eps.2011.06.010",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib"
+      ],
+      "title": "Tsunami Source of the 2011 off the Pacific Coast of {Tohoku} Earthquake",
+      "validation_use": false,
+      "year": "2011"
+    },
+    {
+      "aliases": [],
+      "authors": "Fujima, Koji and Masamura, Kenji and Goto, Chiaki",
+      "calibration_use": false,
+      "citation_key": "fujima2002hybrid",
+      "doi": "10.1142/s0578563402000615",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/superseeded/Development of the 2D 3D Hybrid Model for Tsunami Numerical Simulation.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib"
+      ],
+      "title": "Development of the {2D/3D} Hybrid Model for Tsunami Numerical Simulation",
+      "validation_use": false,
+      "year": "2002"
+    },
+    {
+      "aliases": [],
+      "authors": "{GEBCO Bathymetric Compilation Group 2026}",
+      "calibration_use": false,
+      "citation_key": "gebco2026grid",
+      "doi": "10.5285/4f68d5c7-45eb-f999-e063-7086abc036fa",
+      "entry_type": "misc",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "The {GEBCO\\_2026} Grid: A Continuous Terrain Model for Oceans and Land at 15 Arc-Second Intervals",
+      "validation_use": false,
+      "year": "2026"
+    },
+    {
+      "aliases": [],
+      "authors": "Girfoglio, Michele and Quaini, Annalisa and Rozza, Gianluigi",
+      "calibration_use": "future_only",
+      "citation_key": "girfoglio2021",
+      "doi": "10.48550/arxiv.2102.08011",
+      "entry_type": "misc",
+      "future_work": true,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-FSI - Fluid\u2013Structure Interaction and Coupling Fidelity/Fluid-structure interaction simulations with a LES filtering approach in solids4Foam.pdf"
+      ],
+      "review_status": "approved_future_work",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "Fluid-Structure Interaction Simulations with a LES Filtering Approach in solids4Foam",
+      "validation_use": false,
+      "year": "2021"
+    },
+    {
+      "aliases": [],
+      "authors": "Grilli, Stephan T. and Harris, Jason C. and Tajalli-Bakhsh, T. S. T. and Masterlark, Timothy L. and Kyriakopoulos, Costas and Kirby, James T. and Shi, Fengyan",
+      "calibration_use": "methodology",
+      "citation_key": "grilli2013tohoku",
+      "doi": "10.1007/s00024-012-0528-y",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "verification and validation methodology",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+      ],
+      "title": "Numerical Simulation of the 2011 {Tohoku} Tsunami Based on a New Transient {FEM} Co-Seismic Source: Comparison to Far- and Near-Field Observations",
+      "validation_use": "methodology",
+      "year": "2013"
+    },
+    {
+      "aliases": [],
+      "authors": "{Geospatial Information Authority of Japan}",
+      "calibration_use": false,
+      "citation_key": "gsiDemDownload",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "Fundamental Geospatial Data Download Service: Digital Elevation Model",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "Hayes, Gavin P.",
+      "calibration_use": "methodology",
+      "citation_key": "hayes2011rapid",
+      "doi": "10.5047/eps.2011.05.012",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "Rapid Source Characterization of the 2011 {Mw} 9.0 off the Pacific Coast of {Tohoku} Earthquake",
+      "validation_use": false,
+      "year": "2011"
+    },
+    {
+      "aliases": [],
+      "authors": "Higuera, Pablo and Lara, Javier L. and Losada, Inigo J.",
+      "calibration_use": false,
+      "citation_key": "higuera2013realistic",
+      "doi": "10.1016/j.coastaleng.2012.07.002",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Realistic Wave Generation and Active Wave Absorption for {Navier--Stokes} Models: Application to {OpenFOAM}",
+      "validation_use": false,
+      "year": "2013"
+    },
+    {
+      "aliases": [],
+      "authors": "Hirt, C. W. and Nichols, B. D.",
+      "calibration_use": false,
+      "citation_key": "hirt1981vof",
+      "doi": "10.1016/0021-9991(81)90145-5",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Volume of Fluid ({VOF}) Method for the Dynamics of Free Boundaries",
+      "validation_use": false,
+      "year": "1981"
+    },
+    {
+      "aliases": [],
+      "authors": "Huang, Yu and Zhu, Chongqiang",
+      "calibration_use": false,
+      "citation_key": "huang2015modifiedmps",
+      "doi": "10.1007/s11069-014-1464-1",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Numerical Analysis of Tsunami--Structure Interaction Using a Modified {MPS} Method",
+      "validation_use": false,
+      "year": "2015"
+    },
+    {
+      "aliases": [],
+      "authors": "Issa, R. I.",
+      "calibration_use": false,
+      "citation_key": "issa1986operator",
+      "doi": "10.1016/0021-9991(86)90099-9",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Solution of the Implicitly Discretised Fluid Flow Equations by Operator-Splitting",
+      "validation_use": false,
+      "year": "1986"
+    },
+    {
+      "aliases": [],
+      "authors": "Istrati, Denis and Buckle, Ian",
+      "calibration_use": false,
+      "citation_key": "istrati2019trappedair",
+      "doi": "10.3390/geosciences9040191",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Role of Trapped Air on the Tsunami-Induced Transient Loads and Response of Coastal Bridges.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "Role of Trapped Air on the Tsunami-Induced Transient Loads and Response of Coastal Bridges",
+      "validation_use": false,
+      "year": "2019"
+    },
+    {
+      "aliases": [],
+      "authors": "Jacobsen, Niels G. and Fuhrman, David R. and Fredsoe, Jorgen",
+      "calibration_use": "methodology",
+      "citation_key": "jacobsen2012waves2foam",
+      "doi": "10.1002/fld.2726",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "A Wave Generation Toolbox for the Open-Source {CFD} Library: {OpenFOAM}",
+      "validation_use": false,
+      "year": "2012"
+    },
+    {
+      "aliases": [],
+      "authors": "{Japan Meteorological Agency}",
+      "calibration_use": false,
+      "citation_key": "jmaJra55",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "{JRA-55}: The Japanese 55-Year Reanalysis",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "{Japan Oceanographic Data Center}",
+      "calibration_use": "methodology",
+      "citation_key": "jodcJegg500",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "500m Gridded Bathymetry Data ({J-EGG500})",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "Kozelkov, Andrey and Tyatyushkina, Elena and Kurulin, Vadim and Kurkin, Andrey",
+      "calibration_use": "methodology",
+      "citation_key": "kozelkov2022turbulence",
+      "doi": "10.3390/fluids7030117",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/Influence of Turbulence Effects on the Runup of Tsunami Waves on the Shore within the Framework of the Navier\u2013Stokes Equations .pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib"
+      ],
+      "title": "Influence of Turbulence Effects on the Runup of Tsunami Waves on the Shore within the Framework of the {Navier--Stokes} Equations",
+      "validation_use": false,
+      "year": "2022"
+    },
+    {
+      "aliases": [],
+      "authors": "Kurganov, Alexander and Petrova, Guergana",
+      "calibration_use": false,
+      "citation_key": "kurganov2007wellbalanced",
+      "doi": "",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FVM/A SECOND-ORDER WELL-BALANCED POSITIVITY PRESERVING.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "A Second-Order Well-Balanced Positivity Preserving Central-Upwind Scheme for the {Saint-Venant} System",
+      "validation_use": false,
+      "year": "2007"
+    },
+    {
+      "aliases": [],
+      "authors": "Liu, Ju and Marsden, Alison L.",
+      "calibration_use": "future_only",
+      "citation_key": "liu2018",
+      "doi": "10.1016/j.cma.2018.03.045",
+      "entry_type": "article",
+      "future_work": true,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/A unified continuum and variational multiscale formulation for fluids, solids, and fluid\u2013structure interaction.pdf"
+      ],
+      "review_status": "approved_future_work",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "A Unified Continuum and Variational Multiscale Formulation for Fluids, Solids, and Fluid-Structure Interaction",
+      "validation_use": false,
+      "year": "2018"
+    },
+    {
+      "aliases": [],
+      "authors": "Mari{\\'c}, Tomislav and Marschall, Holger and Bothe, Dieter",
+      "calibration_use": false,
+      "citation_key": "maric2013vofoam",
+      "doi": "",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "{voFoam}: A Geometrical Volume of Fluid Algorithm on Arbitrary Unstructured Meshes with Local Dynamic Adaptive Mesh Refinement Using {OpenFOAM}",
+      "validation_use": false,
+      "year": "2013"
+    },
+    {
+      "aliases": [],
+      "authors": "Meng, Jianping and Gu, Xiao-Jun and Emerson, David R. and Peng, Yong and Zhang, Jianmin",
+      "calibration_use": false,
+      "citation_key": "meng2018discreteboltzmann",
+      "doi": "",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/LBM/Discrete Boltzmann model of shallow water equations with polynomial equilibria.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Discrete Boltzmann Model of Shallow Water Equations with Polynomial Equilibria",
+      "validation_use": false,
+      "year": "2018"
+    },
+    {
+      "aliases": [],
+      "authors": "Menter, F. R.",
+      "calibration_use": "methodology",
+      "citation_key": "menter1994twoequation",
+      "doi": "10.2514/3.12149",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "Two-Equation Eddy-Viscosity Turbulence Models for Engineering Applications",
+      "validation_use": false,
+      "year": "1994"
+    },
+    {
+      "aliases": [],
+      "authors": "Mori, Nobuhito and Takahashi, Tomoyuki and {The 2011 Tohoku Earthquake Tsunami Joint Survey Group}",
+      "calibration_use": false,
+      "citation_key": "mori2012nationwide",
+      "doi": "10.1142/s0578563412500015",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/The 2011 Tohoku Earthquake Tsunami Joint Survey Group. 2012. Nationwide post event survey and analysis of the 2011 Tohoku earthquake tsunami.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib",
+        "docs/workstream/RES - Research/RES-GEO - Barrier Geometry and Spatial Representation/res-geo.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib"
+      ],
+      "title": "Nationwide Post Event Survey and Analysis of the 2011 {Tohoku} Earthquake Tsunami",
+      "validation_use": "methodology",
+      "year": "2012"
+    },
+    {
+      "aliases": [],
+      "authors": "Nemer, R. and Larcher, A. and Coupez, T. and Hachem, E.",
+      "calibration_use": false,
+      "citation_key": "nemer2021",
+      "doi": "10.1016/j.cma.2021.113923",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/Stabilized finite element method for incompressible solid dynamics using an updated Lagrangian formulation.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "Stabilized Finite Element Method for Incompressible Solid Dynamics Using an Updated Lagrangian Formulation",
+      "validation_use": false,
+      "year": "2021"
+    },
+    {
+      "aliases": [],
+      "authors": "{National Oceanic and Atmospheric Administration}",
+      "calibration_use": false,
+      "citation_key": "noaa2005dart",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "Deep-Ocean Assessment and Reporting of Tsunamis ({DART}) Ocean Bottom Pressure Data",
+      "validation_use": false,
+      "year": "2005"
+    },
+    {
+      "aliases": [],
+      "authors": "{NOAA National Centers for Environmental Information}",
+      "calibration_use": false,
+      "citation_key": "noaa2011japanDart",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "March 11, 2011 Japan Earthquake: {DART} Data",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "{NOAA National Centers for Environmental Information}",
+      "calibration_use": false,
+      "citation_key": "noaa2022etopo",
+      "doi": "10.25921/fd45-gt74",
+      "entry_type": "misc",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "{ETOPO} 2022 15 Arc-Second Global Relief Model",
+      "validation_use": false,
+      "year": "2022"
+    },
+    {
+      "aliases": [],
+      "authors": "{National Geophysical Data Center / World Data Service}",
+      "calibration_use": false,
+      "citation_key": "noaaNceiHistoricalTsunami",
+      "doi": "10.7289/v5pn93h7",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "{NCEI/WDS} Global Historical Tsunami Database",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "Pasquariello, Vito and Hammerl, Georg and {\\\"O}rley, Felix and Hickel, Stefan and Danowski, Caroline and Popp, Alexander and Wall, Wolfgang A. and Adams, Nikolaus A.",
+      "calibration_use": "future_only",
+      "citation_key": "pasquariello2016",
+      "doi": "10.1016/j.jcp.2015.12.013",
+      "entry_type": "article",
+      "future_work": true,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "supporting research context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-FSI - Fluid\u2013Structure Interaction and Coupling Fidelity/A cut-cell finite volume \u2013 finite element coupling approach for fluid\u2013structure interaction in compressible flow.pdf"
+      ],
+      "review_status": "approved_future_work",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/res-str.bib"
+      ],
+      "title": "A Cut-Cell Finite Volume--Finite Element Coupling Approach for Fluid-Structure Interaction in Compressible Flow",
+      "validation_use": false,
+      "year": "2016"
+    },
+    {
+      "aliases": [],
+      "authors": "Qin, Xinsheng and Motley, Michael and LeVeque, Randall and Gonzalez, Frank and Mueller, Kaspar",
+      "calibration_use": false,
+      "citation_key": "qin2018comparison",
+      "doi": "10.5194/nhess-18-2489-2018",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/A comparison of a two-dimensional depth-averaged flow model and a three-dimensional RANS model for predicting tsunami inundation and fluid forces.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib",
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+      ],
+      "title": "A Comparison of a Two-Dimensional Depth-Averaged Flow Model and a Three-Dimensional {RANS} Model for Predicting Tsunami Inundation and Fluid Forces",
+      "validation_use": false,
+      "year": "2018"
+    },
+    {
+      "aliases": [],
+      "authors": "Roenby, Johan and Bredmose, Henrik and Jasak, Hrvoje",
+      "calibration_use": false,
+      "citation_key": "roenby2016computational",
+      "doi": "",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "A Computational Method for Sharp Interface Advection",
+      "validation_use": false,
+      "year": "2016"
+    },
+    {
+      "aliases": [],
+      "authors": "Romano, Alessandro and Cecioni, Claudia and Bellotti, Giorgio and Barajas, G. and Lara, Javier L.",
+      "calibration_use": false,
+      "citation_key": "romano2025coupling",
+      "doi": "10.1029/2025jc023042",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/A Numerical 3D\u20102D Coupling Strategy for Simulating Landslide\u2010Generated Tsunamis in Complex.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib",
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+      ],
+      "title": "A Numerical {3D--2D} Coupling Strategy for Simulating Landslide-Generated Tsunamis in Complex Geometries: The {Taan Fiord}, Alaska, Case Study",
+      "validation_use": false,
+      "year": "2025"
+    },
+    {
+      "aliases": [],
+      "authors": "Saito, Tatsuhiko and Inazu, Daisuke and Miyoshi, Tsuyoshi and Hino, Ryota",
+      "calibration_use": false,
+      "citation_key": "saito2014dispersion",
+      "doi": "10.1002/2014jc009971",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Dispersion and nonlinear effects in the 2011 Tohoku\u2010Oki earthquake tsunami.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib"
+      ],
+      "title": "Dispersion and Nonlinear Effects in the 2011 {Tohoku-Oki} Earthquake Tsunami",
+      "validation_use": false,
+      "year": "2014"
+    },
+    {
+      "aliases": [],
+      "authors": "Takase, Shinsuke and Moriguchi, Shuji and Terada, Kenjiro and Kato, Junji and Kyoya, Tetsuya and Kashiyama, Kazuo and Kotani, Takashi",
+      "calibration_use": false,
+      "citation_key": "takase2016hybrid",
+      "doi": "10.1007/s00466-016-1300-4",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "mathematical-model authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/2D-3D hybrid stabilised finite element method  for tsunami runup simulations.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "{2D--3D} Hybrid Stabilized Finite Element Method for Tsunami Runup Simulations",
+      "validation_use": false,
+      "year": "2016"
+    },
+    {
+      "aliases": [],
+      "authors": "{U.S. Geological Survey}",
+      "calibration_use": false,
+      "citation_key": "usgs2011tohokuEvent",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib"
+      ],
+      "title": "{M} 9.1 -- 2011 Great {Tohoku} Earthquake, Japan",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "{U.S. Geological Survey}",
+      "calibration_use": false,
+      "citation_key": "usgsFiniteFaults",
+      "doi": "",
+      "entry_type": "online",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib"
+      ],
+      "title": "Finite Faults",
+      "validation_use": false,
+      "year": ""
+    },
+    {
+      "aliases": [],
+      "authors": "Vuk{\\v{c}}evi{\\'c}, Vuko and Roenby, Johan and Gatin, Inno and Jasak, Hrvoje",
+      "calibration_use": false,
+      "citation_key": "vukcevic2018sharp",
+      "doi": "",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "numerical-method authority",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/Eulerian FVM VOF/A Sharp Free Surface Finite Volume Method Applied to Gravity Wave Flows.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib"
+      ],
+      "title": "A Sharp Free Surface Finite Volume Method Applied to Gravity Wave Flows",
+      "validation_use": false,
+      "year": "2018"
+    },
+    {
+      "aliases": [],
+      "authors": "Watanabe, Masashi and Arikawa, Taro and Kihara, Naoto and Tsurudome, Chiaki and Hosaka, Koichi and Kimura, Tatsuto and Hashimoto, Takayuki and Ishihara, Fumitaka and Shikata, Takemi and Morikawa, Daniel Shigueo and Makino, Taiga and Asai, Mitsuteru and Chida, Yu and Ohnishi, Yoichi and Marras, Simone and Mukherjee, Abhishek and Cajas, Juan Carlos and Houzeaux, Guillaume and {B D Paolo} and Lara, Javier L. and Barajas, Gabriel and Losada, \u00cd\u00f1igo J. and Hasebe, Masanobu and Shigihara, Yoshinori and Asai, Tatsuya and Ikeya, Tsuyoshi and Inoue, Shusaku and Matsutomi, Hideo and Nakano, Yoshiaki and Okuda, Yasuo and Okuno, Shunya and Ooie, Takayuki and Shoji, Gaku and Tateno, Tomokazu",
+      "calibration_use": false,
+      "citation_key": "watanabe2022validation",
+      "doi": "10.1080/21664250.2022.2072611",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "barrier geometry and representation context",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/RES-VER-TST - Component, Conservation and Interface Test Design/Validation of tsunami numerical simulation models for an idealized coastal industrial site.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-GEO - Barrier Geometry and Spatial Representation/res-geo.bib",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.bib",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/res-phy.bib",
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+      ],
+      "title": "Validation of Tsunami Numerical Simulation Models for an Idealized Coastal Industrial Site",
+      "validation_use": "methodology",
+      "year": "2022"
+    },
+    {
+      "aliases": [],
+      "authors": "Wei, Yong and Chamberlin, Christopher D. and Titov, Vasily V. and Tang, Liujuan and Bernard, Eddie N.",
+      "calibration_use": false,
+      "citation_key": "wei2013japan",
+      "doi": "10.1007/s00024-012-0519-z",
+      "entry_type": "article",
+      "future_work": false,
+      "notes": "",
+      "poster_use": false,
+      "project_role": "case-study data, source, terrain or observational evidence",
+      "report_use": true,
+      "repository_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FDM/Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast.pdf"
+      ],
+      "review_status": "approved",
+      "source_bibliographies": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/res-dat.bib",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/res-num.bib",
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/res-ver.bib"
+      ],
+      "title": "Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast",
+      "validation_use": false,
+      "year": "2013"
+    }
+  ],
+  "reviewed_literature_audit": [
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "uncertainty"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "uncertainty and sensitivity context",
+      "related_research_pdf_paths": [],
+      "review_status": "pending_review",
+      "subject": "TsuPy / tsunami uncertainty sensitivity"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "finite",
+        "fault",
+        "source",
+        "tohoku"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "source uncertainty and source-model sensitivity",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/The 2011 Tohoku Earthquake Tsunami Joint Survey Group. 2012. Nationwide post event survey and analysis of the 2011 Tohoku earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/superseeded/Survey of 2011 Tohoku Earhquake Tsunami Innundation and Run-up.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/2D-3D hybrid stabilised finite element method  for tsunami runup simulations.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/Modelling Propogation and innundation of tohoku tsunami.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/Eulerian FVM VOF/A Sharp Free Surface Finite Volume Method Applied to Gravity Wave Flows.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/FDM\\MAC/A full Eulerian finite difference approach for solving fluid\u2013structure coupling problems.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/FEM\\ALE/A Stable Parametric Finite Element Discretization of Two-Phase Navier--Stokes Flow.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/FEM\\ALE/Low Order Finite Element Methods for the Navier-Stokes-Cahn-Hilliard Equations.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/MPS/Improving stability of moving particle semi-implicit method by source terms based on time-scale correction of particle-level impulses.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FDM/Numerical Methods in Fluids - 30 September 1992 - Casulli - Semi\u2010implicit finite difference methods for three\u2010dimensional.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/Other Discretisations/Numerical Solutions of the Nonlinear Dispersive Shallow Water Wave Equations Based on the Space\u2013Time Coupled Generalized Finite Difference Scheme.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Accurate numerical simulation of the far-field tsunami caused by the 2011 Tohoku earthquake.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Dispersion and nonlinear effects in the 2011 Tohoku\u2010Oki earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Exploring the tsunami generation potential of major faults in the sicilian channel using 3D numerical modelling.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-FSI - Fluid\u2013Structure Interaction and Coupling Fidelity/A cut-cell finite volume \u2013 finite element coupling approach for fluid\u2013structure interaction in compressible flow.pdf",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/An open-source finite volume toolbox for solid mechanics and fluid-solid interaction simulations.pdf",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/Stabilized finite element method for incompressible solid dynamics using an updated Lagrangian formulation.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "Tohoku finite-fault source sensitivity"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "dispersion",
+        "tohoku"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "dispersion and model-form limitation",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/The 2011 Tohoku Earthquake Tsunami Joint Survey Group. 2012. Nationwide post event survey and analysis of the 2011 Tohoku earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/superseeded/Survey of 2011 Tohoku Earhquake Tsunami Innundation and Run-up.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/Modelling Propogation and innundation of tohoku tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Accurate numerical simulation of the far-field tsunami caused by the 2011 Tohoku earthquake.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Dispersion and nonlinear effects in the 2011 Tohoku\u2010Oki earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "2011 Tohoku dispersive source inversion"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "source"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "source kinematics and waveform inversion",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/MPS/Improving stability of moving particle semi-implicit method by source terms based on time-scale correction of particle-level impulses.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-SIM - Structural Simulation and Finite-Element Methodology/An open-source finite volume toolbox for solid mechanics and fluid-solid interaction simulations.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "Tohoku waveform inversion with source kinematics"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "japan",
+        "tsunami"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "Manning friction and nested-grid methodology",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/Japan\u2019s 2011 Tsunami: Characteristics of Wave Propagation from Observations and Numerical Modelling.pdf",
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/The 2011 Tohoku Earthquake Tsunami Joint Survey Group. 2012. Nationwide post event survey and analysis of the 2011 Tohoku earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/superseeded/Survey of 2011 Tohoku Earhquake Tsunami Innundation and Run-up.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical Modeling of Tsunami Waves Interaction with Porous and Impermeable Vertical Barriers.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical assessment of tsunami attack on a rubble mound breakwater using openfoam.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Role of Trapped Air on the Tsunami-Induced Transient Loads and Response of Coastal Bridges.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/3D numerical simulation of tsunami generation and propagation,case study.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/A Simplified 3-D Navier-Stokes Numerical Model for Landslide-tsunami.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/A comparison of a two-dimensional depth-averaged flow model and a three-dimensional RANS model for predicting tsunami inundation and fluid forces.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/2D-3D hybrid stabilised finite element method  for tsunami runup simulations.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/A Numerical 3D\u20102D Coupling Strategy for Simulating Landslide\u2010Generated Tsunamis in Complex.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/Modelling Propogation and innundation of tohoku tsunami.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/superseeded/Development of the 2D 3D Hybrid Model for Tsunami Numerical Simulation.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/Influence of Turbulence Effects on the Runup of Tsunami Waves on the Shore within the Framework of the Navier\u2013Stokes Equations .pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Local 3D NSE/SPH/SPH modeling of dynamic impact of tsunami bore on bridge piers.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FDM/Modeling of the 2011 Japan Tsunami: Lessons for Near-Field Forecast.pdf",
+        "docs/workstream/RES - Research/RES-NUM - Numerical Methods, Accuracy and Stability/RES-NUM-FRM - Numerical Formulation and Discrete Conservation Framework/Regional NLSWE/FVM/The VOLNA code for the numerical modeling of tsunami waves_ Generation, propogation and innundation.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Accurate numerical simulation of the far-field tsunami caused by the 2011 Tohoku earthquake.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Dispersion and nonlinear effects in the 2011 Tohoku\u2010Oki earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Exploring the tsunami generation potential of major faults in the sicilian channel using 3D numerical modelling.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf",
+        "docs/workstream/RES - Research/RES-STR - Materials, Structural Response and Damage/RES-STR-FSI - Fluid\u2013Structure Interaction and Coupling Fidelity/A Three-Dimensional Fully-Coupled Fluid-Structure Model for Tsunami Loading on Coastal Bridges .pdf",
+        "docs/workstream/RES - Research/RES-VER - Verification, Testing and Uncertainty Methodology/RES-VER-TST - Component, Conservation and Interface Test Design/Validation of tsunami numerical simulation models for an idealized coastal industrial site.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "Sendai/Tohoku Manning and nested-grid modelling"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "bathymetry",
+        "inundation",
+        "tohoku"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "bathymetric fidelity and inundation modelling",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/The 2011 Tohoku Earthquake Tsunami Joint Survey Group. 2012. Nationwide post event survey and analysis of the 2011 Tohoku earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-DAT - Environmental Data and Case-Study Definition/RES-DAT-OBS - Observational and Validation Data/superseeded/Survey of 2011 Tohoku Earhquake Tsunami Innundation and Run-up.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/A comparison of a two-dimensional depth-averaged flow model and a three-dimensional RANS model for predicting tsunami inundation and fluid forces.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/Modelling Propogation and innundation of tohoku tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Accurate numerical simulation of the far-field tsunami caused by the 2011 Tohoku earthquake.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-PRO - Offshore Propagation and Wave Transformation/Dispersion and nonlinear effects in the 2011 Tohoku\u2010Oki earthquake tsunami.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Numerical Simulation of the 2011 Tohoku Tsunami Based on a New Transient FEM Co-seismic Source: Comparison to Far- and Near-Field Observations.pdf",
+        "docs/workstream/RES - Research/RES-PHY - Tsunami and Coastal Fluid Dynamics/RES-PHY-SRC - Tsunami Generation and Source Physics/Tsunami source of the 2011 off the Pacific coast of Tohoku Earthquake.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "high-resolution Tohoku bathymetry/inundation modelling"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "grid",
+        "inundation"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "grid-resolution sensitivity",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/A comparison of a two-dimensional depth-averaged flow model and a three-dimensional RANS model for predicting tsunami inundation and fluid forces.pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "urban-grid-resolution sensitivity"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "turbulence",
+        "openfoam"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "Local3D turbulence-model sensitivity",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical assessment of tsunami attack on a rubble mound breakwater using openfoam.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/Influence of Turbulence Effects on the Runup of Tsunami Waves on the Shore within the Framework of the Navier\u2013Stokes Equations .pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "buoyancy-modified k-omega SST / OpenFOAM free-surface turbulence"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "breakwater",
+        "turbulence"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "Kamaishi overtopping and turbulence sensitivity",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical assessment of tsunami attack on a rubble mound breakwater using openfoam.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/Influence of Turbulence Effects on the Runup of Tsunami Waves on the Shore within the Framework of the Navier\u2013Stokes Equations .pdf"
+      ],
+      "review_status": "approved_with_conditions",
+      "subject": "Kamaishi breakwater overtopping and turbulence-model sensitivity"
+    },
+    {
+      "exact_research_pdf_paths": [],
+      "local_pdf_status": "related_only_or_absent",
+      "matched_keywords": [
+        "porous",
+        "breakwater",
+        "openfoam"
+      ],
+      "notes": "Exact reviewed-paper metadata was not fabricated; related Research records are distinguished from exact local PDFs.",
+      "project_role": "future porous/rubble-mound calibration only",
+      "related_research_pdf_paths": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical Modeling of Tsunami Waves Interaction with Porous and Impermeable Vertical Barriers.pdf",
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/Numerical assessment of tsunami attack on a rubble mound breakwater using openfoam.pdf"
+      ],
+      "review_status": "approved_future_work",
+      "subject": "porous-breakwater OpenFOAM calibration"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.project_citation_register",
+    "version": "1.0.0"
+  }
+}

@@ -1,0 +1,91 @@
+\section{Regional2D Governing Model}
+
+Regional propagation is represented by the nonlinear shallow-water equations in conservative variables:
+
+\begin{equation}
+\label{eq:regional-conserved-state}
+\mathbf U=
+\begin{bmatrix}
+h\\
+q_x\\
+q_y
+\end{bmatrix}
+\end{equation}
+
+The balance law is
+
+\begin{equation}
+\label{eq:nlswe-balance-law}
+\frac{\partial\mathbf U}{\partial t}
++
+\frac{\partial\mathbf F}{\partial x}
++
+\frac{\partial\mathbf G}{\partial y}
+=
+\mathbf S .
+\end{equation}
+
+The fluxes are
+
+\begin{equation}
+\label{eq:nlswe-flux-x}
+\mathbf F(\mathbf U)=
+\begin{bmatrix}
+q_x\\
+q_x^2/h+\frac{1}{2}gh^2\\
+q_xq_y/h
+\end{bmatrix}
+\end{equation}
+
+and
+
+\begin{equation}
+\label{eq:nlswe-flux-y}
+\mathbf G(\mathbf U)=
+\begin{bmatrix}
+q_y\\
+q_xq_y/h\\
+q_y^2/h+\frac{1}{2}gh^2
+\end{bmatrix}.
+\end{equation}
+
+The bed-slope source is
+
+\begin{equation}
+\label{eq:bed-slope-source}
+\mathbf S_b=
+\begin{bmatrix}
+0\\
+-gh\,\partial z_b/\partial x\\
+-gh\,\partial z_b/\partial y
+\end{bmatrix}.
+\end{equation}
+
+Manning friction is applied as
+
+\begin{equation}
+\label{eq:manning-friction-source}
+\mathbf S_f=
+-
+g n^2
+\frac{
+|\mathbf q|\mathbf q
+}{
+h^{7/3}
+},
+\qquad
+\mathbf q=
+\begin{bmatrix}
+q_x\\
+q_y
+\end{bmatrix}.
+\end{equation}
+
+The Coriolis parameter is
+
+\begin{equation}
+\label{eq:coriolis-definition}
+f=2\Omega\sin\phi .
+\end{equation}
+
+Coriolis is treated as a measured physical/model-form input. It is not a blind calibration knob.
