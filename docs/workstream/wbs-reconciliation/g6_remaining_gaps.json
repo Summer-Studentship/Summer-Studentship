@@ -8,7 +8,7 @@
     "required_change": "Add a documented production lateral boundary configuration or an explicit accepted policy limiting G6 use to symmetry-side geometry.",
     "required_test": "Automated dictionary/acceptance test that distinguishes production open-ocean mode from symmetry test mode.",
     "status": "implementation_complete",
-    "acceptance_status": "real_kamaishi_acceptance_pending",
+    "acceptance_status": "real_kamaishi_acceptance_passed",
     "resolution_summary": "Replay schema 1.1.0 now emits a production open_ocean_damped policy with patch-type lateral boundaries, Foundation 11 open-ocean outlet/lateral field conditions and explicit isotropicDamping zones. Legacy 1.0.0 configurations continue to normalise to symmetry_test.",
     "implementation_evidence": [
       "tools/openfoam/openfoam_replay.py",
@@ -23,7 +23,7 @@
       "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/smoke_summary.json",
       "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
     ],
-    "resolved_commit_candidate": "pending",
+    "resolved_commit_candidate": "test(g6): validate production policy on the Kamaishi replay",
     "wbs_id": "SWE-L3D-BC",
     "why_it_blocks_g6": "The G6 Local3D model requires a baseline lateral boundary policy suitable for the theoretical hybrid model, not only a smoke-test symmetry mode."
   },
@@ -36,7 +36,7 @@
     "required_change": "Add a lightweight reflection diagnostic/benchmark or an evidence note with accepted limits.",
     "required_test": "Focused boundary-condition benchmark or diagnostic assertion over a known replay/synthetic signal.",
     "status": "implementation_complete",
-    "acceptance_status": "real_kamaishi_acceptance_pending",
+    "acceptance_status": "real_kamaishi_acceptance_passed",
     "resolution_summary": "A deterministic small-amplitude reflection benchmark now derives incident/reflected windows analytically and demonstrates metric sensitivity plus outlet/lateral open-boundary acceptance.",
     "implementation_evidence": [
       "tools/openfoam/boundary_reflection_benchmark.py",
@@ -52,7 +52,7 @@
       "docs/workstream/SWE - Software/SWE-L3D/g6_boundary_reflection/outlet_boundary_reflection.png",
       "docs/workstream/SWE - Software/SWE-L3D/g6_boundary_reflection/lateral_boundary_reflection.png"
     ],
-    "resolved_commit_candidate": "pending",
+    "resolved_commit_candidate": "test(g6): validate production policy on the Kamaishi replay",
     "wbs_id": "SWE-L3D-BC",
     "why_it_blocks_g6": "The theoretical hybrid gate needs evidence that the baseline boundary policy does not invalidate the replayed local model at the interface scale."
   },
@@ -65,7 +65,7 @@
     "required_change": "Add a wall-function applicability note and compute or explicitly bound y+ expectations for the generated baseline.",
     "required_test": "Automated check that wall-function policy evidence exists for generated cases or that the selected mesh policy reports a valid surrogate.",
     "status": "implementation_complete",
-    "acceptance_status": "real_kamaishi_acceptance_pending",
+    "acceptance_status": "real_kamaishi_acceptance_passed",
     "resolution_summary": "Production cases now use the continuous Spalding-law nut wall function, include the Foundation 11 yPlus function object and validate y+ evidence for expected wall patches. The copied synthetic OpenFOAM evidence retains yPlus min/max/average tables without inventing face-level percentiles.",
     "implementation_evidence": [
       "tools/openfoam/openfoam_replay.py",
@@ -79,7 +79,7 @@
       "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/wall_function_evidence.json",
       "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
     ],
-    "resolved_commit_candidate": "pending",
+    "resolved_commit_candidate": "test(g6): validate production policy on the Kamaishi replay",
     "wbs_id": "SWE-L3D-WLF",
     "why_it_blocks_g6": "Wall functions are part of the Local3D theoretical baseline; the repository currently configures them but does not evidence applicability."
   },
@@ -92,7 +92,7 @@
     "required_change": "Document which constraints are repository-controlled, which are OpenFOAM-controlled, and what rejected-step recovery is or is not exposed.",
     "required_test": "Focused validator for generated timestep policy and an acceptance note for rejected-step limitations.",
     "status": "implementation_complete",
-    "acceptance_status": "real_kamaishi_acceptance_pending",
+    "acceptance_status": "real_kamaishi_acceptance_passed",
     "resolution_summary": "Production cases now write timestep_policy.json and runtime timestep evidence. The record separates repository pre-run limits and minimum-timestep acceptance from OpenFOAM internal Courant adaptation, records implicit-diffusion disposition and keeps exact rollback/retry as a post-G6 robustness extension.",
     "implementation_evidence": [
       "tools/openfoam/openfoam_replay.py",
@@ -108,7 +108,7 @@
       "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/timestep_policy_evidence.json",
       "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
     ],
-    "resolved_commit_candidate": "pending",
+    "resolved_commit_candidate": "test(g6): validate production policy on the Kamaishi replay",
     "wbs_id": "SWE-L3D-TIM",
     "why_it_blocks_g6": "The WBS title includes CFL, interface-CFL, gravity-wave and diffusion constraints with rejection; OpenFOAM owns internal adaptation and the repository only configures maxCo/maxAlphaCo/maxDeltaT today."
   }

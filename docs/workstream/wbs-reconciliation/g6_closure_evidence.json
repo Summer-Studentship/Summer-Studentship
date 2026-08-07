@@ -5,7 +5,7 @@
   },
   "gate": "G6 - Theoretical 2D-3D Hybrid Model Complete",
   "status": "implementation_complete",
-  "acceptance_status": "real_kamaishi_acceptance_pending",
+  "acceptance_status": "real_kamaishi_acceptance_passed",
   "calibration_status": "not_started",
   "openfoam_authority": "docs/workstream/SWE - Software/SWE-L3D/g6_openfoam_authority_record.json",
   "supported_replay_schema_versions": [
@@ -26,7 +26,7 @@
   "gap_evidence": {
     "G6-L3D-BC-001": {
       "status": "implementation_complete",
-      "acceptance_status": "real_kamaishi_acceptance_pending",
+      "acceptance_status": "real_kamaishi_acceptance_passed",
       "resolution_summary": "Replay configs now support legacy 1.0.0 symmetry_test and production 1.1.0 open_ocean_damped modes. Production mesh laterals are patch type and outlet/lateral fields use Foundation 11-compatible open-ocean boundary conditions with explicit damping zones.",
       "implementation_evidence": [
         "tools/openfoam/openfoam_replay.py",
@@ -41,7 +41,8 @@
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/smoke_summary.json",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/no_defence/boundary_policy.json",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/boundary_policy.json",
-        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
+        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json",
+        "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json"
       ],
       "key_results": {
         "legacy_mode_retained": "symmetry_test",
@@ -56,7 +57,7 @@
     },
     "G6-L3D-BC-002": {
       "status": "implementation_complete",
-      "acceptance_status": "real_kamaishi_acceptance_pending",
+      "acceptance_status": "real_kamaishi_acceptance_passed",
       "resolution_summary": "A deterministic small-amplitude boundary-reflection benchmark now derives incident/reflected windows analytically and reports Kr and RE for a reflective control, production outlet, and production lateral case.",
       "implementation_evidence": [
         "tools/openfoam/boundary_reflection_benchmark.py",
@@ -85,7 +86,7 @@
     },
     "G6-L3D-WLF-001": {
       "status": "implementation_complete",
-      "acceptance_status": "real_kamaishi_acceptance_pending",
+      "acceptance_status": "real_kamaishi_acceptance_passed",
       "resolution_summary": "Production Local3D cases use kqRWallFunction, omegaWallFunction and continuous nutUSpaldingWallFunction, include Foundation 11 yPlus, and write/validate wall-function evidence. OpenFOAM yPlus table evidence is retained as min/max/average without invented face-level percentiles.",
       "implementation_evidence": [
         "tools/openfoam/openfoam_replay.py",
@@ -100,7 +101,8 @@
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/no_defence/terrain_yplus_history.png",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/terrain_yplus_history.png",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/barrier_yplus_history.png",
-        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
+        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json",
+        "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json"
       ],
       "key_results": {
         "production_k_wall_type": "kqRWallFunction",
@@ -122,7 +124,7 @@
     },
     "G6-L3D-TIM-001": {
       "status": "implementation_complete",
-      "acceptance_status": "real_kamaishi_acceptance_pending",
+      "acceptance_status": "real_kamaishi_acceptance_passed",
       "resolution_summary": "Generated production cases write a versioned timestep policy and runtime evidence. The policy records repository-controlled pre-run caps/maxCo/maxAlphaCo/minimum timestep, OpenFOAM-controlled adaptive reduction/increase, implicit diffusion disposition, diagnostic viscous timescale margin, and the lack of exact rollback/retry in the adopted foamRun/incompressibleVoF interface.",
       "implementation_evidence": [
         "tools/openfoam/openfoam_replay.py",
@@ -138,7 +140,8 @@
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/timestep_policy_evidence.json",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/no_defence/timestep_history.png",
         "docs/workstream/SWE - Software/SWE-L3D/g6_synthetic_openfoam_smoke/simple_rigid_barrier/courant_history.png",
-        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
+        "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json",
+        "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json"
       ],
       "key_results": {
         "synthetic_no_defence_timestep_range_s": [0.001386554622, 0.004],
@@ -156,8 +159,12 @@
     }
   },
   "real_kamaishi_acceptance": {
-    "status": "real_kamaishi_acceptance_pending",
-    "evidence": "docs/workstream/SWE - Software/SWE-L3D/g6_kamaishi_rerun_attempt.json"
+    "status": "real_kamaishi_acceptance_passed",
+    "evidence": [
+      "/home/helios/SimulationData/Summer-Studentship/g5-reference-600/evidence/g5_g6_prefix_equivalence.json",
+      "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_forcing_equivalence.json",
+      "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json"
+    ]
   },
-  "resolved_commit_candidate": "pending"
+  "resolved_commit_candidate": "test(g6): validate production policy on the Kamaishi replay"
 }

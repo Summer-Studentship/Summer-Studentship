@@ -9,13 +9,15 @@ import importlib.util
 import json
 import math
 import os
+import resource
 import shutil
 import subprocess
 import sys
+import time
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Iterable, Sequence
+from typing import Any, Iterable, Sequence
 
 
 CASE_ID = "kamaishi-etopo-usgs"
@@ -44,6 +46,9 @@ OPENFOAM_REPLAY = Path("tools/openfoam/openfoam_replay.py")
 DEFAULT_R2D_BINARY = Path("build/linux-gcc-crs-test/apps/r2d_case/tsunami_r2d_case")
 DEFAULT_PYTHON = Path("/tmp/tsunami-g3-producer-venv/bin/python")
 GMESH_BINARY = "gmsh"
+DEFAULT_G6_ARTIFACT_ROOT = Path("/home/helios/SimulationData/Summer-Studentship/g6-kamaishi")
+G5_ACCEPTED_REPLAY_REFERENCE = Path("tests/fixtures/kamaishi/g5_accepted_replay_reference.json")
+G6_PREPROCESSING_STAGE_RECORD = Path("manifests/stages/g6_preprocessing_completion.json")
 
 
 class DeliveryError(RuntimeError):
@@ -142,14 +147,87 @@ def sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def json_sha256(payload: Any) -> str:
+    text = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def current_repo_commit() -> str | None:
+    completed = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo_root(), text=True, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+    if completed.returncode != 0:
+        return None
+    return completed.stdout.strip()
+
+
 def run_command(command: Sequence[str], *, cwd: Path, log_path: Path | None = None) -> subprocess.CompletedProcess[str]:
     log_text = " ".join(command) + "\n"
+    started = time.monotonic()
+    before = resource.getrusage(resource.RUSAGE_CHILDREN)
     completed = subprocess.run(command, cwd=cwd, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    after = resource.getrusage(resource.RUSAGE_CHILDREN)
+    setattr(
+        completed,
+        "resource_usage",
+        {
+            "wall_clock_s": time.monotonic() - started,
+            "cpu_time_s": (after.ru_utime - before.ru_utime) + (after.ru_stime - before.ru_stime),
+            "peak_memory_kb": after.ru_maxrss,
+        },
+    )
     log_text += completed.stdout
     if log_path is not None:
         log_path.parent.mkdir(parents=True, exist_ok=True)
         log_path.write_text(log_text, encoding="utf-8")
     return completed
+
+
+def command_resource_usage(completed: subprocess.CompletedProcess[str]) -> dict[str, float | int | None]:
+    usage = getattr(completed, "resource_usage", None)
+    if isinstance(usage, dict):
+        return {
+            "wall_clock_s": float(usage.get("wall_clock_s", 0.0)),
+            "cpu_time_s": float(usage.get("cpu_time_s", 0.0)),
+            "peak_memory_kb": int(usage.get("peak_memory_kb", 0)),
+        }
+    return {"wall_clock_s": None, "cpu_time_s": None, "peak_memory_kb": None}
+
+
+def r2d_build_record(r2d_binary: Path) -> dict[str, object]:
+    binary = r2d_binary if r2d_binary.is_absolute() else repo_root() / r2d_binary
+    record: dict[str, object] = {
+        "binary": str(binary),
+        "binary_sha256": sha256(binary) if binary.is_file() else None,
+        "source_commit": current_repo_commit(),
+        "compiler": None,
+        "compiler_flags": None,
+        "build_type": None,
+        "cmake_cache": None,
+    }
+    for parent in binary.parents:
+        cache = parent / "CMakeCache.txt"
+        if not cache.is_file():
+            continue
+        record["cmake_cache"] = str(cache)
+        cache_values: dict[str, str] = {}
+        for line in cache.read_text(encoding="utf-8", errors="replace").splitlines():
+            if not line or line.startswith("//") or line.startswith("#") or "=" not in line:
+                continue
+            left, value = line.split("=", 1)
+            key = left.split(":", 1)[0]
+            cache_values[key] = value
+        record["compiler"] = cache_values.get("CMAKE_CXX_COMPILER") or cache_values.get("CMAKE_C_COMPILER")
+        record["compiler_flags"] = cache_values.get("CMAKE_CXX_FLAGS")
+        record["build_type"] = cache_values.get("CMAKE_BUILD_TYPE")
+        break
+    return record
+
+
+def load_g5_accepted_replay_reference(path: Path | None = None) -> dict:
+    reference_path = path or (repo_root() / G5_ACCEPTED_REPLAY_REFERENCE)
+    reference = read_json(reference_path)
+    if reference.get("schema", {}).get("name") != "tsunami.g5_accepted_replay_reference":
+        raise DeliveryError(f"{reference_path} is not a G5 accepted replay reference")
+    return reference
 
 
 def source_inventory(root: Path) -> dict:
@@ -1490,7 +1568,7 @@ def produce_displacement(case_root: Path, root: Path, now: str, python: Path) ->
     return {"command": " ".join(command), "exit_status": result.returncode, "metadata": metadata}
 
 
-def run_regional(case_root: Path, output_root: Path, r2d_binary: Path) -> dict:
+def run_regional(case_root: Path, output_root: Path, r2d_binary: Path, *, minimum_requested_final_time_s: float = 1800.0) -> dict:
     regional_root = output_root / "regional"
     runs_link = regional_root / "runs"
     command = [
@@ -1553,14 +1631,22 @@ def run_regional(case_root: Path, output_root: Path, r2d_binary: Path) -> dict:
         float(corridor["basis"]["centreline_unit"]["y"]),
     )
     spacing = float(corridor["grid"]["profile"])
-    return validate_regional_outputs(
+    validation = validate_regional_outputs(
         output_dir,
         requested_final_time_s=requested_final_time,
         snapshot_interval_s=snapshot_interval,
         selected_interface=selected_point,
         inward_normal=unit,
         nominal_mesh_spacing_m=spacing,
-    ) | {"command": " ".join(command), "exit_status": result.returncode, "output_dir": str(output_dir)}
+        minimum_requested_final_time_s=minimum_requested_final_time_s,
+    )
+    return validation | {
+        "command": " ".join(command),
+        "exit_status": result.returncode,
+        "output_dir": str(output_dir),
+        "resource_usage": command_resource_usage(result),
+        "build": r2d_build_record(r2d_binary),
+    }
 
 
 def _csv_rows(path: Path) -> list[dict[str, str]]:
@@ -1568,15 +1654,25 @@ def _csv_rows(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(handle))
 
 
-def coupling_signal_metrics(samples: Sequence[dict[str, str]], inward_normal: tuple[float, float], *, tolerance: float = 1.0e-8) -> dict:
+def coupling_signal_metrics(
+    samples: Sequence[dict[str, str]],
+    inward_normal: tuple[float, float],
+    *,
+    tolerance: float = 1.0e-8,
+    baseline_samples: Sequence[dict[str, str]] | None = None,
+) -> dict:
     by_time: dict[float, list[dict[str, str]]] = {}
     for row in samples:
         by_time.setdefault(float(row["time"]), []).append(row)
     times = sorted(by_time)
     if not times:
         raise DeliveryError("cannot compute coupling signal metrics from empty samples")
-    baseline_time = times[0]
-    baseline = {int(row["local_index"]): row for row in by_time[baseline_time]}
+    if baseline_samples is None:
+        baseline_time = times[0]
+        baseline = {int(row["local_index"]): row for row in by_time[baseline_time]}
+    else:
+        baseline_time = min(float(row["time"]) for row in baseline_samples)
+        baseline = {int(row["local_index"]): row for row in baseline_samples}
     eta_deltas: list[float] = []
     qn_deltas: list[float] = []
     absolute_etas: list[float] = []
@@ -1588,6 +1684,8 @@ def coupling_signal_metrics(samples: Sequence[dict[str, str]], inward_normal: tu
         signed_peak_qn = 0.0
         for row in by_time[time]:
             local_index = int(row["local_index"])
+            if local_index not in baseline:
+                raise DeliveryError("coupling baseline does not cover every selected sample index")
             base = baseline[local_index]
             eta = float(row["free_surface_elevation"])
             base_eta = float(base["free_surface_elevation"])
@@ -1615,6 +1713,8 @@ def coupling_signal_metrics(samples: Sequence[dict[str, str]], inward_normal: tu
     maximum_abs_delta_eta = max((abs(value) for value in eta_deltas), default=0.0)
     maximum_abs_delta_qn = max((abs(value) for value in qn_deltas), default=0.0)
     peak = max(per_time, key=lambda item: item["metric"])
+    eta_peak = max(per_time, key=lambda item: item["maximum_absolute_delta_eta"])
+    qn_peak = max(per_time, key=lambda item: item["maximum_absolute_delta_qn"])
     threshold = max(10.0 * tolerance, 0.02 * peak["metric"])
     crossing = next((item for item in per_time if item["time"] > baseline_time and item["metric"] >= threshold), None)
     if crossing is None:
@@ -1635,6 +1735,8 @@ def coupling_signal_metrics(samples: Sequence[dict[str, str]], inward_normal: tu
         "maximum_absolute_normal_momentum_change_m2_per_s": maximum_abs_delta_qn,
         "first_threshold_crossing_time_s": crossing["time"],
         "peak_perturbation_time_s": peak["time"],
+        "peak_free_surface_perturbation_time_s": eta_peak["time"],
+        "peak_normal_momentum_change_time_s": qn_peak["time"],
         "peak_delta_eta_m": peak["peak_delta_eta"],
         "peak_delta_qn_m2_per_s": peak["peak_delta_qn"],
         "event_threshold": threshold,
@@ -1692,6 +1794,7 @@ def validate_regional_outputs(
     selected_interface: Point,
     inward_normal: tuple[float, float],
     nominal_mesh_spacing_m: float,
+    minimum_requested_final_time_s: float = 1800.0,
 ) -> dict:
     required = [
         output_dir / "diagnostics.csv",
@@ -1715,8 +1818,8 @@ def validate_regional_outputs(
     expected_time_count = int(math.floor(requested_final_time_s / snapshot_interval_s + 1.0e-9)) + 1
     history_times = [float(row["time"]) for row in history]
     achieved_final_time = max(history_times) if history_times else 0.0
-    if requested_final_time_s < 1800.0:
-        raise DeliveryError("Regional2D requested final time is below 1800 s")
+    if requested_final_time_s + 1.0e-9 < minimum_requested_final_time_s:
+        raise DeliveryError(f"Regional2D requested final time is below {minimum_requested_final_time_s:g} s")
     if achieved_final_time + max(1.0e-6, 1.0e-9 * requested_final_time_s) < requested_final_time_s:
         raise DeliveryError("coupling history does not reach the requested Regional2D final time")
     if len(history) < expected_time_count:
@@ -1746,6 +1849,12 @@ def validate_regional_outputs(
     max_displacement = max(displacement_values)
     if max_displacement <= 0.0:
         raise DeliveryError("earthquake initialisation reports zero effective bed displacement")
+    final_step = None
+    if diagnostics and "step" in diagnostics[-1] and diagnostics[-1]["step"] != "":
+        try:
+            final_step = int(float(diagnostics[-1]["step"]))
+        except ValueError:
+            final_step = None
     return {
         "diagnostics_rows": len(diagnostics),
         "snapshot_rows": len(snapshots),
@@ -1756,6 +1865,7 @@ def validate_regional_outputs(
         "coupling_sample_count": sample_count,
         "requested_final_time_s": requested_final_time_s,
         "achieved_final_time_s": achieved_final_time,
+        "final_step": final_step,
         "maximum_abs_momentum": max_q,
         "maximum_abs_effective_bed_displacement_m": max_displacement,
         "alignment": alignment,
@@ -1899,6 +2009,581 @@ def select_replay_window(full_coupling: Path, selected: Path, inward_normal: tup
     return evidence
 
 
+def _find_time_key(times: Sequence[float], target: float, *, tolerance: float = 1.0e-7) -> float:
+    for time_value in times:
+        if abs(time_value - target) <= tolerance:
+            return time_value
+    raise DeliveryError(f"fixed replay window source time {target:g} s is missing")
+
+
+def _reference_window_value(reference: dict, group: str, key: str) -> float:
+    value = reference[group][key]
+    if not isinstance(value, (int, float)):
+        raise DeliveryError(f"G5 reference {group}.{key} is not numeric")
+    return float(value)
+
+
+def select_fixed_replay_window(
+    full_coupling: Path,
+    selected: Path,
+    inward_normal: tuple[float, float],
+    reference: dict,
+    *,
+    evidence_output: Path | None = None,
+) -> dict:
+    source_start = _reference_window_value(reference, "source_window", "start_s")
+    source_end = _reference_window_value(reference, "source_window", "end_s")
+    shifted_start = _reference_window_value(reference, "shifted_window", "start_s")
+    shifted_end = _reference_window_value(reference, "shifted_window", "end_s")
+    snapshot_interval = float(reference["snapshot_interval_s"])
+    expected_time_count = int(reference["selected_time_count"])
+    expected_sample_count = int(reference["coupling_sample_count"])
+    expected_row_count = int(reference["selected_sample_row_count"])
+    expected_peak_source = float(reference["source_peak_time_s"])
+    expected_peak_shifted = float(reference["shifted_peak_time_s"])
+
+    metadata = read_json(full_coupling / "metadata.json")
+    samples = _csv_rows(full_coupling / "samples.csv")
+    history = _csv_rows(full_coupling / "history.csv")
+    if not samples or not history:
+        raise DeliveryError("cannot extract fixed replay window from empty coupling output")
+    if int(metadata.get("sample_count", 0)) != expected_sample_count:
+        raise DeliveryError("fixed replay window coupling sample count differs from the accepted G5 reference")
+    by_time: dict[float, list[dict[str, str]]] = {}
+    for row in samples:
+        by_time.setdefault(float(row["time"]), []).append(row)
+    by_history_time = {float(row["time"]): row for row in history}
+    source_times = sorted(by_time)
+    if source_times[-1] + 1.0e-7 < source_end:
+        raise DeliveryError("Regional2D evidence run does not cover the accepted fixed replay window")
+    chosen_times = [
+        _find_time_key(source_times, source_start + index * snapshot_interval)
+        for index in range(expected_time_count)
+    ]
+    if any(chosen_times[index] >= chosen_times[index + 1] for index in range(len(chosen_times) - 1)):
+        raise DeliveryError("fixed replay window source times are not strictly increasing")
+    if abs(chosen_times[0] - source_start) > 1.0e-7 or abs(chosen_times[-1] - source_end) > 1.0e-7:
+        raise DeliveryError("fixed replay window endpoints do not match the accepted G5 reference")
+    selected_row_count = sum(len(by_time[time_value]) for time_value in chosen_times)
+    if selected_row_count != expected_row_count:
+        raise DeliveryError("fixed replay window row count differs from the accepted G5 reference")
+
+    selected.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(full_coupling / "metadata.json", selected / "metadata.json")
+    with (selected / "samples.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(samples[0]))
+        writer.writeheader()
+        for index, source_time in enumerate(chosen_times):
+            shifted = source_time - source_start
+            for row in by_time[source_time]:
+                out = dict(row)
+                out["step"] = str(index)
+                out["time"] = f"{shifted:.17g}"
+                writer.writerow(out)
+    with (selected / "history.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(history[0]))
+        writer.writeheader()
+        for index, source_time in enumerate(chosen_times):
+            history_time = _find_time_key(sorted(by_history_time), source_time)
+            out = dict(by_history_time[history_time])
+            out["step"] = str(index)
+            out["time"] = f"{source_time - source_start:.17g}"
+            writer.writerow(out)
+
+    selected_samples = _csv_rows(selected / "samples.csv")
+    shifted_times = sorted({float(row["time"]) for row in selected_samples})
+    if shifted_times[0] != shifted_start or abs(shifted_times[-1] - shifted_end) > 1.0e-7:
+        raise DeliveryError("fixed replay shifted window does not span 0-300 s")
+    signal = coupling_signal_metrics(selected_samples, inward_normal, baseline_samples=by_time[source_times[0]])
+    peak_shifted = float(signal["peak_free_surface_perturbation_time_s"])
+    peak_source = source_start + peak_shifted
+    depths = [float(row["depth"]) for row in selected_samples]
+    positive_depths = sorted(depth for depth in depths if depth > 1.0e-6)
+    representative_depth = positive_depths[len(positive_depths) // 2] if positive_depths else max(depths)
+    evidence = {
+        "schema": {"name": "tsunami.g6_fixed_window_extraction", "version": "1.0.0"},
+        "reference_provenance": reference["provenance"],
+        "profile": reference["profile"],
+        "source_run_identity": {
+            "source_coupling_dir": str(full_coupling),
+            "repository_commit": current_repo_commit(),
+            "extracted_at_utc": utc_now(),
+        },
+        "source_window": {"start_s": source_start, "end_s": source_end},
+        "shifted_window": {"start_s": shifted_start, "end_s": shifted_end},
+        "selected_source_start_s": source_start,
+        "selected_source_end_s": source_end,
+        "selected_shifted_start_s": shifted_times[0],
+        "selected_shifted_end_s": shifted_times[-1],
+        "selected_time_count": len(chosen_times),
+        "coupling_sample_count": expected_sample_count,
+        "selected_sample_row_count": selected_row_count,
+        "source_peak_time_s": peak_source,
+        "shifted_peak_time_s": peak_shifted,
+        "metrics": {
+            "maximum_absolute_free_surface_perturbation_m": signal["maximum_absolute_free_surface_perturbation_m"],
+            "maximum_absolute_normal_momentum_change_m2_per_s": signal["maximum_absolute_normal_momentum_change_m2_per_s"],
+            "peak_free_surface_perturbation_source_time_s": peak_source,
+            "peak_normal_momentum_change_source_time_s": source_start + float(signal["peak_normal_momentum_change_time_s"]),
+            "peak_combined_perturbation_source_time_s": source_start + float(signal["peak_perturbation_time_s"]),
+            "representative_wet_depth_m": representative_depth,
+            "minimum_coupling_depth_m": min(depths),
+            "maximum_coupling_depth_m": max(depths),
+        },
+        "selected_window_metrics": {
+            "selected_window_maximum_absolute_free_surface_perturbation_m": signal["maximum_absolute_free_surface_perturbation_m"],
+            "selected_window_maximum_absolute_normal_momentum_change_m2_per_s": signal["maximum_absolute_normal_momentum_change_m2_per_s"],
+            "selected_window_peak_eta_time_s": peak_source,
+            "selected_window_peak_qn_time_s": source_start + float(signal["peak_normal_momentum_change_time_s"]),
+            "selected_window_peak_combined_time_s": source_start + float(signal["peak_perturbation_time_s"]),
+        },
+        "accepted_full_source_hashes": reference["accepted_full_source_hashes"],
+        "source_metadata_sha256": sha256(full_coupling / "metadata.json"),
+        "source_samples_sha256": sha256(full_coupling / "samples.csv"),
+        "source_history_sha256": sha256(full_coupling / "history.csv"),
+        "source_hashes": {
+            "metadata_sha256": sha256(full_coupling / "metadata.json"),
+            "samples_sha256": sha256(full_coupling / "samples.csv"),
+            "history_sha256": sha256(full_coupling / "history.csv"),
+        },
+        "selected_window_hashes": {
+            "metadata_sha256": sha256(selected / "metadata.json"),
+            "samples_sha256": sha256(selected / "samples.csv"),
+            "history_sha256": sha256(selected / "history.csv"),
+        },
+        "full_source_hashes_cannot_match_truncated_evidence_run": True,
+    }
+    write_json(selected / "window_selection.json", evidence)
+    write_json(selected / "g6_fixed_window_extraction.json", evidence)
+    if evidence_output is not None:
+        write_json(evidence_output, evidence)
+    return evidence
+
+
+def _within_reference_tolerance(actual: float, expected: float) -> bool:
+    return abs(actual - expected) <= 1.0e-10 + 1.0e-8 * max(abs(actual), abs(expected))
+
+
+def selected_window_reference_metrics(reference: dict) -> dict[str, object]:
+    scoped = reference.get("selected_window_245_545_s", {})
+    return {
+        "maximum_absolute_free_surface_perturbation_m": scoped.get(
+            "selected_window_maximum_absolute_free_surface_perturbation_m",
+            reference.get("metrics", {}).get("maximum_absolute_free_surface_perturbation_m"),
+        ),
+        "maximum_absolute_normal_momentum_change_m2_per_s": scoped.get(
+            "selected_window_maximum_absolute_normal_momentum_change_m2_per_s"
+        ),
+        "peak_free_surface_perturbation_source_time_s": scoped.get("selected_window_peak_eta_time_s"),
+        "peak_normal_momentum_change_source_time_s": scoped.get("selected_window_peak_qn_time_s"),
+        "peak_combined_perturbation_source_time_s": scoped.get("selected_window_peak_combined_time_s"),
+        "representative_wet_depth_m": reference.get("metrics", {}).get("representative_wet_depth_m"),
+        "minimum_coupling_depth_m": reference.get("metrics", {}).get("minimum_coupling_depth_m"),
+        "maximum_coupling_depth_m": reference.get("metrics", {}).get("maximum_coupling_depth_m"),
+    }
+
+
+def compare_fixed_window_to_reference(extraction: dict, reference: dict, *, output_path: Path | None = None) -> dict:
+    exact_fields = {
+        "selected_time_count": (extraction["selected_time_count"], reference["selected_time_count"]),
+        "coupling_sample_count": (extraction["coupling_sample_count"], reference["coupling_sample_count"]),
+        "selected_sample_row_count": (extraction["selected_sample_row_count"], reference["selected_sample_row_count"]),
+        "source_start_s": (extraction["source_window"]["start_s"], reference["source_window"]["start_s"]),
+        "source_end_s": (extraction["source_window"]["end_s"], reference["source_window"]["end_s"]),
+        "shifted_start_s": (extraction["shifted_window"]["start_s"], reference["shifted_window"]["start_s"]),
+        "shifted_end_s": (extraction["shifted_window"]["end_s"], reference["shifted_window"]["end_s"]),
+        "source_peak_time_s": (extraction["source_peak_time_s"], reference["source_peak_time_s"]),
+        "shifted_peak_time_s": (extraction["shifted_peak_time_s"], reference["shifted_peak_time_s"]),
+    }
+    exact_results = {
+        name: {"actual": actual, "expected": expected, "passed": actual == expected}
+        for name, (actual, expected) in exact_fields.items()
+    }
+    reference_metrics = selected_window_reference_metrics(reference)
+    metric_results: dict[str, dict[str, object]] = {}
+    missing_reference_metrics: list[str] = []
+    for name, actual in extraction["metrics"].items():
+        expected = reference_metrics.get(name)
+        if expected is None:
+            metric_results[name] = {
+                "actual": actual,
+                "expected": None,
+                "passed": None,
+                "reference_status": "not_published_or_not_reconstructed_for_selected_window",
+                "scope": "selected_window_245_545_s",
+            }
+            missing_reference_metrics.append(name)
+            continue
+        passed = _within_reference_tolerance(float(actual), float(expected))
+        metric_results[name] = {"actual": actual, "expected": expected, "passed": passed, "scope": "selected_window_245_545_s"}
+    passed = all(item["passed"] for item in exact_results.values()) and all(
+        item["passed"] is not False for item in metric_results.values()
+    )
+    comparison = {
+        "schema": {"name": "tsunami.g6_fixed_window_reference_comparison", "version": "1.0.0"},
+        "status": "passed" if passed else "failed",
+        "equivalence_contract": {
+            "level_1": "source provenance",
+            "level_2": "Regional2D case and input equivalence",
+            "level_3": "pointwise G5/G6 prefix equivalence over 0-600 s",
+            "level_4": "selected-window 245-545 s metric equivalence",
+            "level_5": "Local3D replay acceptance",
+            "historical_full_history_metric_must_not_be_used_as_selected_window_comparator": True,
+        },
+        "tolerance": {"absolute": 1.0e-10, "relative": 1.0e-8},
+        "exact": exact_results,
+        "metrics": metric_results,
+        "missing_reference_metrics": missing_reference_metrics,
+        "historical_full_history_metrics_excluded": reference.get("full_history_0_1800_s", {}),
+        "selected_window_hashes": extraction["selected_window_hashes"],
+        "source_hashes": extraction["source_hashes"],
+        "accepted_full_source_hashes": reference["accepted_full_source_hashes"],
+        "full_source_hashes_cannot_match_truncated_evidence_run": True,
+    }
+    if output_path is not None:
+        write_json(output_path, comparison)
+    return comparison
+
+
+def _rows_through_time(path: Path, prefix_final_time_s: float) -> list[dict[str, str]]:
+    rows = _csv_rows(path)
+    if not rows:
+        return rows
+    time_field = "time" if "time" in rows[0] else "end_time" if "end_time" in rows[0] else None
+    if time_field is None:
+        return rows
+    return [row for row in rows if float(row[time_field]) <= prefix_final_time_s + 1.0e-9]
+
+
+def compare_regional_time_horizon_outputs(
+    short_output_dir: Path,
+    long_output_dir: Path,
+    *,
+    prefix_final_time_s: float,
+    output_path: Path | None = None,
+) -> dict:
+    csv_files = [
+        Path("diagnostics.csv"),
+        Path("snapshots.csv"),
+        Path("coupling") / SECTION_ID / "history.csv",
+        Path("coupling") / SECTION_ID / "samples.csv",
+    ]
+    comparisons: dict[str, dict[str, object]] = {}
+    first_difference: dict[str, object] | None = None
+    for relative in csv_files:
+        short_path = short_output_dir / relative
+        long_path = long_output_dir / relative
+        short_rows = _rows_through_time(short_path, prefix_final_time_s)
+        long_rows = _rows_through_time(long_path, prefix_final_time_s)
+        passed = short_rows == long_rows
+        comparison: dict[str, object] = {
+            "short_path": str(short_path),
+            "long_path": str(long_path),
+            "prefix_final_time_s": prefix_final_time_s,
+            "short_prefix_rows": len(short_rows),
+            "long_prefix_rows": len(long_rows),
+            "passed": passed,
+        }
+        if not passed:
+            differing_index = next(
+                (index for index, pair in enumerate(zip(short_rows, long_rows)) if pair[0] != pair[1]),
+                min(len(short_rows), len(long_rows)),
+            )
+            comparison["first_differing_row_index"] = differing_index
+            if first_difference is None:
+                first_difference = {"file": relative.as_posix(), "row_index": differing_index}
+        comparisons[relative.as_posix()] = comparison
+
+    metadata_short = read_json(short_output_dir / "coupling" / SECTION_ID / "metadata.json")
+    metadata_long = read_json(long_output_dir / "coupling" / SECTION_ID / "metadata.json")
+    metadata_passed = metadata_short == metadata_long
+    comparisons[f"coupling/{SECTION_ID}/metadata.json"] = {
+        "short_path": str(short_output_dir / "coupling" / SECTION_ID / "metadata.json"),
+        "long_path": str(long_output_dir / "coupling" / SECTION_ID / "metadata.json"),
+        "passed": metadata_passed,
+    }
+    if not metadata_passed and first_difference is None:
+        first_difference = {"file": f"coupling/{SECTION_ID}/metadata.json"}
+
+    prefix_invariant = all(bool(item["passed"]) for item in comparisons.values())
+    evidence = {
+        "schema": {"name": "tsunami.regional_time_horizon_invariance", "version": "1.0.0"},
+        "prefix_invariant": prefix_invariant,
+        "status": "passed" if prefix_invariant else "failed",
+        "prefix_final_time_s": prefix_final_time_s,
+        "comparisons": comparisons,
+        "first_difference": first_difference,
+    }
+    if output_path is not None:
+        write_json(output_path, evidence)
+    return evidence
+
+
+def compare_g5_g6_upstream_cases(g5_case_root: Path, g6_case_root: Path, *, output_path: Path | None = None) -> dict:
+    value_items = {
+        "case_identity": ("case",),
+        "scenario": ("scenario",),
+        "coordinate_frame": ("coordinate_frame",),
+        "dataset_bindings": ("datasets", "bindings"),
+        "regional_corridor": ("regional_2d", "corridor"),
+        "physics": ("regional_2d", "physics"),
+        "numerics": ("regional_2d", "numerics"),
+        "boundaries": ("regional_2d", "boundaries"),
+        "outputs": ("outputs",),
+    }
+    g5_case = read_json(g5_case_root / "case.json")
+    g6_case = read_json(g6_case_root / "case.json")
+    timestamp_keys = {"created_at_utc", "executed_at_utc", "accessed_at_utc", "generated_at_utc"}
+
+    def nested(payload: dict, path: tuple[str, ...]) -> object:
+        value: object = payload
+        for key in path:
+            if not isinstance(value, dict):
+                raise DeliveryError(f"case comparison path {'.'.join(path)} is not an object")
+            value = value[key]
+        return value
+
+    def normalise_generated_metadata(value: object) -> object:
+        if isinstance(value, dict):
+            return {
+                key: normalise_generated_metadata(child)
+                for key, child in value.items()
+                if key not in timestamp_keys
+            }
+        if isinstance(value, list):
+            return [normalise_generated_metadata(child) for child in value]
+        return value
+
+    value_comparisons = {}
+    for name, path in value_items.items():
+        g5_value = normalise_generated_metadata(nested(g5_case, path))
+        g6_value = normalise_generated_metadata(nested(g6_case, path))
+        value_comparisons[name] = {
+            "g5_sha256": json_sha256(g5_value),
+            "g6_sha256": json_sha256(g6_value),
+            "passed": g5_value == g6_value,
+            "normalised_timestamp_fields": sorted(timestamp_keys),
+        }
+
+    file_items = {
+        "terrain_source": Path("inputs") / SOURCE_TERRAIN_PATH,
+        "quake_source": Path("inputs") / SOURCE_QUAKE_PATH,
+        "conditioned_terrain": TERRAIN_OUTPUT_PATH,
+        "conditioned_terrain_record": TERRAIN_RECORD_PATH,
+        "displacement_raster": Path("inputs/data/earthquake/tohoku_vertical_displacement.tif"),
+        "displacement_metadata": Path("inputs/data/earthquake/tohoku_vertical_displacement.json"),
+        "mesh_topology_coordinates_groups": MESH_PATH,
+        "corridor_record_normal_tangent": CORRIDOR_RECORD_PATH,
+    }
+    file_comparisons = {}
+    for name, relative in file_items.items():
+        g5_path = g5_case_root / relative
+        g6_path = g6_case_root / relative
+        if not g5_path.is_file() or not g6_path.is_file():
+            file_comparisons[name] = {
+                "g5_path": str(g5_path),
+                "g6_path": str(g6_path),
+                "passed": False,
+                "reason": "missing_file",
+            }
+            continue
+        g5_hash = sha256(g5_path)
+        g6_hash = sha256(g6_path)
+        passed = g5_hash == g6_hash
+        normalised: dict[str, object] = {}
+        if g5_path.suffix == ".json" and g6_path.suffix == ".json":
+            g5_payload = normalise_generated_metadata(read_json(g5_path))
+            g6_payload = normalise_generated_metadata(read_json(g6_path))
+            normalised = {
+                "g5_normalised_sha256": json_sha256(g5_payload),
+                "g6_normalised_sha256": json_sha256(g6_payload),
+                "normalised_timestamp_fields": sorted(timestamp_keys),
+            }
+            passed = g5_payload == g6_payload
+        file_comparisons[name] = {
+            "g5_path": str(g5_path),
+            "g6_path": str(g6_path),
+            "g5_sha256": g5_hash,
+            "g6_sha256": g6_hash,
+            "passed": passed,
+        } | normalised
+
+    passed = all(item["passed"] for item in value_comparisons.values()) and all(
+        item["passed"] for item in file_comparisons.values()
+    )
+    evidence = {
+        "schema": {"name": "tsunami.g5_g6_upstream_case_comparison", "version": "1.0.0"},
+        "status": "passed" if passed else "failed",
+        "value_comparisons": value_comparisons,
+        "file_hash_comparisons": file_comparisons,
+        "allowed_differences": ["run_id", "timestamps", "output_path", "g5_g6_metadata", "final_time_provenance"],
+        "local3d_span_difference_is_not_regional_forcing": True,
+    }
+    if output_path is not None:
+        write_json(output_path, evidence)
+    return evidence
+
+
+def _sample_key(row: dict[str, str]) -> tuple[float, int]:
+    return (float(row["time"]), int(row["local_index"]))
+
+
+def _derived_sample_values(
+    row: dict[str, str],
+    baseline: dict[str, str],
+    inward_normal: tuple[float, float],
+    tangent: tuple[float, float],
+) -> dict[str, float]:
+    qn = float(row["momentum_x"]) * inward_normal[0] + float(row["momentum_y"]) * inward_normal[1]
+    qt = float(row["momentum_x"]) * tangent[0] + float(row["momentum_y"]) * tangent[1]
+    base_qn = float(baseline["momentum_x"]) * inward_normal[0] + float(baseline["momentum_y"]) * inward_normal[1]
+    base_eta = float(baseline["free_surface_elevation"])
+    return {
+        "normal_momentum_m2_per_s": qn,
+        "tangent_momentum_m2_per_s": qt,
+        "normal_momentum_change_m2_per_s": qn - base_qn,
+        "free_surface_perturbation_m": float(row["free_surface_elevation"]) - base_eta,
+    }
+
+
+def compare_g5_g6_prefix_coupling(
+    g5_coupling: Path,
+    g6_coupling: Path,
+    inward_normal: tuple[float, float],
+    tangent: tuple[float, float],
+    *,
+    prefix_final_time_s: float = 600.0,
+    output_path: Path | None = None,
+    csv_output_path: Path | None = None,
+) -> dict:
+    raw_fields = [
+        "x_m",
+        "y_m",
+        "depth",
+        "momentum_x",
+        "momentum_y",
+        "bed_elevation",
+        "free_surface_elevation",
+    ]
+    derived_fields = [
+        "normal_momentum_m2_per_s",
+        "tangent_momentum_m2_per_s",
+        "normal_momentum_change_m2_per_s",
+        "free_surface_perturbation_m",
+    ]
+    g5_rows = [row for row in _csv_rows(g5_coupling / "samples.csv") if float(row["time"]) <= prefix_final_time_s + 1.0e-9]
+    g6_rows = [row for row in _csv_rows(g6_coupling / "samples.csv") if float(row["time"]) <= prefix_final_time_s + 1.0e-9]
+    g5_by_key = {_sample_key(row): row for row in g5_rows}
+    g6_by_key = {_sample_key(row): row for row in g6_rows}
+    keys = sorted(set(g5_by_key) | set(g6_by_key))
+    g5_baseline = {int(row["local_index"]): row for row in g5_rows if abs(float(row["time"])) <= 1.0e-9}
+    g6_baseline = {int(row["local_index"]): row for row in g6_rows if abs(float(row["time"])) <= 1.0e-9}
+    abs_tol = 1.0e-11
+    rel_tol = 1.0e-10
+    comparisons = 0
+    exact_matches = 0
+    tolerant_matches = 0
+    failures = 0
+    sum_sq = 0.0
+    max_abs_diff = 0.0
+    max_rel_diff = 0.0
+    first_difference: dict[str, object] | None = None
+    csv_rows: list[dict[str, object]] = []
+    missing_keys = sorted(set(g5_by_key) ^ set(g6_by_key))
+    if missing_keys:
+        first_difference = {"time": missing_keys[0][0], "local_index": missing_keys[0][1], "field": "row_presence"}
+        failures += len(missing_keys)
+
+    for key in keys:
+        if key not in g5_by_key or key not in g6_by_key:
+            continue
+        g5_row = g5_by_key[key]
+        g6_row = g6_by_key[key]
+        local_index = key[1]
+        g5_values = {field: float(g5_row[field]) for field in raw_fields}
+        g6_values = {field: float(g6_row[field]) for field in raw_fields}
+        g5_values |= _derived_sample_values(g5_row, g5_baseline[local_index], inward_normal, tangent)
+        g6_values |= _derived_sample_values(g6_row, g6_baseline[local_index], inward_normal, tangent)
+        for field in raw_fields + derived_fields:
+            actual = g6_values[field]
+            expected = g5_values[field]
+            diff = actual - expected
+            abs_diff = abs(diff)
+            denom = max(abs(actual), abs(expected), 1.0)
+            rel_diff = abs_diff / denom
+            tolerance = abs_tol + rel_tol * max(abs(actual), abs(expected))
+            exact = actual == expected
+            passed = exact or abs_diff <= tolerance
+            comparisons += 1
+            exact_matches += 1 if exact else 0
+            tolerant_matches += 1 if passed else 0
+            failures += 0 if passed else 1
+            sum_sq += diff * diff
+            max_abs_diff = max(max_abs_diff, abs_diff)
+            max_rel_diff = max(max_rel_diff, rel_diff)
+            if not passed and first_difference is None:
+                first_difference = {"time": key[0], "local_index": local_index, "field": field}
+            if not passed or not exact:
+                csv_rows.append(
+                    {
+                        "time": f"{key[0]:.17g}",
+                        "local_index": local_index,
+                        "field": field,
+                        "g5": f"{expected:.17g}",
+                        "g6": f"{actual:.17g}",
+                        "absolute_difference": f"{abs_diff:.17g}",
+                        "relative_difference": f"{rel_diff:.17g}",
+                        "tolerance": f"{tolerance:.17g}",
+                        "passed": passed,
+                        "exact": exact,
+                    }
+                )
+
+    rmse = math.sqrt(sum_sq / comparisons) if comparisons else 0.0
+    prefix_equivalent = failures == 0 and not missing_keys
+    evidence = {
+        "schema": {"name": "tsunami.g5_g6_prefix_equivalence", "version": "1.0.0"},
+        "status": "passed" if prefix_equivalent else "failed",
+        "prefix_equivalent": prefix_equivalent,
+        "prefix_final_time_s": prefix_final_time_s,
+        "tolerance": {"absolute": abs_tol, "relative": rel_tol},
+        "g5_sample_rows": len(g5_rows),
+        "g6_sample_rows": len(g6_rows),
+        "sample_key_count": len(keys),
+        "missing_key_count": len(missing_keys),
+        "field_comparison_count": comparisons,
+        "exact_match_count": exact_matches,
+        "tolerance_match_count": tolerant_matches,
+        "failure_count": failures,
+        "max_absolute_difference": max_abs_diff,
+        "max_relative_difference": max_rel_diff,
+        "rmse": rmse,
+        "first_difference": first_difference,
+        "fields": {"raw": raw_fields, "derived": derived_fields},
+    }
+    if output_path is not None:
+        write_json(output_path, evidence)
+    if csv_output_path is not None:
+        csv_output_path.parent.mkdir(parents=True, exist_ok=True)
+        with csv_output_path.open("w", encoding="utf-8", newline="") as handle:
+            fieldnames = [
+                "time",
+                "local_index",
+                "field",
+                "g5",
+                "g6",
+                "absolute_difference",
+                "relative_difference",
+                "tolerance",
+                "passed",
+                "exact",
+            ]
+            writer = csv.DictWriter(handle, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(csv_rows)
+    return evidence
+
+
 def derive_openfoam_timestep(
     samples: Sequence[dict[str, str]],
     inward_normal: tuple[float, float],
@@ -1993,7 +2678,10 @@ def replay_config_from_window(selected: Path, trajectory: Trajectory, output: Pa
     replay_window = read_json(replay_window_path) if replay_window_path.exists() else {}
     peak_shifted_time = None
     if replay_window:
-        peak_shifted_time = float(replay_window["peak_source_time_s"]) - float(replay_window["selected_source_start_s"])
+        peak_source_time = replay_window.get("peak_source_time_s", replay_window.get("source_peak_time_s"))
+        if peak_source_time is None:
+            raise DeliveryError("selected replay window evidence does not record a source peak time")
+        peak_shifted_time = float(peak_source_time) - float(replay_window["selected_source_start_s"])
     config = {
         "schema": {"name": "tsunami.openfoam_replay_configuration", "version": "1.1.0"},
         "section_id": SECTION_ID,
@@ -2155,6 +2843,9 @@ def run_openfoam_stage(output_root: Path, python: Path, overwrite: bool) -> dict
     if replay_spec is None or replay_spec.loader is None:
         raise DeliveryError("could not load OpenFOAM replay validator")
     replay_module = importlib.util.module_from_spec(replay_spec)
+    openfoam_tools = str((repo_root() / OPENFOAM_REPLAY).parent)
+    if openfoam_tools not in sys.path:
+        sys.path.insert(0, openfoam_tools)
     sys.modules["tsunami_openfoam_replay"] = replay_module
     replay_spec.loader.exec_module(replay_module)
     for variant in ("no_defence", "simple_rigid_barrier"):
@@ -2180,6 +2871,297 @@ def run_openfoam_stage(output_root: Path, python: Path, overwrite: bool) -> dict
     return evidence
 
 
+def preprocessing_input_hashes(root: Path, profile: Profile) -> dict[str, object]:
+    return {
+        "profile": profile.name,
+        "case_spec_sha256": sha256(root / "cases/kamaishi_delivery/case_spec.json"),
+        "terrain_source_sha256": sha256(root / SOURCE_TERRAIN_PATH),
+        "finite_fault_source_sha256": sha256(root / SOURCE_QUAKE_PATH),
+        "earthquake_producer_sha256": sha256(root / EARTHQUAKE_PRODUCER),
+    }
+
+
+def _case_file_record(case_root: Path, relative_path: Path) -> dict[str, object]:
+    path = case_root / relative_path
+    if not path.is_file() or path.stat().st_size == 0:
+        raise DeliveryError(f"missing or empty preprocessing output: {path}")
+    return {
+        "relative_path": relative_path.as_posix(),
+        "size": path.stat().st_size,
+        "sha256": sha256(path),
+    }
+
+
+def preprocessing_output_records(case_root: Path) -> list[dict[str, object]]:
+    required = [
+        TERRAIN_OUTPUT_PATH,
+        TERRAIN_RECORD_PATH,
+        MESH_PATH.with_suffix(".geo"),
+        MESH_PATH,
+        CORRIDOR_RECORD_PATH,
+        Path("manifests/corridors/kamaishi-delivery-corridor-evidence.json"),
+        Path("inputs/data/earthquake/tohoku_vertical_displacement.tif"),
+        Path("inputs/data/earthquake/tohoku_vertical_displacement.json"),
+        Path("manifests/datasets.json"),
+        Path("case.json"),
+    ]
+    return [_case_file_record(case_root, path) for path in required]
+
+
+def try_reuse_preprocessing_stage(case_root: Path, output_root: Path, input_hashes: dict[str, object]) -> dict | None:
+    record_path = case_root / G6_PREPROCESSING_STAGE_RECORD
+    if not record_path.is_file():
+        return None
+    record = read_json(record_path)
+    if record.get("status") != "success":
+        return None
+    if record.get("input_hashes") != input_hashes:
+        return None
+    for output in record.get("outputs", []):
+        relative = Path(str(output["relative_path"]))
+        path = case_root / relative
+        if not path.is_file() or path.stat().st_size == 0:
+            return None
+        if int(output["size"]) != path.stat().st_size or output["sha256"] != sha256(path):
+            return None
+    sources_root = output_root / "sources"
+    sources_root.mkdir(parents=True, exist_ok=True)
+    source_inventory_path = repo_root() / "data/source/source_inventory.json"
+    source_sums_path = repo_root() / "data/source/SHA256SUMS"
+    if source_inventory_path.is_file():
+        shutil.copy2(source_inventory_path, sources_root / "source_inventory.json")
+    if source_sums_path.is_file():
+        shutil.copy2(source_sums_path, sources_root / "SHA256SUMS")
+    build_evidence = dict(record["build_evidence"])
+    build_evidence["reused_preprocessing"] = True
+    build_evidence["stage_completion_record"] = str(record_path)
+    return build_evidence
+
+
+def write_preprocessing_stage_completion(case_root: Path, input_hashes: dict[str, object], build_evidence: dict) -> dict:
+    record = {
+        "schema": {"name": "tsunami.g6_preprocessing_stage_completion", "version": "1.0.0"},
+        "stage": "kamaishi_preprocessing",
+        "status": "success",
+        "recorded_at_utc": utc_now(),
+        "input_hashes": input_hashes,
+        "outputs": preprocessing_output_records(case_root),
+        "build_evidence": build_evidence,
+    }
+    write_json(case_root / G6_PREPROCESSING_STAGE_RECORD, record)
+    return record
+
+
+def _normalise_case_for_equivalence(case_payload: dict) -> dict:
+    normalised = json.loads(json.dumps(case_payload))
+    normalised["case"]["created_at_utc"] = "<ignored-generated-timestamp>"
+    normalised["regional_2d"]["numerics"]["final_time_s"] = "<ignored-regional-evidence-final-time>"
+    return normalised
+
+
+def write_regional_evidence_equivalence(
+    case_root: Path,
+    output_root: Path,
+    *,
+    requested_final_time_s: float,
+    fixed_source_end_s: float,
+    reference: dict,
+) -> dict:
+    margin = requested_final_time_s - fixed_source_end_s
+    if margin + 1.0e-9 < 55.0:
+        raise DeliveryError("G6 Regional2D evidence end time must be at least 55 s beyond the fixed replay source end")
+    case_path = case_root / "case.json"
+    accepted_case = read_json(case_path)
+    accepted_final_time = float(accepted_case["regional_2d"]["numerics"]["final_time_s"])
+    if accepted_final_time < 1800.0:
+        raise DeliveryError("canonical Kamaishi production case no longer requests the accepted 1800 s Regional2D run")
+    evidence_case = json.loads(json.dumps(accepted_case))
+    evidence_case["regional_2d"]["numerics"]["final_time_s"] = float(requested_final_time_s)
+    accepted_hash = json_sha256(_normalise_case_for_equivalence(accepted_case))
+    evidence_hash = json_sha256(_normalise_case_for_equivalence(evidence_case))
+    if accepted_hash != evidence_hash:
+        raise DeliveryError("Regional2D evidence override changed inputs other than the requested final time")
+
+    value_items = {
+        "case_schema": (accepted_case["schema_version"], evidence_case["schema_version"]),
+        "scenario": (accepted_case["scenario"], evidence_case["scenario"]),
+        "gravity": (
+            accepted_case["regional_2d"]["physics"]["gravity_m_per_s2"],
+            evidence_case["regional_2d"]["physics"]["gravity_m_per_s2"],
+        ),
+        "manning_coefficient": (
+            accepted_case["regional_2d"]["physics"]["manning"],
+            evidence_case["regional_2d"]["physics"]["manning"],
+        ),
+        "coriolis": (
+            accepted_case["regional_2d"]["physics"]["coriolis"],
+            evidence_case["regional_2d"]["physics"]["coriolis"],
+        ),
+        "earthquake_configuration": (
+            accepted_case["regional_2d"]["physics"]["earthquake"],
+            evidence_case["regional_2d"]["physics"]["earthquake"],
+        ),
+        "scheme": (
+            accepted_case["regional_2d"]["numerics"]["scheme"],
+            evidence_case["regional_2d"]["numerics"]["scheme"],
+        ),
+        "cfl": (
+            accepted_case["regional_2d"]["numerics"]["courant_number"],
+            evidence_case["regional_2d"]["numerics"]["courant_number"],
+        ),
+        "maximum_timestep": (
+            accepted_case["regional_2d"]["numerics"]["maximum_timestep_s"],
+            evidence_case["regional_2d"]["numerics"]["maximum_timestep_s"],
+        ),
+        "snapshot_interval": (
+            accepted_case["outputs"]["snapshot_interval_s"],
+            evidence_case["outputs"]["snapshot_interval_s"],
+        ),
+        "boundary_conditions": (
+            accepted_case["regional_2d"]["boundaries"],
+            evidence_case["regional_2d"]["boundaries"],
+        ),
+        "coupling_section": (SECTION_ID, SECTION_ID),
+        "coupling_patch": (COUPLING_PATCH, COUPLING_PATCH),
+        "source_replay_window": (reference["source_window"], reference["source_window"]),
+    }
+    comparisons = {
+        name: {
+            "accepted_g5_value": accepted,
+            "current_g6_evidence_run_value": current,
+            "accepted_g5_hash": json_sha256(accepted),
+            "current_g6_hash": json_sha256(current),
+            "passed": accepted == current,
+        }
+        for name, (accepted, current) in value_items.items()
+    }
+    file_items = {
+        "case_spec": repo_root() / "cases/kamaishi_delivery/case_spec.json",
+        "terrain_source": case_root / "inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+        "finite_fault_source": case_root / "inputs/data/source/earthquake/usgs_usp000hvnu_1539808472261_basic_inversion.param",
+        "conditioned_terrain": case_root / "inputs/data/terrain/conditioned-terrain.tif",
+        "terrain_record": case_root / TERRAIN_RECORD_PATH,
+        "regional_mesh": case_root / MESH_PATH,
+        "earthquake_displacement_raster": case_root / "inputs/data/earthquake/tohoku_vertical_displacement.tif",
+        "earthquake_displacement_metadata": case_root / "inputs/data/earthquake/tohoku_vertical_displacement.json",
+        "corridor_record": case_root / CORRIDOR_RECORD_PATH,
+    }
+    file_comparisons = {
+        name: {
+            "accepted_g5_hash": sha256(path),
+            "current_g6_evidence_run_hash": sha256(path),
+            "passed": True,
+            "path": str(path),
+        }
+        for name, path in file_items.items()
+    }
+    if not all(item["passed"] for item in comparisons.values()):
+        raise DeliveryError("Regional2D evidence input equivalence comparison failed")
+    evidence_dir = output_root / "evidence"
+    record = {
+        "schema": {"name": "tsunami.g6_regional_input_equivalence", "version": "1.0.0"},
+        "status": "passed",
+        "description": "targeted regeneration of the previously accepted G5 coupling window",
+        "not_a_replacement_1800s_regional2d_acceptance": True,
+        "calibration_status": "not_started",
+        "requested_regional2d_final_time": {
+            "accepted_g5_value_s": accepted_final_time,
+            "current_g6_evidence_run_value_s": requested_final_time_s,
+            "allowed_difference": True,
+        },
+        "margin_after_fixed_source_window_s": margin,
+        "normalised_case_hash": {
+            "accepted_g5_value_hash": accepted_hash,
+            "current_g6_evidence_run_hash": evidence_hash,
+        },
+        "value_comparisons": comparisons,
+        "file_hash_comparisons": file_comparisons,
+        "allowed_differences": [
+            "requested Regional2D final time",
+            "run identifier",
+            "output directory",
+            "generated timestamp",
+        ],
+    }
+    write_json(case_path, evidence_case)
+    write_json(case_root / "manifests/g6_regional_input_equivalence.json", record)
+    write_json(evidence_dir / "g6_regional_input_equivalence.json", record)
+    return record
+
+
+def collect_artifact_logs(output_root: Path) -> list[dict[str, object]]:
+    logs_dir = output_root / "logs"
+    logs_dir.mkdir(parents=True, exist_ok=True)
+    copied: list[dict[str, object]] = []
+    for current, dirs, files in os.walk(output_root):
+        current_path = Path(current)
+        dirs[:] = [name for name in dirs if name != "logs" and not (current_path / name).is_symlink()]
+        for name in files:
+            path = current_path / name
+            rel = path.relative_to(output_root)
+            if not (name.startswith("log.") or name == "command.txt"):
+                continue
+            target = logs_dir / "__".join(rel.parts)
+            shutil.copy2(path, target)
+            copied.append({"source": rel.as_posix(), "copy": target.relative_to(output_root).as_posix(), "sha256": sha256(target)})
+    return copied
+
+
+def _artifact_role(relative_path: Path) -> tuple[str, str, bool]:
+    top = relative_path.parts[0] if relative_path.parts else relative_path.name
+    if top == "sources":
+        return "source provenance", "source_acquisition", True
+    if top == "case":
+        return "case definition and preprocessing output", "preprocessing", True
+    if top == "regional":
+        return "Regional2D evidence artifact", "regional2d", True
+    if top == "replay":
+        return "Local3D replay forcing artifact", "replay_window", True
+    if top == "local":
+        return "OpenFOAM Local3D runtime artifact", "local3d", False
+    if top == "evidence" or relative_path.name == "artifact_inventory.json":
+        return "machine-readable evidence", "evidence", True
+    if top == "logs":
+        return "execution log", "logging", True
+    if relative_path.name == "delivery_summary.json":
+        return "delivery summary", "evidence", True
+    return "supporting artifact", top, False
+
+
+def write_artifact_inventory(output_root: Path) -> dict:
+    inventory_path = output_root / "artifact_inventory.json"
+    entries: list[dict[str, object]] = []
+    for current, dirs, files in os.walk(output_root):
+        current_path = Path(current)
+        dirs[:] = [name for name in dirs if not (current_path / name).is_symlink()]
+        for name in sorted(files):
+            path = current_path / name
+            rel = path.relative_to(output_root)
+            if path == inventory_path or rel == Path("evidence/artifact_inventory.json"):
+                continue
+            role, stage, required = _artifact_role(rel)
+            entries.append(
+                {
+                    "relative_path": rel.as_posix(),
+                    "size": path.stat().st_size,
+                    "sha256": sha256(path),
+                    "role": role,
+                    "generation_stage": stage,
+                    "required_for_reproduction": required,
+                }
+            )
+    inventory = {
+        "schema": {"name": "tsunami.g6_artifact_inventory", "version": "1.0.0"},
+        "artifact_root": str(output_root),
+        "generated_at_utc": utc_now(),
+        "entries": entries,
+    }
+    write_json(inventory_path, inventory)
+    inventory["inventory_sha256"] = sha256(inventory_path)
+    write_json(output_root / "evidence/artifact_inventory.json", inventory)
+    return inventory
+
+
 def prepare_output_roots(case_root: Path, output_root: Path, overwrite: bool) -> None:
     for path in (case_root, output_root):
         if path.exists() and any(path.iterdir()) and not overwrite:
@@ -2192,12 +3174,27 @@ def prepare_output_roots(case_root: Path, output_root: Path, overwrite: bool) ->
     output_root.mkdir(parents=True, exist_ok=True)
 
 
-def build_case(case_root: Path, output_root: Path, profile: Profile, acquire: bool, offline: bool, overwrite: bool, python: Path) -> dict:
+def build_case(
+    case_root: Path,
+    output_root: Path,
+    profile: Profile,
+    acquire: bool,
+    offline: bool,
+    overwrite: bool,
+    python: Path,
+    *,
+    reuse_preprocessing: bool = False,
+) -> dict:
     root = repo_root()
     now = utc_now()
     spec = read_json(root / "cases/kamaishi_delivery/case_spec.json")
     spec["profile"] = profile.name
     inventory = ensure_sources(root, acquire=acquire, offline=offline, overwrite=False)
+    input_hashes = preprocessing_input_hashes(root, profile)
+    if reuse_preprocessing and not overwrite:
+        reused = try_reuse_preprocessing_stage(case_root, output_root, input_hashes)
+        if reused is not None:
+            return reused
     fault_evidence = validate_finite_fault_source(root / SOURCE_QUAKE_PATH)
     prepare_output_roots(case_root, output_root, overwrite)
     (output_root / "sources").mkdir(parents=True, exist_ok=True)
@@ -2210,11 +3207,12 @@ def build_case(case_root: Path, output_root: Path, profile: Profile, acquire: bo
     mesh_evidence = write_mesh(case_root, trajectory, spec, profile)
     producer_evidence = produce_displacement(case_root, root, now, python)
     write_case_and_manifest(case_root, root, spec, inventory, trajectory, now)
-    return {
+    build_evidence = {
         "timestamp": now,
         "profile": profile.name,
         "case_root": str(case_root),
         "output_root": str(output_root),
+        "reused_preprocessing": False,
         "source_inventory": inventory,
         "finite_fault": fault_evidence,
         "trajectory": {
@@ -2238,12 +3236,65 @@ def build_case(case_root: Path, output_root: Path, profile: Profile, acquire: bo
         "mesh": mesh_evidence,
         "earthquake_producer": producer_evidence,
     }
+    record = write_preprocessing_stage_completion(case_root, input_hashes, build_evidence)
+    build_evidence["stage_completion_record"] = str(case_root / G6_PREPROCESSING_STAGE_RECORD)
+    build_evidence["stage_completion_sha256"] = sha256(case_root / G6_PREPROCESSING_STAGE_RECORD)
+    build_evidence["stage_completion_output_count"] = len(record["outputs"])
+    return build_evidence
 
 
-def run_delivery(case_root: Path, output_root: Path, profile_name: str, acquire: bool, offline: bool, overwrite: bool, python: Path, r2d_binary: Path, run_openfoam: bool) -> dict:
+def run_delivery(
+    case_root: Path,
+    output_root: Path,
+    profile_name: str,
+    acquire: bool,
+    offline: bool,
+    overwrite: bool,
+    python: Path,
+    r2d_binary: Path,
+    run_openfoam: bool,
+    *,
+    evidence_mode: str | None = None,
+    regional_evidence_end_time_s: float | None = None,
+    fixed_replay_reference: dict | None = None,
+    reuse_preprocessing: bool = False,
+) -> dict:
     profile = profile_by_name(profile_name)
-    build_evidence = build_case(case_root, output_root, profile, acquire, offline, overwrite, python)
-    regional = run_regional(case_root, output_root, r2d_binary)
+    reference = fixed_replay_reference
+    if evidence_mode == "g6_local3d_acceptance":
+        reference = reference or load_g5_accepted_replay_reference()
+        if profile.name != reference["profile"]["name"]:
+            raise DeliveryError("G6 Local3D acceptance mode requires the accepted etopo-1000m profile")
+        if regional_evidence_end_time_s is None:
+            regional_evidence_end_time_s = 600.0
+        if abs(regional_evidence_end_time_s - 600.0) > 1.0e-9:
+            raise DeliveryError("G6 Local3D acceptance mode is restricted to the 600 s Regional2D evidence prerequisite")
+    elif regional_evidence_end_time_s is not None or reference is not None:
+        raise DeliveryError("fixed Regional2D/replay evidence options require --g6-local3d-acceptance")
+
+    build_evidence = build_case(
+        case_root,
+        output_root,
+        profile,
+        acquire,
+        offline,
+        overwrite,
+        python,
+        reuse_preprocessing=reuse_preprocessing,
+    )
+    regional_equivalence = None
+    minimum_regional_time = 1800.0
+    if evidence_mode == "g6_local3d_acceptance":
+        assert reference is not None
+        regional_equivalence = write_regional_evidence_equivalence(
+            case_root,
+            output_root,
+            requested_final_time_s=float(regional_evidence_end_time_s),
+            fixed_source_end_s=float(reference["source_window"]["end_s"]),
+            reference=reference,
+        )
+        minimum_regional_time = float(regional_evidence_end_time_s)
+    regional = run_regional(case_root, output_root, r2d_binary, minimum_requested_final_time_s=minimum_regional_time)
     full_coupling = Path(regional["output_dir"]) / "coupling" / SECTION_ID
     replay_root = output_root / "replay"
     full_source = replay_root / "full-source"
@@ -2257,11 +3308,49 @@ def run_delivery(case_root: Path, output_root: Path, profile_name: str, acquire:
     epicentre = Point(trajectory_data["epicentre_projected_m"]["x"], trajectory_data["epicentre_projected_m"]["y"])
     unit, distance = _unit_vector(epicentre, selected)
     trajectory = Trajectory((0.0, 0.0), (0.0, 0.0), epicentre, epicentre, selected, (0.0, 0.0), unit, Point(-unit.y, unit.x), distance, 0.0, _bearing(unit), 0.0, 0.0, False, "")
-    window = select_replay_window(full_source, replay_root / "selected-window", (trajectory.unit.x, trajectory.unit.y))
+    forcing_equivalence = None
+    if evidence_mode == "g6_local3d_acceptance":
+        assert reference is not None
+        evidence_dir = output_root / "evidence"
+        window = select_fixed_replay_window(
+            full_source,
+            replay_root / "selected-window",
+            (trajectory.unit.x, trajectory.unit.y),
+            reference,
+            evidence_output=evidence_dir / "g6_fixed_window_extraction.json",
+        )
+        forcing_equivalence = compare_fixed_window_to_reference(
+            window,
+            reference,
+            output_path=evidence_dir / "g6_forcing_equivalence.json",
+        )
+        if forcing_equivalence["status"] != "passed":
+            raise DeliveryError("fixed G6 forcing-equivalence comparison failed")
+    else:
+        window = select_replay_window(full_source, replay_root / "selected-window", (trajectory.unit.x, trajectory.unit.y))
     config = replay_config_from_window(replay_root / "selected-window", trajectory, replay_root / "replay_config.json")
-    evidence = {"build": build_evidence, "regional": regional, "replay_window": window, "replay_config": config}
+    evidence = {
+        "build": build_evidence,
+        "regional": regional,
+        "replay_window": window,
+        "replay_config": config,
+        "evidence_mode": evidence_mode,
+        "calibration_status": "not_started",
+    }
+    if regional_equivalence is not None:
+        evidence["regional_input_equivalence"] = regional_equivalence
+    if forcing_equivalence is not None:
+        evidence["forcing_equivalence"] = forcing_equivalence
     if run_openfoam:
         evidence["openfoam"] = run_openfoam_stage(output_root, python, overwrite)
+    evidence["logs"] = collect_artifact_logs(output_root)
+    write_json(output_root / "delivery_summary.json", evidence)
+    inventory = write_artifact_inventory(output_root)
+    evidence["artifact_inventory"] = {
+        "path": str(output_root / "artifact_inventory.json"),
+        "sha256": inventory["inventory_sha256"],
+        "entry_count": len(inventory["entries"]),
+    }
     write_json(output_root / "delivery_summary.json", evidence)
     return evidence
 

@@ -1,0 +1,30 @@
+{
+  "schema": {
+    "name": "tsunami.g5_g6_local3d_configuration_delta",
+    "version": "1.0.0"
+  },
+  "status": "recorded",
+  "calibration_status": "not_started",
+  "g5_reference": {
+    "merge_commit": "1ba6475bf1c77e45290fb2d9dea20e37c6c3f81e",
+    "local3d_span_cells_policy": "6-20",
+    "role": "accepted G5 replay reference"
+  },
+  "g6_current": {
+    "branch_commit_1": "061c266209184380a718dba310c994e17540cf2d",
+    "local3d_span_cells_policy": "60-80",
+    "selected_span_cells": 60,
+    "role": "production open-ocean Local3D policy"
+  },
+  "delta": {
+    "span_cells": "G6 increases the Local3D span from the G5 6-20 cell policy to the 60-80 cell production policy.",
+    "reason": "The wider span supplies sufficient cells through the lateral damping zones required by the production open-ocean boundary policy.",
+    "not_a_calibration_effect": true,
+    "regional_forcing_effect": "none"
+  },
+  "evidence": {
+    "g5_g6_prefix_equivalence": "/home/helios/SimulationData/Summer-Studentship/g5-reference-600/evidence/g5_g6_prefix_equivalence.json",
+    "g6_replay_config": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/replay/replay_config.json",
+    "g6_local3d_acceptance": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json"
+  }
+}
