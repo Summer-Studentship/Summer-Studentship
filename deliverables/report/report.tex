@@ -1,23 +1,33 @@
-\documentclass[12pt,a4paper]{article}
+\documentclass[11pt]{article}
+
+\newcommand{\coursename}{Summer Studentship}
+\newcommand{\coursecode}{}
+\newcommand{\reporttitle}{Hybrid 2D--3D Reconstruction of the 2011 Tohoku Tsunami: Earthquake Generation, Regional Propagation, Local Hydrodynamic Impact and Coastal-Defence Assessment}
+\newcommand{\studentnumber}{}
+\newcommand{\departmentname}{Mechanical Engineering}
+\newcommand{\universityname}{University College London}
+\newcommand{\supervisorname}{Dr Lama Hamadeh}
+\newcommand{\submissiondate}{\today}
+\newcommand{\wordcount}{}
 
 \usepackage[hidelayout]{../../docs/Latex/Style/coursework-report-core}
 
 \addbibresource{../references/project-citation-bank.bib}
 \graphicspath{{../figures/}}
-
-\title{Hybrid 2D--3D Reconstruction of the 2011 Tohoku Tsunami: Earthquake Generation, Regional Propagation, Local Hydrodynamic Impact and Coastal-Defence Assessment}
-\author{}
-\date{}
+\fancyhead[RO]{Studentship Technical Report}
 
 \begin{document}
 
-\maketitle
+\pagenumbering{Roman}
+\makecourseworktitle
 
 \begin{abstract}
 \input{../abstract/abstract-body.tex}
 \end{abstract}
 
 \tableofcontents
+\clearpage
+\pagenumbering{arabic}
 
 \input{sections/01-introduction.tex}
 \input{sections/02-project-aims-and-scope.tex}
