@@ -1,0 +1,4 @@
+level_id,status,cfl_target,maximum_timestep_s,reason
+T0,not_started,,,Regional spatial convergence produced fewer than three valid levels.
+T1,not_started,,,Regional spatial convergence produced fewer than three valid levels.
+T2,not_started,,,Regional spatial convergence produced fewer than three valid levels.

@@ -1,0 +1,49 @@
+{
+  "schema": {
+    "name": "tsunami.c1a_regional_convergence_summary",
+    "version": "1.0.0"
+  },
+  "generated_at_utc": "2026-08-07T11:36:00Z",
+  "repository_parent": "d01631d0d36ee89bbce13f194811de364be02de3",
+  "model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+  "c1a_harness_commit": "991d63a",
+  "external_summary": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional/regional_convergence_summary.json",
+  "spatial": {
+    "classification": "resource_limited",
+    "valid_level_count": 1,
+    "valid_levels": [
+      "L0"
+    ],
+    "resource_limited_levels": [
+      "L1"
+    ],
+    "not_started_levels": [
+      "L2",
+      "candidate-250m"
+    ],
+    "principal_reason": "L1 reached only 3.88489347290889 s of the 600 s horizon before being stopped as resource-limited; its observed mean timestep was 0.026978426895200622 s, projecting to hours for one level.",
+    "pairwise_metrics_available": false,
+    "richardson_gci_status": "not_applicable_fewer_than_three_valid_levels"
+  },
+  "temporal": {
+    "status": "not_started",
+    "reason": "Temporal convergence is gated until Regional spatial convergence has three valid levels and a defensible selected mesh."
+  },
+  "production_discretisation": {
+    "selected": false,
+    "reason": "No Regional2D production mesh or timestep policy is selected by C1A-R1 because spatial convergence remains unresolved."
+  },
+  "source_window_identity": {
+    "fixed_source_window_s": [
+      245.0,
+      545.0
+    ],
+    "expected_output_times": 61,
+    "l0_fixed_window_sample_rows": 488
+  },
+  "physical_parameter_invariance": {
+    "L0": true,
+    "L1": "not_applicable_partial_run"
+  },
+  "fabricated_results": false
+}

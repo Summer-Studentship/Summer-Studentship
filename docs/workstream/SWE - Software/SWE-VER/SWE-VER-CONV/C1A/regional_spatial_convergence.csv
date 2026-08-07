@@ -1,0 +1,5 @@
+level_id,status,requested_spacing_m,mesh_size_m,achieved_final_time_s,diagnostics_rows,step_count,min_dt_s,mean_dt_s,median_dt_s,max_dt_s,peak_eta_m,peak_eta_time_s,peak_qn_m2_per_s,peak_qn_time_s,section_discharge_proxy_m2_per_s,fixed_window_sample_rows,classification_note
+L0,passed,1000,1000,600,6009,6009,1.1368683772161603e-12,0.09985022466299445,0.1,0.1,0.8627431707728945,485,4.606580442255484,600,19.37555498606341,488,valid single coarse run only
+L1,resource_limited_interrupted,750,500,3.88489347290889,144,144,0.026973242727068632,0.026978426895200622,0.026977425929358718,0.026987263580840165,,,,,,not a convergence result
+L2,not_started,500,250,,,,,,,,,,,,,,gated off after L1 projected runtime became resource-limited
+candidate-250m,not_started_resource_limited,250,125,,,,,,,,,,,,,,deferred before execution

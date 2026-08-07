@@ -1,9 +1,9 @@
 {
-  "generated_at_utc": "2026-08-07T10:29:04.818784Z",
-  "reason": "no real metric rows were available",
+  "generated_at_utc": "2026-08-07T11:36:00Z",
+  "reason": "Regional convergence figures were not generated because only one valid Regional spatial level completed; pairwise convergence metrics and figure inputs are not available.",
   "schema": {
     "name": "tsunami.c1a_convergence_figure_provenance",
     "version": "1.0.0"
   },
-  "status": "not_generated"
+  "status": "not_generated_insufficient_valid_levels"
 }

@@ -45,5 +45,29 @@
     "openfoam_wrapper_executable": true,
     "producer_python_executable_present": false,
     "producer_python_has_preprocessing_imports": false
-  }
+  },
+  "follow_on_attempts": [
+    {
+      "attempt_id": "C1A-R1",
+      "recorded_at_utc": "2026-08-07T11:36:00Z",
+      "environment_recovered": true,
+      "preprocessing_smoke": "passed",
+      "regional_spatial": {
+        "classification": "resource_limited",
+        "valid_levels": [
+          "L0"
+        ],
+        "resource_limited_levels": [
+          "L1"
+        ],
+        "not_started_levels": [
+          "L2",
+          "candidate-250m"
+        ]
+      },
+      "regional_temporal": "not_started_spatial_gate_failed",
+      "production_discretisation_selected": false,
+      "summary": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional_convergence_summary.json"
+    }
+  ]
 }
