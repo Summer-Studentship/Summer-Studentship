@@ -1,0 +1,36 @@
+{
+  "schema": {
+    "name": "tsunami.c1a_geospatial_environment_recovery_summary",
+    "version": "1.0.0"
+  },
+  "recorded_at_utc": "2026-08-07T11:10:00Z",
+  "repository_parent": "d01631d0d36ee89bbce13f194811de364be02de3",
+  "model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+  "c1a_harness_commit": "991d63a",
+  "environment_path": "/home/helios/SimulationData/Summer-Studentship/envs/c1a-geospatial",
+  "python_executable": "/home/helios/SimulationData/Summer-Studentship/envs/c1a-geospatial/bin/python",
+  "python_version": "3.14.6",
+  "resolved_direct_dependencies": {
+    "clawpack": "5.14.0",
+    "pyproj": "3.7.2",
+    "rasterio": "1.5.0"
+  },
+  "bootstrap_mechanism": {
+    "script": "tools/environment/bootstrap_geospatial_python.sh",
+    "requirements": "tools/earthquake/requirements-tohoku-artifact.txt",
+    "environment_override": "TSUNAMI_C1A_GEOSPATIAL_ENV"
+  },
+  "external_provenance": {
+    "directory": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/environment",
+    "environment_json": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/environment/environment.json",
+    "pip_freeze": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/environment/pip-freeze.txt",
+    "pip_freeze_sha256": "3cd46bdb0aa653f15d67f2f49f6dff8be48af0a8dfe4582edf875735d6fb08d4",
+    "environment_json_sha256": "2ebd0ffb65bb4cb5c0b8be36d57a43801076a56b88097196b3b5eecbea660e52"
+  },
+  "bootstrap_recreation_test": {
+    "status": "passed",
+    "test_environment_path": "/home/helios/SimulationData/Summer-Studentship/envs/c1a-geospatial-bootstrap-test",
+    "pip_freeze_sha256": "3cd46bdb0aa653f15d67f2f49f6dff8be48af0a8dfe4582edf875735d6fb08d4",
+    "matches_primary_pip_freeze": true
+  }
+}
