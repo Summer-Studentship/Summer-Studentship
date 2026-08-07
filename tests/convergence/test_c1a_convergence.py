@@ -29,6 +29,24 @@ class C1AConvergenceTests(unittest.TestCase):
         self.assertEqual(set(study["stages"]), set(c1a.STAGES))
         self.assertFalse(study["artifact_policy"]["commit_raw_fields"])
 
+    def test_requested_solver_mesh_resolution_is_preserved(self):
+        for requested in (1000.0, 800.0, 750.0):
+            with self.subTest(requested=requested):
+                contract = c1a.regional_resolution_contract(
+                    requested_solver_mesh_size_m=requested,
+                    terrain_processing_resolution_m=requested,
+                )
+                self.assertEqual(contract["terrain_processing_resolution"]["requested_m"], requested)
+                self.assertEqual(contract["solver_mesh_target_size"]["requested_m"], requested)
+                self.assertEqual(contract["solver_mesh_target_size"]["configured_m"], requested)
+                self.assertEqual(contract["tier_mapping"], "none")
+
+    def test_requested_solver_mesh_contract_rejects_silent_tier_mapping(self):
+        contract = c1a.regional_resolution_contract(requested_solver_mesh_size_m=750.0)
+        contract["solver_mesh_target_size"]["configured_m"] = 500.0
+        with self.assertRaisesRegex(c1a.ConvergenceError, "without an explicit tier mapping"):
+            c1a.assert_regional_resolution_contract(contract)
+
     def test_physical_invariance_allows_discretisation_changes(self):
         case_spec = json.loads((ROOT / "cases/kamaishi_delivery/case_spec.json").read_text(encoding="utf-8"))
         replay = json.loads((ROOT / "tests/fixtures/openfoam/synthetic_replay/replay_config_production.json").read_text(encoding="utf-8"))
@@ -56,6 +74,17 @@ class C1AConvergenceTests(unittest.TestCase):
         self.assertAlmostEqual(c1a.nrmse([1.0, 2.0, 3.0], [1.0, 2.5, 3.0]), 0.14433756729740643)
         self.assertAlmostEqual(c1a.relative_change(10.0, 8.0), 0.2)
         self.assertAlmostEqual(c1a.local_characteristic_h(8.0, 64), 0.5)
+
+    def test_section_discharge_units_and_integration(self):
+        result = c1a.section_integrated_discharge([1.0, 2.0, 3.0], [10.0, 20.0, 30.0])
+        self.assertEqual(result["Q_n_units"], "m^3/s")
+        self.assertEqual(result["qbar_n_units"], "m^2/s")
+        self.assertAlmostEqual(result["Q_n"], 140.0)
+        self.assertAlmostEqual(result["qbar_n"], 140.0 / 60.0)
+
+    def test_fixed_common_support_spans_section_width(self):
+        support = c1a.fixed_common_support(8000.0, 5)
+        self.assertEqual(support, [0.0, 2000.0, 4000.0, 6000.0, 8000.0])
 
     def test_richardson_gci_reports_monotone_three_level_result(self):
         result = c1a.richardson_gci([1.0, 1.25, 2.0], [0.5, 1.0, 2.0])

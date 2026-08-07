@@ -30,6 +30,7 @@ DEFAULT_R2D_BINARY = Path("build/linux-gcc-crs-test/apps/r2d_case/tsunami_r2d_ca
 DEFAULT_OPENFOAM_WRAPPER = Path("tools/openfoam/run_openfoam11.sh")
 OPENFOAM_IMAGE = "docker.io/openfoam/openfoam11-paraview510:11"
 STAGES = ("regional-spatial", "regional-temporal", "local-spatial", "local-temporal")
+ETOPO_2022_15S_NOMINAL_SOURCE_SPACING_M = 463.0
 
 
 class ConvergenceError(RuntimeError):
@@ -59,6 +60,55 @@ def canonical_json(value: Any) -> str:
 
 def json_sha256(value: Any) -> str:
     return hashlib.sha256(canonical_json(value).encode("utf-8")).hexdigest()
+
+
+def regional_resolution_contract(
+    *,
+    requested_solver_mesh_size_m: float,
+    terrain_processing_resolution_m: float | None = None,
+    actual_characteristic_mesh_size_m: float | None = None,
+    profile_name: str | None = None,
+) -> dict[str, Any]:
+    solver_mesh = float(requested_solver_mesh_size_m)
+    if solver_mesh <= 0.0 or not math.isfinite(solver_mesh):
+        raise ConvergenceError("requested solver mesh size must be positive and finite")
+    terrain_processing = float(terrain_processing_resolution_m) if terrain_processing_resolution_m is not None else solver_mesh
+    if terrain_processing <= 0.0 or not math.isfinite(terrain_processing):
+        raise ConvergenceError("terrain processing resolution must be positive and finite")
+    contract = {
+        "terrain_source_resolution": {
+            "value_m": ETOPO_2022_15S_NOMINAL_SOURCE_SPACING_M,
+            "kind": "nominal_source_spacing",
+            "source": "ETOPO 2022 v1 15 arc-second surface elevation tile",
+        },
+        "terrain_processing_resolution": {
+            "requested_m": terrain_processing,
+            "actual_m": terrain_processing,
+        },
+        "solver_mesh_target_size": {
+            "requested_m": solver_mesh,
+            "configured_m": solver_mesh,
+        },
+        "actual_characteristic_mesh_size": {
+            "value_m": float(actual_characteristic_mesh_size_m) if actual_characteristic_mesh_size_m is not None else None,
+            "definition": "sqrt(common physical corridor area / active surface-cell count)",
+        },
+        "profile_name": profile_name or f"solver-mesh-{solver_mesh:g}m",
+        "tier_mapping": "none",
+        "source_dataset_changes_physics": False,
+    }
+    assert_regional_resolution_contract(contract)
+    return contract
+
+
+def assert_regional_resolution_contract(contract: dict[str, Any]) -> None:
+    requested = float(contract["solver_mesh_target_size"]["requested_m"])
+    configured = float(contract["solver_mesh_target_size"]["configured_m"])
+    mapping = str(contract.get("tier_mapping", "none"))
+    if abs(requested - configured) > max(1.0e-9, 1.0e-12 * abs(requested)) and mapping == "none":
+        raise ConvergenceError(
+            f"requested solver mesh {requested:g} m resolved to {configured:g} m without an explicit tier mapping"
+        )
 
 
 def file_sha256(path: Path) -> str:
@@ -123,8 +173,27 @@ def collect_hardware() -> dict[str, Any]:
 def default_study(results_root: Path) -> dict[str, Any]:
     levels = {
         "regional-spatial": [
-            {"level_id": "r2d-h1000", "profile": "etopo-1000m", "nominal_spacing_m": 1000.0},
-            {"level_id": "r2d-h500", "profile": "etopo-500m", "nominal_spacing_m": 500.0},
+            {
+                "level_id": "r2d-h1000",
+                "profile": "solver-mesh-1000m",
+                "terrain_processing_resolution_m": 1000.0,
+                "requested_solver_mesh_size_m": 1000.0,
+                "solver_mesh_target_size_m": 1000.0,
+            },
+            {
+                "level_id": "r2d-h750",
+                "profile": "solver-mesh-750m",
+                "terrain_processing_resolution_m": 750.0,
+                "requested_solver_mesh_size_m": 750.0,
+                "solver_mesh_target_size_m": 750.0,
+            },
+            {
+                "level_id": "r2d-h600",
+                "profile": "solver-mesh-600m",
+                "terrain_processing_resolution_m": 600.0,
+                "requested_solver_mesh_size_m": 600.0,
+                "solver_mesh_target_size_m": 600.0,
+            },
         ],
         "regional-temporal": [
             {"level_id": "r2d-cfl010", "courant_number": 0.10, "maximum_timestep_s": 0.10},
@@ -353,6 +422,32 @@ def nrmse(candidate: Sequence[float], reference: Sequence[float]) -> float:
 
 def relative_change(coarse: float, fine: float) -> float:
     return abs(fine - coarse) / max(abs(fine), abs(coarse), 1.0e-300)
+
+
+def fixed_common_support(width_m: float, count: int) -> list[float]:
+    if width_m <= 0.0 or count < 2:
+        raise ConvergenceError("common support requires positive width and at least two points")
+    spacing = width_m / float(count - 1)
+    return [index * spacing for index in range(count)]
+
+
+def section_integrated_discharge(qn_m2_per_s: Sequence[float], segment_lengths_m: Sequence[float]) -> dict[str, Any]:
+    if len(qn_m2_per_s) != len(segment_lengths_m) or not qn_m2_per_s:
+        raise ConvergenceError("section discharge integration requires equal non-empty value and length arrays")
+    values = [float(value) for value in qn_m2_per_s]
+    lengths = [float(value) for value in segment_lengths_m]
+    if any((not math.isfinite(value)) for value in values + lengths) or any(length <= 0.0 for length in lengths):
+        raise ConvergenceError("section discharge integration requires finite qn values and positive segment lengths")
+    discharge = sum(qn * length for qn, length in zip(values, lengths))
+    width = sum(lengths)
+    return {
+        "Q_n": discharge,
+        "Q_n_units": "m^3/s",
+        "qbar_n": discharge / width,
+        "qbar_n_units": "m^2/s",
+        "section_width_m": width,
+        "discretisation": "sum(q_n,f * L_f) for depth-integrated 2D normal momentum",
+    }
 
 
 def richardson_gci(values: Sequence[float], spacings: Sequence[float], safety_factor: float = 1.25) -> dict[str, Any]:
