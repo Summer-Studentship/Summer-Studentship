@@ -1,0 +1,34 @@
+{
+  "schema": {
+    "name": "tsunami.g6_post_merge_closure_plan",
+    "version": "1.0.0"
+  },
+  "status": "ready_after_g6_acceptance_merge",
+  "expected_merge_commit": "<merge-commit-sha-after-pr-274-merge>",
+  "issues_to_close_after_this_partial_merge": [],
+  "issues_to_close_after_real_acceptance_merge": [
+    60,
+    61,
+    273
+  ],
+  "issues_remaining_open": [
+    62,
+    64,
+    69,
+    70,
+    8,
+    9
+  ],
+  "required_closure_comments": {
+    "60": "Close after merged evidence includes production continuous wall-function configuration and real Kamaishi y+ evidence covering terrain, barrier, shifted peak time and final time.",
+    "61": "Close after merged evidence includes production open-ocean outlet/lateral policy, damping-zone derivation and passing outlet/lateral reflection benchmark plus real Kamaishi 300 s Local3D acceptance.",
+    "273": "Close after merged evidence shows all four R2 gaps resolved and both real Local3D variants reach 300 s.",
+    "62": "Keep open after G6 baseline; note that formal timestep convergence and optional external rollback/restart supervisor remain post-G6."
+  },
+  "current_branch_blocker": null,
+  "current_branch_acceptance": {
+    "forcing_equivalence": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_forcing_equivalence.json",
+    "local3d_acceptance": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json",
+    "g5_g6_prefix_equivalence": "/home/helios/SimulationData/Summer-Studentship/g5-reference-600/evidence/g5_g6_prefix_equivalence.json"
+  }
+}

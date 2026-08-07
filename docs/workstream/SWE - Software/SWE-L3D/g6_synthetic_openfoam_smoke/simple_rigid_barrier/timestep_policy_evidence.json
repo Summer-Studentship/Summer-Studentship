@@ -1,0 +1,66 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_timestep_policy",
+    "version": "1.0.0"
+  },
+  "replay_schema": {
+    "name": "tsunami.openfoam_replay_configuration",
+    "version": "1.1.0"
+  },
+  "adjustTimeStep": true,
+  "maxCo": 0.25,
+  "maxAlphaCo": 0.25,
+  "maxDeltaT": 0.02,
+  "minimum_accepted_timestep_s": 1e-07,
+  "cell_dimensions_m": {
+    "streamwise_m": 0.05,
+    "span_m": 0.01,
+    "vertical_m": 0.049999999999999996,
+    "minimum_m": 0.01
+  },
+  "maximum_mapped_speed_m_per_s": 0.2509712965570002,
+  "maximum_reconstructed_depth_m": 0.0,
+  "gravity_wave_speed_m_per_s": 0.0,
+  "characteristic_speed_m_per_s": 0.0,
+  "derived_pre_run_timestep_cap_s": 0.02,
+  "observed_timestep_range_s": [
+    0.001386554622,
+    0.004
+  ],
+  "observed_maximum_Co": 0.2566711928,
+  "observed_maximum_alpha_Co": 0.167494173,
+  "repository_controlled_constraints": [
+    "pre-run gravity/advective estimate",
+    "configured maxDeltaT",
+    "configured maxCo",
+    "configured maxAlphaCo",
+    "minimum-timestep failure threshold",
+    "post-run acceptance"
+  ],
+  "openfoam_controlled_constraints": [
+    "internal Co calculation",
+    "internal interface Co calculation",
+    "immediate timestep reduction",
+    "damped timestep increase",
+    "fvModel maxDeltaT contribution"
+  ],
+  "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+  "diagnostic_viscous_timescale_s": 16.666666666666668,
+  "diagnostic_diffusive_margin": 833.3333333333334,
+  "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+  "g6_disposition": {
+    "baseline_theoretical_timestep_control": "implemented and accepted",
+    "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+    "formal_timestep_convergence": "post-G6 verification"
+  },
+  "minimum_observed_timestep_s": 0.001386554622,
+  "maximum_observed_timestep_s": 0.004,
+  "median_observed_timestep_s": 0.0029896797375,
+  "runtime_acceptance": {
+    "minimum_timestep_guard_passed": true,
+    "requested_end_time_reached": true,
+    "openfoam_fatal_error_absent": true,
+    "floating_point_exception_absent": true
+  },
+  "series_path": "timestep_series.csv"
+}

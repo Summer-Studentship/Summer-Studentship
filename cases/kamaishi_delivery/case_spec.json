@@ -119,8 +119,8 @@
     "flat_bed": true,
     "representative_geometry_only": true,
     "barrier_label": "simplified full-width fixed rigid wall",
-    "minimum_span_cells": 6,
-    "maximum_span_cells": 20,
+    "minimum_span_cells": 60,
+    "maximum_span_cells": 80,
     "minimum_vertical_cells": 12,
     "maximum_vertical_cells": 20
   }

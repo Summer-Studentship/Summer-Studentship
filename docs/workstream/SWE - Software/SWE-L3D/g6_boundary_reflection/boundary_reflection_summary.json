@@ -1,0 +1,150 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_boundary_reflection_benchmark",
+    "version": "1.0.0"
+  },
+  "config_path": "/home/helios/Projects/Summer-Studentship/tests/fixtures/openfoam/boundary_reflection/benchmark_config.json",
+  "analytical_definition": {
+    "model": "flat-bed rectangular channel, constant depth, small-amplitude linear Gaussian pulse",
+    "eta_prime": "A exp(-0.5((t-t_i)/sigma)^2) + Kr A exp(-0.5((t-t_r)/sigma)^2)",
+    "linear_inlet_velocity": "u' = eta' sqrt(g/h0)",
+    "window_derivation": "incident and reflected centres use c0=sqrt(g h0), gauge distance and target-boundary distance before any metrics are inspected"
+  },
+  "cases": {
+    "reflective_control": {
+      "case_id": "reflective_control",
+      "boundary_policy_identifier": "g6-reflective-control-wall",
+      "target": "wall",
+      "pulse_direction": "streamwise",
+      "windows": {
+        "c0_m_per_s": 4.428690551393267,
+        "incident": [
+          0.7564030230071503,
+          2.85640302300715
+        ],
+        "reflected": [
+          6.175612092028601,
+          8.2756120920286
+        ],
+        "incident_centre_s": 1.8064030230071502,
+        "reflected_centre_s": 7.225612092028601,
+        "arrival_time_residual_s": 0.0
+      },
+      "metrics": {
+        "incident_amplitude_m": 0.019998943844745775,
+        "reflected_amplitude_m": 0.01639871122910447,
+        "Kr": 0.8199788627044335,
+        "RE": 0.6724000039703224,
+        "incident_energy_surrogate": 0.00024813752504232716,
+        "reflected_energy_surrogate": 0.00016684767282364676,
+        "arrival_time_residual_s": 0.0,
+        "mass_volume_residual": 0.0,
+        "alpha_bounds": [
+          0.0,
+          1.0
+        ],
+        "maximum_Co": 0.12,
+        "maximum_alpha_Co": 0.08,
+        "full_requested_end_time": true,
+        "finite_fields": true,
+        "foam_fatal_error": false,
+        "floating_point_exception": false
+      },
+      "acceptance": {
+        "passed": true,
+        "reason": "reflective diagnostic control detected"
+      },
+      "retained": true
+    },
+    "production_outlet": {
+      "case_id": "production_outlet",
+      "boundary_policy_identifier": "g6-open_ocean_damped-outlet-isotropicDamping-halfCosineRamp",
+      "target": "production outlet boundary plus damping zone",
+      "pulse_direction": "streamwise",
+      "windows": {
+        "c0_m_per_s": 4.428690551393267,
+        "incident": [
+          0.7564030230071503,
+          2.85640302300715
+        ],
+        "reflected": [
+          6.175612092028601,
+          8.2756120920286
+        ],
+        "incident_centre_s": 1.8064030230071502,
+        "reflected_centre_s": 7.225612092028601,
+        "arrival_time_residual_s": 0.0
+      },
+      "metrics": {
+        "incident_amplitude_m": 0.019998943844745775,
+        "reflected_amplitude_m": 0.001599874266254095,
+        "Kr": 0.0799979378248228,
+        "RE": 0.006400000037790098,
+        "incident_energy_surrogate": 0.00024813752504232716,
+        "reflected_energy_surrogate": 1.588080169648035e-06,
+        "arrival_time_residual_s": 0.0,
+        "mass_volume_residual": 0.0,
+        "alpha_bounds": [
+          0.0,
+          1.0
+        ],
+        "maximum_Co": 0.12,
+        "maximum_alpha_Co": 0.08,
+        "full_requested_end_time": true,
+        "finite_fields": true,
+        "foam_fatal_error": false,
+        "floating_point_exception": false
+      },
+      "acceptance": {
+        "passed": true,
+        "reason": "production open-boundary threshold satisfied"
+      },
+      "retained": true
+    },
+    "production_lateral": {
+      "case_id": "production_lateral",
+      "boundary_policy_identifier": "g6-open_ocean_damped-lateral-isotropicDamping-halfCosineRamp",
+      "target": "production lateral boundary plus damping zone",
+      "pulse_direction": "transverse",
+      "windows": {
+        "c0_m_per_s": 4.428690551393267,
+        "incident": [
+          0.07900188937946906,
+          2.1790018893794687
+        ],
+        "reflected": [
+          3.240207179641982,
+          5.340207179641982
+        ],
+        "incident_centre_s": 1.1290018893794689,
+        "reflected_centre_s": 4.290207179641982,
+        "arrival_time_residual_s": 0.0
+      },
+      "metrics": {
+        "incident_amplitude_m": 0.019999918675690988,
+        "reflected_amplitude_m": 0.0019999996496048956,
+        "Kr": 0.10000038910337201,
+        "RE": 0.009999999742106427,
+        "incident_energy_surrogate": 0.0002481375121253283,
+        "reflected_energy_surrogate": 2.4813750572602137e-06,
+        "arrival_time_residual_s": 0.0,
+        "mass_volume_residual": 0.0,
+        "alpha_bounds": [
+          0.0,
+          1.0
+        ],
+        "maximum_Co": 0.12,
+        "maximum_alpha_Co": 0.08,
+        "full_requested_end_time": true,
+        "finite_fields": true,
+        "foam_fatal_error": false,
+        "floating_point_exception": false
+      },
+      "acceptance": {
+        "passed": true,
+        "reason": "production open-boundary threshold satisfied"
+      },
+      "retained": true
+    }
+  }
+}

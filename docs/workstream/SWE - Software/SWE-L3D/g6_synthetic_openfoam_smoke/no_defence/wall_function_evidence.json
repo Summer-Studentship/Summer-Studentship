@@ -1,0 +1,120 @@
+{
+  "schema": {
+    "name": "tsunami.openfoam_wall_yplus_evidence",
+    "version": "1.0.0"
+  },
+  "expected_wall_patches": [
+    "terrain"
+  ],
+  "final_time_s": 0.12,
+  "peak_time_s": null,
+  "patches": {
+    "terrain": {
+      "time_count": 4,
+      "aggregate": {
+        "minimum": 0.0,
+        "p05": null,
+        "mean": 178.20025984,
+        "median": null,
+        "p95": null,
+        "maximum": 669.54201418,
+        "finite_value_count": null,
+        "non_finite_count": 0,
+        "negative_value_count": 0,
+        "viscous_affected_fraction": null,
+        "buffer_fraction": null,
+        "log_layer_fraction": null,
+        "high_fraction": null,
+        "source_level": "openfoam_min_max_average_table"
+      },
+      "times": [
+        0.0,
+        0.04,
+        0.08,
+        0.12
+      ]
+    }
+  },
+  "series": [
+    {
+      "time": 0.0,
+      "patch": "terrain",
+      "minimum": 0.0,
+      "p05": null,
+      "mean": 0.0,
+      "median": null,
+      "p95": null,
+      "maximum": 0.0,
+      "finite_value_count": null,
+      "non_finite_count": 0,
+      "negative_value_count": 0,
+      "viscous_affected_fraction": null,
+      "buffer_fraction": null,
+      "log_layer_fraction": null,
+      "high_fraction": null,
+      "source_level": "openfoam_min_max_average_table"
+    },
+    {
+      "time": 0.04,
+      "patch": "terrain",
+      "minimum": 25.207895073,
+      "p05": null,
+      "mean": 186.90913706,
+      "median": null,
+      "p95": null,
+      "maximum": 547.48180676,
+      "finite_value_count": null,
+      "non_finite_count": 0,
+      "negative_value_count": 0,
+      "viscous_affected_fraction": null,
+      "buffer_fraction": null,
+      "log_layer_fraction": null,
+      "high_fraction": null,
+      "source_level": "openfoam_min_max_average_table"
+    },
+    {
+      "time": 0.08,
+      "patch": "terrain",
+      "minimum": 35.015868628,
+      "p05": null,
+      "mean": 250.86758161,
+      "median": null,
+      "p95": null,
+      "maximum": 606.73356747,
+      "finite_value_count": null,
+      "non_finite_count": 0,
+      "negative_value_count": 0,
+      "viscous_affected_fraction": null,
+      "buffer_fraction": null,
+      "log_layer_fraction": null,
+      "high_fraction": null,
+      "source_level": "openfoam_min_max_average_table"
+    },
+    {
+      "time": 0.12,
+      "patch": "terrain",
+      "minimum": 40.88652404,
+      "p05": null,
+      "mean": 275.02432069,
+      "median": null,
+      "p95": null,
+      "maximum": 669.54201418,
+      "finite_value_count": null,
+      "non_finite_count": 0,
+      "negative_value_count": 0,
+      "viscous_affected_fraction": null,
+      "buffer_fraction": null,
+      "log_layer_fraction": null,
+      "high_fraction": null,
+      "source_level": "openfoam_min_max_average_table"
+    }
+  ],
+  "acceptance": {
+    "finite": true,
+    "non_negative": true,
+    "expected_wall_patches_present": true,
+    "final_time_coverage_present": true,
+    "peak_time_coverage_present": true,
+    "classification": "continuous Spalding-law wall-function baseline; no universal 30<y+<300 requirement is imposed at G6"
+  }
+}

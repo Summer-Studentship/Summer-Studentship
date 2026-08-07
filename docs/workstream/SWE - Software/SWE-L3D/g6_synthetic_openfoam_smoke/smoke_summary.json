@@ -1,0 +1,88 @@
+{
+  "schema": {
+    "name": "tsunami.g6_synthetic_openfoam_smoke_summary",
+    "version": "1.0.0"
+  },
+  "openfoam_image": "docker.io/openfoam/openfoam11-paraview510:11",
+  "image_digest": "sha256:fd10956e0b1eb70f9808baf2857e4baf846a0f6f272f73b6d00546eae96be181",
+  "legacy_1_0_0_smoke": {
+    "command": "python3 tools/openfoam/openfoam_replay.py smoke --output-root /tmp/g6-legacy-smoke --clean",
+    "result": "passed",
+    "boundary_mode": "symmetry_test",
+    "wall_function_mode": "legacy_nutk",
+    "variants": {
+      "no_defence": {
+        "requested_end_time_s": 0.12,
+        "final_time_s": 0.12,
+        "boundary_data_time_range_s": [0.0, 0.12],
+        "probe_final_time_s": 0.12,
+        "alpha_range": [1.265313817e-118, 1.000000019],
+        "maximum_Co": 0.1739330157,
+        "maximum_alpha_Co": 0.1739330157,
+        "vtk_file_count": 21
+      },
+      "simple_rigid_barrier": {
+        "requested_end_time_s": 0.12,
+        "final_time_s": 0.12,
+        "boundary_data_time_range_s": [0.0, 0.12],
+        "probe_final_time_s": 0.12,
+        "force_final_time_s": 0.12,
+        "alpha_range": [5.641422193e-75, 1.000000407],
+        "maximum_Co": 0.1157279055,
+        "maximum_alpha_Co": 0.1157279055,
+        "maximum_barrier_force": 0.230499639592407,
+        "maximum_barrier_moment": 7.622248876660041e-7,
+        "vtk_file_count": 24
+      }
+    }
+  },
+  "production_1_1_0_smoke": {
+    "command": "python3 tools/openfoam/openfoam_replay.py smoke --output-root /tmp/g6-production-smoke --config tests/fixtures/openfoam/synthetic_replay/replay_config_production.json --clean",
+    "result": "passed",
+    "boundary_mode": "open_ocean_damped",
+    "wall_function_mode": "continuous_spalding",
+    "damping_model": "isotropicDamping",
+    "notes": [
+      "OpenFOAM adaptive timestep reached the requested end time with finite fields and accepted alpha bounds.",
+      "The maximum flow Courant diagnostic slightly exceeded the configured target during the synthetic barrier run; the observed value is retained here rather than hidden."
+    ],
+    "variants": {
+      "no_defence": {
+        "requested_end_time_s": 0.12,
+        "final_time_s": 0.12,
+        "boundary_data_time_range_s": [0.0, 0.12],
+        "probe_final_time_s": 0.12,
+        "alpha_range": [-4.657779245e-16, 1.000000101],
+        "maximum_Co": 0.2529575276,
+        "maximum_alpha_Co": 0.1852414227,
+        "timestep_range_s": [0.001386554622, 0.004],
+        "median_timestep_s": 0.002902436398,
+        "diagnostic_viscous_timescale_s": 16.666666666666668,
+        "diagnostic_diffusive_margin": 833.3333333333334,
+        "wall_function_evidence": "no_defence/wall_function_evidence.json",
+        "timestep_policy_evidence": "no_defence/timestep_policy_evidence.json",
+        "vtk_file_count": 28
+      },
+      "simple_rigid_barrier": {
+        "requested_end_time_s": 0.12,
+        "final_time_s": 0.12,
+        "boundary_data_time_range_s": [0.0, 0.12],
+        "probe_final_time_s": 0.12,
+        "force_final_time_s": 0.12,
+        "alpha_range": [-1.187432162e-10, 1.000000046],
+        "maximum_Co": 0.2566711928,
+        "maximum_alpha_Co": 0.167494173,
+        "timestep_range_s": [0.001386554622, 0.004],
+        "median_timestep_s": 0.0029896797375,
+        "diagnostic_viscous_timescale_s": 16.666666666666668,
+        "diagnostic_diffusive_margin": 833.3333333333334,
+        "wall_function_evidence": "simple_rigid_barrier/wall_function_evidence.json",
+        "timestep_policy_evidence": "simple_rigid_barrier/timestep_policy_evidence.json",
+        "maximum_barrier_force": 0.10918027123667862,
+        "maximum_barrier_moment": 1.3509208352317642e-6,
+        "vtk_file_count": 32
+      }
+    }
+  },
+  "calibration_status": "not_started"
+}

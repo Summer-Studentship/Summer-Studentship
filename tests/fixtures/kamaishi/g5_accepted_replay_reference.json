@@ -1,0 +1,61 @@
+{
+  "schema": {
+    "name": "tsunami.g5_accepted_replay_reference",
+    "version": "1.0.0"
+  },
+  "provenance": {
+    "pull_request": 271,
+    "merge_commit": "1ba6475bf1c77e45290fb2d9dea20e37c6c3f81e",
+    "description": "Accepted G5 Kamaishi Local3D replay window used as the fixed G6 production-policy forcing reference."
+  },
+  "profile": {
+    "name": "etopo-1000m"
+  },
+  "source_window": {
+    "start_s": 245.0,
+    "end_s": 545.0
+  },
+  "shifted_window": {
+    "start_s": 0.0,
+    "end_s": 300.0
+  },
+  "snapshot_interval_s": 5.0,
+  "selected_time_count": 61,
+  "coupling_sample_count": 8,
+  "selected_sample_row_count": 488,
+  "source_peak_time_s": 485.0,
+  "shifted_peak_time_s": 240.0,
+  "full_history_0_1800_s": {
+    "scope": "G5 accepted Regional2D full source history from 0 s through 1800 s",
+    "full_history_maximum_absolute_normal_momentum_change_m2_per_s": 4.779893640553428
+  },
+  "selected_window_245_545_s": {
+    "scope": "G5 accepted Local3D replay source window from 245 s through 545 s, shifted to 0 s through 300 s for OpenFOAM",
+    "selected_window_maximum_absolute_free_surface_perturbation_m": 0.8627431707728945,
+    "selected_window_maximum_absolute_normal_momentum_change_m2_per_s": 4.2421347278949835,
+    "selected_window_peak_eta_time_s": 485.0,
+    "selected_window_peak_qn_time_s": 545.0,
+    "selected_window_peak_combined_time_s": 545.0,
+    "normal_momentum_status": "reconstructed from deterministic G5 0-600 s prefix evidence"
+  },
+  "metrics": {
+    "maximum_absolute_free_surface_perturbation_m": 0.8627431707728945,
+    "maximum_absolute_normal_momentum_change_m2_per_s": 4.2421347278949835,
+    "peak_free_surface_perturbation_source_time_s": 485.0,
+    "peak_normal_momentum_change_source_time_s": 545.0,
+    "peak_combined_perturbation_source_time_s": 545.0,
+    "representative_wet_depth_m": 38.630858355426426,
+    "minimum_coupling_depth_m": 5.276085359110731,
+    "maximum_coupling_depth_m": 83.58759616315172
+  },
+  "accepted_full_source_hashes": {
+    "source_history_sha256": "34198866cd824cb7a55e2fb752b304f8f8e43552ae49e034e683f4acacdea50c",
+    "source_metadata_sha256": "aa9dd019d513715f5d61f12bda06e8b3dbb168ed064de069228e7bf9cf3df847",
+    "source_samples_sha256": "49fee2b2c80870c707cdc58005c06845b06612614dfb42dae35604c7ad432901"
+  },
+  "notes": {
+    "full_source_hashes_cannot_match_truncated_600s_evidence_run": true,
+    "metric_scope_guard": "The historical 0-1800 s normal-momentum maximum is retained only under full_history_0_1800_s and must not be compared against the 245-545 s selected replay window.",
+    "reconstructed_selected_window_metrics": "The selected-window normal momentum, peak qn, combined peak, and coupling-depth metrics were reconstructed only after deterministic G5/G6 0-600 s prefix equivalence passed."
+  }
+}

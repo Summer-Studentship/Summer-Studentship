@@ -35,14 +35,17 @@ class KamaishiDeliveryTests(unittest.TestCase):
         coupling: Path,
         times: list[float],
         *,
+        sample_count: int = 4,
         arrival_time: float = 300.0,
         peak_time: float = 600.0,
         persistent_after: float = 0.0,
+        peak_eta: float = 1.0,
+        peak_qn: float = 0.2,
     ) -> None:
         coupling.mkdir(parents=True, exist_ok=True)
         samples = [
             {"local_index": index, "cell": 10 + index, "face": 20 + index, "x_m": 1000.0, "y_m": 500.0 + index * 250.0}
-            for index in range(4)
+            for index in range(sample_count)
         ]
         metadata = {
             "contract_version": 1,
@@ -69,8 +72,8 @@ class KamaishiDeliveryTests(unittest.TestCase):
                 for sample in samples:
                     depth = 20.0 + sample["local_index"]
                     bed = -depth
-                    eta = amplitude
-                    qx = 0.2 * amplitude * depth
+                    eta = peak_eta * amplitude
+                    qx = peak_qn * amplitude
                     writer.writerow({
                         "step": step,
                         "time": f"{time:.17g}",
@@ -117,6 +120,7 @@ class KamaishiDeliveryTests(unittest.TestCase):
         self.assertEqual(float(spec["corridor"]["inland_extent_m"]), 0.0)
         self.assertLessEqual(float(spec["regional_2d"]["maximum_timestep_s"]), 2.0)
         self.assertEqual(spec["nearshore_interface"]["fallback_depth_band_m"], [5.0, 50.0])
+        self.assertGreaterEqual(int(spec["local_3d"]["minimum_span_cells"]), 60)
 
     def test_full_cross_section_wetness_is_required(self):
         preferred = (15.0, 30.0)
@@ -187,6 +191,136 @@ class KamaishiDeliveryTests(unittest.TestCase):
         coupling = replay.load_coupling_export(selected, config)
         self.assertEqual(coupling.times[0], 0.0)
 
+    def test_fixed_g6_window_uses_accepted_reference_without_rediscovery(self):
+        coupling = self.tmp / "fixed-coupling"
+        self._write_coupling(
+            coupling,
+            [float(value) for value in range(0, 601, 5)],
+            sample_count=8,
+            arrival_time=245.0,
+            peak_time=485.0,
+            peak_eta=0.8627431707728945,
+            peak_qn=4.2421347278949835,
+        )
+        reference = kamaishi.load_g5_accepted_replay_reference()
+        reference["selected_window_245_545_s"]["selected_window_peak_qn_time_s"] = None
+        reference["selected_window_245_545_s"]["selected_window_peak_combined_time_s"] = None
+        for key in ("representative_wet_depth_m", "minimum_coupling_depth_m", "maximum_coupling_depth_m"):
+            reference["metrics"][key] = None
+        selected = self.tmp / "fixed-selected"
+        extraction = kamaishi.select_fixed_replay_window(coupling, selected, (1.0, 0.0), reference)
+        self.assertEqual(extraction["selected_source_start_s"], 245.0)
+        self.assertEqual(extraction["selected_source_end_s"], 545.0)
+        self.assertEqual(extraction["selected_time_count"], 61)
+        self.assertEqual(extraction["coupling_sample_count"], 8)
+        self.assertEqual(extraction["selected_sample_row_count"], 488)
+        self.assertEqual(extraction["shifted_peak_time_s"], 240.0)
+        self.assertAlmostEqual(extraction["metrics"]["maximum_absolute_free_surface_perturbation_m"], 0.8627431707728945)
+        self.assertAlmostEqual(extraction["metrics"]["maximum_absolute_normal_momentum_change_m2_per_s"], 4.2421347278949835)
+        self.assertAlmostEqual(
+            reference["full_history_0_1800_s"]["full_history_maximum_absolute_normal_momentum_change_m2_per_s"],
+            4.779893640553428,
+        )
+        self.assertAlmostEqual(
+            reference["selected_window_245_545_s"]["selected_window_maximum_absolute_normal_momentum_change_m2_per_s"],
+            4.2421347278949835,
+        )
+        comparison = kamaishi.compare_fixed_window_to_reference(extraction, reference)
+        self.assertEqual(comparison["status"], "passed")
+        self.assertTrue(comparison["metrics"]["maximum_absolute_normal_momentum_change_m2_per_s"]["passed"])
+        self.assertIn("representative_wet_depth_m", comparison["missing_reference_metrics"])
+        with (selected / "samples.csv").open() as handle:
+            samples = list(csv.DictReader(handle))
+        self.assertEqual(float(samples[0]["time"]), 0.0)
+        self.assertEqual(float(samples[-1]["time"]), 300.0)
+
+    def test_fixed_g6_window_rejects_changed_reference_peak_times(self):
+        coupling = self.tmp / "fixed-coupling"
+        self._write_coupling(
+            coupling,
+            [float(value) for value in range(0, 601, 5)],
+            sample_count=8,
+            arrival_time=245.0,
+            peak_time=485.0,
+            peak_eta=0.8627431707728945,
+            peak_qn=4.2421347278949835,
+        )
+        reference = kamaishi.load_g5_accepted_replay_reference()
+        reference["source_peak_time_s"] = 490.0
+        with self.assertRaisesRegex(kamaishi.DeliveryError, "accepted G5 contract"):
+            kamaishi.select_fixed_replay_window(coupling, self.tmp / "fixed-selected", (1.0, 0.0), reference)
+
+    def test_full_history_normal_momentum_is_not_selected_window_comparator(self):
+        coupling = self.tmp / "scope-coupling"
+        self._write_coupling(
+            coupling,
+            [float(value) for value in range(0, 601, 5)],
+            sample_count=8,
+            arrival_time=245.0,
+            peak_time=485.0,
+            peak_eta=0.8627431707728945,
+            peak_qn=4.2421347278949835,
+        )
+        reference = kamaishi.load_g5_accepted_replay_reference()
+        reference["selected_window_245_545_s"]["selected_window_maximum_absolute_normal_momentum_change_m2_per_s"] = None
+        reference["selected_window_245_545_s"]["selected_window_peak_qn_time_s"] = None
+        reference["selected_window_245_545_s"]["selected_window_peak_combined_time_s"] = None
+        reference["metrics"]["maximum_absolute_normal_momentum_change_m2_per_s"] = None
+        for key in ("representative_wet_depth_m", "minimum_coupling_depth_m", "maximum_coupling_depth_m"):
+            reference["metrics"][key] = None
+        extraction = kamaishi.select_fixed_replay_window(coupling, self.tmp / "scope-selected", (1.0, 0.0), reference)
+        comparison = kamaishi.compare_fixed_window_to_reference(extraction, reference)
+        self.assertEqual(comparison["status"], "passed")
+
+        selected_reference = json.loads(json.dumps(reference))
+        selected_reference["selected_window_245_545_s"]["selected_window_maximum_absolute_normal_momentum_change_m2_per_s"] = (
+            reference["full_history_0_1800_s"]["full_history_maximum_absolute_normal_momentum_change_m2_per_s"]
+        )
+        selected_comparison = kamaishi.compare_fixed_window_to_reference(extraction, selected_reference)
+        self.assertEqual(selected_comparison["status"], "failed")
+        self.assertFalse(selected_comparison["metrics"]["maximum_absolute_normal_momentum_change_m2_per_s"]["passed"])
+
+    def test_prefix_coupling_equivalence_reports_exact_raw_and_derived_fields(self):
+        g5 = self.tmp / "g5-coupling"
+        g6 = self.tmp / "g6-coupling"
+        self._write_coupling(g5, [0.0, 5.0, 10.0], sample_count=2, peak_time=10.0, peak_qn=0.25)
+        self._write_coupling(g6, [0.0, 5.0, 10.0], sample_count=2, peak_time=10.0, peak_qn=0.25)
+        evidence = kamaishi.compare_g5_g6_prefix_coupling(
+            g5,
+            g6,
+            (1.0, 0.0),
+            (0.0, 1.0),
+            output_path=self.tmp / "prefix.json",
+            csv_output_path=self.tmp / "prefix.csv",
+        )
+        self.assertEqual(evidence["status"], "passed")
+        self.assertEqual(evidence["failure_count"], 0)
+        self.assertEqual(evidence["field_comparison_count"], 66)
+        self.assertTrue((self.tmp / "prefix.csv").is_file())
+
+    def test_time_horizon_invariance_compares_common_prefix_outputs(self):
+        short = self.tmp / "short-regional"
+        long = self.tmp / "long-regional"
+        for root in (short, long):
+            coupling = root / "coupling" / kamaishi.SECTION_ID
+            coupling.mkdir(parents=True, exist_ok=True)
+            (coupling / "metadata.json").write_text(json.dumps({"sample_count": 1}), encoding="utf-8")
+            self._write_coupling(coupling, [0.0, 5.0, 10.0], sample_count=1, peak_time=10.0)
+            for name in ("diagnostics.csv", "snapshots.csv"):
+                with (root / name).open("w", encoding="utf-8", newline="") as handle:
+                    writer = csv.DictWriter(handle, fieldnames=["step", "time", "value"])
+                    writer.writeheader()
+                    for step, time in enumerate([0.0, 5.0, 10.0]):
+                        writer.writerow({"step": step, "time": f"{time:.17g}", "value": "1"})
+        evidence = kamaishi.compare_regional_time_horizon_outputs(
+            short,
+            long,
+            prefix_final_time_s=10.0,
+            output_path=self.tmp / "regional_time_horizon_invariance.json",
+        )
+        self.assertTrue(evidence["prefix_invariant"])
+        self.assertEqual(evidence["status"], "passed")
+
     def test_replay_window_rejects_short_and_insufficient_history(self):
         short = self.tmp / "short"
         self._write_coupling(short, [0.0, 5.0, 10.0, 15.0], persistent_after=1.0)
@@ -203,12 +337,19 @@ class KamaishiDeliveryTests(unittest.TestCase):
         window = kamaishi.select_replay_window(coupling, selected, (1.0, 0.0))
         config_path = self.tmp / "replay_config.json"
         config = kamaishi.replay_config_from_window(selected, self._trajectory(), config_path)
+        self.assertEqual(config["schema"]["version"], "1.1.0")
         self.assertEqual(config["section_id"], kamaishi.SECTION_ID)
+        self.assertEqual(config["boundary_policy"]["mode"], "open_ocean_damped")
+        self.assertTrue(config["damping_policy"]["enabled"])
+        self.assertEqual(config["wall_function_policy"]["nut"], "nutUSpaldingWallFunction")
+        self.assertEqual(config["timestep_policy"]["target_max_co"], 0.25)
+        self.assertEqual(config["timestep_policy"]["target_max_alpha_co"], 0.25)
         self.assertIn("local_case", config)
         self.assertIn("span_fraction", config["barrier"])
         self.assertEqual(config["local_case"]["end_time_s"], window["shifted_duration_s"])
         self.assertEqual(config["local_case"]["end_time_s"], 300.0)
         self.assertEqual(config["local_case"]["write_interval_s"], 60.0)
+        self.assertGreaterEqual(config["local_case"]["span_cells"], 60)
         self.assertAlmostEqual(config["replay_window"]["peak_shifted_time_s"], window["peak_source_time_s"] - window["selected_source_start_s"])
         self.assertGreater(config["local_case"]["maximum_timestep_s"], 0.005)
         self.assertIn("timestep_derivation", config["local_case"])

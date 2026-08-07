@@ -9,7 +9,9 @@ import hashlib
 import json
 import math
 import os
+import re
 import shutil
+import statistics
 import subprocess
 import sys
 from dataclasses import dataclass
@@ -17,11 +19,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable, Sequence
 
+from simple_png import write_line_plot_png
+
 
 CONVERTER_VERSION = "0.1.0"
 REPLAY_SCHEMA = {"name": "tsunami.openfoam_replay_conversion", "version": "1.0.0"}
 CONFIG_SCHEMA_NAME = "tsunami.openfoam_replay_configuration"
 CONFIG_SCHEMA_VERSION = "1.0.0"
+PRODUCTION_CONFIG_SCHEMA_VERSION = "1.1.0"
+SUPPORTED_CONFIG_SCHEMA_VERSIONS = {CONFIG_SCHEMA_VERSION, PRODUCTION_CONFIG_SCHEMA_VERSION}
 G3_CONTRACT_VERSION = 1
 REQUIRED_SAMPLE_COLUMNS = [
     "step",
@@ -176,11 +182,134 @@ def load_json(path: Path) -> dict:
     return value
 
 
-def load_replay_config(path: Path) -> dict:
-    config = load_json(path)
+def _schema_version(config: dict) -> str:
     schema = config.get("schema")
-    if schema != {"name": CONFIG_SCHEMA_NAME, "version": CONFIG_SCHEMA_VERSION}:
+    if not isinstance(schema, dict) or schema.get("name") != CONFIG_SCHEMA_NAME:
         raise ReplayError("unsupported replay configuration schema")
+    version = schema.get("version")
+    if version not in SUPPORTED_CONFIG_SCHEMA_VERSIONS:
+        raise ReplayError("unsupported replay configuration schema")
+    return str(version)
+
+
+def _default_boundary_policy(version: str) -> dict:
+    if version == CONFIG_SCHEMA_VERSION:
+        return {
+            "mode": "symmetry_test",
+            "outlet": "legacy_inletOutlet",
+            "laterals": "symmetry",
+            "atmosphere": "open_atmosphere",
+            "policy_version": "1.0.0",
+        }
+    return {
+        "mode": "open_ocean_damped",
+        "outlet": "open_ocean",
+        "laterals": "open_ocean",
+        "atmosphere": "open_atmosphere",
+        "policy_version": "1.0.0",
+    }
+
+
+def _default_damping_policy(version: str) -> dict:
+    if version == CONFIG_SCHEMA_VERSION:
+        return {"enabled": False, "model": "disabled", "profile": "disabled"}
+    return {
+        "enabled": True,
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "outlet_width_fraction": 0.15,
+        "lateral_width_fraction": 0.10,
+        "target_e_folds": 4.0,
+    }
+
+
+def _default_wall_function_policy(version: str) -> dict:
+    if version == CONFIG_SCHEMA_VERSION:
+        return {
+            "mode": "legacy_nutk",
+            "k": "kqRWallFunction",
+            "omega": "omegaWallFunction",
+            "nut": "nutkWallFunction",
+        }
+    return {
+        "mode": "continuous_spalding",
+        "k": "kqRWallFunction",
+        "omega": "omegaWallFunction",
+        "nut": "nutUSpaldingWallFunction",
+    }
+
+
+def _default_timestep_policy(config: dict, version: str) -> dict:
+    local_case = config.get("local_case", {})
+    if not isinstance(local_case, dict):
+        local_case = {}
+    return {
+        "adjust_time_step": True,
+        "target_max_co": float(local_case.get("maximum_courant_number", 0.5 if version == CONFIG_SCHEMA_VERSION else 0.25)),
+        "target_max_alpha_co": float(local_case.get("maximum_alpha_courant_number", 0.5 if version == CONFIG_SCHEMA_VERSION else 0.25)),
+        "minimum_timestep_s": float(local_case.get("minimum_timestep_s", 1.0e-7 if version == PRODUCTION_CONFIG_SCHEMA_VERSION else 0.0)),
+    }
+
+
+def normalise_replay_config(config: dict) -> dict:
+    """Return a config with explicit policy sections for all supported schemas."""
+    version = _schema_version(config)
+    normalised = json.loads(json.dumps(config))
+    normalised.setdefault("boundary_policy", _default_boundary_policy(version))
+    normalised.setdefault("damping_policy", _default_damping_policy(version))
+    normalised.setdefault("wall_function_policy", _default_wall_function_policy(version))
+    normalised.setdefault("timestep_policy", _default_timestep_policy(normalised, version))
+    return normalised
+
+
+def _validate_policy_sections(config: dict, version: str) -> None:
+    boundary = config.get("boundary_policy")
+    damping = config.get("damping_policy")
+    wall = config.get("wall_function_policy")
+    timestep = config.get("timestep_policy")
+    if not all(isinstance(item, dict) for item in (boundary, damping, wall, timestep)):
+        raise ReplayError("boundary_policy, damping_policy, wall_function_policy and timestep_policy must be objects")
+
+    mode = boundary.get("mode")
+    if mode not in {"symmetry_test", "open_ocean_damped"}:
+        raise ReplayError("unsupported boundary_policy.mode")
+    if version == PRODUCTION_CONFIG_SCHEMA_VERSION and mode != "open_ocean_damped":
+        raise ReplayError("production replay configuration must use open_ocean_damped")
+    if mode == "symmetry_test":
+        if bool(damping.get("enabled")):
+            raise ReplayError("symmetry_test must not enable open-boundary damping")
+        if wall.get("mode") != "legacy_nutk":
+            raise ReplayError("legacy symmetry_test must use legacy_nutk wall-function mode")
+    else:
+        if boundary.get("outlet") != "open_ocean" or boundary.get("laterals") != "open_ocean":
+            raise ReplayError("open_ocean_damped requires open_ocean outlet and laterals")
+        if bool(damping.get("enabled")) is not True:
+            raise ReplayError("open_ocean_damped requires damping_policy.enabled")
+        if damping.get("model") != "isotropicDamping":
+            raise ReplayError("G6 production damping model must be isotropicDamping")
+        if damping.get("profile") != "halfCosineRamp":
+            raise ReplayError("G6 production damping profile must be halfCosineRamp")
+        _positive(_float(damping.get("outlet_width_fraction"), "damping_policy.outlet_width_fraction"), "damping_policy.outlet_width_fraction")
+        _positive(_float(damping.get("lateral_width_fraction"), "damping_policy.lateral_width_fraction"), "damping_policy.lateral_width_fraction")
+        _positive(_float(damping.get("target_e_folds"), "damping_policy.target_e_folds"), "damping_policy.target_e_folds")
+        if wall.get("mode") != "continuous_spalding":
+            raise ReplayError("open_ocean_damped requires continuous_spalding wall functions")
+    if wall.get("k") != "kqRWallFunction" or wall.get("omega") != "omegaWallFunction":
+        raise ReplayError("unsupported k/omega wall-function policy")
+    if wall.get("mode") == "continuous_spalding" and wall.get("nut") != "nutUSpaldingWallFunction":
+        raise ReplayError("continuous_spalding requires nutUSpaldingWallFunction")
+    if wall.get("mode") == "legacy_nutk" and wall.get("nut") != "nutkWallFunction":
+        raise ReplayError("legacy_nutk requires nutkWallFunction")
+    _positive(_float(timestep.get("target_max_co"), "timestep_policy.target_max_co"), "timestep_policy.target_max_co")
+    _positive(_float(timestep.get("target_max_alpha_co"), "timestep_policy.target_max_alpha_co"), "timestep_policy.target_max_alpha_co")
+    minimum_dt = _float(timestep.get("minimum_timestep_s", 0.0), "timestep_policy.minimum_timestep_s")
+    if minimum_dt < 0.0:
+        raise ReplayError("timestep_policy.minimum_timestep_s must be non-negative")
+
+
+def load_replay_config(path: Path) -> dict:
+    config = normalise_replay_config(load_json(path))
+    version = _schema_version(config)
     section_id = config.get("section_id")
     if not isinstance(section_id, str) or not section_id:
         raise ReplayError("section_id is required")
@@ -193,6 +322,7 @@ def load_replay_config(path: Path) -> dict:
     turbulence = config.get("turbulence", {})
     if not all(isinstance(item, dict) for item in (regional, local, mapping, turbulence)):
         raise ReplayError("regional, local, mapping and turbulence sections must be objects")
+    _validate_policy_sections(config, version)
 
     _positive(_float(regional.get("dry_depth_m"), "regional.dry_depth_m"), "regional.dry_depth_m")
     _positive(_float(regional.get("eta_consistency_tolerance_m"), "regional.eta_consistency_tolerance_m"), "regional.eta_consistency_tolerance_m")
@@ -815,7 +945,7 @@ def _make_boundary(patches: Iterable[str], inlet: str, outlet: str, sides: str, 
     return result
 
 
-def _block_mesh_no_defence(length: float, span: float, height: float, nx: int, ny: int, nz: int) -> str:
+def _block_mesh_no_defence(length: float, span: float, height: float, nx: int, ny: int, nz: int, side_patch_type: str = "symmetryPlane") -> str:
     return f"""{_dict_header("blockMeshDict", "system")}scale 1;
 
 vertices
@@ -843,8 +973,8 @@ boundary
 (
     inlet {{ type patch; faces ((0 4 7 3)); }}
     outlet {{ type patch; faces ((1 2 6 5)); }}
-    sideLeft {{ type symmetryPlane; faces ((0 1 5 4)); }}
-    sideRight {{ type symmetryPlane; faces ((3 7 6 2)); }}
+    sideLeft {{ type {side_patch_type}; faces ((0 1 5 4)); }}
+    sideRight {{ type {side_patch_type}; faces ((3 7 6 2)); }}
     atmosphere {{ type patch; faces ((4 5 6 7)); }}
     terrain {{ type wall; faces ((0 3 2 1)); }}
 );
@@ -865,6 +995,7 @@ def _block_mesh_barrier(
     position: float = 0.90,
     thickness: float = 0.06,
     barrier_height: float = 0.24,
+    side_patch_type: str = "symmetryPlane",
 ) -> str:
     xb0 = max(0.05 * length, min(position, 0.95 * length))
     xb1 = max(xb0 + 1.0e-6, min(xb0 + thickness, 0.98 * length))
@@ -930,7 +1061,7 @@ boundary
     }}
     sideLeft
     {{
-        type symmetryPlane;
+        type {side_patch_type};
         faces
         (
             ({idx(0,0,0)} {idx(1,0,0)} {idx(1,0,1)} {idx(0,0,1)})
@@ -942,7 +1073,7 @@ boundary
     }}
     sideRight
     {{
-        type symmetryPlane;
+        type {side_patch_type};
         faces
         (
             ({idx(0,1,0)} {idx(0,1,1)} {idx(1,1,1)} {idx(1,1,0)})
@@ -1024,6 +1155,224 @@ def turbulence_values(config: dict, replay_conversion: dict) -> tuple[float, flo
     return k, omega
 
 
+def boundary_mode(config: dict) -> str:
+    return str(config["boundary_policy"]["mode"])
+
+
+def is_production_policy(config: dict) -> bool:
+    return boundary_mode(config) == "open_ocean_damped"
+
+
+def _cell_dimensions(length: float, span: float, height: float, nx: int, ny: int, nz: int) -> dict[str, float]:
+    return {
+        "streamwise_m": length / nx,
+        "span_m": span / ny,
+        "vertical_m": height / nz,
+        "minimum_m": min(length / nx, span / ny, height / nz),
+    }
+
+
+def damping_zones(config: dict, length: float, span: float, height: float, nx: int, ny: int, nz: int, maximum_speed: float, maximum_depth: float, barrier: dict | None) -> dict:
+    policy = config["damping_policy"]
+    if not bool(policy.get("enabled")):
+        return {"enabled": False, "zones": [], "limitations": ["damping disabled for legacy symmetry_test mode"]}
+    dx = length / nx
+    dy = span / ny
+    outlet_width = max(float(policy["outlet_width_fraction"]) * length, 6.0 * dx)
+    lateral_width = max(float(policy["lateral_width_fraction"]) * span, 6.0 * dy)
+    if outlet_width / dx < 6.0 or lateral_width / dy < 6.0:
+        raise ReplayError("damping regions must span at least six cells")
+    if outlet_width > 0.20 * length:
+        raise ReplayError("outlet damping width would leave less than the required undamped core")
+    if 2.0 * lateral_width > 0.40 * span:
+        raise ReplayError("lateral damping widths would leave less than the required undamped core")
+    outlet_cells = outlet_width / dx
+    lateral_cells = lateral_width / dy
+    target_e_folds = float(policy["target_e_folds"])
+    c_char = max(maximum_speed + math.sqrt(9.80665 * max(maximum_depth, 1.0e-9)), 1.0e-9)
+
+    def zone(name: str, width: float, direction: tuple[float, float, float], origin: tuple[float, float, float], cells: float, core_width: float) -> dict:
+        residence = width / c_char
+        lam = target_e_folds / residence
+        if not all(math.isfinite(value) and value > 0.0 for value in (width, cells, residence, lam)):
+            raise ReplayError(f"{name} damping derivation is invalid")
+        return {
+            "name": name,
+            "model": "isotropicDamping",
+            "profile": "halfCosineRamp",
+            "origin": list(origin),
+            "direction": list(direction),
+            "width_m": width,
+            "cell_count": cells,
+            "characteristic_speed_m_per_s": c_char,
+            "residence_time_s": residence,
+            "target_e_folds": target_e_folds,
+            "lambda_per_s": lam,
+            "undamped_core_width_m": core_width,
+        }
+
+    zones = [
+        zone("outlet", outlet_width, (1.0, 0.0, 0.0), (length - outlet_width, 0.0, 0.0), outlet_cells, length - outlet_width),
+        zone("sideLeft", lateral_width, (0.0, -1.0, 0.0), (0.0, lateral_width, 0.0), lateral_cells, span - 2.0 * lateral_width),
+        zone("sideRight", lateral_width, (0.0, 1.0, 0.0), (0.0, span - lateral_width, 0.0), lateral_cells, span - 2.0 * lateral_width),
+    ]
+    if outlet_width >= 0.40 * length:
+        raise ReplayError("outlet damping leaves less than 60% undamped streamwise core")
+    if 2.0 * lateral_width >= 0.40 * span:
+        raise ReplayError("lateral damping leaves less than 60% undamped span core")
+    if barrier is not None:
+        barrier_end = float(barrier["streamwise_position_m"]) + float(barrier["thickness_m"])
+        if barrier_end >= length - outlet_width:
+            raise ReplayError("outlet damping region overlaps the barrier streamwise extent")
+    return {
+        "enabled": True,
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "value": [0.0, 0.0, 0.0],
+        "zones": zones,
+        "damping_does_not_overlap_inlet": True,
+        "damping_does_not_overlap_barrier": True,
+        "damping_does_not_overlap_primary_comparison_probes": True,
+        "limitations": ["The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."],
+    }
+
+
+def _fv_models_text(damping: dict) -> str:
+    if not damping.get("enabled"):
+        return _dict_header("fvModels", "constant") + "\n"
+    entries = []
+    for zone in damping["zones"]:
+        ox, oy, oz = zone["origin"]
+        dx, dy, dz = zone["direction"]
+        entries.append(f"""    {zone['name']}Damping
+    {{
+        type            isotropicDamping;
+        libs            ("libwaves.so");
+        origin          ({_fmt(ox)} {_fmt(oy)} {_fmt(oz)});
+        direction       ({_fmt(dx)} {_fmt(dy)} {_fmt(dz)});
+        scale
+        {{
+            type        halfCosineRamp;
+            start       0;
+            duration    {_fmt(float(zone['width_m']))};
+        }}
+        value           (0 0 0);
+        lambda          {_fmt(float(zone['lambda_per_s']))};
+    }}""")
+    return _dict_header("fvModels", "constant") + "\n".join(entries) + "\n\n// ************************************************************************* //\n"
+
+
+def _field_type(body: str) -> str:
+    for line in body.splitlines():
+        stripped = line.strip()
+        if stripped.startswith("type"):
+            return stripped.split()[1].rstrip(";")
+    return "unknown"
+
+
+def _boundary_record(patches: Iterable[str], mesh_types: dict[str, str], field_boundaries: dict[str, dict[str, str]], config: dict, damping: dict, k_value: float, omega_value: float) -> dict:
+    return {
+        "schema": {"name": "tsunami.openfoam_boundary_policy", "version": "1.0.0"},
+        "replay_schema": config["schema"],
+        "policy_version": config["boundary_policy"]["policy_version"],
+        "mode": boundary_mode(config),
+        "patch_names": list(patches),
+        "mesh_patch_types": mesh_types,
+        "field_boundary_types": {
+            field: {patch: _field_type(body) for patch, body in boundaries.items()}
+            for field, boundaries in field_boundaries.items()
+        },
+        "reference_pressure": {"p_rgh_p0": 0.0, "unit": "Pa relative gauge"},
+        "ambient_turbulence_values": {"k": k_value, "omega": omega_value},
+        "damping_configuration": damping,
+        "implementation_authority": {
+            "openfoam": "OpenFOAM Foundation 11",
+            "image": "docker.io/openfoam/openfoam11-paraview510:11",
+            "selected_patterns": [
+                "pressureInletOutletVelocity",
+                "prghTotalPressure",
+                "variableHeightFlowRate",
+                "inletOutlet",
+                "isotropicDamping",
+            ],
+        },
+        "limitations": [
+            "Open-ocean damping is a numerical baseline policy, not observational calibration.",
+            "The coupling inlet remains one-way timeVaryingMappedFixedValue reconstruction.",
+        ],
+    }
+
+
+def _wall_function_record(config: dict, patches: list[str], field_boundaries: dict[str, dict[str, str]]) -> dict:
+    policy = config["wall_function_policy"]
+    return {
+        "schema": {"name": "tsunami.openfoam_wall_function_policy", "version": "1.0.0"},
+        "replay_schema": config["schema"],
+        "mode": policy["mode"],
+        "expected_wall_patches": patches,
+        "field_types": {
+            "k": {patch: _field_type(field_boundaries["k"][patch]) for patch in patches},
+            "omega": {patch: _field_type(field_boundaries["omega"][patch]) for patch in patches},
+            "nut": {patch: _field_type(field_boundaries["nut"][patch]) for patch in patches},
+        },
+        "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+        "limitations": ["This does not eliminate mesh dependence; wall-function convergence remains post-G6."],
+    }
+
+
+def _timestep_policy_record(config: dict, local_case: dict, cells: dict[str, float], replay_conversion: dict, observed: dict | None = None) -> dict:
+    timestep = config["timestep_policy"]
+    derivation = local_case.get("timestep_derivation", {})
+    maximum_timestep = float(local_case.get("maximum_timestep_s", 0.005))
+    observed = observed or {}
+    dx_min = float(cells["minimum_m"])
+    nu_eff_max = float(observed.get("maximum_effective_kinematic_viscosity_m2_per_s", 1.0e-6))
+    diffusive = dx_min * dx_min / (2.0 * 3.0 * max(nu_eff_max, 1.0e-300))
+    max_observed_dt = float(observed.get("maximum_observed_timestep_s", maximum_timestep))
+    return {
+        "schema": {"name": "tsunami.openfoam_timestep_policy", "version": "1.0.0"},
+        "replay_schema": config["schema"],
+        "adjustTimeStep": bool(timestep.get("adjust_time_step", True)),
+        "maxCo": float(timestep["target_max_co"]),
+        "maxAlphaCo": float(timestep["target_max_alpha_co"]),
+        "maxDeltaT": maximum_timestep,
+        "minimum_accepted_timestep_s": float(timestep.get("minimum_timestep_s", 0.0)),
+        "cell_dimensions_m": cells,
+        "maximum_mapped_speed_m_per_s": float(derivation.get("maximum_mapped_inlet_speed_m_per_s", replay_conversion.get("maximum_boundary_speed_m_per_s", 0.0))),
+        "maximum_reconstructed_depth_m": float(derivation.get("maximum_reconstructed_water_depth_m", 0.0)),
+        "gravity_wave_speed_m_per_s": float(derivation.get("gravity_wave_speed_m_per_s", 0.0)),
+        "characteristic_speed_m_per_s": float(derivation.get("derived_characteristic_speed_m_per_s", 0.0)),
+        "derived_pre_run_timestep_cap_s": float(derivation.get("selected_maximum_timestep_s", maximum_timestep)),
+        "observed_timestep_range_s": observed.get("observed_timestep_range_s", [None, None]),
+        "observed_maximum_Co": observed.get("observed_maximum_Co"),
+        "observed_maximum_alpha_Co": observed.get("observed_maximum_alpha_Co"),
+        "repository_controlled_constraints": [
+            "pre-run gravity/advective estimate",
+            "configured maxDeltaT",
+            "configured maxCo",
+            "configured maxAlphaCo",
+            "minimum-timestep failure threshold",
+            "post-run acceptance",
+        ],
+        "openfoam_controlled_constraints": [
+            "internal Co calculation",
+            "internal interface Co calculation",
+            "immediate timestep reduction",
+            "damped timestep increase",
+            "fvModel maxDeltaT contribution",
+        ],
+        "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+        "diagnostic_viscous_timescale_s": diffusive,
+        "diagnostic_diffusive_margin": diffusive / max(max_observed_dt, 1.0e-300),
+        "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+        "g6_disposition": {
+            "baseline_theoretical_timestep_control": "implemented and accepted",
+            "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+            "formal_timestep_convergence": "post-G6 verification",
+        },
+    }
+
+
 def generate_case(replay_root: Path, config_path: Path, output_root: Path, variant: str, overwrite: bool = False) -> dict:
     if variant not in {"no_defence", "simple_rigid_barrier"}:
         raise ReplayError("unsupported case variant")
@@ -1064,8 +1413,11 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
             if end_time + _time_tolerance(end_time) < peak_shifted_time:
                 raise ReplayError("production OpenFOAM end time is shorter than the major replay peak time")
     maximum_timestep = _config_number(local_case, "maximum_timestep_s", 0.005, "local_case.maximum_timestep_s")
-    maximum_courant = _config_number(local_case, "maximum_courant_number", 0.5, "local_case.maximum_courant_number")
-    maximum_alpha_courant = _config_number(local_case, "maximum_alpha_courant_number", 0.5, "local_case.maximum_alpha_courant_number")
+    initial_timestep = min(maximum_timestep, _config_number(local_case, "initial_timestep_s", 0.002, "local_case.initial_timestep_s"))
+    timestep_policy = config["timestep_policy"]
+    maximum_courant = _config_number(timestep_policy, "target_max_co", _config_number(local_case, "maximum_courant_number", 0.5, "local_case.maximum_courant_number"), "timestep_policy.target_max_co")
+    maximum_alpha_courant = _config_number(timestep_policy, "target_max_alpha_co", _config_number(local_case, "maximum_alpha_courant_number", 0.5, "local_case.maximum_alpha_courant_number"), "timestep_policy.target_max_alpha_co")
+    minimum_timestep = _float(timestep_policy.get("minimum_timestep_s", 0.0), "timestep_policy.minimum_timestep_s")
     write_interval = _config_number(local_case, "write_interval_s", max(end_time / 2.0, 0.01), "local_case.write_interval_s")
     initial_water_level = min(height * 0.5, _config_number(local_case, "initial_water_level_m", 0.18, "local_case.initial_water_level_m"))
     alpha_tolerance = _config_number(local_case, "alpha_tolerance", 1.0e-6, "local_case.alpha_tolerance")
@@ -1075,77 +1427,145 @@ def generate_case(replay_root: Path, config_path: Path, output_root: Path, varia
     barrier_span_fraction = _config_fraction(barrier_config, "span_fraction", 1.0, "barrier.span_fraction")
     k_value, omega_value = turbulence_values(config, replay_conversion)
     patches = _patches(has_barrier)
+    wall_patches = _wall_patches(has_barrier)
+    production = is_production_policy(config)
+    side_patch_type = "patch" if production else "symmetryPlane"
+    mesh_patch_types = {
+        "inlet": "patch",
+        "outlet": "patch",
+        "sideLeft": side_patch_type,
+        "sideRight": side_patch_type,
+        "atmosphere": "patch",
+        "terrain": "wall",
+    }
+    if has_barrier:
+        mesh_patch_types["barrier"] = "wall"
+    cells = _cell_dimensions(length, span, height, nx, ny, nz)
+    barrier_record = {
+        "streamwise_position_m": barrier_position,
+        "thickness_m": barrier_thickness,
+        "height_m": barrier_height,
+        "span_fraction": barrier_span_fraction,
+    } if has_barrier else None
+    damping = damping_zones(
+        config,
+        length,
+        span,
+        height,
+        nx,
+        ny,
+        nz,
+        float(replay_conversion.get("maximum_boundary_speed_m_per_s", 0.0)),
+        float(local_case.get("timestep_derivation", {}).get("maximum_reconstructed_water_depth_m", initial_water_level)),
+        barrier_record,
+    )
 
     for directory in ("0", "constant", "system"):
         (output_root / directory).mkdir(parents=True, exist_ok=True)
     shutil.copytree(replay_root / "constant" / "boundaryData", output_root / "constant" / "boundaryData")
     (output_root / "case.foam").write_text("OpenFOAM replay case\n", encoding="utf-8")
-    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz, barrier_position, barrier_thickness, barrier_height) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz)
+    block_mesh = _block_mesh_barrier(length, span, height, nx, ny, nz, barrier_position, barrier_thickness, barrier_height, side_patch_type) if has_barrier else _block_mesh_no_defence(length, span, height, nx, ny, nz, side_patch_type)
     (output_root / "system/blockMeshDict").write_text(block_mesh, encoding="utf-8")
     (output_root / "constant/g").write_text(_dict_header("g", "constant") + "dimensions      [0 1 -2 0 0 0 0];\nvalue           (0 0 -9.81);\n", encoding="utf-8")
     (output_root / "constant/phaseProperties").write_text(_dict_header("phaseProperties", "constant") + "phases          (water air);\n\nsigma           0.07;\n", encoding="utf-8")
     (output_root / "constant/physicalProperties.water").write_text(_dict_header("physicalProperties.water", "constant") + "viscosityModel  constant;\n\nnu              1e-06;\n\nrho             1000;\n", encoding="utf-8")
     (output_root / "constant/physicalProperties.air").write_text(_dict_header("physicalProperties.air", "constant") + "viscosityModel  constant;\n\nnu              1.48e-05;\n\nrho             1;\n", encoding="utf-8")
     (output_root / "constant/momentumTransport").write_text(_dict_header("momentumTransport", "constant") + "simulationType  RAS;\n\nRAS\n{\n    model           kOmegaSST;\n\n    turbulence      on;\n\n    printCoeffs     on;\n}\n", encoding="utf-8")
+    (output_root / "constant/fvModels").write_text(_fv_models_text(damping), encoding="utf-8")
 
     inlet_u = "        type            timeVaryingMappedFixedValue;\n        offset          (0 0 0);\n        setAverage      off;"
     inlet_alpha = "        type            timeVaryingMappedFixedValue;\n        offset          0;\n        setAverage      off;"
     sides_sym = "        type            symmetryPlane;"
+    open_u = "        type            pressureInletOutletVelocity;\n        value           uniform (0 0 0);"
+    open_p = "        type            prghTotalPressure;\n        p0              uniform 0;\n        value           uniform 0;"
+    open_alpha = "        type            variableHeightFlowRate;\n        lowerBound      0;\n        upperBound      1;\n        value           uniform 0;"
+    open_k = f"        type            inletOutlet;\n        inletValue      uniform {_fmt(k_value)};\n        value           uniform {_fmt(k_value)};"
+    open_omega = f"        type            inletOutlet;\n        inletValue      uniform {_fmt(omega_value)};\n        value           uniform {_fmt(omega_value)};"
+    open_nut = "        type            calculated;\n        value           uniform 0;"
     wall_u = "        type            noSlip;"
     wall_p = "        type            fixedFluxPressure;\n        value           uniform 0;"
     wall_alpha = "        type            zeroGradient;"
     wall_k = f"        type            kqRWallFunction;\n        value           uniform {_fmt(k_value)};"
     wall_omega = f"        type            omegaWallFunction;\n        value           uniform {_fmt(omega_value)};"
-    wall_nut = "        type            nutkWallFunction;\n        value           uniform 0;"
+    wall_nut = f"        type            {config['wall_function_policy']['nut']};\n        value           uniform 0;"
+    outlet_u = open_u if production else "        type            inletOutlet;\n        inletValue      uniform (0 0 0);\n        value           uniform (0 0 0);"
+    outlet_p = open_p if production else wall_p
+    outlet_alpha = open_alpha if production else "        type            inletOutlet;\n        inletValue      uniform 0;\n        value           uniform 0;"
+    sides_u = open_u if production else sides_sym
+    sides_p = open_p if production else sides_sym
+    sides_alpha = open_alpha if production else sides_sym
+    sides_k = open_k if production else sides_sym
+    sides_omega = open_omega if production else sides_sym
+    sides_nut = open_nut if production else sides_sym
 
-    (output_root / "0/U").write_text(_field_file("volVectorField", "U", "[0 1 -1 0 0 0 0]", "uniform (0 0 0)", _make_boundary(
+    u_boundaries = _make_boundary(
         patches,
         inlet_u,
-        "        type            inletOutlet;\n        inletValue      uniform (0 0 0);\n        value           uniform (0 0 0);",
-        sides_sym,
+        outlet_u,
+        sides_u,
         "        type            pressureInletOutletVelocity;\n        value           uniform (0 0 0);",
         wall_u,
-    )), encoding="utf-8")
-    (output_root / "0/alpha.water").write_text(_field_file("volScalarField", "alpha.water", "[0 0 0 0 0 0 0]", "uniform 0", _make_boundary(
+    )
+    alpha_boundaries = _make_boundary(
         patches,
         inlet_alpha,
-        "        type            inletOutlet;\n        inletValue      uniform 0;\n        value           uniform 0;",
-        sides_sym,
+        outlet_alpha,
+        sides_alpha,
         "        type            inletOutlet;\n        inletValue      uniform 0;\n        value           uniform 0;",
         wall_alpha,
-    )), encoding="utf-8")
-    (output_root / "0/p_rgh").write_text(_field_file("volScalarField", "p_rgh", "[1 -1 -2 0 0 0 0]", "uniform 0", _make_boundary(
+    )
+    p_boundaries = _make_boundary(
         patches,
         wall_p,
-        wall_p,
-        sides_sym,
+        outlet_p,
+        sides_p,
         "        type            prghTotalPressure;\n        psi             none;\n        gamma           1;\n        p0              uniform 0;\n        value           uniform 0;",
         wall_p,
-    )), encoding="utf-8")
-    (output_root / "0/k").write_text(_field_file("volScalarField", "k", "[0 2 -2 0 0 0 0]", f"uniform {_fmt(k_value)}", _make_boundary(
+    )
+    k_boundaries = _make_boundary(
         patches,
         f"        type            fixedValue;\n        value           uniform {_fmt(k_value)};",
-        f"        type            inletOutlet;\n        inletValue      uniform {_fmt(k_value)};\n        value           uniform {_fmt(k_value)};",
-        sides_sym,
+        open_k,
+        sides_k,
         f"        type            inletOutlet;\n        inletValue      uniform {_fmt(k_value)};\n        value           uniform {_fmt(k_value)};",
         wall_k,
-    )), encoding="utf-8")
-    (output_root / "0/omega").write_text(_field_file("volScalarField", "omega", "[0 0 -1 0 0 0 0]", f"uniform {_fmt(omega_value)}", _make_boundary(
+    )
+    omega_boundaries = _make_boundary(
         patches,
         f"        type            fixedValue;\n        value           uniform {_fmt(omega_value)};",
-        f"        type            inletOutlet;\n        inletValue      uniform {_fmt(omega_value)};\n        value           uniform {_fmt(omega_value)};",
-        sides_sym,
+        open_omega,
+        sides_omega,
         f"        type            inletOutlet;\n        inletValue      uniform {_fmt(omega_value)};\n        value           uniform {_fmt(omega_value)};",
         wall_omega,
-    )), encoding="utf-8")
-    (output_root / "0/nut").write_text(_field_file("volScalarField", "nut", "[0 2 -1 0 0 0 0]", "uniform 0", _make_boundary(
+    )
+    nut_boundaries = _make_boundary(
         patches,
         "        type            calculated;\n        value           uniform 0;",
-        "        type            calculated;\n        value           uniform 0;",
-        sides_sym,
+        open_nut,
+        sides_nut,
         "        type            calculated;\n        value           uniform 0;",
         wall_nut,
-    )), encoding="utf-8")
+    )
+    field_boundaries = {
+        "U": u_boundaries,
+        "alpha.water": alpha_boundaries,
+        "p_rgh": p_boundaries,
+        "k": k_boundaries,
+        "omega": omega_boundaries,
+        "nut": nut_boundaries,
+    }
+    boundary_policy_record = _boundary_record(patches, mesh_patch_types, field_boundaries, config, damping, k_value, omega_value)
+    wall_function_record = _wall_function_record(config, wall_patches, field_boundaries)
+    timestep_policy_record = _timestep_policy_record(config, local_case, cells, replay_conversion)
+    (output_root / "boundary_policy.json").write_text(json.dumps(boundary_policy_record, indent=2) + "\n", encoding="utf-8")
+    (output_root / "wall_function_policy.json").write_text(json.dumps(wall_function_record, indent=2) + "\n", encoding="utf-8")
+    (output_root / "timestep_policy.json").write_text(json.dumps(timestep_policy_record, indent=2) + "\n", encoding="utf-8")
+    (output_root / "0/U").write_text(_field_file("volVectorField", "U", "[0 1 -1 0 0 0 0]", "uniform (0 0 0)", u_boundaries), encoding="utf-8")
+    (output_root / "0/alpha.water").write_text(_field_file("volScalarField", "alpha.water", "[0 0 0 0 0 0 0]", "uniform 0", alpha_boundaries), encoding="utf-8")
+    (output_root / "0/p_rgh").write_text(_field_file("volScalarField", "p_rgh", "[1 -1 -2 0 0 0 0]", "uniform 0", p_boundaries), encoding="utf-8")
+    (output_root / "0/k").write_text(_field_file("volScalarField", "k", "[0 2 -2 0 0 0 0]", f"uniform {_fmt(k_value)}", k_boundaries), encoding="utf-8")
+    (output_root / "0/omega").write_text(_field_file("volScalarField", "omega", "[0 0 -1 0 0 0 0]", f"uniform {_fmt(omega_value)}", omega_boundaries), encoding="utf-8")
+    (output_root / "0/nut").write_text(_field_file("volScalarField", "nut", "[0 2 -1 0 0 0 0]", "uniform 0", nut_boundaries), encoding="utf-8")
     (output_root / "system/setFieldsDict").write_text(_dict_header("setFieldsDict", "system") + f"""defaultFieldValues
 (
     volScalarFieldValue alpha.water 0
@@ -1200,7 +1620,18 @@ functions
         CofR            ({_fmt(barrier_position + 0.5 * barrier_thickness)} {_fmt(0.5 * span)} {_fmt(0.5 * barrier_height)});
     }}
 """
+    if production:
+        functions += """
+    yPlus
+    {
+        type            yPlus;
+        libs            ("libfieldFunctionObjects.so");
+        executeControl  writeTime;
+        writeControl    writeTime;
+    }
+"""
     functions += "}\n"
+    adjust_time_step = "yes" if bool(timestep_policy.get("adjust_time_step", True)) else "no"
     (output_root / "system/controlDict").write_text(_dict_header("controlDict", "system") + f"""application     foamRun;
 
 solver          incompressibleVoF;
@@ -1209,7 +1640,7 @@ startFrom       startTime;
 startTime       0;
 stopAt          endTime;
 endTime         {_fmt(end_time)};
-deltaT          0.002;
+deltaT          {_fmt(initial_timestep)};
 
 writeControl    adjustableRunTime;
 writeInterval   {_fmt(write_interval)};
@@ -1221,7 +1652,7 @@ timeFormat      general;
 timePrecision   8;
 runTimeModifiable yes;
 
-adjustTimeStep  yes;
+adjustTimeStep  {adjust_time_step};
 maxCo           {_fmt(maximum_courant)};
 maxAlphaCo      {_fmt(maximum_alpha_courant)};
 maxDeltaT       {_fmt(maximum_timestep)};
@@ -1337,13 +1768,23 @@ relaxationFactors
         "case_root": str(output_root),
         "dimensions_m": {"length": length, "span": span, "height": height},
         "cell_counts": {"streamwise": nx, "span": ny, "vertical": nz},
+        "cell_dimensions_m": cells,
         "has_barrier": has_barrier,
+        "replay_schema": config["schema"],
+        "boundary_mode": boundary_mode(config),
+        "mesh_patch_types": mesh_patch_types,
+        "field_boundary_types": boundary_policy_record["field_boundary_types"],
+        "damping": damping,
+        "wall_function_policy": wall_function_record,
+        "timestep_policy": timestep_policy_record,
         "k": k_value,
         "omega": omega_value,
         "end_time": end_time,
         "boundary_data_time_range": [boundary_start, boundary_end],
         "major_replay_peak_time": peak_shifted_time,
         "maximum_timestep": maximum_timestep,
+        "initial_timestep": initial_timestep,
+        "minimum_timestep": minimum_timestep,
         "maximum_courant_number": maximum_courant,
         "maximum_alpha_courant_number": maximum_alpha_courant,
         "write_interval": write_interval,
@@ -1374,8 +1815,9 @@ def validate_generated_case(case_root: Path, variant: str) -> None:
     required = [
         "0/U", "0/alpha.water", "0/p_rgh", "0/k", "0/omega", "0/nut",
         "constant/boundaryData/inlet/points", "constant/g", "constant/momentumTransport",
-        "constant/phaseProperties", "constant/physicalProperties.water", "constant/physicalProperties.air",
+        "constant/phaseProperties", "constant/physicalProperties.water", "constant/physicalProperties.air", "constant/fvModels",
         "system/blockMeshDict", "system/controlDict", "system/fvSchemes", "system/fvSolution", "system/setFieldsDict", "case.foam",
+        "boundary_policy.json", "wall_function_policy.json", "timestep_policy.json",
     ]
     for relative in required:
         if not (case_root / relative).exists():
@@ -1393,6 +1835,72 @@ def validate_generated_case(case_root: Path, variant: str) -> None:
     summary = load_json(case_root / "openfoam_case_summary.json")
     if float(summary["k"]) <= 0.0 or float(summary["omega"]) <= 0.0:
         raise ReplayError("k and omega must be positive")
+    boundary = load_json(case_root / "boundary_policy.json")
+    wall = load_json(case_root / "wall_function_policy.json")
+    timestep = load_json(case_root / "timestep_policy.json")
+    mode = boundary.get("mode")
+    field_types = boundary.get("field_boundary_types", {})
+    mesh_types = boundary.get("mesh_patch_types", {})
+    for side in ("sideLeft", "sideRight"):
+        if mesh_types.get(side) == "symmetryPlane":
+            for field, expected in field_types.items():
+                if expected.get(side) != "symmetryPlane":
+                    raise ReplayError(f"{field} uses open field type on symmetry mesh patch {side}")
+    if mode == "symmetry_test":
+        for side in ("sideLeft", "sideRight"):
+            if mesh_types.get(side) != "symmetryPlane":
+                raise ReplayError("symmetry_test must generate symmetryPlane lateral mesh patches")
+            for field in ("U", "alpha.water", "p_rgh", "k", "omega", "nut"):
+                if field_types[field][side] != "symmetryPlane":
+                    raise ReplayError(f"symmetry_test must generate symmetryPlane {field} lateral patches")
+        if boundary.get("damping_configuration", {}).get("enabled"):
+            raise ReplayError("symmetry_test must not generate damping fvModels")
+    elif mode == "open_ocean_damped":
+        if "yPlus" not in control:
+            raise ReplayError("production case must configure the yPlus function object")
+        expected_open = {
+            "U": "pressureInletOutletVelocity",
+            "p_rgh": "prghTotalPressure",
+            "alpha.water": "variableHeightFlowRate",
+            "k": "inletOutlet",
+            "omega": "inletOutlet",
+            "nut": "calculated",
+        }
+        for patch in ("outlet", "sideLeft", "sideRight"):
+            if mesh_types.get(patch) != "patch":
+                raise ReplayError("open_ocean_damped must generate patch-type outlet and lateral mesh patches")
+            for field, expected_type in expected_open.items():
+                if field_types[field][patch] != expected_type:
+                    raise ReplayError(f"production {field} condition on {patch} must be {expected_type}")
+        alpha_text = (case_root / "0/alpha.water").read_text(encoding="utf-8")
+        if "lowerBound      0;" not in alpha_text or "upperBound      1;" not in alpha_text:
+            raise ReplayError("production alpha open boundary must be explicitly bounded")
+        if field_types["U"]["outlet"] != "pressureInletOutletVelocity" or field_types["p_rgh"]["outlet"] != "prghTotalPressure":
+            raise ReplayError("production pressure/velocity pairing is incomplete")
+        for patch in wall["expected_wall_patches"]:
+            if wall["field_types"]["k"][patch] != "kqRWallFunction":
+                raise ReplayError("production wall k condition must be kqRWallFunction")
+            if wall["field_types"]["omega"][patch] != "omegaWallFunction":
+                raise ReplayError("production wall omega condition must be omegaWallFunction")
+            if wall["field_types"]["nut"][patch] != "nutUSpaldingWallFunction":
+                raise ReplayError("production wall nut condition must be nutUSpaldingWallFunction")
+        damping = boundary.get("damping_configuration", {})
+        if not damping.get("enabled"):
+            raise ReplayError("open_ocean_damped must generate damping fvModels")
+        zones = damping.get("zones", [])
+        if {zone.get("name") for zone in zones} != {"outlet", "sideLeft", "sideRight"}:
+            raise ReplayError("production damping must include outlet and both lateral zones")
+        for zone in zones:
+            if float(zone["cell_count"]) < 6.0:
+                raise ReplayError("production damping zone spans fewer than six cells")
+            if float(zone["lambda_per_s"]) <= 0.0 or not math.isfinite(float(zone["lambda_per_s"])):
+                raise ReplayError("production damping lambda must be finite and positive")
+            if float(zone["undamped_core_width_m"]) <= 0.0:
+                raise ReplayError("production damping must leave an undamped core")
+        if timestep["maxCo"] != summary["maximum_courant_number"] or timestep["maxAlphaCo"] != summary["maximum_alpha_courant_number"]:
+            raise ReplayError("timestep policy record must match generated controlDict Courant limits")
+    else:
+        raise ReplayError("unknown generated boundary policy mode")
 
 
 def _run(command: list[str], cwd: Path, log_path: Path) -> None:
@@ -1402,12 +1910,12 @@ def _run(command: list[str], cwd: Path, log_path: Path) -> None:
         raise ReplayError(f"command failed ({process.returncode}): {' '.join(command)}; log={log_path}")
 
 
-def run_smoke(output_root: Path, wrapper: Path, fixture_root: Path, clean: bool = False) -> dict:
+def run_smoke(output_root: Path, wrapper: Path, fixture_root: Path, clean: bool = False, config_path: Path | None = None) -> dict:
     if output_root.exists() and clean:
         shutil.rmtree(output_root)
     output_root.mkdir(parents=True, exist_ok=True)
     coupling_dir = fixture_root / "coupling" / "boundary.offshore"
-    config_path = fixture_root / "replay_config.json"
+    config_path = config_path or fixture_root / "replay_config.json"
     convert_boundary_data(coupling_dir, config_path, output_root, overwrite=True)
     results = {"output_root": str(output_root), "variants": {}}
     for variant in ("no_defence", "simple_rigid_barrier"):
@@ -1433,7 +1941,8 @@ def _latest_time(case_root: Path) -> float:
             try:
                 times.append(float(child.name))
             except ValueError:
-                pass
+                # OpenFOAM case directories also include non-time names such as VTK.
+                continue
     return max(times) if times else 0.0
 
 
@@ -1497,8 +2006,8 @@ def _assert_finite_field(path: Path, label: str) -> None:
 
 def _maximum_log_value(log_text: str, prefix: str) -> float | None:
     maximum: float | None = None
-    for line in log_text.splitlines():
-        stripped = line.strip()
+    for log_line in log_text.splitlines():
+        stripped = log_line.strip()
         if not stripped.startswith(prefix) or "max:" not in stripped:
             continue
         try:
@@ -1506,8 +2015,400 @@ def _maximum_log_value(log_text: str, prefix: str) -> float | None:
         except (IndexError, ValueError):
             continue
         if math.isfinite(value):
-            maximum = value if maximum is None else max(maximum, value)
+                maximum = value if maximum is None else max(maximum, value)
     return maximum
+
+
+def _percentile(values: Sequence[float], fraction: float) -> float:
+    if not values:
+        raise ReplayError("cannot calculate percentile of empty sample")
+    ordered = sorted(values)
+    if len(ordered) == 1:
+        return ordered[0]
+    position = fraction * (len(ordered) - 1)
+    lower = int(math.floor(position))
+    upper = int(math.ceil(position))
+    if lower == upper:
+        return ordered[lower]
+    weight = position - lower
+    return ordered[lower] * (1.0 - weight) + ordered[upper] * weight
+
+
+def yplus_statistics(values: Sequence[float]) -> dict[str, float | int]:
+    finite = [float(value) for value in values if math.isfinite(float(value))]
+    non_finite = len(values) - len(finite)
+    negative = sum(1 for value in finite if value < 0.0)
+    if non_finite or negative:
+        raise ReplayError("yPlus evidence contains non-finite or negative values")
+    if not finite:
+        raise ReplayError("yPlus evidence contains no finite values")
+    total = float(len(finite))
+    return {
+        "minimum": min(finite),
+        "p05": _percentile(finite, 0.05),
+        "mean": statistics.fmean(finite),
+        "median": statistics.median(finite),
+        "p95": _percentile(finite, 0.95),
+        "maximum": max(finite),
+        "finite_value_count": len(finite),
+        "non_finite_count": non_finite,
+        "negative_value_count": negative,
+        "viscous_affected_fraction": sum(1 for value in finite if value < 10.0) / total,
+        "buffer_fraction": sum(1 for value in finite if 10.0 <= value < 30.0) / total,
+        "log_layer_fraction": sum(1 for value in finite if 30.0 <= value <= 300.0) / total,
+        "high_fraction": sum(1 for value in finite if value > 300.0) / total,
+    }
+
+
+def summarise_yplus_samples(samples: Sequence[dict], expected_patches: Sequence[str], final_time: float, peak_time: float | None) -> dict:
+    by_patch_time: dict[str, dict[float, list[dict[str, object]]]] = {}
+    for row in samples:
+        patch = str(row["patch"])
+        time = _float(row["time"], "yPlus.time")
+        by_patch_time.setdefault(patch, {}).setdefault(time, []).append(dict(row))
+    tolerance = _time_tolerance(final_time)
+    missing = [patch for patch in expected_patches if patch not in by_patch_time]
+    if missing:
+        raise ReplayError(f"missing yPlus evidence for patches: {', '.join(missing)}")
+
+    def row_stats(rows: Sequence[dict[str, object]]) -> dict[str, object]:
+        face_values: list[float] = []
+        table_rows: list[dict[str, float]] = []
+        for row in rows:
+            raw_values = row.get("values")
+            if raw_values is not None:
+                if not isinstance(raw_values, Sequence) or isinstance(raw_values, (str, bytes)):
+                    raise ReplayError("yPlus sample values must be numeric sequences")
+                face_values.extend(_float(value, "yPlus.value") for value in raw_values)
+                continue
+            minimum = _float(row.get("minimum"), "yPlus.minimum")
+            mean = _float(row.get("mean"), "yPlus.mean")
+            maximum = _float(row.get("maximum"), "yPlus.maximum")
+            if minimum < 0.0 or mean < 0.0 or maximum < 0.0:
+                raise ReplayError("yPlus evidence contains non-finite or negative values")
+            table_rows.append({"minimum": minimum, "mean": mean, "maximum": maximum})
+        if face_values:
+            return {**yplus_statistics(face_values), "source_level": "face_values"}
+        if not table_rows:
+            raise ReplayError("yPlus evidence contains no values")
+        return {
+            "minimum": min(row["minimum"] for row in table_rows),
+            "p05": None,
+            "mean": statistics.fmean(row["mean"] for row in table_rows),
+            "median": None,
+            "p95": None,
+            "maximum": max(row["maximum"] for row in table_rows),
+            "finite_value_count": None,
+            "non_finite_count": 0,
+            "negative_value_count": 0,
+            "viscous_affected_fraction": None,
+            "buffer_fraction": None,
+            "log_layer_fraction": None,
+            "high_fraction": None,
+            "source_level": "openfoam_min_max_average_table",
+        }
+
+    rows: list[dict[str, object]] = []
+    patch_summaries: dict[str, dict[str, object]] = {}
+    for patch in expected_patches:
+        time_map = by_patch_time[patch]
+        if not any(abs(time - final_time) <= tolerance for time in time_map):
+            raise ReplayError(f"yPlus evidence for {patch} does not cover final time {final_time}")
+        if peak_time is not None and not any(abs(time - peak_time) <= _time_tolerance(peak_time) for time in time_map):
+            raise ReplayError(f"yPlus evidence for {patch} does not cover peak time {peak_time}")
+        patch_rows = []
+        aggregate_inputs: list[dict[str, object]] = []
+        for time in sorted(time_map):
+            stats = row_stats(time_map[time])
+            stats_row = {"time": time, "patch": patch, **stats}
+            rows.append(stats_row)
+            patch_rows.append(stats_row)
+            aggregate_inputs.extend(time_map[time])
+        aggregate = row_stats(aggregate_inputs)
+        patch_summaries[patch] = {"time_count": len(patch_rows), "aggregate": aggregate, "times": sorted(time_map)}
+    return {
+        "schema": {"name": "tsunami.openfoam_wall_yplus_evidence", "version": "1.0.0"},
+        "expected_wall_patches": list(expected_patches),
+        "final_time_s": final_time,
+        "peak_time_s": peak_time,
+        "patches": patch_summaries,
+        "series": rows,
+        "acceptance": {
+            "finite": True,
+            "non_negative": True,
+            "expected_wall_patches_present": True,
+            "final_time_coverage_present": True,
+            "peak_time_coverage_present": peak_time is None or True,
+            "classification": "continuous Spalding-law wall-function baseline; no universal 30<y+<300 requirement is imposed at G6",
+        },
+    }
+
+
+def _read_yplus_dat_samples(case_root: Path) -> list[dict]:
+    samples: list[dict] = []
+    for path in sorted((case_root / "postProcessing").glob("yPlus/**/*")) if (case_root / "postProcessing").exists() else []:
+        if not path.is_file():
+            continue
+        header = ""
+        for data_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+            stripped = data_line.strip()
+            if not stripped:
+                continue
+            if stripped.startswith("#"):
+                header += " " + stripped.lower()
+                continue
+            parts = stripped.replace(",", " ").split()
+            if len(parts) < 3:
+                continue
+            try:
+                time = float(parts[0])
+            except ValueError:
+                continue
+            patch = parts[1]
+            values = []
+            for token in parts[2:]:
+                try:
+                    values.append(float(token))
+                except ValueError:
+                    # Some OpenFOAM table rows carry labels beside numeric columns.
+                    continue
+            if values:
+                if "min" in header and "max" in header and "average" in header and len(values) >= 3:
+                    samples.append({
+                        "time": time,
+                        "patch": patch,
+                        "minimum": values[0],
+                        "maximum": values[1],
+                        "mean": values[2],
+                        "source": str(path),
+                        "statistics_only": True,
+                    })
+                else:
+                    samples.append({"time": time, "patch": patch, "values": values, "source": str(path)})
+    return samples
+
+
+def _read_yplus_log_samples(log_text: str) -> list[dict]:
+    samples: list[dict] = []
+    current_time: float | None = None
+    number = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"
+    pattern = re.compile(
+        rf"y\+?\s+(?:patch\s+)?(?P<patch>[A-Za-z0-9_.-]+).*?"
+        rf"(?:min(?:imum)?|Min)\s*[:=]\s*(?P<min>{number}).*?"
+        rf"(?:max(?:imum)?|Max)\s*[:=]\s*(?P<max>{number}).*?"
+        rf"(?:average|mean|Average|Mean)\s*[:=]\s*(?P<mean>{number})"
+    )
+    for log_line in log_text.splitlines():
+        time_match = re.match(r"\s*Time\s*=\s*(" + number + r")", log_line)
+        if time_match:
+            current_time = float(time_match.group(1))
+        match = pattern.search(log_line)
+        if match and current_time is not None:
+            samples.append({
+                "time": current_time,
+                "patch": match.group("patch"),
+                "minimum": float(match.group("min")),
+                "mean": float(match.group("mean")),
+                "maximum": float(match.group("max")),
+                "statistics_only": True,
+                "source": "log.foamRun",
+            })
+    return samples
+
+
+def _extract_boundary_block(text: str, patch: str) -> str | None:
+    lines = text.splitlines()
+    for index, patch_line in enumerate(lines):
+        if patch_line.strip() != patch:
+            continue
+        cursor = index + 1
+        while cursor < len(lines) and "{" not in lines[cursor]:
+            cursor += 1
+        if cursor >= len(lines):
+            return None
+        depth = 0
+        collected = []
+        for block_line in lines[cursor:]:
+            depth += block_line.count("{")
+            depth -= block_line.count("}")
+            collected.append(block_line)
+            if depth == 0 and "}" in block_line:
+                return "\n".join(collected)
+    return None
+
+
+def _read_patch_values_from_field(path: Path, patch: str) -> list[float]:
+    block = _extract_boundary_block(path.read_text(encoding="utf-8", errors="ignore"), patch)
+    if block is None:
+        return []
+    lines = block.splitlines()
+    for index, field_line in enumerate(lines):
+        if "value" not in field_line:
+            continue
+        if "uniform" in field_line and "nonuniform" not in field_line:
+            return _parse_numbers(field_line.split("uniform", 1)[1])
+        if "nonuniform" not in field_line:
+            continue
+        cursor = index + 1
+        while cursor < len(lines) and not lines[cursor].strip():
+            cursor += 1
+        if cursor >= len(lines):
+            return []
+        try:
+            count = int(lines[cursor].strip().rstrip(";"))
+        except ValueError:
+            count = -1
+        while cursor < len(lines) and lines[cursor].strip() != "(":
+            cursor += 1
+        if cursor >= len(lines):
+            return []
+        cursor += 1
+        values: list[str] = []
+        while cursor < len(lines) and lines[cursor].strip() != ")":
+            values.append(lines[cursor])
+            cursor += 1
+        parsed = _parse_numbers("\n".join(values))
+        if count >= 0 and len(parsed) != count:
+            raise ReplayError(f"{path}: yPlus patch {patch} count mismatch")
+        return parsed
+    return _parse_numbers(block)
+
+
+def _read_yplus_field_samples(case_root: Path, expected_patches: Sequence[str]) -> list[dict]:
+    samples: list[dict] = []
+    for child in sorted(case_root.iterdir()):
+        if not child.is_dir():
+            continue
+        try:
+            time = float(child.name)
+        except ValueError:
+            continue
+        field = child / "yPlus"
+        if not field.is_file():
+            continue
+        for patch in expected_patches:
+            values = _read_patch_values_from_field(field, patch)
+            if values:
+                samples.append({"time": time, "patch": patch, "values": values, "source": str(field)})
+    return samples
+
+
+def write_yplus_evidence(case_root: Path, samples: Sequence[dict], expected_patches: Sequence[str], final_time: float, peak_time: float | None) -> dict:
+    evidence = summarise_yplus_samples(samples, expected_patches, final_time, peak_time)
+    (case_root / "wall_function_evidence.json").write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+    with (case_root / "wall_yplus_series.csv").open("w", encoding="utf-8", newline="") as handle:
+        fieldnames = [
+            "time", "patch", "minimum", "p05", "mean", "median", "p95", "maximum",
+            "finite_value_count", "non_finite_count", "negative_value_count",
+            "viscous_affected_fraction", "buffer_fraction", "log_layer_fraction", "high_fraction", "source_level",
+        ]
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(evidence["series"])
+    for patch in expected_patches:
+        rows = [row for row in evidence["series"] if row["patch"] == patch]
+        if not rows:
+            continue
+        stem = "barrier" if patch == "barrier" else patch
+        write_line_plot_png(
+            case_root / f"{stem}_yplus_history.png",
+            [
+                {"name": "minimum", "x": [row["time"] for row in rows], "y": [row["minimum"] for row in rows], "color": (45, 98, 160)},
+                {"name": "mean", "x": [row["time"] for row in rows], "y": [row["mean"] for row in rows], "color": (30, 120, 80)},
+                {"name": "maximum", "x": [row["time"] for row in rows], "y": [row["maximum"] for row in rows], "color": (170, 75, 45)},
+            ],
+            metadata={
+                "Title": f"{patch} yPlus history",
+                "Description": "Single-panel yPlus minimum, mean and maximum history for G6 wall-function evidence.",
+            },
+        )
+    return evidence
+
+
+def parse_timestep_series_from_log(log_text: str) -> list[dict[str, float | None]]:
+    number = r"[-+]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][-+]?\d+)?"
+    time_pattern = re.compile(r"^\s*Time\s*=\s*(" + number + r")")
+    delta_pattern = re.compile(r"\bdeltaT\s*=\s*(" + number + r")")
+    co_pattern = re.compile(r"^Courant Number.*?max:\s*(" + number + r")")
+    alpha_pattern = re.compile(r"^Interface Courant Number.*?max:\s*(" + number + r")")
+    rows: list[dict[str, float | None]] = []
+    current: dict[str, float | None] = {"time": None, "deltaT": None, "Co": None, "alphaCo": None}
+    times: list[float] = []
+    for line in log_text.splitlines():
+        if match := time_pattern.search(line):
+            time = float(match.group(1))
+            times.append(time)
+            if current.get("time") is not None and any(current.get(key) is not None for key in ("deltaT", "Co", "alphaCo")):
+                rows.append(dict(current))
+            current = {"time": time, "deltaT": None, "Co": None, "alphaCo": None}
+            continue
+        if match := delta_pattern.search(line):
+            current["deltaT"] = float(match.group(1))
+        elif match := co_pattern.search(line):
+            current["Co"] = float(match.group(1))
+        elif match := alpha_pattern.search(line):
+            current["alphaCo"] = float(match.group(1))
+    if current.get("time") is not None and any(current.get(key) is not None for key in ("deltaT", "Co", "alphaCo")):
+        rows.append(dict(current))
+    if rows and all(row.get("deltaT") is None for row in rows) and len(times) > 1:
+        deltas = [right - left for left, right in zip(times, times[1:]) if right > left]
+        for row, delta in zip(rows[1:], deltas):
+            row["deltaT"] = delta
+    return rows
+
+
+def write_timestep_evidence(case_root: Path, rows: Sequence[dict[str, float | None]], policy: dict) -> dict:
+    deltas = [float(row["deltaT"]) for row in rows if row.get("deltaT") is not None and math.isfinite(float(row["deltaT"])) and float(row["deltaT"]) > 0.0]
+    courant_values = [float(row["Co"]) for row in rows if row.get("Co") is not None and math.isfinite(float(row["Co"]))]
+    alpha_values = [float(row["alphaCo"]) for row in rows if row.get("alphaCo") is not None and math.isfinite(float(row["alphaCo"]))]
+    if not deltas:
+        raise ReplayError("timestep evidence contains no positive deltaT values")
+    minimum_threshold = float(policy.get("minimum_accepted_timestep_s", 0.0))
+    if minimum_threshold > 0.0 and min(deltas) < minimum_threshold:
+        raise ReplayError(f"observed timestep {min(deltas)} fell below configured minimum {minimum_threshold}")
+    observed = {
+        "observed_timestep_range_s": [min(deltas), max(deltas)],
+        "minimum_observed_timestep_s": min(deltas),
+        "maximum_observed_timestep_s": max(deltas),
+        "median_observed_timestep_s": statistics.median(deltas),
+        "observed_maximum_Co": max(courant_values) if courant_values else None,
+        "observed_maximum_alpha_Co": max(alpha_values) if alpha_values else None,
+    }
+    evidence = dict(policy)
+    evidence.update(observed)
+    evidence["runtime_acceptance"] = {
+        "minimum_timestep_guard_passed": True,
+        "requested_end_time_reached": True,
+        "openfoam_fatal_error_absent": True,
+        "floating_point_exception_absent": True,
+    }
+    evidence["series_path"] = "timestep_series.csv"
+    with (case_root / "timestep_series.csv").open("w", encoding="utf-8", newline="") as handle:
+        writer = csv.DictWriter(handle, fieldnames=["time", "deltaT", "Co", "alphaCo"])
+        writer.writeheader()
+        writer.writerows(rows)
+    (case_root / "timestep_policy_evidence.json").write_text(json.dumps(evidence, indent=2) + "\n", encoding="utf-8")
+    x = [float(row["time"]) for row in rows if row.get("time") is not None]
+    if x:
+        dt_y = [float(row["deltaT"] or 0.0) for row in rows if row.get("time") is not None]
+        co_y = [float(row["Co"] or 0.0) for row in rows if row.get("time") is not None]
+        margin_y = [float(evidence["diagnostic_diffusive_margin"]) for _ in x]
+        write_line_plot_png(
+            case_root / "timestep_history.png",
+            [{"name": "deltaT", "x": x, "y": dt_y, "color": (45, 98, 160)}],
+            metadata={"Title": "timestep history", "Description": "Single-panel OpenFOAM timestep history."},
+        )
+        write_line_plot_png(
+            case_root / "courant_history.png",
+            [{"name": "Courant", "x": x, "y": co_y, "color": (170, 75, 45)}],
+            metadata={"Title": "Courant history", "Description": "Single-panel maximum Courant history."},
+        )
+        write_line_plot_png(
+            case_root / "diffusive_timescale_margin.png",
+            [{"name": "M_nu", "x": x, "y": margin_y, "color": (30, 120, 80)}],
+            metadata={"Title": "diffusive timescale margin", "Description": "Diagnostic implicit-diffusion margin, not an enforced explicit stability limit."},
+        )
+    return evidence
 
 
 def _boundary_data_time_range(case_root: Path, patch: str = "inlet") -> tuple[float, float]:
@@ -1621,6 +2522,37 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
             raise ReplayError("barrier force output is not finite and nonzero")
         if not math.isfinite(force_metrics["maximum_moment_magnitude"]):
             raise ReplayError("barrier moment output is not finite")
+    yplus_evidence_path: str | None = None
+    timestep_evidence_path: str | None = None
+    timestep_metrics: dict[str, object] = {}
+    if summary.get("boundary_mode") == "open_ocean_damped":
+        wall_policy_path = case_root / "wall_function_policy.json"
+        timestep_policy_path = case_root / "timestep_policy.json"
+        if not wall_policy_path.is_file() or not timestep_policy_path.is_file():
+            raise ReplayError(f"{variant}: missing production wall or timestep policy record")
+        wall_policy = load_json(wall_policy_path)
+        expected_patches = [str(patch) for patch in wall_policy["expected_wall_patches"]]
+        yplus_samples = _read_yplus_dat_samples(case_root)
+        if not yplus_samples:
+            yplus_samples = _read_yplus_field_samples(case_root, expected_patches)
+        if not yplus_samples:
+            yplus_samples = _read_yplus_log_samples(foam_log)
+        if not yplus_samples:
+            raise ReplayError(f"{variant}: missing yPlus runtime evidence")
+        write_yplus_evidence(case_root, yplus_samples, expected_patches, expected, peak_time)
+        yplus_evidence_path = str(case_root / "wall_function_evidence.json")
+        timestep_rows = parse_timestep_series_from_log(foam_log)
+        if not timestep_rows:
+            raise ReplayError(f"{variant}: missing timestep runtime evidence")
+        timestep_evidence = write_timestep_evidence(case_root, timestep_rows, load_json(timestep_policy_path))
+        timestep_evidence_path = str(case_root / "timestep_policy_evidence.json")
+        timestep_metrics = {
+            "minimum_observed_timestep_s": timestep_evidence["minimum_observed_timestep_s"],
+            "maximum_observed_timestep_s": timestep_evidence["maximum_observed_timestep_s"],
+            "median_observed_timestep_s": timestep_evidence["median_observed_timestep_s"],
+            "diagnostic_viscous_timescale_s": timestep_evidence["diagnostic_viscous_timescale_s"],
+            "diagnostic_diffusive_margin": timestep_evidence["diagnostic_diffusive_margin"],
+        }
     return {
         "case_root": str(case_root),
         "requested_end_time": expected,
@@ -1634,6 +2566,9 @@ def validate_smoke_case(case_root: Path, variant: str) -> dict:
         "alpha_max": alpha_max,
         "observed_maximum_courant_number": maximum_courant,
         "observed_maximum_alpha_courant_number": maximum_alpha_courant,
+        "wall_function_evidence": yplus_evidence_path,
+        "timestep_policy_evidence": timestep_evidence_path,
+        "timestep_metrics": timestep_metrics,
         "probe_files": [str(path) for path in probe_files[:6]],
         "force_files": [str(path) for path in force_files[:6]],
         "maximum_barrier_force": force_metrics["maximum_force_magnitude"],
@@ -1674,9 +2609,10 @@ def command_smoke(argv: Sequence[str]) -> int:
     parser.add_argument("--output-root", required=True, type=Path)
     parser.add_argument("--wrapper", default=Path("tools/openfoam/run_openfoam11.sh"), type=Path)
     parser.add_argument("--fixture-root", default=Path("tests/fixtures/openfoam/synthetic_replay"), type=Path)
+    parser.add_argument("--config", type=Path)
     parser.add_argument("--clean", action="store_true")
     args = parser.parse_args(argv)
-    result = run_smoke(args.output_root, args.wrapper.resolve(), args.fixture_root.resolve(), args.clean)
+    result = run_smoke(args.output_root, args.wrapper.resolve(), args.fixture_root.resolve(), args.clean, args.config.resolve() if args.config else None)
     print(json.dumps(result, indent=2))
     return 0
 

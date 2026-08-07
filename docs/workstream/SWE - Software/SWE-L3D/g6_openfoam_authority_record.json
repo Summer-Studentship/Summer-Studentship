@@ -1,0 +1,115 @@
+{
+  "schema": {
+    "name": "tsunami.g6_openfoam_foundation_authority_record",
+    "version": "1.0.0"
+  },
+  "recorded_at_utc": "2026-08-06T00:00:00Z",
+  "image": {
+    "name": "docker.io/openfoam/openfoam11-paraview510:11",
+    "runtime": "podman",
+    "image_id": "7f8a8af7c4c5884a41a61e42f5a18e037f46a114ae91196f4154a4cdac1e4f93",
+    "digest": "sha256:fd10956e0b1eb70f9808baf2857e4baf846a0f6f272f73b6d00546eae96be181",
+    "labels": {
+      "openfoam.version": "11",
+      "openfoam.release_date": "2022-07-12",
+      "vendor": "The OpenFOAM Foundation Ltd"
+    },
+    "environment_confirmation": {
+      "WM_PROJECT_VERSION": "11",
+      "foamRun": "/opt/openfoam11/platforms/linux64GccDPInt32Opt/bin/foamRun",
+      "foamInfo": "/opt/openfoam11/bin/foamInfo"
+    }
+  },
+  "selected_solver": {
+    "name": "foamRun -solver incompressibleVoF",
+    "module_header": "/opt/openfoam11/applications/modules/incompressibleVoF/incompressibleVoF.H",
+    "description": "Two incompressible immiscible fluids using VOF interface capturing, a single momentum equation, PIMPLE coupling, and optional fvModels/fvConstraints."
+  },
+  "inspected_sources": [
+    {
+      "path": "/opt/openfoam11/src/functionObjects/field/yPlus/yPlus.C",
+      "sha256": "2d0afc7d9b57784d60818574560ac800cf99e0786fcc960bdd4c29cba04b0281",
+      "use": "runtime wall y+ function object"
+    },
+    {
+      "path": "/opt/openfoam11/src/functionObjects/field/yPlus/yPlus.H",
+      "sha256": "fa355a7bc9dbbe75602d9e3d15abeadf172b9724792c7dd9b029789356a2cd6a",
+      "use": "runtime wall y+ function object"
+    },
+    {
+      "path": "/opt/openfoam11/src/functionObjects/field/interfaceHeight/interfaceHeight.C",
+      "sha256": "0504049acc8361cd870878e0f198845e658d30de5e2dbb28592965a1427aff6e",
+      "use": "free-surface gauge/reflection benchmark authority"
+    },
+    {
+      "path": "/opt/openfoam11/src/functionObjects/field/interfaceHeight/interfaceHeight.H",
+      "sha256": "b17a658c2989da9e57c254bc20ef6273164171897b75f73e3fc8ba5cece92bd7",
+      "use": "free-surface gauge/reflection benchmark authority"
+    },
+    {
+      "path": "/opt/openfoam11/src/waves/fvModels/isotropicDamping/isotropicDamping.C",
+      "sha256": "4903fe1be76ab8f4b37a7fb08e9a29f929dcfc6b7a6fcf6938b06e9a88552658",
+      "use": "production outlet and lateral damping"
+    },
+    {
+      "path": "/opt/openfoam11/src/waves/fvModels/isotropicDamping/isotropicDamping.H",
+      "sha256": "94e04ea7265a8324ddb51de44bc29a1d52cb7980c04ad3cb7b7976d7b76218dd",
+      "use": "production outlet and lateral damping"
+    },
+    {
+      "path": "/opt/openfoam11/src/waves/fvModels/verticalDamping/verticalDamping.C",
+      "sha256": "f1cbe9483baf6a77fe4fd5fe251149fbdbc3e178b8124b9aaf10d7e74b3b6e42",
+      "use": "inspected alternative; not selected for G6 baseline"
+    },
+    {
+      "path": "/opt/openfoam11/src/waves/fvModels/verticalDamping/verticalDamping.H",
+      "sha256": "88d9e2eead4b4187cfc4b9135beed998ff70436ddbee4f1734f15884b56967dd",
+      "use": "inspected alternative; not selected for G6 baseline"
+    },
+    {
+      "path": "/opt/openfoam11/src/twoPhaseModels/VoF/setDeltaT.H",
+      "sha256": "b56bf14e6f964808cea6330b7d03d2be545572a3fc261a3b92a836a283ce3e93",
+      "use": "VOF Courant and interface-Courant adaptive timestep authority"
+    },
+    {
+      "path": "/opt/openfoam11/applications/solvers/foamRun/setDeltaT.C",
+      "sha256": "600cf7991f7d2409f58503ffca922b49b5c337903daa9ff86aaa704f18e3ba4d",
+      "use": "generic foamRun timestep-dispatch authority"
+    },
+    {
+      "path": "/opt/openfoam11/applications/solvers/foamRun/setDeltaT.H",
+      "sha256": "dbb70e9b5e8d9e1a47d893f0581d050572e1d5efdd1b39505f95c4e29c0d995d",
+      "use": "generic foamRun timestep-dispatch authority"
+    }
+  ],
+  "inspected_tutorials": [
+    "/opt/openfoam11/tutorials/incompressibleVoF/waterChannel",
+    "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
+    "/opt/openfoam11/tutorials/incompressibleVoF/damBreakPorousBaffle",
+    "/opt/openfoam11/tutorials/incompressibleVoF/forcedUpstreamWave",
+    "/opt/openfoam11/tutorials/incompressibleVoF/wave"
+  ],
+  "selected_boundary_conditions": {
+    "U": "pressureInletOutletVelocity on production outlet/laterals; timeVaryingMappedFixedValue on coupling inlet; pressureInletOutletVelocity on atmosphere",
+    "p_rgh": "prghTotalPressure with p0 uniform 0 on production outlet/laterals and atmosphere; fixedFluxPressure on walls/inlet",
+    "alpha.water": "variableHeightFlowRate lowerBound 0 upperBound 1 on production outlet/laterals; timeVaryingMappedFixedValue on coupling inlet; inletOutlet on atmosphere",
+    "k": "inletOutlet with explicit ambient inletValue on production outlet/laterals and atmosphere; fixedValue on coupling inlet; kqRWallFunction on walls",
+    "omega": "inletOutlet with explicit ambient inletValue on production outlet/laterals and atmosphere; fixedValue on coupling inlet; omegaWallFunction on walls",
+    "nut": "calculated on production outlet/laterals, inlet and atmosphere; nutUSpaldingWallFunction on production terrain/barrier walls"
+  },
+  "selected_damping": {
+    "model": "isotropicDamping",
+    "library": "libwaves.so",
+    "profile": "halfCosineRamp",
+    "reason": "Foundation 11 isotropicDamping damps all velocity components toward the quiescent reference state, matching the G6 open-ocean numerical baseline."
+  },
+  "timestep_disposition": {
+    "foundation_11_behaviour": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information, with immediate reduction and damped timestep increase in the inspected VOF path.",
+    "rollback_retry": "The adopted generic foamRun/incompressibleVoF interface does not expose exact rollback and re-solve of an already failed physical timestep.",
+    "diffusion": "Momentum diffusion is assembled implicitly in the adopted stress-divergence implementation; an explicit diffusion-stability limit is diagnostic only for this baseline."
+  },
+  "limitations": [
+    "This record confirms Foundation 11 feature availability and selected dictionary patterns only.",
+    "No observational calibration or validation data are used by this authority record."
+  ]
+}
