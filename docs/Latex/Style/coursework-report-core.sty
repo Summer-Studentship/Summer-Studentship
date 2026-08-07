@@ -14,12 +14,36 @@
 \defaultfontfeatures{Ligatures=TeX}
 \setmainfont{Times New Roman}
 
+% Page geometry and paragraph rhythm
+\makeatletter
+\newif\ifcoursework@geometryalreadyloaded
+\@ifpackageloaded{geometry}{\coursework@geometryalreadyloadedtrue}{}
+\makeatother
+\RequirePackage{geometry}
+\makeatletter
+\ifcoursework@geometryalreadyloaded\else
+  \geometry{
+    a4paper,
+    margin=25.4mm
+  }
+\fi
+\makeatother
+\raggedbottom
+\setlength{\parindent}{20pt}
+\setlength{\parskip}{0.5em}
+
 % Core maths and units
 \RequirePackage{amsmath,amssymb}
 \RequirePackage{mathtools}
 \RequirePackage{bigints}
 \RequirePackage{siunitx}
-\numberwithin{equation}{section}
+\InputIfFileExists{studentship-math-conventions.sty}{}{%
+  \numberwithin{equation}{section}
+  \setlength{\abovedisplayskip}{12pt plus 3pt minus 2pt}
+  \setlength{\belowdisplayskip}{12pt plus 3pt minus 2pt}
+  \setlength{\abovedisplayshortskip}{8pt plus 2pt minus 2pt}
+  \setlength{\belowdisplayshortskip}{8pt plus 2pt minus 2pt}
+}
 \sisetup{
   detect-all,
   per-mode=symbol
@@ -33,6 +57,12 @@
 % Figures, tables, and landscape pages
 \RequirePackage{graphicx}
 \RequirePackage{float}
+\RequirePackage[
+  font=small,
+  labelfont=bf,
+  labelsep=period,
+  skip=6pt
+]{caption}
 \RequirePackage{subcaption}
 \RequirePackage{longtable}
 \RequirePackage{tabularx}
@@ -297,6 +327,47 @@
 
 % Title helpers
 \newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\providecommand{\coursename}{Summer Studentship}
+\providecommand{\coursecode}{}
+\providecommand{\reporttitle}{}
+\providecommand{\studentnumber}{}
+\providecommand{\departmentname}{}
+\providecommand{\universityname}{}
+\providecommand{\supervisorname}{}
+\providecommand{\submissiondate}{\today}
+\providecommand{\wordcount}{}
+
+\makeatletter
+\newcommand{\courseworkmetadatacmdrow}[2]{%
+  \ifx#2\@empty\else
+    \textbf{#1:} & #2\\%
+  \fi
+}
+\makeatother
+\newcommand{\makecourseworktitle}{%
+  \begin{titlepage}
+  \centering
+  \vspace*{18mm}
+  {\Large\bfseries \coursename\par}
+  \makeatletter
+  \ifx\coursecode\@empty\else
+    \vspace{2mm}{\large \coursecode\par}%
+  \fi
+  \makeatother
+  \vspace{10mm}
+  {\huge\bfseries \reporttitle\par}
+  \vspace{14mm}
+  \begin{tabular}{rl}
+    \courseworkmetadatacmdrow{Student number}{\studentnumber}
+    \courseworkmetadatacmdrow{Department}{\departmentname}
+    \courseworkmetadatacmdrow{University}{\universityname}
+    \courseworkmetadatacmdrow{Supervisor}{\supervisorname}
+    \courseworkmetadatacmdrow{Submission date}{\submissiondate}
+    \courseworkmetadatacmdrow{Word count}{\wordcount}
+  \end{tabular}
+  \vfill
+  \end{titlepage}
+}
 \newcommand{\subtitle}[1]{%
   \posttitle{%
     \par\end{center}

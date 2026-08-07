@@ -1,0 +1,14 @@
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{research-workstream}[2026/08/07 Research workstream presentation extension]
+
+\DeclareOption*{%
+  \PassOptionsToPackage{\CurrentOption}{../../../Latex/Style/coursework-report-core}%
+}
+\ProcessOptions\relax
+
+\RequirePackage{../../../Latex/Style/coursework-report-core}
+\RequirePackage{bm}
+
+\newcommand{\makeresearchworkstreamtitle}{%
+  \maketitle
+}
