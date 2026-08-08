@@ -1,0 +1,9 @@
+mechanism,evidence,metric,severity,confidence,can_explain_observed_NRMSE
+phase/timing,Qn phase_fraction=0.169; optimal lag=-25.000s,phase-aligned vs physical NRMSE,minor,high,no
+bed projection,coupling bed RMSE=2.342m; whole-domain RMSE=5.313m,common-support bed RMSE,material,medium,partly
+source projection,coupling source NRMSE=0.000; source-volume changes are small relative to waveform error,time-zero surface perturbation common-support/source integrals,minor,medium,unlikely_as_primary
+coupling extraction,independent Qn reconstruction passed,sum(qn_f*L_f) residual,negligible,high,no
+boundary interaction,relaxation active but no incoming/reflection diagnostic; errors peak at coupling waveform without boundary-specific evidence,relaxation diagnostics only,unknown,low,not_supported_by_current_evidence
+numerical diffusion,peak Qn is non-monotone and h800 exceeds h600/h1000; not simple monotonic attenuation,crest amplitudes and scalar GCI,material,medium,partly
+numerical dispersion,phase alignment removes only 16.9% of Qn error; morphology/spectral differences remain,phase fraction plus spectral/zero-crossing differences,material,medium,partly
+conservation,max relative water-volume change=1.313e-03,diagnostics.csv water volume,minor,medium,unlikely_as_primary

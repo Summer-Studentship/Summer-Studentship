@@ -1,0 +1,11 @@
+{
+  "figure": "deliverables/figures/convergence/c1a_r4d_eta_physical.svg",
+  "generated_at_utc": "2026-08-08T16:27:04.709214Z",
+  "quantity": "C1A-R4D eta Physical-Time Comparison",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_diagnosis": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4/diagnosis/regional_frozen_terrain_v4_diagnosis.json",
+  "study_id": "regional-spatial-frozen-terrain-v4"
+}
