@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+<rect width="100%" height="100%" fill="white"/>
+<text x="70" y="24" font-size="16" font-family="sans-serif" fill="#24292f">P1B End-to-End Speedup vs Threads</text>
+<line x1="72.00" y1="38" x2="72.00" y2="362" stroke="#d0d7de"/>
+<text x="72.00" y="396" text-anchor="middle" font-size="12">1</text>
+<line x1="116.00" y1="38" x2="116.00" y2="362" stroke="#d0d7de"/>
+<text x="116.00" y="396" text-anchor="middle" font-size="12">2</text>
+<line x1="204.00" y1="38" x2="204.00" y2="362" stroke="#d0d7de"/>
+<text x="204.00" y="396" text-anchor="middle" font-size="12">4</text>
+<line x1="380.00" y1="38" x2="380.00" y2="362" stroke="#d0d7de"/>
+<text x="380.00" y="396" text-anchor="middle" font-size="12">8</text>
+<line x1="556.00" y1="38" x2="556.00" y2="362" stroke="#d0d7de"/>
+<text x="556.00" y="396" text-anchor="middle" font-size="12">12</text>
+<line x1="732.00" y1="38" x2="732.00" y2="362" stroke="#d0d7de"/>
+<text x="732.00" y="396" text-anchor="middle" font-size="12">16</text>
+<line x1="72" y1="362.00" x2="732" y2="362.00" stroke="#d0d7de"/>
+<text x="64" y="366.00" text-anchor="end" font-size="12">0</text>
+<line x1="72" y1="281.00" x2="732" y2="281.00" stroke="#d0d7de"/>
+<text x="64" y="285.00" text-anchor="end" font-size="12">0.29</text>
+<line x1="72" y1="200.00" x2="732" y2="200.00" stroke="#d0d7de"/>
+<text x="64" y="204.00" text-anchor="end" font-size="12">0.58</text>
+<line x1="72" y1="119.00" x2="732" y2="119.00" stroke="#d0d7de"/>
+<text x="64" y="123.00" text-anchor="end" font-size="12">0.87</text>
+<line x1="72" y1="38.00" x2="732" y2="38.00" stroke="#d0d7de"/>
+<text x="64" y="42.00" text-anchor="end" font-size="12">1.2</text>
+<polyline points="72.00,81.49 116.00,82.74 204.00,80.80 380.00,80.33 556.00,82.96 732.00,83.63" fill="none" stroke="#4c78a8" stroke-width="2.5"/>
+<circle cx="72.00" cy="81.49" r="4" fill="#4c78a8"/>
+<circle cx="116.00" cy="82.74" r="4" fill="#4c78a8"/>
+<circle cx="204.00" cy="80.80" r="4" fill="#4c78a8"/>
+<circle cx="380.00" cy="80.33" r="4" fill="#4c78a8"/>
+<circle cx="556.00" cy="82.96" r="4" fill="#4c78a8"/>
+<circle cx="732.00" cy="83.63" r="4" fill="#4c78a8"/>
+<polyline points="380.00,80.26 732.00,83.94" fill="none" stroke="#f58518" stroke-width="2.5"/>
+<circle cx="380.00" cy="80.26" r="4" fill="#f58518"/>
+<circle cx="732.00" cy="83.94" r="4" fill="#f58518"/>
+<polyline points="380.00,83.14" fill="none" stroke="#54a24b" stroke-width="2.5"/>
+<circle cx="380.00" cy="83.14" r="4" fill="#54a24b"/>
+<line x1="72" y1="362" x2="732" y2="362" stroke="#24292f" stroke-width="1.5"/>
+<line x1="72" y1="38" x2="72" y2="362" stroke="#24292f" stroke-width="1.5"/>
+<text x="380.0" y="412" text-anchor="middle" font-size="13">OpenMP threads</text>
+<text x="18" y="210.0" transform="rotate(-90 18 210.0)" text-anchor="middle" font-size="13">End-to-end speedup</text>
+</svg>

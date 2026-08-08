@@ -1,5 +1,7 @@
 #include <tsunami/r2d/RegionalSolveLoop.hpp>
 
+#include <tsunami/r2d/RegionalPerformanceTiming.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <limits>
@@ -46,7 +48,11 @@ namespace tsunami::r2d
             std::size_t rejected_attempts,
             tsunami::core::Real last_timestep) -> tsunami::core::Result<RegionalSolveSummary>
         {
-            auto integrals = calculate_regional_integrals(mesh, state.conserved_state(), state_policy);
+            auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+                integrals = calculate_regional_integrals(mesh, state.conserved_state(), state_policy);
+            }
             if (!integrals) {
                 return tsunami::core::failure<RegionalSolveSummary>(integrals.error());
             }
@@ -195,7 +201,9 @@ namespace tsunami::r2d
         }
 
         constexpr auto time_tolerance = 1.0e-12;
-        while (simulation_state.time() < request.final_time - time_tolerance) {
+        {
+            auto solve_timer = RegionalScopedTimer{RegionalTimingRegion::solve_loop};
+            while (simulation_state.time() < request.final_time - time_tolerance) {
             if (request.stop_token.stop_requested()) {
                 return make_summary(mesh, simulation_state, request.state_policy, RegionalSolveTerminationReason::cancelled, true, rejected_attempts, last_timestep);
             }
@@ -206,13 +214,17 @@ namespace tsunami::r2d
             auto remaining = request.final_time - simulation_state.time();
             auto timestep = std::min(request.time_policy.maximum_timestep, remaining);
             if (uses_local_sources) {
-                auto source_limit = estimate_regional_source_timestep(
-                    mesh,
-                    simulation_state.conserved_state(),
-                    *local_sources,
-                    request.state_policy,
-                    request.time_policy.source_safety_factor,
-                    request.time_policy.timestep_comparison_tolerance);
+                auto source_limit = tsunami::core::Result<RegionalSourceTimestepEstimate>{RegionalSourceTimestepEstimate{}};
+                {
+                    auto timer = RegionalScopedTimer{RegionalTimingRegion::source_timestep};
+                    source_limit = estimate_regional_source_timestep(
+                        mesh,
+                        simulation_state.conserved_state(),
+                        *local_sources,
+                        request.state_policy,
+                        request.time_policy.source_safety_factor,
+                        request.time_policy.timestep_comparison_tolerance);
+                }
                 if (!source_limit) {
                     return tsunami::core::failure<RegionalSolveSummary>(source_limit.error());
                 }
@@ -305,24 +317,40 @@ namespace tsunami::r2d
             }
 
             if (diagnostics_sink) {
-                auto emitted = diagnostics_sink(accepted_diagnostics);
+                auto emitted = tsunami::core::success();
+                {
+                    auto output_timer = RegionalScopedTimer{RegionalTimingRegion::diagnostic_output};
+                    auto total_output_timer = RegionalScopedTimer{RegionalTimingRegion::output_total};
+                    emitted = diagnostics_sink(accepted_diagnostics);
+                }
                 if (!emitted) {
                     return tsunami::core::failure<RegionalSolveSummary>(emitted.error());
                 }
             }
             if (request.output_policy.interval && simulation_state.time() >= next_snapshot_time - time_tolerance) {
-                auto snapshot = emit_snapshot(mesh, simulation_state, *request.bathymetry, snapshot_sink, workspace);
+                auto snapshot = tsunami::core::success();
+                {
+                    auto output_timer = RegionalScopedTimer{RegionalTimingRegion::snapshot_output};
+                    auto total_output_timer = RegionalScopedTimer{RegionalTimingRegion::output_total};
+                    snapshot = emit_snapshot(mesh, simulation_state, *request.bathymetry, snapshot_sink, workspace);
+                }
                 if (!snapshot) {
                     return tsunami::core::failure<RegionalSolveSummary>(snapshot.error());
                 }
                 last_snapshot_time = simulation_state.time();
                 next_snapshot_time += *request.output_policy.interval;
             }
+            }
         }
 
         const auto final_already_emitted = last_snapshot_time && std::abs(*last_snapshot_time - simulation_state.time()) <= time_tolerance;
         if (request.output_policy.emit_final_snapshot && !final_already_emitted) {
-            auto snapshot = emit_snapshot(mesh, simulation_state, *request.bathymetry, snapshot_sink, workspace);
+            auto snapshot = tsunami::core::success();
+            {
+                auto output_timer = RegionalScopedTimer{RegionalTimingRegion::final_snapshot_output};
+                auto total_output_timer = RegionalScopedTimer{RegionalTimingRegion::output_total};
+                snapshot = emit_snapshot(mesh, simulation_state, *request.bathymetry, snapshot_sink, workspace);
+            }
             if (!snapshot) {
                 return tsunami::core::failure<RegionalSolveSummary>(snapshot.error());
             }

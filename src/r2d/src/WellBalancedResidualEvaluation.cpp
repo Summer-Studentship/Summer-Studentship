@@ -1,5 +1,7 @@
 #include <tsunami/r2d/WellBalancedResidualEvaluation.hpp>
 
+#include <tsunami/r2d/RegionalPerformanceTiming.hpp>
+
 #include <algorithm>
 #include <atomic>
 #include <cmath>
@@ -419,10 +421,17 @@ namespace tsunami::r2d
             return tsunami::core::failure(bed_validation.error());
         }
 
-        auto depth_apply = apply_boundaries(mesh, depth_boundaries, state.depth(), workspace.depth_patches());
-        auto qx_apply = apply_boundaries(mesh, momentum_x_boundaries, state.momentum_x(), workspace.momentum_x_patches());
-        auto qy_apply = apply_boundaries(mesh, momentum_y_boundaries, state.momentum_y(), workspace.momentum_y_patches());
-        auto bed_apply = apply_boundaries(mesh, bathymetry_boundaries, bathymetry.bed_elevation(), workspace.bed_elevation_patches());
+        auto depth_apply = tsunami::core::success();
+        auto qx_apply = tsunami::core::success();
+        auto qy_apply = tsunami::core::success();
+        auto bed_apply = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::boundary_application};
+            depth_apply = apply_boundaries(mesh, depth_boundaries, state.depth(), workspace.depth_patches());
+            qx_apply = apply_boundaries(mesh, momentum_x_boundaries, state.momentum_x(), workspace.momentum_x_patches());
+            qy_apply = apply_boundaries(mesh, momentum_y_boundaries, state.momentum_y(), workspace.momentum_y_patches());
+            bed_apply = apply_boundaries(mesh, bathymetry_boundaries, bathymetry.bed_elevation(), workspace.bed_elevation_patches());
+        }
         if (!depth_apply) {
             return tsunami::core::failure(depth_apply.error());
         }
@@ -443,6 +452,7 @@ namespace tsunami::r2d
 
         const auto faces = mesh.topology().faces();
         if (!use_openmp_face_path(faces.size(), mesh.summary().cell_count)) {
+            auto face_timer = RegionalScopedTimer{RegionalTimingRegion::face_residual};
             for (const auto &face : faces) {
                 auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
                 if (!normal) {
@@ -516,16 +526,20 @@ namespace tsunami::r2d
             constexpr auto no_failed_face = std::numeric_limits<std::size_t>::max();
             auto boundary_failed_face = std::atomic<std::size_t>{no_failed_face};
             auto result_failed_face = std::atomic<std::size_t>{no_failed_face};
+            {
+                auto face_timer = RegionalScopedTimer{RegionalTimingRegion::face_residual};
 #ifdef TSUNAMI_ENABLE_OPENMP
 #pragma omp parallel for schedule(static) reduction(max : maximum_speed)
 #endif
-            for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
+                for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
                 const auto index = static_cast<std::size_t>(signed_index);
                 const auto &face = faces[index];
 #ifdef TSUNAMI_ENABLE_OPENMP
                 const auto thread_id = static_cast<std::size_t>(omp_get_thread_num());
+                record_regional_observed_openmp_threads(static_cast<std::uint64_t>(omp_get_num_threads()));
 #else
                 const auto thread_id = std::size_t{0U};
+                record_regional_observed_openmp_threads(1U);
 #endif
                 auto left = state.local_state(face.owner);
                 auto right = ConservedVariables2D{};
@@ -575,6 +589,7 @@ namespace tsunami::r2d
                     buffers.outgoing_mass_rate[neighbour_offset] += std::max(-integrated_mass_flux, 0.0);
                 }
                 maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+                }
             }
             const auto boundary_face_index = boundary_failed_face.load(std::memory_order_relaxed);
             if (boundary_face_index != no_failed_face) {
@@ -586,7 +601,10 @@ namespace tsunami::r2d
                 const auto face_id = faces[result_face_index].id;
                 return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "parallel hydrostatic reconstruction or Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face_id));
             }
-            reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
+            {
+                auto reduction_timer = RegionalScopedTimer{RegionalTimingRegion::residual_reduction};
+                reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
+            }
         }
 
         for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
@@ -671,14 +689,18 @@ namespace tsunami::r2d
             }
         }
 
-        auto exterior = populate_regional_exterior_states(
-            mesh,
-            state,
-            bathymetry,
-            boundaries,
-            policy,
-            time,
-            workspace.exterior_workspace());
+        auto exterior = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::boundary_application};
+            exterior = populate_regional_exterior_states(
+                mesh,
+                state,
+                bathymetry,
+                boundaries,
+                policy,
+                time,
+                workspace.exterior_workspace());
+        }
         if (!exterior) {
             return tsunami::core::failure(exterior.error());
         }
@@ -691,6 +713,7 @@ namespace tsunami::r2d
 
         const auto faces = mesh.topology().faces();
         if (!use_openmp_face_path(faces.size(), mesh.summary().cell_count)) {
+            auto face_timer = RegionalScopedTimer{RegionalTimingRegion::face_residual};
             for (const auto &face : faces) {
                 auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
                 if (!normal) {
@@ -761,16 +784,20 @@ namespace tsunami::r2d
             constexpr auto no_failed_face = std::numeric_limits<std::size_t>::max();
             auto boundary_failed_face = std::atomic<std::size_t>{no_failed_face};
             auto result_failed_face = std::atomic<std::size_t>{no_failed_face};
+            {
+                auto face_timer = RegionalScopedTimer{RegionalTimingRegion::face_residual};
 #ifdef TSUNAMI_ENABLE_OPENMP
 #pragma omp parallel for schedule(static) reduction(max : maximum_speed)
 #endif
-            for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
+                for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
                 const auto index = static_cast<std::size_t>(signed_index);
                 const auto &face = faces[index];
 #ifdef TSUNAMI_ENABLE_OPENMP
                 const auto thread_id = static_cast<std::size_t>(omp_get_thread_num());
+                record_regional_observed_openmp_threads(static_cast<std::uint64_t>(omp_get_num_threads()));
 #else
                 const auto thread_id = std::size_t{0U};
+                record_regional_observed_openmp_threads(1U);
 #endif
                 auto left = state.local_state(face.owner);
                 auto right = ConservedVariables2D{};
@@ -820,6 +847,7 @@ namespace tsunami::r2d
                     buffers.outgoing_mass_rate[neighbour_offset] += std::max(-integrated_mass_flux, 0.0);
                 }
                 maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+                }
             }
             const auto boundary_face_index = boundary_failed_face.load(std::memory_order_relaxed);
             if (boundary_face_index != no_failed_face) {
@@ -831,7 +859,10 @@ namespace tsunami::r2d
                 const auto face_id = faces[result_face_index].id;
                 return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "parallel hydrostatic reconstruction or Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face_id));
             }
-            reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
+            {
+                auto reduction_timer = RegionalScopedTimer{RegionalTimingRegion::residual_reduction};
+                reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
+            }
         }
 
         auto relaxation = apply_regional_relaxation_source(

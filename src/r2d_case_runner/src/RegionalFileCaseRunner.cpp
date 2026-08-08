@@ -26,6 +26,7 @@
 #include <tsunami/geo/TerrainConditioningParsing.hpp>
 #include <tsunami/geo_gdal/GdalConditionedTerrainArtifacts.hpp>
 #include <tsunami/geo_gdal/GdalEarthquakeDisplacementArtifacts.hpp>
+#include <tsunami/r2d/RegionalPerformanceTiming.hpp>
 #include <tsunami/r2d_io/RegionalCsvOutputWriter.hpp>
 
 namespace tsunami::r2d_case
@@ -61,6 +62,15 @@ namespace tsunami::r2d_case
                 return "numerical_failure";
             }
             return "unknown";
+        }
+
+        [[nodiscard]] auto timing_output_path() -> std::filesystem::path
+        {
+            const auto *path = std::getenv("TSUNAMI_R2D_TIMING_JSON");
+            if (path == nullptr || std::string_view{path}.empty()) {
+                return {};
+            }
+            return std::filesystem::path{path};
         }
 
         [[nodiscard]] auto file_error(
@@ -1614,6 +1624,9 @@ namespace tsunami::r2d_case
                     outputs));
             }
 
+            if (tsunami::r2d::regional_performance_timing_enabled()) {
+                tsunami::r2d::reset_regional_performance_timing();
+            }
             auto solve = tsunami::r2d::solve_regional_model(
                 solve_request.value(),
                 prepared.value().simulation_state(),
@@ -1628,6 +1641,9 @@ namespace tsunami::r2d_case
                     solve.error(),
                     output_state_changed,
                     outputs));
+            }
+            if (const auto timing_path = timing_output_path(); !timing_path.empty()) {
+                tsunami::r2d::write_regional_performance_timing_json(timing_path);
             }
             const auto time_scale = std::max<tsunami::core::Real>(1.0, std::abs(solve_request.value().final_time));
             const auto time_tolerance = solve_request.value().time_policy.timestep_comparison_tolerance * time_scale;

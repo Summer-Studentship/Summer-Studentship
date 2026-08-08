@@ -189,6 +189,7 @@ add_library(tsunami_r2d STATIC
     r2d/src/RegionalEarthquakeInitialisation.cpp
     r2d/src/RegionalExteriorState.cpp
     r2d/src/RegionalGeometryPreflight.cpp
+    r2d/src/RegionalPerformanceTiming.cpp
     r2d/src/RegionalTerrainTransfer.cpp
     r2d/src/RegionalRelaxationZone.cpp
     r2d/src/RegionalResidual.cpp

@@ -1,5 +1,7 @@
 #include <tsunami/r2d/RegionalTimeIntegration.hpp>
 
+#include <tsunami/r2d/RegionalPerformanceTiming.hpp>
+
 #include <algorithm>
 #include <cmath>
 #include <string>
@@ -83,11 +85,19 @@ namespace tsunami::r2d
             if (!residual) {
                 return tsunami::core::failure<StageLimit>(residual.error());
             }
-            auto cfl = estimate_cfl_timestep(mesh, workspace.spectral_sum(), time_policy.courant_number);
+            auto cfl = tsunami::core::Result<CflTimestepEstimate>{CflTimestepEstimate{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::cfl_reduction};
+                cfl = estimate_cfl_timestep(mesh, workspace.spectral_sum(), time_policy.courant_number);
+            }
             if (!cfl) {
                 return tsunami::core::failure<StageLimit>(cfl.error());
             }
-            auto positivity = estimate_positivity_timestep(mesh, state, workspace.outgoing_mass_rate(), time_policy.positivity_safety_factor);
+            auto positivity = tsunami::core::Result<PositivityTimestepEstimate>{PositivityTimestepEstimate{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::positivity_reduction};
+                positivity = estimate_positivity_timestep(mesh, state, workspace.outgoing_mass_rate(), time_policy.positivity_safety_factor);
+            }
             if (!positivity) {
                 return tsunami::core::failure<StageLimit>(positivity.error());
             }
@@ -127,15 +137,27 @@ namespace tsunami::r2d
             if (!residual) {
                 return tsunami::core::failure<StageLimit>(residual.error());
             }
-            auto cfl = estimate_cfl_timestep(mesh, workspace.spectral_sum(), time_policy.courant_number);
+            auto cfl = tsunami::core::Result<CflTimestepEstimate>{CflTimestepEstimate{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::cfl_reduction};
+                cfl = estimate_cfl_timestep(mesh, workspace.spectral_sum(), time_policy.courant_number);
+            }
             if (!cfl) {
                 return tsunami::core::failure<StageLimit>(cfl.error());
             }
-            auto positivity = estimate_positivity_timestep(mesh, state, workspace.outgoing_mass_rate(), time_policy.positivity_safety_factor);
+            auto positivity = tsunami::core::Result<PositivityTimestepEstimate>{PositivityTimestepEstimate{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::positivity_reduction};
+                positivity = estimate_positivity_timestep(mesh, state, workspace.outgoing_mass_rate(), time_policy.positivity_safety_factor);
+            }
             if (!positivity) {
                 return tsunami::core::failure<StageLimit>(positivity.error());
             }
-            auto relaxation = estimate_relaxation_timestep(mesh, relaxation_zones, time_policy.relaxation_safety_factor);
+            auto relaxation = tsunami::core::Result<RelaxationTimestepEstimate>{RelaxationTimestepEstimate{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::relaxation_timestep};
+                relaxation = estimate_relaxation_timestep(mesh, relaxation_zones, time_policy.relaxation_safety_factor);
+            }
             if (!relaxation) {
                 return tsunami::core::failure<StageLimit>(relaxation.error());
             }
@@ -206,16 +228,20 @@ namespace tsunami::r2d
             if (!requested_timestep_is_within(timestep, limit.value().stable)) {
                 return tsunami::core::success(retry_result(diagnostics, limit.value().stable));
             }
-            auto update = wet_dry_forward_euler_update(
-                mesh,
-                source,
-                workspace.residual_workspace().residual(),
-                timestep,
-                limit.value().stable,
-                state_policy,
-                destination,
-                wet_dry,
-                workspace.wet_dry_workspace());
+            auto update = tsunami::core::success();
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::state_update};
+                update = wet_dry_forward_euler_update(
+                    mesh,
+                    source,
+                    workspace.residual_workspace().residual(),
+                    timestep,
+                    limit.value().stable,
+                    state_policy,
+                    destination,
+                    wet_dry,
+                    workspace.wet_dry_workspace());
+            }
             if (!update) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(update.error());
             }
@@ -264,16 +290,20 @@ namespace tsunami::r2d
             if (!requested_timestep_is_within(timestep, limit.value().stable)) {
                 return tsunami::core::success(retry_result(diagnostics, limit.value().stable));
             }
-            auto update = wet_dry_forward_euler_update(
-                mesh,
-                source,
-                workspace.physical_residual_workspace().residual(),
-                timestep,
-                limit.value().stable,
-                state_policy,
-                destination,
-                wet_dry,
-                workspace.wet_dry_workspace());
+            auto update = tsunami::core::success();
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::state_update};
+                update = wet_dry_forward_euler_update(
+                    mesh,
+                    source,
+                    workspace.physical_residual_workspace().residual(),
+                    timestep,
+                    limit.value().stable,
+                    state_policy,
+                    destination,
+                    wet_dry,
+                    workspace.wet_dry_workspace());
+            }
             if (!update) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(update.error());
             }
@@ -435,6 +465,7 @@ namespace tsunami::r2d
         std::size_t step_index,
         RegionalTimeIntegrationWorkspace &workspace) -> tsunami::core::Result<RegionalStepAttemptResult>
     {
+        auto attempt_timer = RegionalScopedTimer{RegionalTimingRegion::timestep_attempt};
         const auto mesh_id = mesh.summary().id;
         auto state_policy_validation = validate_policy(state_policy);
         auto time_policy_validation = validate_regional_time_integration_policy(time_policy);
@@ -499,7 +530,11 @@ namespace tsunami::r2d
             if (!copy) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(copy.error());
             }
-            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+                integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            }
             if (!integrals) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
             }
@@ -528,19 +563,27 @@ namespace tsunami::r2d
         diagnostics = second_stage_euler.value().diagnostics;
 
         if (time_policy.scheme == ExplicitIntegrationScheme::ssprk2) {
-            auto combine = convex_combine_regional_states(
-                mesh,
-                current,
-                0.5,
-                workspace.euler_stage(),
-                0.5,
-                state_policy,
-                workspace.candidate(),
-                workspace.combination());
+            auto combine = tsunami::core::success();
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+                combine = convex_combine_regional_states(
+                    mesh,
+                    current,
+                    0.5,
+                    workspace.euler_stage(),
+                    0.5,
+                    state_policy,
+                    workspace.candidate(),
+                    workspace.combination());
+            }
             if (!combine) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(combine.error());
             }
-            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+                integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            }
             if (!integrals) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
             }
@@ -548,15 +591,19 @@ namespace tsunami::r2d
             return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
         }
 
-        auto combine_stage_2 = convex_combine_regional_states(
-            mesh,
-            current,
-            0.75,
-            workspace.euler_stage(),
-            0.25,
-            state_policy,
-            workspace.stage_2(),
-            workspace.combination());
+        auto combine_stage_2 = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+            combine_stage_2 = convex_combine_regional_states(
+                mesh,
+                current,
+                0.75,
+                workspace.euler_stage(),
+                0.25,
+                state_policy,
+                workspace.stage_2(),
+                workspace.combination());
+        }
         if (!combine_stage_2) {
             return tsunami::core::failure<RegionalStepAttemptResult>(combine_stage_2.error());
         }
@@ -581,19 +628,27 @@ namespace tsunami::r2d
         }
         diagnostics = third_stage_euler.value().diagnostics;
 
-        auto combine_candidate = convex_combine_regional_states(
-            mesh,
-            current,
-            1.0 / 3.0,
-            workspace.euler_stage(),
-            2.0 / 3.0,
-            state_policy,
-            workspace.candidate(),
-            workspace.combination());
+        auto combine_candidate = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+            combine_candidate = convex_combine_regional_states(
+                mesh,
+                current,
+                1.0 / 3.0,
+                workspace.euler_stage(),
+                2.0 / 3.0,
+                state_policy,
+                workspace.candidate(),
+                workspace.combination());
+        }
         if (!combine_candidate) {
             return tsunami::core::failure<RegionalStepAttemptResult>(combine_candidate.error());
         }
-        auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+        auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+            integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+        }
         if (!integrals) {
             return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
         }
@@ -614,6 +669,7 @@ namespace tsunami::r2d
         std::size_t step_index,
         RegionalTimeIntegrationWorkspace &workspace) -> tsunami::core::Result<RegionalStepAttemptResult>
     {
+        auto attempt_timer = RegionalScopedTimer{RegionalTimingRegion::timestep_attempt};
         const auto mesh_id = mesh.summary().id;
         auto state_policy_validation = validate_policy(state_policy);
         auto time_policy_validation = validate_regional_time_integration_policy(time_policy);
@@ -676,7 +732,11 @@ namespace tsunami::r2d
             if (!copy) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(copy.error());
             }
-            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+                integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            }
             if (!integrals) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
             }
@@ -704,19 +764,27 @@ namespace tsunami::r2d
         diagnostics = second_stage_euler.value().diagnostics;
 
         if (time_policy.scheme == ExplicitIntegrationScheme::ssprk2) {
-            auto combine = convex_combine_regional_states(
-                mesh,
-                current,
-                0.5,
-                workspace.euler_stage(),
-                0.5,
-                state_policy,
-                workspace.candidate(),
-                workspace.combination());
+            auto combine = tsunami::core::success();
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+                combine = convex_combine_regional_states(
+                    mesh,
+                    current,
+                    0.5,
+                    workspace.euler_stage(),
+                    0.5,
+                    state_policy,
+                    workspace.candidate(),
+                    workspace.combination());
+            }
             if (!combine) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(combine.error());
             }
-            auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+            {
+                auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+                integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+            }
             if (!integrals) {
                 return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
             }
@@ -724,15 +792,19 @@ namespace tsunami::r2d
             return tsunami::core::success(RegionalStepAttemptResult{RegionalStepAttemptStatus::accepted, std::nullopt, diagnostics});
         }
 
-        auto combine_stage_2 = convex_combine_regional_states(
-            mesh,
-            current,
-            0.75,
-            workspace.euler_stage(),
-            0.25,
-            state_policy,
-            workspace.stage_2(),
-            workspace.combination());
+        auto combine_stage_2 = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+            combine_stage_2 = convex_combine_regional_states(
+                mesh,
+                current,
+                0.75,
+                workspace.euler_stage(),
+                0.25,
+                state_policy,
+                workspace.stage_2(),
+                workspace.combination());
+        }
         if (!combine_stage_2) {
             return tsunami::core::failure<RegionalStepAttemptResult>(combine_stage_2.error());
         }
@@ -756,19 +828,27 @@ namespace tsunami::r2d
         }
         diagnostics = third_stage_euler.value().diagnostics;
 
-        auto combine_candidate = convex_combine_regional_states(
-            mesh,
-            current,
-            1.0 / 3.0,
-            workspace.euler_stage(),
-            2.0 / 3.0,
-            state_policy,
-            workspace.candidate(),
-            workspace.combination());
+        auto combine_candidate = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::state_combination};
+            combine_candidate = convex_combine_regional_states(
+                mesh,
+                current,
+                1.0 / 3.0,
+                workspace.euler_stage(),
+                2.0 / 3.0,
+                state_policy,
+                workspace.candidate(),
+                workspace.combination());
+        }
         if (!combine_candidate) {
             return tsunami::core::failure<RegionalStepAttemptResult>(combine_candidate.error());
         }
-        auto integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+        auto integrals = tsunami::core::Result<RegionalIntegralDiagnostics>{RegionalIntegralDiagnostics{}};
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::integrals};
+            integrals = calculate_regional_integrals(mesh, workspace.candidate(), state_policy);
+        }
         if (!integrals) {
             return tsunami::core::failure<RegionalStepAttemptResult>(integrals.error());
         }
@@ -805,6 +885,7 @@ namespace tsunami::r2d
                 workspace);
         }
 
+        auto attempt_timer = RegionalScopedTimer{RegionalTimingRegion::timestep_attempt};
         const auto mesh_id = mesh.summary().id;
         auto state_policy_validation = validate_policy(state_policy);
         auto time_policy_validation = validate_regional_time_integration_policy(time_policy);
@@ -843,13 +924,17 @@ namespace tsunami::r2d
         diagnostics.timestep = timestep;
         diagnostics.scheme = time_policy.scheme;
 
-        auto accepted_source_bound = estimate_regional_source_timestep(
-            mesh,
-            current,
-            local_sources,
-            state_policy,
-            time_policy.source_safety_factor,
-            time_policy.timestep_comparison_tolerance);
+        auto accepted_source_bound = tsunami::core::Result<RegionalSourceTimestepEstimate>{RegionalSourceTimestepEstimate{}};
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::source_timestep};
+            accepted_source_bound = estimate_regional_source_timestep(
+                mesh,
+                current,
+                local_sources,
+                state_policy,
+                time_policy.source_safety_factor,
+                time_policy.timestep_comparison_tolerance);
+        }
         if (!accepted_source_bound) {
             return tsunami::core::failure<RegionalStepAttemptResult>(accepted_source_bound.error());
         }
@@ -859,15 +944,19 @@ namespace tsunami::r2d
         }
 
         auto first_source_diagnostics = RegionalSourceUpdateDiagnostics{};
-        auto source_half = apply_regional_local_sources(
-            mesh,
-            current,
-            local_sources,
-            state_policy,
-            0.5 * timestep,
-            workspace.source_half_state(),
-            first_source_diagnostics,
-            workspace.source_update_workspace());
+        auto source_half = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::source_update};
+            source_half = apply_regional_local_sources(
+                mesh,
+                current,
+                local_sources,
+                state_policy,
+                0.5 * timestep,
+                workspace.source_half_state(),
+                first_source_diagnostics,
+                workspace.source_update_workspace());
+        }
         if (!source_half) {
             return tsunami::core::failure<RegionalStepAttemptResult>(source_half.error());
         }
@@ -906,15 +995,19 @@ namespace tsunami::r2d
         }
 
         auto second_source_diagnostics = RegionalSourceUpdateDiagnostics{};
-        auto final_source = apply_regional_local_sources(
-            mesh,
-            workspace.candidate(),
-            local_sources,
-            state_policy,
-            0.5 * timestep,
-            workspace.source_candidate_state(),
-            second_source_diagnostics,
-            workspace.source_update_workspace());
+        auto final_source = tsunami::core::success();
+        {
+            auto timer = RegionalScopedTimer{RegionalTimingRegion::source_update};
+            final_source = apply_regional_local_sources(
+                mesh,
+                workspace.candidate(),
+                local_sources,
+                state_policy,
+                0.5 * timestep,
+                workspace.source_candidate_state(),
+                second_source_diagnostics,
+                workspace.source_update_workspace());
+        }
         if (!final_source) {
             return tsunami::core::failure<RegionalStepAttemptResult>(final_source.error());
         }

@@ -1,0 +1,16 @@
+{
+  "figures": [
+    "c1a_p1b_solver_loop_speedup.svg",
+    "c1a_p1b_end_to_end_speedup.svg",
+    "c1a_p1b_parallel_efficiency.svg",
+    "c1a_p1b_runtime_breakdown.svg",
+    "c1a_p1b_projected_convergence_runtime.svg"
+  ],
+  "generated_at_utc": "2026-08-08T18:20:24.270051Z",
+  "schema": {
+    "name": "tsunami.c1a_p1b_figure_manifest",
+    "version": "1.0.0"
+  },
+  "source": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_cpu_parallel_p1b_benchmark.json",
+  "study_id": "regional2d-cpu-parallel-p1b"
+}
