@@ -1,0 +1,11 @@
+{
+  "figures": [
+    "c1a_p2_aggregate_throughput.svg",
+    "c1a_p2_ensemble_speedup.svg",
+    "c1a_p2_individual_slowdown.svg",
+    "c1a_p2_projected_ladder_wall_time.svg"
+  ],
+  "generated_at_utc": "2026-08-08T18:45:37.180346Z",
+  "source_evidence": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_cpu_ensemble_p2_benchmark.json",
+  "study_id": "regional2d-cpu-ensemble-p2"
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+<rect width="100%" height="100%" fill="white"/>
+<text x="70" y="24" font-size="16" font-family="sans-serif" fill="#24292f">P2 Estimated Fine-Ladder Wall Time</text>
+<rect x="82" y="302.27" width="42" height="59.73" fill="#d0d7de"/>
+<rect x="132" y="335.35" width="42" height="26.65" fill="#54a24b"/>
+<text x="128" y="396" text-anchor="middle" font-size="12">h500</text>
+<rect x="240" y="280.14" width="42" height="81.86" fill="#d0d7de"/>
+<rect x="290" y="325.47" width="42" height="36.53" fill="#54a24b"/>
+<text x="286" y="396" text-anchor="middle" font-size="12">h450</text>
+<rect x="398" y="245.43" width="42" height="116.57" fill="#d0d7de"/>
+<rect x="448" y="309.98" width="42" height="52.02" fill="#54a24b"/>
+<text x="444" y="396" text-anchor="middle" font-size="12">h400</text>
+<rect x="556" y="85.48" width="42" height="276.52" fill="#d0d7de"/>
+<rect x="606" y="238.60" width="42" height="123.40" fill="#54a24b"/>
+<text x="602" y="396" text-anchor="middle" font-size="12">h300</text>
+<text x="82" y="52" font-size="12" fill="#24292f">grey=serial prior, green=ensemble estimate</text>
+</svg>
