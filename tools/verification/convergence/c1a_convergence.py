@@ -230,9 +230,11 @@ def assert_regional_frozen_family_invariance(records: Sequence[dict[str, Any]]) 
         raise ConvergenceError("frozen-family invariance requires at least two records")
     reference = records[0]
     invariant_paths = (
+        "/frozen_terrain/path",
         "/frozen_terrain/sha256",
         "/frozen_terrain/metadata_sha256",
         "/frozen_terrain/processing_resolution_m",
+        "/frozen_source/path",
         "/frozen_source/sha256",
         "/frozen_source/metadata_sha256",
         "/frozen_source/representation_policy",

@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT / "tools/verification/convergence"))
 sys.path.insert(0, str(ROOT / "tools/cases"))
 
 import c1a_convergence as c1a
+import c1a_r4_execute_frozen_terrain as r4e
 import kamaishi_delivery as kd
 
 
@@ -75,8 +76,18 @@ class C1AConvergenceTests(unittest.TestCase):
 
     def test_frozen_family_invariance_allows_only_solver_mesh_variation(self):
         base = {
-            "frozen_terrain": {"sha256": "terrain", "metadata_sha256": "terrain-meta", "processing_resolution_m": 1000.0},
-            "frozen_source": {"sha256": "source", "metadata_sha256": "source-meta", "representation_policy": "fixed raster"},
+            "frozen_terrain": {
+                "path": "/external/g6/conditioned-terrain.tif",
+                "sha256": "terrain",
+                "metadata_sha256": "terrain-meta",
+                "processing_resolution_m": 1000.0,
+            },
+            "frozen_source": {
+                "path": "/external/g6/tohoku_vertical_displacement.tif",
+                "sha256": "source",
+                "metadata_sha256": "source-meta",
+                "representation_policy": "fixed raster",
+            },
             "physical_configuration_sha256": "physical",
             "domain_sha256": "domain",
             "coupling_section_sha256": "section",
@@ -89,6 +100,37 @@ class C1AConvergenceTests(unittest.TestCase):
         changed["frozen_terrain"]["sha256"] = "different"
         with self.assertRaisesRegex(c1a.ConvergenceError, "frozen Regional family invariance failed"):
             c1a.assert_regional_frozen_family_invariance([base, changed])
+        changed_path = json.loads(json.dumps(finer))
+        changed_path["frozen_terrain"]["path"] = "/external/level-dependent/conditioned-terrain.tif"
+        with self.assertRaisesRegex(c1a.ConvergenceError, "frozen Regional family invariance failed"):
+            c1a.assert_regional_frozen_family_invariance([base, changed_path])
+
+    def test_r4_adapter_records_share_frozen_paths_and_vary_solver_targets(self):
+        case_record = {
+            "terrain": {
+                "path": "/external/r4/case/outputs/terrain/conditioned-terrain.tif",
+                "sha256": "terrain-sha",
+                "record_sha256": "terrain-record-sha",
+                "metadata_sha256": "terrain-meta-sha",
+                "processing_resolution_m": 1000.0,
+            },
+            "source": {
+                "path": "/external/r4/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+                "sha256": "source-sha",
+                "metadata_sha256": "source-meta-sha",
+                "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+            },
+            "physical_configuration_sha256": "physical",
+            "domain_sha256": "domain",
+            "coupling_section_sha256": "section",
+        }
+        records = [r4e.adapter_level_record(case_record, target) for target in (1000.0, 800.0, 600.0)]
+        c1a.assert_regional_frozen_family_invariance(records)
+        self.assertEqual({record["frozen_terrain"]["path"] for record in records}, {case_record["terrain"]["path"]})
+        self.assertEqual(
+            {record["solver_mesh_target_size"]["requested_m"] for record in records},
+            {1000.0, 800.0, 600.0},
+        )
 
     def test_phase_diagnostic_keeps_formal_metric_unshifted(self):
         reference = [0.0, 0.0, 1.0, 0.0, 0.0]
