@@ -1,0 +1,38 @@
+{
+  "common_support_point_count": 401,
+  "figure": "deliverables/figures/convergence/c1a_r4_runtime_vs_error.svg",
+  "forcing_window_s": [
+    245.0,
+    545.0
+  ],
+  "generated_at_utc": "2026-08-08T13:09:19.780685Z",
+  "quantity": "runtime vs forcing waveform error",
+  "renderer": "stdlib_svg",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_inputs": {
+    "h1000": {
+      "mesh_msh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+      "metadata_json_sha256": "0ff6d75900b5d96846c13e37afd265939e43abbc18210835b46f27a9ac35b0d1",
+      "run_id": "r4-full-h1000",
+      "samples_csv_sha256": "6660e2c7aa0efb3df5aeef86a6a34189c70868246e61847e93b09917dd2b9c1b"
+    },
+    "h600": {
+      "mesh_msh_sha256": "3bda1d2b4e9d0abc6c35fa4afde4fd885b8dcf9e99947eab1f50b07a99a6faa3",
+      "metadata_json_sha256": "477738fc27961076766acbdfdff60cca6ebc3a8b29a0aada944114c88e02466b",
+      "run_id": "r4-full-h600",
+      "samples_csv_sha256": "f2ac073cdd88c91e9a97d1814eee687d6b3b7ab270db4eb4e37da727908c2508"
+    },
+    "h800": {
+      "mesh_msh_sha256": "8db8da58818966db4973ae918f00443368fb6dc5c103f568120396b674c44d02",
+      "metadata_json_sha256": "dc0c6b22b06ca8b863881835b29474902ac67d3dffdba9648578b6b31e0067a5",
+      "run_id": "r4-full-h800",
+      "samples_csv_sha256": "d91d5309ce43dccbaca9e67fda9d0ace923132a0ea39f80f614c867bf62db5ce"
+    }
+  },
+  "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4/frozen_terrain_v4_metrics.json",
+  "study_id": "regional-spatial-frozen-terrain-v4",
+  "threshold_percent": 2.0
+}

@@ -1,4 +1,4 @@
 level_id,status,cfl_target,maximum_timestep_s,reason
-T0,not_started,,,Temporal convergence remains gated because C1A-R3 Regional2D spatial qualification did not pass.
-T1,not_started,,,Temporal convergence remains gated because C1A-R3 Regional2D spatial qualification did not pass.
-T2,not_started,,,Temporal convergence remains gated because C1A-R3 Regional2D spatial qualification did not pass.
+T0,not_started,,,Temporal convergence remains gated by C1A-R4 frozen-terrain spatial qualification.
+T1,not_started,,,Temporal convergence remains gated by C1A-R4 frozen-terrain spatial qualification.
+T2,not_started,,,Temporal convergence remains gated by C1A-R4 frozen-terrain spatial qualification.

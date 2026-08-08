@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" role="img" aria-labelledby="title desc">
+<title id="title">C1A-R4 qn Waveform Convergence</title>
+<desc id="desc">Maximum signed normal-momentum perturbation over the frozen-terrain coupling section.</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="82" y="31" font-family="Arial, sans-serif" font-size="22" fill="#222">C1A-R4 qn Waveform Convergence</text>
+<line x1="82.00" y1="58" x2="82.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="82.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">245</text>
+<line x1="222.67" y1="58" x2="222.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="222.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">295</text>
+<line x1="363.33" y1="58" x2="363.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="363.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">345</text>
+<line x1="504.00" y1="58" x2="504.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="504.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">395</text>
+<line x1="644.67" y1="58" x2="644.67" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="644.67" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">445</text>
+<line x1="785.33" y1="58" x2="785.33" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="785.33" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">495</text>
+<line x1="926.00" y1="58" x2="926.00" y2="464" stroke="#e4e4e4" stroke-width="1"/>
+<text x="926.00" y="488" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#555">545</text>
+<line x1="82" y1="464.00" x2="926" y2="464.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="468.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">1.71</text>
+<line x1="82" y1="382.80" x2="926" y2="382.80" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="386.80" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">2.42</text>
+<line x1="82" y1="301.60" x2="926" y2="301.60" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="305.60" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">3.13</text>
+<line x1="82" y1="220.40" x2="926" y2="220.40" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="224.40" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">3.83</text>
+<line x1="82" y1="139.20" x2="926" y2="139.20" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="143.20" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">4.54</text>
+<line x1="82" y1="58.00" x2="926" y2="58.00" stroke="#e8e8e8" stroke-width="1"/>
+<text x="72" y="62.00" text-anchor="end" font-family="Arial, sans-serif" font-size="13" fill="#555">5.25</text>
+<line x1="82" y1="464" x2="926" y2="464" stroke="#333" stroke-width="1.4"/>
+<line x1="82" y1="58" x2="82" y2="464" stroke="#333" stroke-width="1.4"/>
+<polyline fill="none" stroke="#4c78a8" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,418.45 96.07,416.82 110.13,415.20 124.20,413.56 138.27,411.89 152.33,410.18 166.40,408.40 180.47,406.55 194.53,404.61 208.60,402.57 222.67,400.42 236.73,398.14 250.80,395.74 264.87,393.21 278.93,390.54 293.00,387.73 307.07,384.79 321.13,381.72 335.20,378.52 349.27,375.20 363.33,371.77 377.40,368.23 391.47,364.60 405.53,360.90 419.60,357.12 433.67,353.29 447.73,349.43 461.80,345.53 475.87,341.63 489.93,337.73 504.00,333.86 518.07,330.01 532.13,326.22 546.20,322.48 560.27,318.82 574.33,315.24 588.40,311.76 602.47,308.38 616.53,305.12 630.60,301.99 644.67,298.98 658.73,296.12 672.80,293.40 686.87,290.82 700.93,285.28 715.00,276.75 729.07,268.38 743.13,260.19 757.20,252.20 771.27,244.40 785.33,236.81 799.40,229.44 813.47,222.29 827.53,215.37 841.60,208.69 855.67,202.24 869.73,196.03 883.80,190.07 897.87,184.35 911.93,178.88 926.00,173.66"/>
+<polyline fill="none" stroke="#f58518" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,375.81 96.07,374.62 110.13,373.46 124.20,372.34 138.27,371.22 152.33,370.10 166.40,368.95 180.47,367.75 194.53,366.49 208.60,365.15 222.67,363.72 236.73,362.17 250.80,360.51 264.87,358.71 278.93,356.76 293.00,354.68 307.07,352.45 321.13,350.07 335.20,347.55 349.27,344.90 363.33,342.12 377.40,339.23 391.47,336.24 405.53,333.17 419.60,330.02 433.67,326.83 447.73,323.61 461.80,320.38 475.87,315.74 489.93,310.66 504.00,305.52 518.07,300.35 532.13,295.18 546.20,290.02 560.27,284.90 574.33,279.85 588.40,274.87 602.47,269.99 616.53,265.23 630.60,260.60 644.67,256.11 658.73,248.96 672.80,238.06 686.87,227.35 700.93,216.86 715.00,206.59 729.07,196.57 743.13,186.80 757.20,177.31 771.27,168.08 785.33,159.14 799.40,150.49 813.47,142.13 827.53,134.06 841.60,126.30 855.67,118.84 869.73,111.68 883.80,104.82 897.87,98.25 911.93,91.98 926.00,86.00"/>
+<polyline fill="none" stroke="#54a24b" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" points="82.00,427.74 96.07,426.74 110.13,426.14 124.20,425.93 138.27,426.06 152.33,426.49 166.40,427.18 180.47,428.09 194.53,429.14 208.60,430.29 222.67,431.47 236.73,432.63 250.80,433.69 264.87,434.62 278.93,435.34 293.00,435.82 307.07,436.00 321.13,435.85 335.20,435.34 349.27,434.45 363.33,433.15 377.40,431.45 391.47,429.33 405.53,426.80 419.60,423.88 433.67,420.59 447.73,416.94 461.80,412.97 475.87,408.70 489.93,402.36 504.00,395.52 518.07,388.43 532.13,381.15 546.20,373.72 560.27,366.19 574.33,358.61 588.40,351.03 602.47,343.47 616.53,335.99 630.60,328.62 644.67,321.39 658.73,314.34 672.80,301.42 686.87,288.16 700.93,275.18 715.00,262.52 729.07,250.19 743.13,238.21 757.20,226.59 771.27,215.35 785.33,204.49 799.40,194.03 813.47,183.96 827.53,174.28 841.60,165.00 855.67,156.11 869.73,147.62 883.80,139.52 897.87,131.80 911.93,124.46 926.00,117.50"/>
+<line x1="102" y1="76" x2="130" y2="76" stroke="#4c78a8" stroke-width="4"/>
+<text x="140" y="81" font-family="Arial, sans-serif" font-size="14" fill="#222">h1000</text>
+<line x1="102" y1="100" x2="130" y2="100" stroke="#f58518" stroke-width="4"/>
+<text x="140" y="105" font-family="Arial, sans-serif" font-size="14" fill="#222">h800</text>
+<line x1="102" y1="124" x2="130" y2="124" stroke="#54a24b" stroke-width="4"/>
+<text x="140" y="129" font-family="Arial, sans-serif" font-size="14" fill="#222">h600</text>
+<text x="504.0" y="512" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">Time since event start (s)</text>
+<text transform="translate(25 261.0) rotate(-90)" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" fill="#333">qn perturbation (m^2/s)</text>
+<text x="82" y="532" font-family="Arial, sans-serif" font-size="12" fill="#666">Classification: not_spatially_qualified; formal window 245-545 s.</text>
+</svg>

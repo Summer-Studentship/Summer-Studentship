@@ -1,0 +1,614 @@
+{
+  "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4/case",
+  "comparisons": {
+    "h600_vs_h800": {
+      "Qn_waveform": {
+        "candidate_peak_abs": 17253.39996052517,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9935804621046017,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 5474.429123057054,
+        "nrmse": 0.3762294394434946,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -25.0,
+          "phase_aligned_nrmse": 0.31247471736053184,
+          "phase_error_fraction": 0.16945702648167693,
+          "unshifted_nrmse": 0.3762294394434946
+        },
+        "reference_peak_abs": 21453.25637811121,
+        "reference_peak_time_s": 545.0,
+        "rmse": 4853.463565365514,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "arrival_time_proxy_difference_s": 0.0,
+      "bed_projection_common_support": {
+        "bias_m": 0.3403707605423473,
+        "common_support_width_m": 8000.0,
+        "max_abs_difference_m": 8.576605056990843,
+        "nrmse": 0.03062499346515505,
+        "rmse_m": 2.3418051530675053,
+        "support_point_count": 401
+      },
+      "coarse_level": "h800",
+      "eta_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.13666356459868634,
+        "nrmse": 0.06672415442869345,
+        "quantity": "eta",
+        "rmse": 0.04404939288297808,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "eta_waveform": {
+        "candidate_peak_abs": 0.8953772550503061,
+        "candidate_peak_time_s": 470.0,
+        "correlation": 0.9923645571719006,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.08741234627967032,
+        "nrmse": 0.31231541098741905,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 0.0,
+          "phase_aligned_nrmse": 0.31231541098741905,
+          "phase_error_fraction": 0.0,
+          "unshifted_nrmse": 0.31231541098741905
+        },
+        "reference_peak_abs": 0.8440524388611479,
+        "reference_peak_time_s": 470.0,
+        "rmse": 0.05708499591154515,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "fine_level": "h600",
+      "qbar_waveform": {
+        "candidate_peak_abs": 2.156674995065646,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9935804621046014,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.6843036403821318,
+        "nrmse": 0.37622943944349463,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -25.0,
+          "phase_aligned_nrmse": 0.31247471736053184,
+          "phase_error_fraction": 0.16945702648167704,
+          "unshifted_nrmse": 0.37622943944349463
+        },
+        "reference_peak_abs": 2.681657047263901,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.6066829456706893,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "qn_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 2.9011137898877504,
+        "nrmse": 0.18084029975920674,
+        "quantity": "qn",
+        "rmse": 0.8693613441611949,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "qn_waveform": {
+        "candidate_peak_abs": 4.732449752386133,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9909695776569799,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.8195206750643313,
+        "nrmse": 0.239887721723775,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -15.0,
+          "phase_aligned_nrmse": 0.21702620246853116,
+          "phase_error_fraction": 0.09530091449018951,
+          "unshifted_nrmse": 0.239887721723775
+        },
+        "reference_peak_abs": 5.007484874064481,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.6070187357843567,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "refinement_ratio_actual_h": 1.322724299647411,
+      "source_projection": {
+        "absolute_centroid_shift_m": 0.06025301260410035,
+        "integrated_surface_perturbation_relative_change": 6.56789323565736e-16,
+        "maximum_absolute_surface_perturbation_relative_change": 0.0,
+        "signed_centroid_shift_m": 0.06025301260410035
+      }
+    },
+    "h800_vs_h1000": {
+      "Qn_waveform": {
+        "candidate_peak_abs": 21453.25637811121,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.999906488401927,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 2831.646154526483,
+        "nrmse": 0.18063782522508845,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -5.0,
+          "phase_aligned_nrmse": 0.199843614235605,
+          "phase_error_fraction": -0.10632207837192831,
+          "unshifted_nrmse": 0.18063782522508845
+        },
+        "reference_peak_abs": 18621.61022358473,
+        "reference_peak_time_s": 545.0,
+        "rmse": 2065.946816409295,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "arrival_time_proxy_difference_s": 0.0,
+      "bed_projection_common_support": {
+        "bias_m": 0.7435753513135364,
+        "common_support_width_m": 8000.0,
+        "max_abs_difference_m": 6.923729761443951,
+        "nrmse": 0.02809275943683561,
+        "rmse_m": 2.1856041954913787,
+        "support_point_count": 401
+      },
+      "coarse_level": "h1000",
+      "eta_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.10354216025913204,
+        "nrmse": 0.03963935916940847,
+        "quantity": "eta",
+        "rmse": 0.02606357062087063,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "eta_waveform": {
+        "candidate_peak_abs": 0.8440524388611479,
+        "candidate_peak_time_s": 470.0,
+        "correlation": 0.9988255739802435,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.030414131170871883,
+        "nrmse": 0.06953474071782129,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 5.0,
+          "phase_aligned_nrmse": 0.06285954445726948,
+          "phase_error_fraction": 0.09599800318002771,
+          "unshifted_nrmse": 0.06953474071782129
+        },
+        "reference_peak_abs": 0.8627431707728945,
+        "reference_peak_time_s": 485.0,
+        "rmse": 0.016124050511516556,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "fine_level": "h800",
+      "qbar_waveform": {
+        "candidate_peak_abs": 2.681657047263901,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9999064884019268,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.3539557693158102,
+        "nrmse": 0.18063782522508845,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -5.0,
+          "phase_aligned_nrmse": 0.19984361423560504,
+          "phase_error_fraction": -0.10632207837192853,
+          "unshifted_nrmse": 0.18063782522508845
+        },
+        "reference_peak_abs": 2.327701277948091,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.25824335205116183,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "qn_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 1.059090201286879,
+        "nrmse": 0.08118294479498082,
+        "quantity": "qn",
+        "rmse": 0.3288578037396629,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "qn_waveform": {
+        "candidate_peak_abs": 5.007484874064481,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9926154221482423,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.7653501461694976,
+        "nrmse": 0.2130628611834436,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": -100.0,
+          "phase_aligned_nrmse": 1.1768136988714641,
+          "phase_error_fraction": -4.523316885612678,
+          "unshifted_nrmse": 0.2130628611834436
+        },
+        "reference_peak_abs": 4.2421347278949835,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.4553863500844575,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "refinement_ratio_actual_h": 1.2441599110634924,
+      "source_projection": {
+        "absolute_centroid_shift_m": 0.07378311143238996,
+        "integrated_surface_perturbation_relative_change": 8.37406387546314e-15,
+        "maximum_absolute_surface_perturbation_relative_change": 0.0,
+        "signed_centroid_shift_m": 0.07378311143238996
+      }
+    }
+  },
+  "dominant_residual_error_mechanism": [
+    "mesh-dependent projection of frozen bed/source onto solver cells",
+    "section-normal momentum waveform differences on the fixed coupling support"
+  ],
+  "external_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4",
+  "fabricated_results": false,
+  "forcing_window_s": [
+    245.0,
+    545.0
+  ],
+  "frozen_family_invariance": {
+    "coupling_section_sha256": "7c2d9369a62d116b1726e4107695d2eaf7229f22ee16e6c1acc840c48467794d",
+    "domain_sha256": "6ebc1ccc0ee118c7ca464f4c0635bc8a9bcfa2f5138ec3e4a05d6c76d20dc7f3",
+    "physical_configuration_sha256": "258fed88d86db537bdf8618cddaf2c728ae608b273b3731a66e0c94a95f9995a",
+    "source_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+    "source_sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+    "terrain_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4/case/outputs/terrain/conditioned-terrain.tif",
+    "terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+  },
+  "generated_at_utc": "2026-08-08T13:09:19.772495Z",
+  "levels": {
+    "h1000": {
+      "active_cells": 2420,
+      "actual_characteristic_mesh_size_m": 638.3173897881047,
+      "coupling_sample_count": 8,
+      "forcing_window_qoi": {
+        "arrival_time_proxy_definition": "first formal-window sample where abs(Qn) reaches 5% of its own formal-window peak",
+        "arrival_time_proxy_s": 245.0,
+        "peak_Qn_abs_m3_per_s": 18621.61022358473,
+        "peak_Qn_signed_m3_per_s": 18621.61022358473,
+        "peak_Qn_time_s": 545.0,
+        "peak_eta_abs_m": 0.8627431707728945,
+        "peak_eta_signed_m": 0.8627431707728945,
+        "peak_eta_time_s": 485.0,
+        "peak_qbar_abs_m2_per_s": 2.327701277948091,
+        "peak_qbar_signed_m2_per_s": 2.327701277948091,
+        "peak_qbar_time_s": 545.0,
+        "peak_qn_abs_m2_per_s": 4.2421347278949835,
+        "peak_qn_signed_m2_per_s": 4.2421347278949835,
+        "peak_qn_time_s": 545.0,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "mesh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+      "peak_memory_kb": 38344,
+      "requested_solver_target_m": 1000.0,
+      "runtime_cpu_time_s": 614.3134970000001,
+      "runtime_wall_clock_s": 615.5663920850002,
+      "source_projection": {
+        "absolute_centroid_m": {
+          "x": 603368.4729737724,
+          "y": 4281011.2014899375
+        },
+        "cell_count": 2420,
+        "centroid_definition": "time-zero free-surface perturbation integrated over mesh cell areas from snapshots.csv",
+        "integrated_surface_perturbation_m3": -726012346.8730465,
+        "maximum_absolute_bathymetry_change_m": 1.266512549781055,
+        "maximum_absolute_surface_perturbation_m": 1.2665125497810008,
+        "signed_centroid_m": {
+          "x": 603368.4729737724,
+          "y": 4281011.2014899375
+        }
+      },
+      "timestep": {
+        "diagnostics_rows": 6009,
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "final_diagnostic_time_s": 600.0,
+        "inferred_active_timestep_limiter": "explicit_stability_or_source_restriction",
+        "maximum_dt_s": 0.1,
+        "mean_dt_s": 0.09985022466299447,
+        "median_dt_s": 0.1,
+        "minimum_dt_s": 1.1368683772161603e-12,
+        "rejected_attempts_total": 0,
+        "source_restriction_rows": 6009,
+        "step_count": 6009,
+        "wet_cell_max": 2420,
+        "wet_cell_min": 2420
+      },
+      "total_cells": 2420,
+      "wetdry": {
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "wet_cell_max": 2420,
+        "wet_cell_min": 2420
+      }
+    },
+    "h600": {
+      "active_cells": 6554,
+      "actual_characteristic_mesh_size_m": 387.8744212827467,
+      "coupling_sample_count": 14,
+      "forcing_window_qoi": {
+        "arrival_time_proxy_definition": "first formal-window sample where abs(Qn) reaches 5% of its own formal-window peak",
+        "arrival_time_proxy_s": 245.0,
+        "peak_Qn_abs_m3_per_s": 17253.39996052517,
+        "peak_Qn_signed_m3_per_s": 17253.39996052517,
+        "peak_Qn_time_s": 545.0,
+        "peak_eta_abs_m": 0.8953772550503061,
+        "peak_eta_signed_m": 0.8953772550503061,
+        "peak_eta_time_s": 470.0,
+        "peak_qbar_abs_m2_per_s": 2.156674995065646,
+        "peak_qbar_signed_m2_per_s": 2.156674995065646,
+        "peak_qbar_time_s": 545.0,
+        "peak_qn_abs_m2_per_s": 4.732449752386133,
+        "peak_qn_signed_m2_per_s": 4.732449752386133,
+        "peak_qn_time_s": 545.0,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "mesh_sha256": "3bda1d2b4e9d0abc6c35fa4afde4fd885b8dcf9e99947eab1f50b07a99a6faa3",
+      "peak_memory_kb": 50616,
+      "requested_solver_target_m": 600.0,
+      "runtime_cpu_time_s": 8582.396729,
+      "runtime_wall_clock_s": 8601.856548497002,
+      "source_projection": {
+        "absolute_centroid_m": {
+          "x": 603368.5613706817,
+          "y": 4281011.10171219
+        },
+        "cell_count": 6554,
+        "centroid_definition": "time-zero free-surface perturbation integrated over mesh cell areas from snapshots.csv",
+        "integrated_surface_perturbation_m3": -726012346.8730531,
+        "maximum_absolute_bathymetry_change_m": 1.266512549781055,
+        "maximum_absolute_surface_perturbation_m": 1.2665125497810008,
+        "signed_centroid_m": {
+          "x": 603368.5613706817,
+          "y": 4281011.10171219
+        }
+      },
+      "timestep": {
+        "diagnostics_rows": 21600,
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "final_diagnostic_time_s": 600.0,
+        "inferred_active_timestep_limiter": "explicit_stability_or_source_restriction",
+        "maximum_dt_s": 0.042170336937751074,
+        "mean_dt_s": 0.0277777777777778,
+        "median_dt_s": 0.02770214852930565,
+        "minimum_dt_s": 0.027697313102764413,
+        "rejected_attempts_total": 21480,
+        "source_restriction_rows": 21600,
+        "step_count": 21600,
+        "wet_cell_max": 6554,
+        "wet_cell_min": 6554
+      },
+      "total_cells": 6554,
+      "wetdry": {
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "wet_cell_max": 6554,
+        "wet_cell_min": 6554
+      }
+    },
+    "h800": {
+      "active_cells": 3746,
+      "actual_characteristic_mesh_size_m": 513.0509222423659,
+      "coupling_sample_count": 10,
+      "forcing_window_qoi": {
+        "arrival_time_proxy_definition": "first formal-window sample where abs(Qn) reaches 5% of its own formal-window peak",
+        "arrival_time_proxy_s": 245.0,
+        "peak_Qn_abs_m3_per_s": 21453.25637811121,
+        "peak_Qn_signed_m3_per_s": 21453.25637811121,
+        "peak_Qn_time_s": 545.0,
+        "peak_eta_abs_m": 0.8440524388611479,
+        "peak_eta_signed_m": 0.8440524388611479,
+        "peak_eta_time_s": 470.0,
+        "peak_qbar_abs_m2_per_s": 2.681657047263901,
+        "peak_qbar_signed_m2_per_s": 2.681657047263901,
+        "peak_qbar_time_s": 545.0,
+        "peak_qn_abs_m2_per_s": 5.007484874064481,
+        "peak_qn_signed_m2_per_s": 5.007484874064481,
+        "peak_qn_time_s": 545.0,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "mesh_sha256": "8db8da58818966db4973ae918f00443368fb6dc5c103f568120396b674c44d02",
+      "peak_memory_kb": 40320,
+      "requested_solver_target_m": 800.0,
+      "runtime_cpu_time_s": 3020.356547,
+      "runtime_wall_clock_s": 3027.0022217920005,
+      "source_projection": {
+        "absolute_centroid_m": {
+          "x": 603368.5164696033,
+          "y": 4281011.1418907745
+        },
+        "cell_count": 3746,
+        "centroid_definition": "time-zero free-surface perturbation integrated over mesh cell areas from snapshots.csv",
+        "integrated_surface_perturbation_m3": -726012346.8730526,
+        "maximum_absolute_bathymetry_change_m": 1.266512549781055,
+        "maximum_absolute_surface_perturbation_m": 1.2665125497810008,
+        "signed_centroid_m": {
+          "x": 603368.5164696033,
+          "y": 4281011.1418907745
+        }
+      },
+      "timestep": {
+        "diagnostics_rows": 13200,
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "final_diagnostic_time_s": 600.0,
+        "inferred_active_timestep_limiter": "explicit_stability_or_source_restriction",
+        "maximum_dt_s": 0.08522836837954628,
+        "mean_dt_s": 0.045454545454545615,
+        "median_dt_s": 0.04509496311722423,
+        "minimum_dt_s": 0.04508963168253158,
+        "rejected_attempts_total": 13080,
+        "source_restriction_rows": 13200,
+        "step_count": 13200,
+        "wet_cell_max": 3746,
+        "wet_cell_min": 3746
+      },
+      "total_cells": 3746,
+      "wetdry": {
+        "dry_cell_max": 0,
+        "dry_cell_min": 0,
+        "wet_cell_max": 3746,
+        "wet_cell_min": 3746
+      }
+    }
+  },
+  "local3d_not_started": true,
+  "no_calibration_performed": true,
+  "no_observations_used": true,
+  "qualification": {
+    "failing_metrics": [
+      "eta_waveform.nrmse",
+      "qn_waveform.nrmse",
+      "Qn_waveform.nrmse",
+      "qbar_waveform.nrmse",
+      "eta_distributed_common_support.nrmse",
+      "qn_distributed_common_support.nrmse"
+    ],
+    "medium_to_fine_pair": "h600_vs_h800",
+    "status": "not_spatially_qualified",
+    "temporal_gate": "closed",
+    "temporal_runs_started": false,
+    "threshold_nrmse": 0.02
+  },
+  "richardson_gci": {
+    "peak_Qn_abs_m3_per_s": {
+      "h_fine_to_coarse_m": [
+        387.8744212827467,
+        513.0509222423659,
+        638.3173897881047
+      ],
+      "result": {
+        "gci21_percent": null,
+        "observed_order": null,
+        "r21": 1.322724299647411,
+        "r32": 1.2441599110634924,
+        "status": "not_monotone"
+      },
+      "values_fine_to_coarse": [
+        17253.39996052517,
+        21453.25637811121,
+        18621.61022358473
+      ]
+    },
+    "peak_eta_abs_m": {
+      "h_fine_to_coarse_m": [
+        387.8744212827467,
+        513.0509222423659,
+        638.3173897881047
+      ],
+      "result": {
+        "gci21_percent": null,
+        "observed_order": null,
+        "r21": 1.322724299647411,
+        "r32": 1.2441599110634924,
+        "status": "not_monotone"
+      },
+      "values_fine_to_coarse": [
+        0.8953772550503061,
+        0.8440524388611479,
+        0.8627431707728945
+      ]
+    },
+    "peak_qbar_abs_m2_per_s": {
+      "h_fine_to_coarse_m": [
+        387.8744212827467,
+        513.0509222423659,
+        638.3173897881047
+      ],
+      "result": {
+        "gci21_percent": null,
+        "observed_order": null,
+        "r21": 1.322724299647411,
+        "r32": 1.2441599110634924,
+        "status": "not_monotone"
+      },
+      "values_fine_to_coarse": [
+        2.156674995065646,
+        2.681657047263901,
+        2.327701277948091
+      ]
+    },
+    "peak_qn_abs_m2_per_s": {
+      "h_fine_to_coarse_m": [
+        387.8744212827467,
+        513.0509222423659,
+        638.3173897881047
+      ],
+      "result": {
+        "gci21_percent": null,
+        "observed_order": null,
+        "r21": 1.322724299647411,
+        "r32": 1.2441599110634924,
+        "status": "not_monotone"
+      },
+      "values_fine_to_coarse": [
+        4.732449752386133,
+        5.007484874064481,
+        4.2421347278949835
+      ]
+    }
+  },
+  "schema": {
+    "name": "tsunami.c1a_r4_frozen_terrain_metrics",
+    "version": "1.0.0"
+  },
+  "section_integration": {
+    "common_support": {
+      "point_count": 401,
+      "width_m": 8000.0
+    },
+    "method": "sum((q_n(t)-q_n(t0)) * face_length) over boundary.inland faces",
+    "normal_source": "manifests/corridors/kamaishi-delivery-corridor-evidence.json basis.centreline_unit",
+    "section_width_m": 8000.0
+  },
+  "selected_ladder": [
+    "h1000",
+    "h800",
+    "h600"
+  ],
+  "study_id": "regional-spatial-frozen-terrain-v4",
+  "temporal_gate": {
+    "reason": "Temporal convergence is gated on frozen-terrain spatial qualification.",
+    "status": "not_started_spatial_gate_closed"
+  }
+}
