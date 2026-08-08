@@ -330,7 +330,11 @@ def read_diagnostics(path: Path) -> list[dict[str, float]]:
 
 def timestep_stats(output_dir: Path) -> dict[str, Any]:
     diagnostics = read_diagnostics(output_dir / "diagnostics.csv")
-    dt_values = [row["dt"] for row in diagnostics if "dt" in row and row["dt"] > 0.0]
+    dt_values = [
+        row.get("dt", row.get("timestep"))
+        for row in diagnostics
+        if row.get("dt", row.get("timestep")) is not None and row.get("dt", row.get("timestep")) > 0.0
+    ]
     if not dt_values:
         return {"status": "missing_dt"}
     return {
@@ -523,20 +527,86 @@ def command_pilot(args: argparse.Namespace) -> int:
     return 0
 
 
+def command_run_full(args: argparse.Namespace) -> int:
+    external_root = args.external_root
+    case_root, case_record = prepare_shared_case(external_root, args.g6_root)
+    logs_root = external_root / "logs"
+    set_case_final_time(case_root, FULL_TIME_S)
+    pilot_summary = read_json(external_root / "pilot_summary.json") if (external_root / "pilot_summary.json").is_file() else None
+    pilot_by_target = {
+        float(pilot["requested_solver_target_m"]): pilot
+        for pilot in (pilot_summary or {}).get("pilots", [])
+        if pilot.get("status") == "passed"
+    }
+    runs = []
+    for target in args.targets:
+        target = float(target)
+        pilot = pilot_by_target.get(target)
+        if pilot is not None and pilot.get("projected_600s_wall_s") is not None:
+            projected = float(pilot["projected_600s_wall_s"])
+            if projected > args.max_projected_wall_s:
+                runs.append(
+                    {
+                        "status": "resource_limited_not_started",
+                        "requested_solver_target_m": target,
+                        "projected_600s_wall_s": projected,
+                        "max_projected_wall_s": args.max_projected_wall_s,
+                    }
+                )
+                continue
+        mesh_path = case_root / f"meshes/r4-h{target:g}.msh"
+        if not mesh_path.is_file():
+            mesh_path = generate_mesh(case_root, target, logs_root)
+        run_id = f"r4-full-h{target:g}"
+        result = run_regional(case_root, mesh_path, run_id, args.r2d_binary, logs_root)
+        result.update(
+            {
+                "requested_solver_target_m": target,
+                "mesh": parse_msh_triangles(mesh_path),
+                "case_invariance": {
+                    "terrain_sha256": case_record["terrain"]["sha256"],
+                    "source_sha256": case_record["source"]["sha256"],
+                    "physical_configuration_sha256": case_record["physical_configuration_sha256"],
+                    "domain_sha256": case_record["domain_sha256"],
+                    "coupling_section_sha256": case_record["coupling_section_sha256"],
+                },
+            }
+        )
+        write_json(external_root / "spatial" / f"h{target:g}" / "run.json", result)
+        runs.append(result)
+    summary = {
+        "schema": {"name": "tsunami.c1a_r4_frozen_spatial_runs", "version": "1.0.0"},
+        "generated_at_utc": utc_now(),
+        "study_id": STUDY_ID,
+        "resource_gate": {
+            "max_projected_wall_s": args.max_projected_wall_s,
+            "pilot_summary": str(external_root / "pilot_summary.json") if pilot_summary else None,
+        },
+        "runs": runs,
+    }
+    write_json(external_root / "spatial_run_summary.json", summary)
+    print(json.dumps(summary, indent=2, sort_keys=True))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--external-root", type=Path, default=DEFAULT_EXTERNAL_ROOT)
     parser.add_argument("--g6-root", type=Path, default=DEFAULT_G6_ROOT)
     parser.add_argument("--r2d-binary", type=Path, default=repo_root() / DEFAULT_R2D_BINARY)
-    parser.add_argument("--targets", type=float, nargs="+", default=[1000.0, 800.0, 600.0])
+    parser.add_argument("--targets", default="1000,800,600", help="Comma-separated requested mesh targets in metres.")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("preflight").set_defaults(func=command_preflight)
     sub.add_parser("pilot").set_defaults(func=command_pilot)
+    full = sub.add_parser("run-full")
+    full.add_argument("--max-projected-wall-s", type=float, default=10800.0)
+    full.set_defaults(func=command_run_full)
     return parser
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    args.targets = [float(item) for item in str(args.targets).split(",") if item.strip()]
     try:
         return int(args.func(args))
     except R4ExecutionError as exc:
