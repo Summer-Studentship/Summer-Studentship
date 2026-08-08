@@ -239,6 +239,35 @@
     "selected": false
   },
   "r3_mesh_contract_commit": "1770b37",
+  "r3_scientific_interpretation": {
+    "audit_record": "regional_frozen_terrain_v4_audit.json",
+    "classification": "coupled solver-mesh + terrain/source-discretisation sensitivity",
+    "r4_reuse_status": "not_reusable_for_frozen_terrain_solver_mesh_convergence",
+    "varied_source_representation_with_mesh": true,
+    "varied_terrain_processing_with_mesh": true
+  },
+  "r4_frozen_terrain_status": {
+    "active_cell_counts": "not_available_no_valid_r4_runs",
+    "actual_characteristic_sizes_m": "not_available_no_valid_r4_runs",
+    "bed_rmse": "not_available_no_valid_r4_runs",
+    "dominant_residual_numerical_mechanism": "not_determined_until_real_frozen_runs_exist",
+    "gci": {
+      "status": "not_applicable_no_valid_three_grid_frozen_family"
+    },
+    "h600_pilot_memory": "not_available_no_valid_r4_runs",
+    "h600_pilot_runtime": "not_available_no_valid_r4_runs",
+    "observed_orders": "not_available_no_valid_r4_runs",
+    "phase_lags": "not_available_no_valid_r4_runs",
+    "previous_runs_reusable": false,
+    "projected_600s_runtime": "not_available_no_valid_r4_runs",
+    "source_centroid_variation": "not_available_no_valid_r4_runs",
+    "source_volume_variation": "not_available_no_valid_r4_runs",
+    "spatial_qualification_status": "not_started",
+    "status": "blocked_pending_frozen_family_execution_adapter_and_real_runs",
+    "temporal_convergence_status": "not_started_spatial_gate_closed",
+    "travel_time_proxy": "not_available_no_valid_r4_runs",
+    "waveform_errors": "not_available_no_valid_r4_runs"
+  },
   "schema": {
     "name": "tsunami.c1a_regional_convergence_summary",
     "version": "1.2.0"

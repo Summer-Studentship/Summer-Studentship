@@ -1,0 +1,304 @@
+{
+  "fabricated_results": false,
+  "forcing_window_s": [
+    245.0,
+    545.0
+  ],
+  "frozen_g6_authority": {
+    "g6_physical_model_baseline": "319d347644f0fe057ca2faa66ca5e324e10b5a21",
+    "mathematical_chain": {
+      "only_mesh_dependent_operator": "Pi_h",
+      "source": "Delta z_b_fixed_G6 -> Pi_h(Delta z_b_fixed_G6)",
+      "terrain": "z_b_source -> z_b_processed_fixed_G6 -> Pi_h(z_b_processed_fixed_G6)"
+    },
+    "source": {
+      "event_id": "usgs-usp000hvnu",
+      "metadata_path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.json",
+      "metadata_sha256": "9d6ef9bcce01f1c6a4336df6029e6278ec8c1f6854f33af42560194b8ac5b8b9",
+      "model_id": "usgs-usp000hvnu-basic-inversion",
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+      "physical_source_sha256": "9632217695585cc562b4ac87f64b9ceb6c35a9fd30e050271628a472510228bb",
+      "producer": "tools/earthquake/tohoku_usgs_finite_fault.py",
+      "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+      "sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+      "subfault_count": 325
+    },
+    "study_id": "regional-spatial-frozen-terrain-v4",
+    "terrain": {
+      "coast_treatment": [
+        "ETOPO 2022 is a fallback integration terrain source; positive cells are wet-conditioned for the offshore-to-nearshore delivery corridor"
+      ],
+      "crs": {
+        "authority_code": "32654",
+        "authority_name": "EPSG",
+        "axis_directions": [
+          "east",
+          "north"
+        ],
+        "axis_names": [
+          "Easting",
+          "Northing"
+        ],
+        "axis_units": [
+          "metre",
+          "metre"
+        ],
+        "canonical_projjson": null,
+        "canonical_wkt2": null,
+        "coordinate_epoch_decimal_year": null,
+        "datum_name": "World Geodetic System 1984 ensemble",
+        "datum_realisation": null,
+        "name": "WGS 84 / UTM zone 54N"
+      },
+      "interpolation_method": "bilinear",
+      "metadata_sha256": "8284cc721bf9ed0ab7696251683a684b8d641b7bbd7af9a2fa0234792904c65a",
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+      "processing_resolution_m": 1000.0,
+      "raster_dimensions": {
+        "height": 8,
+        "width": 124
+      },
+      "record_path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/terrain/conditioned-terrain.json",
+      "record_sha256": "8e53d759c4cf947756175e94a10cad5153f0adadfdf84efe0f91dbbf40e49c31",
+      "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363",
+      "source_asset_id": "etopo-2022-v1-15s-n45e135-surface-tif",
+      "source_asset_sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e",
+      "source_dataset_id": "etopo-2022-v1-15s-n45e135-surface",
+      "vertical_treatment": {
+        "enabled": false,
+        "steps": []
+      }
+    }
+  },
+  "generated_at_utc": "2026-08-08T09:08:18.100789Z",
+  "protected_activity": {
+    "no_local3d_convergence": true,
+    "no_observational_data_used": true,
+    "no_physical_calibration": true,
+    "no_push": true
+  },
+  "r3_resolution_audit": {
+    "classification": "coupled solver-mesh + terrain/source-discretisation sensitivity",
+    "interpretation_note": "C1A-R3 remains valid evidence that the prior Regional2D setup was not spatially qualified, but it is not a pure solver-mesh convergence study because the numerical terrain/source raster changed with mesh level.",
+    "r3_reuse_for_r4": false,
+    "table": [
+      {
+        "actual_h_m": 638.4873841390253,
+        "run": "h1000",
+        "solver_mesh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+        "solver_target_m": 1000.0,
+        "source_asset": "ETOPO 2022 v1 15 arc-second surface + USGS finite-fault",
+        "source_dataset_resolution_m": 463.0,
+        "source_metadata_sha256": "07327c6f46195818dc05752c52117108b151244e2abdec767fd4433b8859e2a1",
+        "source_representation_sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+        "terrain_intermediate_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363",
+        "terrain_metadata_sha256": "225b7c6df2a38b139998266c903ad2aa2cefa426c54026bb3703dde48f7b0cd4",
+        "terrain_processing_resolution_m": 1000.0,
+        "terrain_raster_height": 8,
+        "terrain_raster_width": 124
+      },
+      {
+        "actual_h_m": 595.9281252670686,
+        "run": "h900",
+        "solver_mesh_sha256": "8e8d9397b73253c50f613b6014f1a387260ee232b32e824c3cdf9083eed30125",
+        "solver_target_m": 900.0,
+        "source_asset": "ETOPO 2022 v1 15 arc-second surface + USGS finite-fault",
+        "source_dataset_resolution_m": 463.0,
+        "source_metadata_sha256": "4d2057447cae61877bcc0f5aa2aa73a38dd7d6c75098a6ee1947bbbf12ecda05",
+        "source_representation_sha256": "3f0ecf0d79795971cc24cfee65114139f14764e4ba85fe4a697169aac355cd2c",
+        "terrain_intermediate_sha256": "db998bf94e14bd761bd68fe30d2d7fc068b76282e4cf3d39b1d0b7c592481793",
+        "terrain_metadata_sha256": "02b5146d90bd500e8d49f777b194f9d066088b7e493fbc837fb58467a0447549",
+        "terrain_processing_resolution_m": 900.0,
+        "terrain_raster_height": 9,
+        "terrain_raster_width": 138
+      },
+      {
+        "actual_h_m": 514.5630277465905,
+        "run": "h800",
+        "solver_mesh_sha256": "9f4ebc5417425299fb513093376225a7bdf850f27e4e27813228fb60f333e072",
+        "solver_target_m": 800.0,
+        "source_asset": "ETOPO 2022 v1 15 arc-second surface + USGS finite-fault",
+        "source_dataset_resolution_m": 463.0,
+        "source_metadata_sha256": "cb773ed1027eebec3453227a00ec5e09e5b4f1733a9a18e163097ca143f83d44",
+        "source_representation_sha256": "a8c55d17a938203348d6cee928bb35149d395c482b0a8454bd8289535d4bf318",
+        "terrain_intermediate_sha256": "85897bdc141ffea2859252a6ff7026acdf4216275798d285f6813d671c998986",
+        "terrain_metadata_sha256": "5aa5c77f6fc485c63ce1bdc12926cbc491ede0c02aab42bb60e9fdb9183ac462",
+        "terrain_processing_resolution_m": 800.0,
+        "terrain_raster_height": 10,
+        "terrain_raster_width": 155
+      }
+    ],
+    "varied_source_representation_with_mesh": true,
+    "varied_terrain_intermediate_with_mesh": true,
+    "varied_terrain_processing_with_mesh": true
+  },
+  "r3_study_id": "regional-spatial-fine-resolution-v3",
+  "r4_contract": {
+    "common_coupling_section": "kamaishi-nearshore-interface",
+    "family_invariant": true,
+    "formal_metrics_remain_unshifted": true,
+    "local3d_started": false,
+    "observations_used": false,
+    "physical_calibration_performed": false,
+    "planned_contracts": [
+      {
+        "actual_characteristic_mesh_size": {
+          "definition": "sqrt(common physical corridor area / active surface-cell count)",
+          "value_m": null
+        },
+        "frozen_source": {
+          "metadata_sha256": "9d6ef9bcce01f1c6a4336df6029e6278ec8c1f6854f33af42560194b8ac5b8b9",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+          "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+          "sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498"
+        },
+        "frozen_terrain": {
+          "metadata_sha256": "8284cc721bf9ed0ab7696251683a684b8d641b7bbd7af9a2fa0234792904c65a",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+          "processing_resolution_m": 1000.0,
+          "record_sha256": "8e53d759c4cf947756175e94a10cad5153f0adadfdf84efe0f91dbbf40e49c31",
+          "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+        },
+        "profile_name": "r4-frozen-g6-terrain-h1000",
+        "solver_mesh_target_size": {
+          "configured_m": 1000.0,
+          "requested_m": 1000.0
+        },
+        "source_dataset_changes_physics": false,
+        "terrain_processing_resolution": {
+          "actual_m": 1000.0,
+          "requested_m": 1000.0
+        },
+        "terrain_source_resolution": {
+          "kind": "nominal_source_spacing",
+          "source": "ETOPO 2022 v1 15 arc-second surface elevation tile",
+          "value_m": 463.0
+        },
+        "tier_mapping": "none",
+        "varied_only": [
+          "solver_mesh_target_size",
+          "mesh topology/geometry",
+          "mesh-dependent projection Pi_h",
+          "derived timestep history",
+          "run identity/output paths/timestamps"
+        ]
+      },
+      {
+        "actual_characteristic_mesh_size": {
+          "definition": "sqrt(common physical corridor area / active surface-cell count)",
+          "value_m": null
+        },
+        "frozen_source": {
+          "metadata_sha256": "9d6ef9bcce01f1c6a4336df6029e6278ec8c1f6854f33af42560194b8ac5b8b9",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+          "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+          "sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498"
+        },
+        "frozen_terrain": {
+          "metadata_sha256": "8284cc721bf9ed0ab7696251683a684b8d641b7bbd7af9a2fa0234792904c65a",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+          "processing_resolution_m": 1000.0,
+          "record_sha256": "8e53d759c4cf947756175e94a10cad5153f0adadfdf84efe0f91dbbf40e49c31",
+          "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+        },
+        "profile_name": "r4-frozen-g6-terrain-h800",
+        "solver_mesh_target_size": {
+          "configured_m": 800.0,
+          "requested_m": 800.0
+        },
+        "source_dataset_changes_physics": false,
+        "terrain_processing_resolution": {
+          "actual_m": 1000.0,
+          "requested_m": 1000.0
+        },
+        "terrain_source_resolution": {
+          "kind": "nominal_source_spacing",
+          "source": "ETOPO 2022 v1 15 arc-second surface elevation tile",
+          "value_m": 463.0
+        },
+        "tier_mapping": "none",
+        "varied_only": [
+          "solver_mesh_target_size",
+          "mesh topology/geometry",
+          "mesh-dependent projection Pi_h",
+          "derived timestep history",
+          "run identity/output paths/timestamps"
+        ]
+      },
+      {
+        "actual_characteristic_mesh_size": {
+          "definition": "sqrt(common physical corridor area / active surface-cell count)",
+          "value_m": null
+        },
+        "frozen_source": {
+          "metadata_sha256": "9d6ef9bcce01f1c6a4336df6029e6278ec8c1f6854f33af42560194b8ac5b8b9",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.tif",
+          "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+          "sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498"
+        },
+        "frozen_terrain": {
+          "metadata_sha256": "8284cc721bf9ed0ab7696251683a684b8d641b7bbd7af9a2fa0234792904c65a",
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+          "processing_resolution_m": 1000.0,
+          "record_sha256": "8e53d759c4cf947756175e94a10cad5153f0adadfdf84efe0f91dbbf40e49c31",
+          "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+        },
+        "profile_name": "r4-frozen-g6-terrain-h600",
+        "solver_mesh_target_size": {
+          "configured_m": 600.0,
+          "requested_m": 600.0
+        },
+        "source_dataset_changes_physics": false,
+        "terrain_processing_resolution": {
+          "actual_m": 1000.0,
+          "requested_m": 1000.0
+        },
+        "terrain_source_resolution": {
+          "kind": "nominal_source_spacing",
+          "source": "ETOPO 2022 v1 15 arc-second surface elevation tile",
+          "value_m": 463.0
+        },
+        "tier_mapping": "none",
+        "varied_only": [
+          "solver_mesh_target_size",
+          "mesh topology/geometry",
+          "mesh-dependent projection Pi_h",
+          "derived timestep history",
+          "run identity/output paths/timestamps"
+        ]
+      }
+    ],
+    "planned_requested_ladder": [
+      "h1000",
+      "h800",
+      "h600"
+    ]
+  },
+  "r4_execution": {
+    "active_cell_counts": "not_available_no_valid_r4_runs",
+    "actual_characteristic_sizes_m": "not_available_no_valid_r4_runs",
+    "bed_rmse": "not_available_no_valid_r4_runs",
+    "dominant_residual_numerical_mechanism": "not_determined_until_real_frozen_runs_exist",
+    "gci": {
+      "status": "not_applicable_no_valid_three_grid_frozen_family"
+    },
+    "h600_pilot_memory": "not_available_no_valid_r4_runs",
+    "h600_pilot_runtime": "not_available_no_valid_r4_runs",
+    "observed_orders": "not_available_no_valid_r4_runs",
+    "phase_lags": "not_available_no_valid_r4_runs",
+    "previous_runs_reusable": false,
+    "projected_600s_runtime": "not_available_no_valid_r4_runs",
+    "source_centroid_variation": "not_available_no_valid_r4_runs",
+    "source_volume_variation": "not_available_no_valid_r4_runs",
+    "spatial_qualification_status": "not_started",
+    "status": "blocked_pending_frozen_family_execution_adapter_and_real_runs",
+    "temporal_convergence_status": "not_started_spatial_gate_closed",
+    "travel_time_proxy": "not_available_no_valid_r4_runs",
+    "waveform_errors": "not_available_no_valid_r4_runs"
+  },
+  "r4_study_id": "regional-spatial-frozen-terrain-v4",
+  "schema": {
+    "name": "tsunami.c1a_r4_frozen_terrain_audit",
+    "version": "1.0.0"
+  }
+}

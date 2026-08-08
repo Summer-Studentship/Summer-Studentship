@@ -1,0 +1,19 @@
+{
+  "generated_at_utc": "2026-08-08T09:08:18.101632Z",
+  "reason": "No valid frozen-terrain R4 Regional2D runs exist yet; figures must only be generated from real R4 data.",
+  "required_figures": [
+    "r4_eta_physical_time_convergence.svg",
+    "r4_qn_physical_time_convergence.svg",
+    "r4_Qn_convergence.svg",
+    "r4_phase_lag_vs_mesh.svg",
+    "r4_bed_projection_error_vs_mesh.svg",
+    "r4_travel_time_proxy_vs_crest_time.svg",
+    "r4_runtime_vs_Qn_error.svg"
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r4_figure_manifest",
+    "version": "1.0.0"
+  },
+  "status": "not_generated_no_real_r4_data",
+  "study_id": "regional-spatial-frozen-terrain-v4"
+}

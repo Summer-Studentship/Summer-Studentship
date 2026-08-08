@@ -31,6 +31,11 @@ DEFAULT_OPENFOAM_WRAPPER = Path("tools/openfoam/run_openfoam11.sh")
 OPENFOAM_IMAGE = "docker.io/openfoam/openfoam11-paraview510:11"
 STAGES = ("regional-spatial", "regional-temporal", "local-spatial", "local-temporal")
 ETOPO_2022_15S_NOMINAL_SOURCE_SPACING_M = 463.0
+R4_FROZEN_TERRAIN_STUDY_ID = "regional-spatial-frozen-terrain-v4"
+G6_FROZEN_TERRAIN_RELATIVE_PATH = Path("case/outputs/terrain/conditioned-terrain.tif")
+G6_FROZEN_TERRAIN_RECORD_RELATIVE_PATH = Path("case/manifests/terrain/conditioned-terrain.json")
+G6_FROZEN_SOURCE_RELATIVE_PATH = Path("case/inputs/data/earthquake/tohoku_vertical_displacement.tif")
+G6_FROZEN_SOURCE_METADATA_RELATIVE_PATH = Path("case/inputs/data/earthquake/tohoku_vertical_displacement.json")
 
 
 class ConvergenceError(RuntimeError):
@@ -99,6 +104,212 @@ def regional_resolution_contract(
     }
     assert_regional_resolution_contract(contract)
     return contract
+
+
+def frozen_g6_numerical_authority(g6_root: Path = DEFAULT_G6_ROOT) -> dict[str, Any]:
+    """Return the accepted G6 terrain/source artefacts used as the R4 numerical authority."""
+    terrain_path = g6_root / G6_FROZEN_TERRAIN_RELATIVE_PATH
+    terrain_record_path = g6_root / G6_FROZEN_TERRAIN_RECORD_RELATIVE_PATH
+    source_path = g6_root / G6_FROZEN_SOURCE_RELATIVE_PATH
+    source_metadata_path = g6_root / G6_FROZEN_SOURCE_METADATA_RELATIVE_PATH
+    terrain_record = read_json(terrain_record_path)
+    datasets = read_json(g6_root / "case/manifests/datasets.json")
+    source_metadata = read_json(source_metadata_path)
+    return {
+        "study_id": R4_FROZEN_TERRAIN_STUDY_ID,
+        "g6_physical_model_baseline": G6_PHYSICAL_BASELINE,
+        "terrain": {
+            "path": str(terrain_path),
+            "record_path": str(terrain_record_path),
+            "sha256": file_sha256(terrain_path),
+            "record_sha256": file_sha256(terrain_record_path),
+            "processing_resolution_m": float(terrain_record["grid"]["spacing_m"]),
+            "raster_dimensions": {
+                "width": int(terrain_record["grid"]["width"]),
+                "height": int(terrain_record["grid"]["height"]),
+            },
+            "source_asset_id": terrain_record.get("bathymetry_asset_id"),
+            "source_dataset_id": terrain_record.get("bathymetry_dataset_id"),
+            "source_asset_sha256": _dataset_asset_sha256(
+                datasets,
+                terrain_record.get("bathymetry_dataset_id"),
+                terrain_record.get("bathymetry_asset_id"),
+            ),
+            "crs": terrain_record["bathymetry_resampling"]["operation"]["target_crs"],
+            "vertical_treatment": terrain_record["bathymetry_resampling"].get("vertical_operation"),
+            "coast_treatment": terrain_record["diagnostics"].get("warnings", []),
+            "interpolation_method": terrain_record["bathymetry_resampling"].get("kernel"),
+            "metadata_sha256": json_sha256(terrain_record),
+        },
+        "source": {
+            "path": str(source_path),
+            "metadata_path": str(source_metadata_path),
+            "sha256": file_sha256(source_path),
+            "metadata_sha256": file_sha256(source_metadata_path),
+            "physical_source_sha256": source_metadata.get("source_sha256"),
+            "representation_policy": "fixed G6 coseismic displacement raster projected to each solver mesh",
+            "producer": source_metadata.get("producer"),
+            "event_id": source_metadata.get("event_id"),
+            "model_id": source_metadata.get("model_id"),
+            "subfault_count": source_metadata.get("subfault_count"),
+        },
+        "mathematical_chain": {
+            "terrain": "z_b_source -> z_b_processed_fixed_G6 -> Pi_h(z_b_processed_fixed_G6)",
+            "source": "Delta z_b_fixed_G6 -> Pi_h(Delta z_b_fixed_G6)",
+            "only_mesh_dependent_operator": "Pi_h",
+        },
+    }
+
+
+def _dataset_asset_sha256(datasets: dict[str, Any], dataset_id: Any, asset_id: Any) -> str | None:
+    for dataset in datasets.get("datasets", []):
+        if dataset.get("dataset_id") != dataset_id:
+            continue
+        for asset in dataset.get("assets", []):
+            if asset.get("asset_id") == asset_id:
+                digest = asset.get("digest", {})
+                if digest.get("algorithm") == "sha256":
+                    return digest.get("value")
+    return None
+
+
+def regional_frozen_terrain_resolution_contract(
+    *,
+    requested_solver_mesh_size_m: float,
+    frozen_authority: dict[str, Any],
+    actual_characteristic_mesh_size_m: float | None = None,
+    profile_name: str | None = None,
+) -> dict[str, Any]:
+    contract = regional_resolution_contract(
+        requested_solver_mesh_size_m=requested_solver_mesh_size_m,
+        terrain_processing_resolution_m=float(frozen_authority["terrain"]["processing_resolution_m"]),
+        actual_characteristic_mesh_size_m=actual_characteristic_mesh_size_m,
+        profile_name=profile_name or f"r4-frozen-g6-terrain-h{requested_solver_mesh_size_m:g}",
+    )
+    contract["frozen_terrain"] = {
+        "path": frozen_authority["terrain"]["path"],
+        "sha256": frozen_authority["terrain"]["sha256"],
+        "record_sha256": frozen_authority["terrain"]["record_sha256"],
+        "metadata_sha256": frozen_authority["terrain"]["metadata_sha256"],
+        "processing_resolution_m": frozen_authority["terrain"]["processing_resolution_m"],
+    }
+    contract["frozen_source"] = {
+        "path": frozen_authority["source"]["path"],
+        "sha256": frozen_authority["source"]["sha256"],
+        "metadata_sha256": frozen_authority["source"]["metadata_sha256"],
+        "representation_policy": frozen_authority["source"]["representation_policy"],
+    }
+    contract["varied_only"] = [
+        "solver_mesh_target_size",
+        "mesh topology/geometry",
+        "mesh-dependent projection Pi_h",
+        "derived timestep history",
+        "run identity/output paths/timestamps",
+    ]
+    assert_frozen_terrain_contract(contract)
+    return contract
+
+
+def assert_frozen_terrain_contract(contract: dict[str, Any]) -> None:
+    assert_regional_resolution_contract(contract)
+    terrain = contract.get("frozen_terrain", {})
+    source = contract.get("frozen_source", {})
+    processing = float(contract["terrain_processing_resolution"]["requested_m"])
+    frozen_processing = float(terrain.get("processing_resolution_m", math.nan))
+    if not math.isfinite(frozen_processing) or abs(processing - frozen_processing) > 1.0e-9:
+        raise ConvergenceError("frozen terrain-processing resolution must match the frozen authority")
+    for label, payload in (("terrain", terrain), ("source", source)):
+        if not payload.get("sha256"):
+            raise ConvergenceError(f"frozen {label} hash is required")
+        if not payload.get("metadata_sha256"):
+            raise ConvergenceError(f"frozen {label} metadata hash is required")
+
+
+def assert_regional_frozen_family_invariance(records: Sequence[dict[str, Any]]) -> None:
+    if len(records) < 2:
+        raise ConvergenceError("frozen-family invariance requires at least two records")
+    reference = records[0]
+    invariant_paths = (
+        "/frozen_terrain/sha256",
+        "/frozen_terrain/metadata_sha256",
+        "/frozen_terrain/processing_resolution_m",
+        "/frozen_source/sha256",
+        "/frozen_source/metadata_sha256",
+        "/frozen_source/representation_policy",
+        "/physical_configuration_sha256",
+        "/domain_sha256",
+        "/coupling_section_sha256",
+    )
+    for candidate in records[1:]:
+        for path in invariant_paths:
+            left = value_at_pointer(reference, path)
+            right = value_at_pointer(candidate, path)
+            if left != right:
+                raise ConvergenceError(f"frozen Regional family invariance failed at {path}")
+        if value_at_pointer(reference, "/solver_mesh_target_size/requested_m") == value_at_pointer(
+            candidate, "/solver_mesh_target_size/requested_m"
+        ):
+            raise ConvergenceError("frozen Regional family records must vary solver mesh target")
+
+
+def value_at_pointer(payload: dict[str, Any], pointer: str) -> Any:
+    value: Any = payload
+    for part in pointer.strip("/").split("/"):
+        if not isinstance(value, dict) or part not in value:
+            return None
+        value = value[part]
+    return value
+
+
+def phase_alignment_diagnostic(
+    candidate: Sequence[float],
+    reference: Sequence[float],
+    dt_s: float,
+    *,
+    max_lag_steps: int | None = None,
+) -> dict[str, Any]:
+    if len(candidate) != len(reference) or len(candidate) < 3:
+        raise ConvergenceError("phase diagnostic requires equal series with at least three samples")
+    physical = nrmse(candidate, reference)
+    limit = max_lag_steps if max_lag_steps is not None else len(candidate) - 1
+    limit = max(0, min(int(limit), len(candidate) - 1))
+    best: tuple[float, int, float] | None = None
+    for lag in range(-limit, limit + 1):
+        if lag < 0:
+            shifted_candidate = candidate[-lag:]
+            shifted_reference = reference[: len(reference) + lag]
+        elif lag > 0:
+            shifted_candidate = candidate[: len(candidate) - lag]
+            shifted_reference = reference[lag:]
+        else:
+            shifted_candidate = candidate
+            shifted_reference = reference
+        if len(shifted_candidate) < 2:
+            continue
+        aligned = nrmse(shifted_candidate, shifted_reference)
+        corr = _pearson(shifted_candidate, shifted_reference)
+        if best is None or corr > best[0]:
+            best = (corr, lag, aligned)
+    assert best is not None
+    aligned = best[2]
+    return {
+        "unshifted_nrmse": physical,
+        "optimal_lag_s": best[1] * float(dt_s),
+        "phase_aligned_nrmse": aligned,
+        "phase_error_fraction": None if physical <= 0.0 else 1.0 - aligned / physical,
+        "formal_metric_shifted": False,
+    }
+
+
+def _pearson(left: Sequence[float], right: Sequence[float]) -> float:
+    lmean = statistics.fmean(left)
+    rmean = statistics.fmean(right)
+    numerator = sum((l - lmean) * (r - rmean) for l, r in zip(left, right))
+    lnorm = math.sqrt(sum((l - lmean) ** 2 for l in left))
+    rnorm = math.sqrt(sum((r - rmean) ** 2 for r in right))
+    if lnorm <= 0.0 or rnorm <= 0.0:
+        return 0.0
+    return numerator / (lnorm * rnorm)
 
 
 def assert_regional_resolution_contract(contract: dict[str, Any]) -> None:
