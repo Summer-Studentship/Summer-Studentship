@@ -1,0 +1,18 @@
+{
+  "figures": [
+    {
+      "path": "deliverables/figures/convergence/c1a_p1_parallel_speedup.svg",
+      "source": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_cpu_parallel_p1_scaling.csv"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_p1_parallel_efficiency.svg",
+      "source": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_cpu_parallel_p1_scaling.csv"
+    }
+  ],
+  "generated_at_utc": "2026-08-08T17:06:25.165842Z",
+  "schema": {
+    "name": "tsunami.c1a_p1_parallel_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-cpu-parallel-p1"
+}

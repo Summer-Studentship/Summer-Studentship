@@ -1,0 +1,597 @@
+{
+  "benchmark_rows": [
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "511a163ed124e9b3987ea4bf5dbe26c1b4092d051b4fdc9ca747a4fb0b060f0b",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1452499999999999,
+      "diagnostics_sha256": "b718309e6a07fb3c0a0ca82d4b6a391b1dd536a48dbd7b53746d331787a4d248",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-serial-t1-r1/outputs/regional2d",
+      "peak_memory_kb": 38388,
+      "repeat": 1,
+      "returncode": 0,
+      "run_id": "p1-serial-t1-r1",
+      "snapshots_sha256": "01b05dc96a425d9e90d5d11f6fa24bfc6a7435fb59cecc61c8888365d8199fe6",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 1,
+      "variant": "serial",
+      "wall_clock_s": 1.1488002100013546
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "511a163ed124e9b3987ea4bf5dbe26c1b4092d051b4fdc9ca747a4fb0b060f0b",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1409779999999998,
+      "diagnostics_sha256": "b718309e6a07fb3c0a0ca82d4b6a391b1dd536a48dbd7b53746d331787a4d248",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-serial-t1-r2/outputs/regional2d",
+      "peak_memory_kb": 38388,
+      "repeat": 2,
+      "returncode": 0,
+      "run_id": "p1-serial-t1-r2",
+      "snapshots_sha256": "01b05dc96a425d9e90d5d11f6fa24bfc6a7435fb59cecc61c8888365d8199fe6",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 1,
+      "variant": "serial",
+      "wall_clock_s": 1.1434853110004042
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1462450000000002,
+      "diagnostics_sha256": "b718309e6a07fb3c0a0ca82d4b6a391b1dd536a48dbd7b53746d331787a4d248",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t1-r1/outputs/regional2d",
+      "peak_memory_kb": 38600,
+      "repeat": 1,
+      "returncode": 0,
+      "run_id": "p1-openmp-t1-r1",
+      "snapshots_sha256": "01b05dc96a425d9e90d5d11f6fa24bfc6a7435fb59cecc61c8888365d8199fe6",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 1,
+      "variant": "openmp",
+      "wall_clock_s": 1.1487823490024311
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1444839999999994,
+      "diagnostics_sha256": "b718309e6a07fb3c0a0ca82d4b6a391b1dd536a48dbd7b53746d331787a4d248",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t1-r2/outputs/regional2d",
+      "peak_memory_kb": 38788,
+      "repeat": 2,
+      "returncode": 0,
+      "run_id": "p1-openmp-t1-r2",
+      "snapshots_sha256": "01b05dc96a425d9e90d5d11f6fa24bfc6a7435fb59cecc61c8888365d8199fe6",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 1,
+      "variant": "openmp",
+      "wall_clock_s": 1.1470173240013537
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1433030000000002,
+      "diagnostics_sha256": "d61511545918f19b9e918adc381bc58574cae40e78590b3630a6da67bcfc47fc",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t2-r1/outputs/regional2d",
+      "peak_memory_kb": 39460,
+      "repeat": 1,
+      "returncode": 0,
+      "run_id": "p1-openmp-t2-r1",
+      "snapshots_sha256": "f88e204907bb9b06979b6eb7e8ca78083ee12ea8aa5c5b0ce2c46476cc8df551",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 2,
+      "variant": "openmp",
+      "wall_clock_s": 1.1388443910000206
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.145994,
+      "diagnostics_sha256": "d61511545918f19b9e918adc381bc58574cae40e78590b3630a6da67bcfc47fc",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t2-r2/outputs/regional2d",
+      "peak_memory_kb": 39460,
+      "repeat": 2,
+      "returncode": 0,
+      "run_id": "p1-openmp-t2-r2",
+      "snapshots_sha256": "f88e204907bb9b06979b6eb7e8ca78083ee12ea8aa5c5b0ce2c46476cc8df551",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 2,
+      "variant": "openmp",
+      "wall_clock_s": 1.141835116999573
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.151431,
+      "diagnostics_sha256": "25a037482fc9c6b623f336dca9a18edb0268091be05da562f469fc8d6fabfce7",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t4-r1/outputs/regional2d",
+      "peak_memory_kb": 39656,
+      "repeat": 1,
+      "returncode": 0,
+      "run_id": "p1-openmp-t4-r1",
+      "snapshots_sha256": "d39c061104d11637ef8809e82b070e5e29c04bd70643253923d395875ad037cb",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 4,
+      "variant": "openmp",
+      "wall_clock_s": 1.1423200509998424
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1480410000000005,
+      "diagnostics_sha256": "25a037482fc9c6b623f336dca9a18edb0268091be05da562f469fc8d6fabfce7",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t4-r2/outputs/regional2d",
+      "peak_memory_kb": 39656,
+      "repeat": 2,
+      "returncode": 0,
+      "run_id": "p1-openmp-t4-r2",
+      "snapshots_sha256": "d39c061104d11637ef8809e82b070e5e29c04bd70643253923d395875ad037cb",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 4,
+      "variant": "openmp",
+      "wall_clock_s": 1.1376414910009771
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1590149999999988,
+      "diagnostics_sha256": "a7b3190ea2e28921d79ceaa0543bf5f3ffcda6d7e2387745b18f286a2588d283",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t8-r1/outputs/regional2d",
+      "peak_memory_kb": 39764,
+      "repeat": 1,
+      "returncode": 0,
+      "run_id": "p1-openmp-t8-r1",
+      "snapshots_sha256": "d2f836eb167787e3c441b5cfea492064a98a7ca86c9f7edebae90dee5b78c6a8",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 8,
+      "variant": "openmp",
+      "wall_clock_s": 1.1437923829980718
+    },
+    {
+      "binary": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "binary_sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e",
+      "coupling_history_sha256": "6fa30a02ede11c5fb87b5c231b2c9906d7fdde55d1e2c77b8b85fa45888550f3",
+      "coupling_samples_sha256": "9d1d464069fa01e8a2f8b31a043e5ee42f0d30dc81f474c04c51d35db09b87f0",
+      "cpu_time_s": 1.1560590000000013,
+      "diagnostics_sha256": "a7b3190ea2e28921d79ceaa0543bf5f3ffcda6d7e2387745b18f286a2588d283",
+      "final_time_s": 1.0,
+      "output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/runs/p1-openmp-t8-r2/outputs/regional2d",
+      "peak_memory_kb": 39764,
+      "repeat": 2,
+      "returncode": 0,
+      "run_id": "p1-openmp-t8-r2",
+      "snapshots_sha256": "d2f836eb167787e3c441b5cfea492064a98a7ca86c9f7edebae90dee5b78c6a8",
+      "status": "passed",
+      "stdout_tail": "",
+      "steps": 10,
+      "threads": 8,
+      "variant": "openmp",
+      "wall_clock_s": 1.139882896997733
+    }
+  ],
+  "binaries": {
+    "openmp": {
+      "path": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+      "sha256": "ff6747b3bdc8972732f69b9af75c29d9965438c418a8f263888aa60ff1834a9e"
+    },
+    "serial": {
+      "path": "/home/helios/Projects/Summer-Studentship/build/linux-gcc-crs-release/apps/r2d_case/tsunami_r2d_case",
+      "sha256": "511a163ed124e9b3987ea4bf5dbe26c1b4092d051b4fdc9ca747a4fb0b060f0b"
+    }
+  },
+  "branch": "feat/c1a-numerical-convergence",
+  "case": {
+    "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case",
+    "external_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1",
+    "final_time_s": 1.0,
+    "forbidden_ladder_not_run": true,
+    "frozen_source_sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+    "frozen_terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363",
+    "mesh": {
+      "active_cells": 2420,
+      "actual_characteristic_h_m": 638.3173897881047,
+      "domain_area_m2": 986026798.0562762,
+      "maximum_cell_area_m2": 545112.5652401317,
+      "mean_cell_area_m2": 407449.09010589926,
+      "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-cpu-parallel-p1/case/meshes/r4-h1000.msh",
+      "mesh_sha256": "ab12fd66ec419e09ff8471e70573e176c2198fe68722eda2df07c795a4c3355a",
+      "minimum_cell_area_m2": 270621.38965582027,
+      "total_cells": 2420
+    },
+    "source_r4_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v4"
+  },
+  "equivalence": [
+    {
+      "candidate_run": "p1-openmp-t1-r1",
+      "comparisons": {
+        "coupling_history": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 5,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 2,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "coupling_samples": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 12,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 16,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "diagnostics": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 33,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 10,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "snapshots": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 8,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 4840,
+          "status": "passed",
+          "worst_difference": null
+        }
+      },
+      "reference_run": "p1-serial-t1-r1",
+      "status": "passed"
+    },
+    {
+      "candidate_run": "p1-openmp-t2-r1",
+      "comparisons": {
+        "coupling_history": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 5,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 2,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "coupling_samples": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 12,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 16,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "diagnostics": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 1.4454126358032227e-06,
+          "max_relative_difference": 2.590248675271578e-11,
+          "numeric_column_count": 33,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 1.7139306535173753e-07,
+          "row_count": 10,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -5982297.135084409,
+            "column": "momentum_y",
+            "difference": 1.4454126358032227e-06,
+            "reference": -5982297.135085855,
+            "row": 7
+          }
+        },
+        "snapshots": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 4.29101199017623e-13,
+          "max_relative_difference": 4.29101199017623e-13,
+          "numeric_column_count": 8,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 1.1908143736581578e-14,
+          "row_count": 4840,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -0.17978800483602564,
+            "column": "momentum_y",
+            "difference": 4.29101199017623e-13,
+            "reference": -0.17978800483645474,
+            "row": 4064
+          }
+        }
+      },
+      "reference_run": "p1-serial-t1-r1",
+      "status": "passed"
+    },
+    {
+      "candidate_run": "p1-openmp-t4-r1",
+      "comparisons": {
+        "coupling_history": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 5,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 2,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "coupling_samples": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 12,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 16,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "diagnostics": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 1.0244548320770264e-06,
+          "max_relative_difference": 3.491567798774575e-11,
+          "numeric_column_count": 33,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 1.2125225109308653e-07,
+          "row_count": 10,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -5982297.13508483,
+            "column": "momentum_y",
+            "difference": 1.0244548320770264e-06,
+            "reference": -5982297.135085855,
+            "row": 7
+          }
+        },
+        "snapshots": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 4.29101199017623e-13,
+          "max_relative_difference": 4.29101199017623e-13,
+          "numeric_column_count": 8,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 1.2986037121922161e-14,
+          "row_count": 4840,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -0.17978800483602564,
+            "column": "momentum_y",
+            "difference": 4.29101199017623e-13,
+            "reference": -0.17978800483645474,
+            "row": 4064
+          }
+        }
+      },
+      "reference_run": "p1-serial-t1-r1",
+      "status": "passed"
+    },
+    {
+      "candidate_run": "p1-openmp-t8-r1",
+      "comparisons": {
+        "coupling_history": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 5,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 2,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "coupling_samples": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 0.0,
+          "max_relative_difference": 0.0,
+          "numeric_column_count": 12,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 0.0,
+          "row_count": 16,
+          "status": "passed",
+          "worst_difference": null
+        },
+        "diagnostics": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 5.85801899433136e-07,
+          "max_relative_difference": 2.4559539948607045e-11,
+          "numeric_column_count": 33,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 8.462322349628047e-08,
+          "row_count": 10,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -5982297.135085269,
+            "column": "momentum_y",
+            "difference": 5.85801899433136e-07,
+            "reference": -5982297.135085855,
+            "row": 7
+          }
+        },
+        "snapshots": {
+          "abs_tolerance": 1e-09,
+          "max_abs_difference": 4.29101199017623e-13,
+          "max_relative_difference": 4.29101199017623e-13,
+          "numeric_column_count": 8,
+          "relative_tolerance": 1e-09,
+          "rms_difference": 1.4317481857480667e-14,
+          "row_count": 4840,
+          "status": "passed",
+          "worst_difference": {
+            "candidate": -0.17978800483602564,
+            "column": "momentum_y",
+            "difference": 4.29101199017623e-13,
+            "reference": -0.17978800483645474,
+            "row": 4064
+          }
+        }
+      },
+      "reference_run": "p1-serial-t1-r1",
+      "status": "passed"
+    }
+  ],
+  "generated_at_utc": "2026-08-08T17:06:25.107950Z",
+  "git_head": "d37d261c8a5231f2a426afc13b81239ad6e5a19d",
+  "implementation": {
+    "parallel_backend": "OpenMP when TSUNAMI_ENABLE_OPENMP=ON",
+    "parallelised_kernel": "well-balanced Regional2D Rusanov face residual",
+    "race_avoidance": "thread-local residual, spectral-radius, and outgoing-mass buffers reduced in deterministic cell-major/thread-major order",
+    "serial_authority": "TSUNAMI_ENABLE_OPENMP=OFF serial release binary",
+    "small_mesh_path": "serial face loop retained below the OpenMP activation threshold"
+  },
+  "profiling": {
+    "available_external_tools": {
+      "gprof": "/usr/bin/gprof",
+      "hyperfine": null,
+      "perf": null,
+      "valgrind": null
+    },
+    "best_openmp": {
+      "median_cpu_time_s": 1.1497360000000003,
+      "median_wall_clock_s": 1.1399807710004097,
+      "parallel_efficiency_vs_serial_binary_t1": 0.2513513362806686,
+      "peak_memory_kb": 39656,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0054053451226743,
+      "steps": 10,
+      "threads": 4,
+      "variant": "openmp"
+    },
+    "component_breakdown": "not_available_no_instrumented_component_timer_in_current_solver",
+    "serial_baseline": {
+      "median_cpu_time_s": 1.1431139999999997,
+      "median_wall_clock_s": 1.1461427605008794,
+      "parallel_efficiency_vs_serial_binary_t1": 1.0,
+      "peak_memory_kb": 38388,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0,
+      "steps": 10,
+      "threads": 1,
+      "variant": "serial"
+    },
+    "used_method": "subprocess wall-clock, child CPU time, peak RSS, solver step count, and output equivalence checks"
+  },
+  "qualification": {
+    "benchmark_status": "passed",
+    "equivalence_status": "passed",
+    "local3d_started": false,
+    "observations_used": false,
+    "physical_calibration_performed": false
+  },
+  "scaling_rows": [
+    {
+      "median_cpu_time_s": 1.1453645,
+      "median_wall_clock_s": 1.1478998365018924,
+      "parallel_efficiency_vs_serial_binary_t1": 0.9984693124389951,
+      "peak_memory_kb": 38788,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 0.9984693124389951,
+      "steps": 10,
+      "threads": 1,
+      "variant": "openmp"
+    },
+    {
+      "median_cpu_time_s": 1.1446485000000002,
+      "median_wall_clock_s": 1.1403397539997968,
+      "parallel_efficiency_vs_serial_binary_t1": 0.5025444199769096,
+      "peak_memory_kb": 39460,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0050888399538191,
+      "steps": 10,
+      "threads": 2,
+      "variant": "openmp"
+    },
+    {
+      "median_cpu_time_s": 1.1497360000000003,
+      "median_wall_clock_s": 1.1399807710004097,
+      "parallel_efficiency_vs_serial_binary_t1": 0.2513513362806686,
+      "peak_memory_kb": 39656,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0054053451226743,
+      "steps": 10,
+      "threads": 4,
+      "variant": "openmp"
+    },
+    {
+      "median_cpu_time_s": 1.157537,
+      "median_wall_clock_s": 1.1418376399979024,
+      "parallel_efficiency_vs_serial_binary_t1": 0.12547129297898527,
+      "peak_memory_kb": 39764,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0037703438318821,
+      "steps": 10,
+      "threads": 8,
+      "variant": "openmp"
+    },
+    {
+      "median_cpu_time_s": 1.1431139999999997,
+      "median_wall_clock_s": 1.1461427605008794,
+      "parallel_efficiency_vs_serial_binary_t1": 1.0,
+      "peak_memory_kb": 38388,
+      "repeat_count": 2,
+      "speedup_vs_serial_binary_t1": 1.0,
+      "steps": 10,
+      "threads": 1,
+      "variant": "serial"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_p1_parallel_benchmark",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-cpu-parallel-p1"
+}

@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="420" viewBox="0 0 760 420">
+<rect width="760" height="420" fill="white"/>
+<text x="70" y="22" font-size="16" font-family="sans-serif" fill="#24292f">Parallel efficiency: C1A-P1 frozen h1000</text>
+<line x1="70.00" y1="32" x2="70.00" y2="358" stroke="#d0d7de" stroke-width="1"/>
+<text x="70.00" y="396" text-anchor="middle" font-size="12">1</text>
+<line x1="164.57" y1="32" x2="164.57" y2="358" stroke="#d0d7de" stroke-width="1"/>
+<text x="164.57" y="396" text-anchor="middle" font-size="12">2</text>
+<line x1="353.71" y1="32" x2="353.71" y2="358" stroke="#d0d7de" stroke-width="1"/>
+<text x="353.71" y="396" text-anchor="middle" font-size="12">4</text>
+<line x1="732.00" y1="32" x2="732.00" y2="358" stroke="#d0d7de" stroke-width="1"/>
+<text x="732.00" y="396" text-anchor="middle" font-size="12">8</text>
+<line x1="70" y1="358.00" x2="732" y2="358.00" stroke="#d0d7de" stroke-width="1"/>
+<text x="60" y="362.00" text-anchor="end" font-size="12">0</text>
+<line x1="70" y1="276.50" x2="732" y2="276.50" stroke="#d0d7de" stroke-width="1"/>
+<text x="60" y="280.50" text-anchor="end" font-size="12">0.29</text>
+<line x1="70" y1="195.00" x2="732" y2="195.00" stroke="#d0d7de" stroke-width="1"/>
+<text x="60" y="199.00" text-anchor="end" font-size="12">0.57</text>
+<line x1="70" y1="113.50" x2="732" y2="113.50" stroke="#d0d7de" stroke-width="1"/>
+<text x="60" y="117.50" text-anchor="end" font-size="12">0.86</text>
+<line x1="70" y1="32.00" x2="732" y2="32.00" stroke="#d0d7de" stroke-width="1"/>
+<text x="60" y="36.00" text-anchor="end" font-size="12">1.1</text>
+<line x1="70" y1="358" x2="732" y2="358" stroke="#24292f" stroke-width="1.5"/>
+<line x1="70" y1="32" x2="70" y2="358" stroke="#24292f" stroke-width="1.5"/>
+<polyline points="70.00,74.52 732.00,74.52" fill="none" stroke="#d0d7de" stroke-width="2" stroke-dasharray="6 4"/>
+<polyline points="70.00,74.96 164.57,215.54 353.71,286.75 732.00,322.43" fill="none" stroke="#f58518" stroke-width="2.5"/>
+<circle cx="70.00" cy="74.96" r="4.5" fill="#f58518"/>
+<circle cx="164.57" cy="215.54" r="4.5" fill="#f58518"/>
+<circle cx="353.71" cy="286.75" r="4.5" fill="#f58518"/>
+<circle cx="732.00" cy="322.43" r="4.5" fill="#f58518"/>
+<text x="380.00" y="412" text-anchor="middle" font-size="13" font-family="sans-serif">OpenMP threads</text>
+<text x="18" y="210.00" text-anchor="middle" font-size="13" font-family="sans-serif" transform="rotate(-90 18 210.00)">Parallel efficiency</text>
+</svg>
