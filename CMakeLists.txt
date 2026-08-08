@@ -38,6 +38,16 @@ option(
     OFF
 )
 
+option(
+    TSUNAMI_ENABLE_OPENMP
+    "Build Regional2D CPU kernels with OpenMP shared-memory parallelism"
+    OFF
+)
+
+if(TSUNAMI_ENABLE_OPENMP)
+    find_package(OpenMP REQUIRED COMPONENTS CXX)
+endif()
+
 include(CTest)
 include(cmake/TsunamiCompilerWarnings.cmake)
 

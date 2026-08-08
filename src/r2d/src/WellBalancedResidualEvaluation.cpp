@@ -1,8 +1,14 @@
 #include <tsunami/r2d/WellBalancedResidualEvaluation.hpp>
 
 #include <algorithm>
+#include <atomic>
 #include <cmath>
+#include <limits>
 #include <string>
+
+#ifdef TSUNAMI_ENABLE_OPENMP
+#include <omp.h>
+#endif
 
 namespace tsunami::r2d
 {
@@ -29,6 +35,97 @@ namespace tsunami::r2d
             residual.mass().at(cell_id.value) += factor * flux.mass;
             residual.momentum_x().at(cell_id.value) += factor * flux.momentum_x;
             residual.momentum_y().at(cell_id.value) += factor * flux.momentum_y;
+        }
+
+        struct ThreadLocalResidualBuffers
+        {
+            std::size_t thread_count{};
+            std::size_t cell_count{};
+            std::vector<tsunami::core::Real> mass;
+            std::vector<tsunami::core::Real> momentum_x;
+            std::vector<tsunami::core::Real> momentum_y;
+            std::vector<tsunami::core::Real> spectral_sum;
+            std::vector<tsunami::core::Real> outgoing_mass_rate;
+
+            ThreadLocalResidualBuffers(std::size_t threads, std::size_t cells)
+                : thread_count{threads}
+                , cell_count{cells}
+                , mass(threads * cells, 0.0)
+                , momentum_x(threads * cells, 0.0)
+                , momentum_y(threads * cells, 0.0)
+                , spectral_sum(threads * cells, 0.0)
+                , outgoing_mass_rate(threads * cells, 0.0)
+            {
+            }
+        };
+
+        [[nodiscard]] auto regional_openmp_thread_count() -> std::size_t
+        {
+#ifdef TSUNAMI_ENABLE_OPENMP
+            return static_cast<std::size_t>(std::max(1, omp_get_max_threads()));
+#else
+            return 1U;
+#endif
+        }
+
+        [[nodiscard]] auto use_openmp_face_path(std::size_t face_count, std::size_t cell_count) -> bool
+        {
+#ifdef TSUNAMI_ENABLE_OPENMP
+            return regional_openmp_thread_count() > 1U && face_count >= 512U && cell_count >= 256U;
+#else
+            (void)face_count;
+            (void)cell_count;
+            return false;
+#endif
+        }
+
+        auto add_thread_flux(
+            ThreadLocalResidualBuffers &buffers,
+            std::size_t thread_id,
+            tsunami::fvm::CellId cell_id,
+            ShallowWaterFlux2D flux,
+            tsunami::core::Real factor) -> void
+        {
+            const auto offset = (thread_id * buffers.cell_count) + cell_id.value;
+            buffers.mass[offset] += factor * flux.mass;
+            buffers.momentum_x[offset] += factor * flux.momentum_x;
+            buffers.momentum_y[offset] += factor * flux.momentum_y;
+        }
+
+        auto record_parallel_failure(std::atomic<std::size_t> &failed_face, std::size_t index) -> void
+        {
+            auto current = failed_face.load(std::memory_order_relaxed);
+            while (index < current &&
+                   !failed_face.compare_exchange_weak(current, index, std::memory_order_relaxed, std::memory_order_relaxed)) {
+            }
+        }
+
+        auto reduce_thread_buffers(
+            const ThreadLocalResidualBuffers &buffers,
+            RegionalResidual &residual,
+            tsunami::fvm::CellScalarField &spectral_sum,
+            tsunami::fvm::CellScalarField &outgoing_mass_rate) -> void
+        {
+            for (std::size_t cell = 0; cell < buffers.cell_count; ++cell) {
+                auto mass = tsunami::core::Real{0.0};
+                auto qx = tsunami::core::Real{0.0};
+                auto qy = tsunami::core::Real{0.0};
+                auto spectral = tsunami::core::Real{0.0};
+                auto outgoing = tsunami::core::Real{0.0};
+                for (std::size_t thread = 0; thread < buffers.thread_count; ++thread) {
+                    const auto offset = (thread * buffers.cell_count) + cell;
+                    mass += buffers.mass[offset];
+                    qx += buffers.momentum_x[offset];
+                    qy += buffers.momentum_y[offset];
+                    spectral += buffers.spectral_sum[offset];
+                    outgoing += buffers.outgoing_mass_rate[offset];
+                }
+                residual.mass().at(cell) = mass;
+                residual.momentum_x().at(cell) = qx;
+                residual.momentum_y().at(cell) = qy;
+                spectral_sum.at(cell) = spectral;
+                outgoing_mass_rate.at(cell) = outgoing;
+            }
         }
 
         [[nodiscard]] auto sum_flux(ShallowWaterFlux2D left, ShallowWaterFlux2D right) -> ShallowWaterFlux2D
@@ -344,58 +441,152 @@ namespace tsunami::r2d
         workspace.outgoing_mass_rate().fill(0.0);
         auto maximum_speed = tsunami::core::Real{0.0};
 
-        for (const auto &face : mesh.topology().faces()) {
-            auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
-            if (!normal) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
-            }
-
-            auto left = state.local_state(face.owner);
-            auto right = ConservedVariables2D{};
-            auto left_bed = bathymetry.local_bed_elevation(face.owner);
-            auto right_bed = tsunami::core::Real{};
-            if (face.neighbour) {
-                right = state.local_state(*face.neighbour);
-                right_bed = bathymetry.local_bed_elevation(*face.neighbour);
-            } else {
-                const auto patch_id = *face.boundary_patch;
-                const auto &patch = mesh.boundary_patch(patch_id);
-                const auto local_it = std::ranges::find(patch.faces, face.id);
-                const auto local_index = static_cast<std::size_t>(local_it - patch.faces.begin());
-                right = ConservedVariables2D{
-                    .depth = workspace.depth_patches()[patch_id.value].at(local_index),
-                    .momentum_x = workspace.momentum_x_patches()[patch_id.value].at(local_index),
-                    .momentum_y = workspace.momentum_y_patches()[patch_id.value].at(local_index)};
-                right_bed = workspace.bed_elevation_patches()[patch_id.value].at(local_index);
-                auto exterior = validate_and_canonicalise_state(right, policy, std::nullopt);
-                if (!exterior || !finite(right_bed)) {
-                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
+        const auto faces = mesh.topology().faces();
+        if (!use_openmp_face_path(faces.size(), mesh.summary().cell_count)) {
+            for (const auto &face : faces) {
+                auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
+                if (!normal) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
                 }
-                right = exterior.value();
-            }
 
-            auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
-            if (!reconstructed) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "hydrostatic reconstruction failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(reconstructed.error().code()));
-            }
-            auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normal.value(), policy);
-            if (!flux) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(flux.error().code()));
-            }
+                auto left = state.local_state(face.owner);
+                auto right = ConservedVariables2D{};
+                auto left_bed = bathymetry.local_bed_elevation(face.owner);
+                auto right_bed = tsunami::core::Real{};
+                if (face.neighbour) {
+                    right = state.local_state(*face.neighbour);
+                    right_bed = bathymetry.local_bed_elevation(*face.neighbour);
+                } else {
+                    const auto patch_id = *face.boundary_patch;
+                    const auto &patch = mesh.boundary_patch(patch_id);
+                    const auto local_it = std::ranges::find(patch.faces, face.id);
+                    const auto local_index = static_cast<std::size_t>(local_it - patch.faces.begin());
+                    right = ConservedVariables2D{
+                        .depth = workspace.depth_patches()[patch_id.value].at(local_index),
+                        .momentum_x = workspace.momentum_x_patches()[patch_id.value].at(local_index),
+                        .momentum_y = workspace.momentum_y_patches()[patch_id.value].at(local_index)};
+                    right_bed = workspace.bed_elevation_patches()[patch_id.value].at(local_index);
+                    auto exterior = validate_and_canonicalise_state(right, policy, std::nullopt);
+                    if (!exterior || !finite(right_bed)) {
+                        return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
+                    }
+                    right = exterior.value();
+                }
 
-            const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
-            add_flux(workspace.residual(), face.owner, owner_flux, normal.value().length);
-            workspace.spectral_sum().at(face.owner.value) += flux.value().maximum_signal_speed * normal.value().length;
-            const auto integrated_mass_flux = flux.value().flux.mass * normal.value().length;
-            workspace.outgoing_mass_rate().at(face.owner.value) += std::max(integrated_mass_flux, 0.0);
+                auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
+                if (!reconstructed) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "hydrostatic reconstruction failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(reconstructed.error().code()));
+                }
+                auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normal.value(), policy);
+                if (!flux) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(flux.error().code()));
+                }
 
-            if (face.neighbour) {
-                const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
-                add_flux(workspace.residual(), *face.neighbour, neighbour_flux, -normal.value().length);
-                workspace.spectral_sum().at(face.neighbour->value) += flux.value().maximum_signal_speed * normal.value().length;
-                workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
+                const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
+                add_flux(workspace.residual(), face.owner, owner_flux, normal.value().length);
+                workspace.spectral_sum().at(face.owner.value) += flux.value().maximum_signal_speed * normal.value().length;
+                const auto integrated_mass_flux = flux.value().flux.mass * normal.value().length;
+                workspace.outgoing_mass_rate().at(face.owner.value) += std::max(integrated_mass_flux, 0.0);
+
+                if (face.neighbour) {
+                    const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
+                    add_flux(workspace.residual(), *face.neighbour, neighbour_flux, -normal.value().length);
+                    workspace.spectral_sum().at(face.neighbour->value) += flux.value().maximum_signal_speed * normal.value().length;
+                    workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
+                }
+                maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
             }
-            maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+        } else {
+            auto normals = std::vector<FaceNormal2D>(faces.size());
+            auto boundary_local_indices = std::vector<std::size_t>(faces.size(), 0U);
+            for (std::size_t index = 0; index < faces.size(); ++index) {
+                const auto &face = faces[index];
+                auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
+                if (!normal) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
+                }
+                normals[index] = normal.value();
+                if (!face.neighbour) {
+                    const auto &patch = mesh.boundary_patch(*face.boundary_patch);
+                    const auto local_it = std::ranges::find(patch.faces, face.id);
+                    boundary_local_indices[index] = static_cast<std::size_t>(local_it - patch.faces.begin());
+                }
+            }
+            auto buffers = ThreadLocalResidualBuffers{regional_openmp_thread_count(), mesh.summary().cell_count};
+            constexpr auto no_failed_face = std::numeric_limits<std::size_t>::max();
+            auto boundary_failed_face = std::atomic<std::size_t>{no_failed_face};
+            auto result_failed_face = std::atomic<std::size_t>{no_failed_face};
+#ifdef TSUNAMI_ENABLE_OPENMP
+#pragma omp parallel for schedule(static) reduction(max : maximum_speed)
+#endif
+            for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
+                const auto index = static_cast<std::size_t>(signed_index);
+                const auto &face = faces[index];
+#ifdef TSUNAMI_ENABLE_OPENMP
+                const auto thread_id = static_cast<std::size_t>(omp_get_thread_num());
+#else
+                const auto thread_id = std::size_t{0U};
+#endif
+                auto left = state.local_state(face.owner);
+                auto right = ConservedVariables2D{};
+                auto left_bed = bathymetry.local_bed_elevation(face.owner);
+                auto right_bed = tsunami::core::Real{};
+                if (face.neighbour) {
+                    right = state.local_state(*face.neighbour);
+                    right_bed = bathymetry.local_bed_elevation(*face.neighbour);
+                } else {
+                    const auto patch_id = *face.boundary_patch;
+                    const auto local_index = boundary_local_indices[index];
+                    right = ConservedVariables2D{
+                        .depth = workspace.depth_patches()[patch_id.value].at(local_index),
+                        .momentum_x = workspace.momentum_x_patches()[patch_id.value].at(local_index),
+                        .momentum_y = workspace.momentum_y_patches()[patch_id.value].at(local_index)};
+                    right_bed = workspace.bed_elevation_patches()[patch_id.value].at(local_index);
+                    auto exterior = validate_and_canonicalise_state(right, policy, std::nullopt);
+                    if (!exterior || !finite(right_bed)) {
+                        record_parallel_failure(boundary_failed_face, index);
+                        continue;
+                    }
+                    right = exterior.value();
+                }
+                const auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normals[index], policy);
+                if (!reconstructed) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+                const auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normals[index], policy);
+                if (!flux) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+
+                const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
+                add_thread_flux(buffers, thread_id, face.owner, owner_flux, normals[index].length);
+                const auto owner_offset = (thread_id * buffers.cell_count) + face.owner.value;
+                buffers.spectral_sum[owner_offset] += flux.value().maximum_signal_speed * normals[index].length;
+                const auto integrated_mass_flux = flux.value().flux.mass * normals[index].length;
+                buffers.outgoing_mass_rate[owner_offset] += std::max(integrated_mass_flux, 0.0);
+
+                if (face.neighbour) {
+                    const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
+                    add_thread_flux(buffers, thread_id, *face.neighbour, neighbour_flux, -normals[index].length);
+                    const auto neighbour_offset = (thread_id * buffers.cell_count) + face.neighbour->value;
+                    buffers.spectral_sum[neighbour_offset] += flux.value().maximum_signal_speed * normals[index].length;
+                    buffers.outgoing_mass_rate[neighbour_offset] += std::max(-integrated_mass_flux, 0.0);
+                }
+                maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+            }
+            const auto boundary_face_index = boundary_failed_face.load(std::memory_order_relaxed);
+            if (boundary_face_index != no_failed_face) {
+                const auto &face = faces[boundary_face_index];
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, *face.boundary_patch));
+            }
+            const auto result_face_index = result_failed_face.load(std::memory_order_relaxed);
+            if (result_face_index != no_failed_face) {
+                const auto face_id = faces[result_face_index].id;
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "parallel hydrostatic reconstruction or Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face_id));
+            }
+            reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
         }
 
         for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
@@ -498,57 +689,149 @@ namespace tsunami::r2d
         workspace.relaxation_diagnostics() = RegionalRelaxationDiagnostics{};
         auto maximum_speed = tsunami::core::Real{0.0};
 
-        for (const auto &face : mesh.topology().faces()) {
-            auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
-            if (!normal) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
-            }
-
-            auto left = state.local_state(face.owner);
-            auto right = ConservedVariables2D{};
-            auto left_bed = bathymetry.local_bed_elevation(face.owner);
-            auto right_bed = tsunami::core::Real{};
-            if (face.neighbour) {
-                right = state.local_state(*face.neighbour);
-                right_bed = bathymetry.local_bed_elevation(*face.neighbour);
-            } else {
-                const auto patch_id = *face.boundary_patch;
-                const auto &patch = mesh.boundary_patch(patch_id);
-                const auto local_index = patch_local_index(patch, face.id);
-                right = ConservedVariables2D{
-                    .depth = workspace.exterior_workspace().depth_patches()[patch_id.value].at(local_index),
-                    .momentum_x = workspace.exterior_workspace().momentum_x_patches()[patch_id.value].at(local_index),
-                    .momentum_y = workspace.exterior_workspace().momentum_y_patches()[patch_id.value].at(local_index)};
-                right_bed = workspace.exterior_workspace().bed_elevation_patches()[patch_id.value].at(local_index);
-                auto exterior_state = validate_and_canonicalise_state(right, policy, std::nullopt);
-                if (!exterior_state || !finite(right_bed)) {
-                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
+        const auto faces = mesh.topology().faces();
+        if (!use_openmp_face_path(faces.size(), mesh.summary().cell_count)) {
+            for (const auto &face : faces) {
+                auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
+                if (!normal) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
                 }
-                right = exterior_state.value();
-            }
 
-            auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
-            if (!reconstructed) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "hydrostatic reconstruction failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(reconstructed.error().code()));
-            }
-            auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normal.value(), policy);
-            if (!flux) {
-                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(flux.error().code()));
-            }
+                auto left = state.local_state(face.owner);
+                auto right = ConservedVariables2D{};
+                auto left_bed = bathymetry.local_bed_elevation(face.owner);
+                auto right_bed = tsunami::core::Real{};
+                if (face.neighbour) {
+                    right = state.local_state(*face.neighbour);
+                    right_bed = bathymetry.local_bed_elevation(*face.neighbour);
+                } else {
+                    const auto patch_id = *face.boundary_patch;
+                    const auto &patch = mesh.boundary_patch(patch_id);
+                    const auto local_index = patch_local_index(patch, face.id);
+                    right = ConservedVariables2D{
+                        .depth = workspace.exterior_workspace().depth_patches()[patch_id.value].at(local_index),
+                        .momentum_x = workspace.exterior_workspace().momentum_x_patches()[patch_id.value].at(local_index),
+                        .momentum_y = workspace.exterior_workspace().momentum_y_patches()[patch_id.value].at(local_index)};
+                    right_bed = workspace.exterior_workspace().bed_elevation_patches()[patch_id.value].at(local_index);
+                    auto exterior_state = validate_and_canonicalise_state(right, policy, std::nullopt);
+                    if (!exterior_state || !finite(right_bed)) {
+                        return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
+                    }
+                    right = exterior_state.value();
+                }
 
-            const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
-            add_flux(workspace.residual(), face.owner, owner_flux, normal.value().length);
-            workspace.spectral_sum().at(face.owner.value) += flux.value().maximum_signal_speed * normal.value().length;
-            const auto integrated_mass_flux = flux.value().flux.mass * normal.value().length;
-            workspace.outgoing_mass_rate().at(face.owner.value) += std::max(integrated_mass_flux, 0.0);
+                auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
+                if (!reconstructed) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "hydrostatic reconstruction failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(reconstructed.error().code()));
+                }
+                auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normal.value(), policy);
+                if (!flux) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(flux.error().code()));
+                }
 
-            if (face.neighbour) {
-                const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
-                add_flux(workspace.residual(), *face.neighbour, neighbour_flux, -normal.value().length);
-                workspace.spectral_sum().at(face.neighbour->value) += flux.value().maximum_signal_speed * normal.value().length;
-                workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
+                const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
+                add_flux(workspace.residual(), face.owner, owner_flux, normal.value().length);
+                workspace.spectral_sum().at(face.owner.value) += flux.value().maximum_signal_speed * normal.value().length;
+                const auto integrated_mass_flux = flux.value().flux.mass * normal.value().length;
+                workspace.outgoing_mass_rate().at(face.owner.value) += std::max(integrated_mass_flux, 0.0);
+
+                if (face.neighbour) {
+                    const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
+                    add_flux(workspace.residual(), *face.neighbour, neighbour_flux, -normal.value().length);
+                    workspace.spectral_sum().at(face.neighbour->value) += flux.value().maximum_signal_speed * normal.value().length;
+                    workspace.outgoing_mass_rate().at(face.neighbour->value) += std::max(-integrated_mass_flux, 0.0);
+                }
+                maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
             }
-            maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+        } else {
+            auto normals = std::vector<FaceNormal2D>(faces.size());
+            auto boundary_local_indices = std::vector<std::size_t>(faces.size(), 0U);
+            for (std::size_t index = 0; index < faces.size(); ++index) {
+                const auto &face = faces[index];
+                auto normal = make_face_normal(mesh.face_geometry(face.id).area_vector, policy, face.id);
+                if (!normal) {
+                    return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.mesh_incompatible", "face normal is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id).with_cause_code(normal.error().code()));
+                }
+                normals[index] = normal.value();
+                if (!face.neighbour) {
+                    boundary_local_indices[index] = patch_local_index(mesh.boundary_patch(*face.boundary_patch), face.id);
+                }
+            }
+            auto buffers = ThreadLocalResidualBuffers{regional_openmp_thread_count(), mesh.summary().cell_count};
+            constexpr auto no_failed_face = std::numeric_limits<std::size_t>::max();
+            auto boundary_failed_face = std::atomic<std::size_t>{no_failed_face};
+            auto result_failed_face = std::atomic<std::size_t>{no_failed_face};
+#ifdef TSUNAMI_ENABLE_OPENMP
+#pragma omp parallel for schedule(static) reduction(max : maximum_speed)
+#endif
+            for (std::ptrdiff_t signed_index = 0; signed_index < static_cast<std::ptrdiff_t>(faces.size()); ++signed_index) {
+                const auto index = static_cast<std::size_t>(signed_index);
+                const auto &face = faces[index];
+#ifdef TSUNAMI_ENABLE_OPENMP
+                const auto thread_id = static_cast<std::size_t>(omp_get_thread_num());
+#else
+                const auto thread_id = std::size_t{0U};
+#endif
+                auto left = state.local_state(face.owner);
+                auto right = ConservedVariables2D{};
+                auto left_bed = bathymetry.local_bed_elevation(face.owner);
+                auto right_bed = tsunami::core::Real{};
+                if (face.neighbour) {
+                    right = state.local_state(*face.neighbour);
+                    right_bed = bathymetry.local_bed_elevation(*face.neighbour);
+                } else {
+                    const auto patch_id = *face.boundary_patch;
+                    const auto local_index = boundary_local_indices[index];
+                    right = ConservedVariables2D{
+                        .depth = workspace.exterior_workspace().depth_patches()[patch_id.value].at(local_index),
+                        .momentum_x = workspace.exterior_workspace().momentum_x_patches()[patch_id.value].at(local_index),
+                        .momentum_y = workspace.exterior_workspace().momentum_y_patches()[patch_id.value].at(local_index)};
+                    right_bed = workspace.exterior_workspace().bed_elevation_patches()[patch_id.value].at(local_index);
+                    auto exterior_state = validate_and_canonicalise_state(right, policy, std::nullopt);
+                    if (!exterior_state || !finite(right_bed)) {
+                        record_parallel_failure(boundary_failed_face, index);
+                        continue;
+                    }
+                    right = exterior_state.value();
+                }
+                const auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normals[index], policy);
+                if (!reconstructed) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+                const auto flux = rusanov_flux(reconstructed.value().left, reconstructed.value().right, normals[index], policy);
+                if (!flux) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+
+                const auto owner_flux = sum_flux(flux.value().flux, reconstructed.value().left_pressure_correction);
+                add_thread_flux(buffers, thread_id, face.owner, owner_flux, normals[index].length);
+                const auto owner_offset = (thread_id * buffers.cell_count) + face.owner.value;
+                buffers.spectral_sum[owner_offset] += flux.value().maximum_signal_speed * normals[index].length;
+                const auto integrated_mass_flux = flux.value().flux.mass * normals[index].length;
+                buffers.outgoing_mass_rate[owner_offset] += std::max(integrated_mass_flux, 0.0);
+
+                if (face.neighbour) {
+                    const auto neighbour_flux = sum_flux(flux.value().flux, reconstructed.value().right_pressure_correction);
+                    add_thread_flux(buffers, thread_id, *face.neighbour, neighbour_flux, -normals[index].length);
+                    const auto neighbour_offset = (thread_id * buffers.cell_count) + face.neighbour->value;
+                    buffers.spectral_sum[neighbour_offset] += flux.value().maximum_signal_speed * normals[index].length;
+                    buffers.outgoing_mass_rate[neighbour_offset] += std::max(-integrated_mass_flux, 0.0);
+                }
+                maximum_speed = std::max(maximum_speed, flux.value().maximum_signal_speed);
+            }
+            const auto boundary_face_index = boundary_failed_face.load(std::memory_order_relaxed);
+            if (boundary_face_index != no_failed_face) {
+                const auto &face = faces[boundary_face_index];
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, *face.boundary_patch));
+            }
+            const auto result_face_index = result_failed_face.load(std::memory_order_relaxed);
+            if (result_face_index != no_failed_face) {
+                const auto face_id = faces[result_face_index].id;
+                return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.result_nonfinite", "parallel hydrostatic reconstruction or Rusanov flux evaluation failed", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face_id));
+            }
+            reduce_thread_buffers(buffers, workspace.residual(), workspace.spectral_sum(), workspace.outgoing_mass_rate());
         }
 
         auto relaxation = apply_regional_relaxation_source(

@@ -216,6 +216,10 @@ target_include_directories(tsunami_r2d
 )
 target_compile_features(tsunami_r2d PUBLIC cxx_std_20)
 target_link_libraries(tsunami_r2d PUBLIC tsunami_core tsunami_fvm tsunami_data tsunami_geo)
+if(TSUNAMI_ENABLE_OPENMP)
+    target_link_libraries(tsunami_r2d PUBLIC OpenMP::OpenMP_CXX)
+    target_compile_definitions(tsunami_r2d PUBLIC TSUNAMI_ENABLE_OPENMP=1)
+endif()
 tsunami_apply_compiler_warnings(tsunami_r2d)
 
 add_library(tsunami_r2d_io STATIC
