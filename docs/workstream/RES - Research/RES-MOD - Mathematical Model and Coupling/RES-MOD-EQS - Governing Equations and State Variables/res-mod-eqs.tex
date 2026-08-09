@@ -280,21 +280,25 @@ domain:
   \label{eq:res-mod-eqs-regional-sponge-reference-depth}
 \end{align}
 
-Earthquake forcing is represented by dynamic bathymetry:
+The current accepted earthquake baseline is instantaneous passive
+transfer of coseismic vertical displacement to the initial free
+surface:
 
 \begin{align}
-  b(x,y,t)
+  \eta(x,y,0^+)
   &=
-  b_0(x,y)
+  \eta_0(x,y)
   +
-  \sum_m
-  \Delta b_m(x,y)R_m(t)
-  \label{eq:res-mod-eqs-regional-dynamic-bed}
+  \Delta z_b(x,y)
+  \label{eq:res-mod-eqs-regional-passive-earthquake-transfer}
 \end{align}
 
 Because $h$ is the conserved depth variable in
-\cref{eq:res-mod-eqs-regional-conserved-state}, this formulation does
-not add a separate earthquake mass source to the depth equation.
+\cref{eq:res-mod-eqs-regional-conserved-state}, the baseline does not
+add a separate earthquake mass source to the depth equation. A
+finite-rise-time rupture or dynamic moving-bed forcing,
+$b=b_0+\sum_m\Delta b_m R_m(t)$, is retained as a future
+source-fidelity extension rather than the current production baseline.
 
 The Coriolis source term remains an optional sensitivity term rather
 than part of the baseline locked regional model:

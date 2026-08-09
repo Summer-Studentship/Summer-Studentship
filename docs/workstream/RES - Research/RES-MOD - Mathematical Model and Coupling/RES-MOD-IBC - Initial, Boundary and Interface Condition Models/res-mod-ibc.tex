@@ -187,8 +187,9 @@ boundary roles are:
     &
     Downstream open or radiation boundary with absorption where needed
     &
-    Selected as a boundary role; exact formula and relaxation length
-    remain numerical choices
+    Selected as a boundary role; current numerical realisation uses the
+    accepted characteristic/open-ocean damped treatment, while
+    alternatives remain numerical sensitivities
     \\
     $\Gamma_{\mathrm{side}}$
     &
@@ -369,7 +370,8 @@ remain open:
 \begin{itemize}
   \item final QGIS/geospatial domain lock and artificial-boundary
     placement;
-  \item sponge-layer width and damping scale after domain selection;
+  \item alternative sponge-layer widths and damping scales as numerical
+    sensitivity studies;
   \item final regional-to-local transfer operators;
   \item final representation of documented defences as topography,
     wall faces, holes, porous interfaces, or local 3D extraction
@@ -378,7 +380,7 @@ remain open:
     under strong reflection;
   \item local wall-function and roughness parameters for terrain and
     barrier surfaces;
-  \item local outlet and side-boundary absorption settings.
+  \item alternative local outlet and side-boundary absorption settings.
 \end{itemize}
 
 \subsection{Requirements and Handoffs}

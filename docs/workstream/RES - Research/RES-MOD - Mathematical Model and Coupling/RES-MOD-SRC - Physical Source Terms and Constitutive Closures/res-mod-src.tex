@@ -408,11 +408,11 @@ evaluator until the source of the discrepancy has been resolved.
 
 The regional two-dimensional NLSWE source catalogue is established at
 research-specification level. The baseline retained terms are bed slope,
-Manning bottom friction, dynamic earthquake bathymetry, and optional
-sponge damping near artificial open boundaries. Coriolis and lateral
-eddy viscosity are not part of the baseline regional model; they remain
-optional sensitivity terms if the selected domain scale or validation
-evidence requires them.
+Manning bottom friction, instantaneous passive coseismic free-surface
+transfer at initialisation, and optional sponge damping near artificial
+open boundaries. Coriolis and lateral eddy viscosity are not part of the
+baseline regional model; they remain optional sensitivity terms if the
+selected domain scale or validation evidence requires them.
 
 The continuous regional source split is:
 
@@ -431,9 +431,12 @@ where $\mathbf{S}_{\mathrm{b}}$ is the bed-slope source,
 $\mathbf{S}_{\mathrm{f}}$ is Manning bottom friction, and
 $\mathbf{S}_{\mathrm{sp}}$ is the sponge-layer relaxation source
 defined in \cref{sec:res-mod-eqs-continuous-governing-model}. The
-earthquake contribution is applied by updating the bed field
-$b(x,y,t)$; no additional depth-equation mass source is added in the
-conserved-depth formulation.
+accepted earthquake contribution is applied as an instantaneous passive
+free-surface initial condition,
+$\eta(x,y,0^+)=\eta_0(x,y)+\Delta z_b(x,y)$; no additional
+depth-equation mass source is added in the conserved-depth formulation.
+Finite-rise-time rupture or dynamic moving-bed forcing is retained as a
+future source-fidelity extension, not the current production baseline.
 
 \subsection{Initial, Boundary and Interface Conditions}
 \label{sec:res-mod-src-initial-boundary-interface-conditions}
@@ -499,8 +502,9 @@ The selected regional source approach is:
     bed-source discretisation;
   \item Manning bottom friction, advanced by a split semi-implicit
     update in the numerical method;
-  \item dynamic moving-bed earthquake source,
-    $b=b_0+\sum_m\Delta b_m R_m(t)$;
+  \item instantaneous passive coseismic transfer to the initial free
+    surface, $\eta(x,y,0^+)=\eta_0(x,y)+\Delta z_b(x,y)$, with no
+    separate depth-equation mass source;
   \item sponge-layer relaxation at artificial ocean boundaries where
     required by domain truncation;
   \item Coriolis and explicit lateral eddy viscosity disabled in the
@@ -532,8 +536,11 @@ verification and lower-level closure-implementation items:
 \begin{itemize}
   \item final Manning coefficient fields;
   \item final static bathymetry/topography dataset;
-  \item final fault-source dataset and rupture-time functions;
-  \item lake-at-rest and moving-bottom verification evidence;
+  \item final fault-source dataset and any future rupture-time
+    functions for a dynamic moving-bed source-fidelity extension;
+  \item lake-at-rest and passive earthquake-transfer verification
+    evidence, plus any future moving-bottom verification evidence if a
+    dynamic source extension is activated;
   \item decision on whether optional Coriolis sensitivity is required;
   \item local wall-function constants and roughness treatment for the
     selected case-study materials;

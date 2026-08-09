@@ -107,11 +107,13 @@ closure is URANS $k$--$\omega$ SST.
 \label{sec:res-mod-spec-source-terms-closures}
 
 The baseline regional source terms are bed slope, Manning friction and
-open-boundary sponge damping. Dynamic earthquake forcing is represented
-as a time-dependent bed field,
-\cref{eq:res-mod-eqs-regional-dynamic-bed}. Since $h$ is the conserved
-depth variable, no separate earthquake mass source is added to the
-depth equation.
+open-boundary sponge damping. The accepted earthquake baseline is
+instantaneous passive coseismic transfer to the initial free surface,
+\cref{eq:res-mod-eqs-regional-passive-earthquake-transfer}. Since $h$
+is the conserved depth variable, no separate earthquake mass source is
+added to the depth equation. Finite-rise-time rupture or dynamic
+moving-bed forcing is retained as a future source-fidelity extension,
+not the current production baseline.
 
 Coriolis and explicit lateral eddy viscosity remain disabled in the
 baseline and may be activated only as later sensitivity studies.
@@ -218,9 +220,10 @@ The selected regional mathematical approach is:
 \begin{quote}
   horizontal two-dimensional, depth-averaged NLSWE with conserved state
   $[h,q_x,q_y]^{\mathsf{T}}$, positive-upward bathymetry, bed-slope and
-  Manning sources, dynamic moving bed, open/radiation boundaries,
-  sponge damping where required, and wetting--drying handled by the
-  numerical method
+  Manning sources, instantaneous passive coseismic transfer to the
+  initial free surface, open/radiation boundaries, accepted
+  characteristic/open-ocean damped treatment with sponge damping where
+  required, and wetting--drying handled by the numerical method
 \end{quote}
 
 Dispersive extensions, regional-to-local interface algorithms and FSI
@@ -262,8 +265,9 @@ deferred or external to the baseline hydrodynamic model.
     \\
     \hline
     Regional 2D NLSWE formulation; conserved and primitive states; bed
-    convention; source-term catalogue; dynamic moving bed; open,
-    reflective and sponge boundary roles
+    convention; source-term catalogue; passive coseismic free-surface
+    transfer baseline; open, reflective and sponge boundary roles with
+    accepted characteristic/open-ocean damped numerical realisation
     &
     QGIS/geospatial domain lock; exact bathymetry/topography dataset;
     exact fault-source dataset; validation execution; C++
