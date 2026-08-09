@@ -1,0 +1,13 @@
+{
+  "figure": "deliverables/figures/convergence/c1a_r10_limited_linear_Qn_convergence.svg",
+  "generated_at_utc": "2026-08-09T19:19:04.940763Z",
+  "generator": "/home/helios/Projects/Summer-Studentship/tools/verification/convergence/c1a_r10_limited_linear_event_convergence.py",
+  "matplotlib": "3.11.1",
+  "schema": {
+    "name": "tsunami.figure.provenance",
+    "version": "1.0.0"
+  },
+  "seaborn": false,
+  "study_id": "regional2d-limited-linear-event-r10",
+  "subplots": false
+}

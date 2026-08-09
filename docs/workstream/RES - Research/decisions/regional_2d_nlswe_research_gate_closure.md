@@ -3,7 +3,8 @@
 Date: 2026-07-07
 
 Status: Research specification complete; later implementation
-verification recorded in C1A-R8/R9
+verification recorded in C1A-R8/R9 and event-level R10 evidence
+classified as approaching spatial qualification
 
 ## Decision
 
@@ -22,6 +23,11 @@ and C1A-R9 implementation verification established the current
 production numerical paths as first-order and opt-in limited-linear
 hydrodynamic reconstruction with Rusanov flux; that numerical-method
 evidence does not alter the locked NLSWE mathematical model.
+Subsequent C1A-R10 event testing on the frozen Tōhoku--Kamaishi
+h600/h500/h400 family did not promote h400 to a production-converged
+forcing mesh: the limited-linear path completed the runs and materially
+changed the delivered forcing relative to first order, but the
+h500--h400 formal differences remained above the project spatial gate.
 
 ## Closed Research Gate
 
@@ -40,7 +46,9 @@ The following remain separate workstreams:
 - QGIS/geospatial case-study domain lock;
 - final bathymetry/topography dataset selection;
 - final fault-source dataset selection;
-- numerical verification and validation runs;
+- the next Regional2D event-level spatial-qualification route after the
+  R10 h600/h500/h400 limited-linear family remained above tolerance;
+- validation runs;
 - C++ implementation;
 - local 3D/interface/FSI modelling;
 - optimisation and ML workflow.

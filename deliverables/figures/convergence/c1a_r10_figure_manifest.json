@@ -1,0 +1,38 @@
+{
+  "generated_at_utc": "2026-08-09T19:19:05.169354Z",
+  "outputs": [
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_limited_linear_eta_convergence.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_limited_linear_eta_convergence.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_limited_linear_qn_convergence.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_limited_linear_qn_convergence.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_limited_linear_Qn_convergence.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_limited_linear_Qn_convergence.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_forcing_error_vs_h.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_forcing_error_vs_h.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_first_vs_limited_Qn_h400.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_first_vs_limited_Qn_h400.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_runtime_vs_forcing_error.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_runtime_vs_forcing_error.provenance.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r10_spatial_convergence_summary.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r10_spatial_convergence_summary.provenance.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r10_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-limited-linear-event-r10"
+}

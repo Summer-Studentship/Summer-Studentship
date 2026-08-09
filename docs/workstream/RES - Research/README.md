@@ -69,6 +69,11 @@ Completed:
   reconstruction, Rusanov flux, wetting--drying, SSPRK(3,3), Manning
   friction, CFL timestep, open/radiation boundaries, sponge damping and
   mesh-refinement principles.
+- Evaluated the verified Rusanov plus limited-linear Regional2D
+  discretisation on the frozen Tōhoku--Kamaishi h600/h500/h400 event
+  family. The result is
+  `APPROACHING_SPATIAL_QUALIFICATION`, not spatially qualified, so no
+  temporal convergence or Local3D handoff follows from that evidence.
 - LBM/DBM reviewed and removed from the active regional shortlist.
 - VOLNA contextual validation reviewed.
 - OpenFOAM adopted as the local 3D software and architectural reference.
@@ -85,8 +90,9 @@ In progress:
 Not yet started or unresolved:
 
 - Final regional dry-depth tolerance and velocity regularisation constants.
-- Event-level adequacy of the verified Rusanov plus limited-linear
-  Regional2D discretisation.
+- Next Regional2D event-level qualification route after the R10
+  h600/h500/h400 limited-linear family remained above the formal
+  spatial tolerance.
 - Final regional mesh levels, CFL value and domain-specific sponge placement.
 - Final bathymetry/topography and fault-source dataset selections.
 - Local free-surface method.

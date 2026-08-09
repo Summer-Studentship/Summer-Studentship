@@ -351,24 +351,62 @@ method remains available as a backend and historical comparator.
 \subsection{Candidate Approaches}
 \label{sec:res-ver-cnv-candidate-approaches}
 
-% TODO: Define the credible candidate approaches considered.
+The candidate event-level numerical approaches were:
+
+\begin{itemize}
+  \item the verified first-order Regional2D backend retained as the
+    conservative production fallback and historical comparator;
+  \item the C1A-R9 verified \texttt{limited\_linear} reconstruction,
+    retaining the same NLSWE model, Rusanov flux, hydrostatic
+    reconstruction, source terms, wetting--drying, boundary treatment
+    and SSPRK(3,3) integration;
+  \item further mesh refinement below h400, deferred because R10 was
+    constrained to the minimum frozen h600/h500/h400 event family and
+    no h300 run was authorised.
+\end{itemize}
 
 \subsection{Critical Comparison}
 \label{sec:res-ver-cnv-critical-comparison}
 
-% TODO: Compare candidates using physically and project-relevant criteria.
-% Do not select an approach solely on popularity or implementation ease.
+The R10 event run used the exact frozen R4/R5 physical family and
+explicitly selected \texttt{limited\_linear}. The three spatial members
+completed the $600~\mathrm{s}$ Tōhoku--Kamaishi forcing window on the
+historical h600, h500 and h400 meshes. The primary h500--h400 formal
+differences remained above the $2\%$ qualification target: $7.01\%$ for
+peak $\eta$, $5.28\%$ for peak $q_n$, $9.13\%$ for peak $Q_n$ and
+$9.13\%$ for $\bar{q}_n$. Distributed common-support differences were
+$2.76\%$ for $\eta$ and $5.72\%$ for $q_n$. The corresponding
+waveforms had zero formal-window peak-time shift, but the amplitude and
+distributed differences were still too large to qualify h400 as a
+production-converged Regional2D forcing mesh.
+
+The same-mesh comparison shows that \texttt{limited\_linear} is not a
+neutral post-processing change. On h400 the peak $Q_n$ increased from
+$2.20\times 10^4$ to $4.63\times 10^4~\mathrm{m^3\,s^{-1}}$, and peak
+$q_n$ increased from $6.29$ to $14.37~\mathrm{m^2\,s^{-1}}$, with the
+same $545~\mathrm{s}$ peak-time sample. This confirms that the
+first-order event solution was strongly diffusion-affected, while also
+showing that the limited-linear event family has not yet met the
+project's formal spatial gate.
 
 \subsection{Assumptions and Applicability}
 \label{sec:res-ver-cnv-assumptions}
 
-% TODO: State assumptions and the conditions under which they are valid.
+The R10 conclusion applies only to the frozen Regional2D event family
+used for the numerical gate: unchanged terrain, source, domain,
+Manning coefficient, gravity, sponge policy, wetting--drying settings,
+coupling section, output cadence and $600~\mathrm{s}$ horizon. It is a
+numerical-method statement about the Regional2D forcing operator, not an
+observational validation or calibration result.
 
 \subsection{Limitations and Failure Conditions}
 \label{sec:res-ver-cnv-limitations}
 
-% TODO: State where the evidence, model or selected approach ceases to be
-% reliable or applicable.
+R10 did not run h300, Local3D, observational comparison or calibration.
+Because the h500--h400 formal differences exceed the $2\%$ gate, the
+event-level limited-linear family is classified as approaching spatial
+qualification rather than spatially qualified. Temporal convergence is
+therefore not a valid downstream study from this evidence alone.
 
 \subsection{Project-Specific Conclusions}
 \label{sec:res-ver-cnv-conclusions}
@@ -385,16 +423,36 @@ amplitude and phase error. The remaining numerical question is whether
 that controlled improvement restores practical spatial convergence for
 the event-specific Tōhoku--Kamaishi forcing.
 
+R10 answered that question negatively for the h600/h500/h400 frozen
+family. The limited-linear event runs completed and materially changed
+the delivered forcing relative to first order, but the h500--h400
+differences remained $5.28$--$9.13\%$ for the principal point-forcing
+metrics and $2.76$--$5.72\%$ for distributed common-support metrics.
+The result is therefore
+\texttt{APPROACHING\_SPATIAL\_QUALIFICATION}; no production mesh was
+selected and the temporal convergence gate remains closed.
+
 \subsection{Selected Approach and Rationale}
 \label{sec:res-ver-cnv-selected-approach}
 
-% TODO: Record the selected approach only after sufficient evidence exists.
-% State the alternatives rejected and the reasons for rejection.
+The selected documented state is to retain the verified first-order and
+\texttt{limited\_linear} Regional2D backends, but not to promote the
+h400 limited-linear event run to a production-converged forcing mesh.
+The higher-order path remains the scientifically preferred candidate for
+future event refinement because controlled C1A-R9 tests verified its
+order improvement, yet R10 shows that the present h600/h500/h400 event
+family is still above the formal spatial tolerance.
 
 \subsection{Unresolved Decisions}
 \label{sec:res-ver-cnv-unresolved-decisions}
 
-% TODO: Record unresolved questions, required evidence and decision owners.
+The unresolved Regional2D numerical decision is the next event-level
+qualification route: either run a finer frozen-family spatial member,
+revise the event metric gate with explicit project approval, or accept a
+documented non-qualified forcing uncertainty for downstream
+demonstration-only work. No temporal convergence, observational
+comparison, calibration or Local3D handoff follows automatically from
+R10.
 
 \subsection{Requirements and Handoffs}
 \label{sec:res-ver-cnv-requirements}
@@ -402,28 +460,20 @@ the event-specific Tōhoku--Kamaishi forcing.
 The Software C1A evidence tree is the authority for detailed numerical
 metrics:
 \texttt{docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/}.
-R10 shall add event evidence there, keep raw outputs under an external
-R10 root, and update this Research workstream only after actual event
-results are available. No observational comparison, calibration,
-Local3D run or h300 run may proceed from this Deliverable unless the
-Regional2D numerical gates explicitly allow it.
+R10 event evidence is recorded in
+\texttt{regional2d\_r10\_limited\_linear\_event\_convergence.json},
+\texttt{regional2d\_r10\_limited\_linear\_event\_convergence.csv} and
+\texttt{regional2d\_r10\_first\_vs\_second\_order\_comparison.json};
+raw outputs remain under the external R10 root. No observational
+comparison, calibration, Local3D run, temporal convergence run or h300
+run may proceed from this Deliverable unless the Regional2D numerical
+gates explicitly allow it.
 
 \subsection{Deliverable Completion Record}
 \label{sec:res-ver-cnv-completion-record}
 
-% TODO: Record whether the Deliverable is:
-%
-% - Not started
-% - In progress
-% - Draft complete
-% - Reviewed
-% - Accepted
-%
-% Acceptance requires:
-%
-% - the research questions to be answered;
-% - claims to be supported by appropriate evidence;
-% - assumptions and limitations to be explicit;
-% - the project-specific conclusion to be stated;
-% - downstream requirements to be traceable;
-% - unresolved decisions to be closed or formally deferred.
+Status: draft complete for the R10 numerical-methodology and
+event-spatial-convergence record. The research question has been
+answered for the authorised h600/h500/h400 family, the result is tied to
+software evidence, assumptions and limitations are explicit, and
+downstream temporal/Local3D/calibration work remains gated.
