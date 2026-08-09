@@ -1,0 +1,49 @@
+{
+  "baseline": {
+    "branch": "feat/c1a-numerical-convergence",
+    "build_preset": "linux-gcc-crs-openmp-release",
+    "build_type": "Release",
+    "compiler": "g++ (GCC) 16.1.1 20260625\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "disk": "Filesystem        Size  Used Avail Use% Mounted on\n/dev/mapper/root  931G  151G  778G  17% /home\ntmpfs              32G  398M   31G   2% /tmp",
+    "generated_at_utc": "2026-08-09T07:50:54.451389Z",
+    "r2d_binary": "build/linux-gcc-crs-openmp-release/apps/r2d_case/tsunami_r2d_case",
+    "r2d_binary_sha256": "51046ed04f1c4b6dc0ecced37d109e10d6c0d87d3b59e67106104d44922f019a",
+    "starting_head": "70956b9e76510c1f9be59df9e82919b9f0450d1e",
+    "status_sb": "## feat/c1a-numerical-convergence\n M .github/copilot-instructions.md\n M deliverables/abstract/abstract-body.tex\n D deliverables/abstract/abstract.pdf\n M deliverables/abstract/abstract.tex\n M docs/Latex/Style/coursework-report-core.sty\n M tests/CMakeLists.txt\n?? deliverables/abstract/.latex-build/\n?? deliverables/figures/convergence/c1a_r6_forcing_error_vs_h.provenance.json\n?? deliverables/figures/convergence/c1a_r6_forcing_error_vs_h.svg\n?? deliverables/figures/convergence/c1a_r6_formal_error_vs_h.provenance.json\n?? deliverables/figures/convergence/c1a_r6_formal_error_vs_h.svg\n?? deliverables/figures/convergence/c1a_r6_mesh_quality_vs_h.provenance.json\n?? deliverables/figures/convergence/c1a_r6_mesh_quality_vs_h.svg\n?? deliverables/figures/convergence/c1a_r6_solver_h_vs_terrain_resolution.provenance.json\n?? deliverables/figures/convergence/c1a_r6_solver_h_vs_terrain_resolution.svg\n?? deliverables/poster/.latex-build/\n?? docs/Latex/Notes/.latex-build/\n?? \"docs/Latex/Proposed Model/\"\n?? \"docs/Latex/Studentship Proposal/.latex-build/\"\n?? \"docs/Research Papers/JGR Solid Earth - 2015 - Hossen - Tsunami waveform inversion for sea surface displacement following the 2011 Tohoku.pdf\"\n?? \"docs/Research Papers/JGR Solid Earth - 2017 - Yamazaki - A Self\\342\\200\\220Consistent Fault Slip Model for the 2011 Tohoku Earthquake and Tsunami.pdf\"\n?? \"docs/Research Papers/Lessons Learned from the 2011 Great East Japan Tsunami: Performance of Tsunami Countermeasures, Coastal Buildings, and Tsunami Evacuation in Japan.pdf\"\n?? \"docs/Research Papers/Modeling near\\342\\200\\220field tsunami observations to improve finite\\342\\200\\220fault slip.pdf\"\n?? \"docs/Research Papers/TsuPy_ Computational robustness in Tsunami hazard modelling.pdf\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_controlled_benchmark.json\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_diagnosis.json\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_figure_manifest.json\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_formal_order.csv\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_mesh_quality.csv\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_nrmse_normalization.csv\"\n?? \"docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_numerical_method_audit.json\"\n?? tests/r2d/spatial_order_diagnostics_tests.cpp\n?? tools/verification/convergence/c1a_r6_spatial_method_diagnosis.py"
+  },
+  "method": {
+    "bed_slope_source": "represented through hydrostatic reconstruction pressure corrections, not separate explicit bed-gradient source",
+    "boundary_fluxes": "same Rusanov path using exterior states from boundary conditions; production case can add radiation/relaxation",
+    "cell_state_storage": "cell-centred conserved variables: depth, momentum_x, momentum_y",
+    "cfl_timestep": "courant_number * cell_area / sum(alpha * face_length), combined with positivity/source/relaxation bounds",
+    "coriolis_source": "operator-split local source when configured",
+    "hydrostatic_well_balanced_treatment": "Audusse-style hydrostatic reconstruction using max(left_bed,right_bed), with pressure corrections on owner/neighbour fluxes",
+    "left_right_face_states": "piecewise-constant owner/neighbour cell states; boundary states from scalar boundary-condition patch fields",
+    "manning_source": "operator-split local source when configured",
+    "numerical_flux": "local Lax-Friedrichs/Rusanov 0.5(F_L+F_R)-0.5 alpha (U_R-U_L)",
+    "positivity_wet_dry": "dry-depth canonicalisation and positivity timestep limit based on outgoing mass rate",
+    "residual_accumulation": "integrated face flux added to owner and subtracted from neighbour; OpenMP path uses thread-local buffers then reduction",
+    "rusanov_wave_speed": "max(|u_n|+sqrt(g h)) across canonical left/right states",
+    "state_update": "wet/dry forward Euler candidate update per SSPRK stage with positivity canonicalisation",
+    "time_integration": "forward_euler, SSPRK2, SSPRK3 supported; production policy defaults to SSPRK3"
+  },
+  "order": {
+    "classification": "first-order spatial, higher-order explicit time integration",
+    "expected_overall_order_constant_cfl": 1.0,
+    "expected_smooth_region_spatial_order": 1.0,
+    "expected_temporal_order_with_symmetric_local_source_split": "up to second order for split source terms; bounded by SSPRK3 hydrodynamic stage otherwise",
+    "expected_temporal_order_without_sources": 3.0,
+    "limiter_method_status": "none found for hydrodynamic face reconstruction; hydrostatic reconstruction clips depths for wet/dry robustness but no MUSCL slope limiter is present",
+    "reasoning": "No cell-gradient reconstruction is used when forming internal face states in RegionalResidualEvaluation.cpp or WellBalancedResidualEvaluation.cpp."
+  },
+  "rusanov_dissipation": {
+    "dissipation_scales_with_h": "For smooth states the jump is O(h), so the Rusanov dissipative flux is O(h) in the semi-discrete truncation error.",
+    "intent": "robust low-order well-balanced finite-volume propagation, not high-order wave-preserving propagation",
+    "limited_reconstruction": false,
+    "state_jump": "canonical right depth/qx/qy minus left depth/qx/qy after hydrostatic reconstruction in well-balanced path"
+  },
+  "schema": {
+    "name": "tsunami.c1a_r6_numerical_method_audit",
+    "version": "1.0.0"
+  }
+}

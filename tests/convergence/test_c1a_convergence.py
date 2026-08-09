@@ -1,4 +1,5 @@
 import json
+import csv
 import shutil
 import tempfile
 import unittest
@@ -247,6 +248,22 @@ class C1AConvergenceTests(unittest.TestCase):
         self.assertEqual(coarse_evidence["corridor"], fine_evidence["corridor"])
         self.assertEqual(coarse_evidence["basis"], fine_evidence["basis"])
         self.assertNotEqual(coarse_evidence["grid"]["profile"], fine_evidence["grid"]["profile"])
+
+    def test_r6_spatial_method_diagnosis_artifacts_are_consistent(self):
+        docs = ROOT / "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A"
+        diagnosis = json.loads((docs / "regional2d_r6_diagnosis.json").read_text(encoding="utf-8"))
+        benchmark = json.loads((docs / "regional2d_r6_controlled_benchmark.json").read_text(encoding="utf-8"))
+        with (docs / "regional2d_r6_mesh_quality.csv").open("r", encoding="utf-8", newline="") as handle:
+            mesh_rows = list(csv.DictReader(handle))
+        with (docs / "regional2d_r6_formal_order.csv").open("r", encoding="utf-8", newline="") as handle:
+            order_rows = list(csv.DictReader(handle))
+
+        self.assertEqual(diagnosis["primary_recommendation_enum"], "UPGRADE_SPATIAL_SCHEME")
+        self.assertEqual(benchmark["classification"], "lower_than_expected_order")
+        self.assertEqual({row["level"] for row in mesh_rows}, {"h600", "h500", "h450", "h400"})
+        self.assertEqual([row["level"] for row in order_rows], ["n16", "n32", "n64", "n128"])
+        self.assertTrue(diagnosis["h300_remains_unjustified"])
+        self.assertTrue(diagnosis["temporal_convergence_remains_gated"])
 
 
 if __name__ == "__main__":

@@ -21,6 +21,7 @@ add_executable(tsunami_tests
     r2d/regional_earthquake_initialisation_tests.cpp
     r2d/regional_boundary_relaxation_tests.cpp
     r2d/regional_source_terms_tests.cpp
+    r2d/spatial_order_diagnostics_tests.cpp
     r2d/time_integration_tests.cpp
     r2d/well_balanced_wet_dry_tests.cpp
     r2d_benchmarks/benchmark_case_tests.cpp

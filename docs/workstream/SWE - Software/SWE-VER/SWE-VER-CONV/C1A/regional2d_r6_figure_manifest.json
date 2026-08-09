@@ -1,0 +1,24 @@
+{
+  "figures": [
+    {
+      "path": "deliverables/figures/convergence/c1a_r6_formal_error_vs_h.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r6_formal_error_vs_h.provenance.json"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r6_mesh_quality_vs_h.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r6_mesh_quality_vs_h.provenance.json"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r6_forcing_error_vs_h.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r6_forcing_error_vs_h.provenance.json"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r6_solver_h_vs_terrain_resolution.svg",
+      "provenance": "deliverables/figures/convergence/c1a_r6_solver_h_vs_terrain_resolution.provenance.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r6_figures",
+    "version": "1.0.0"
+  }
+}
