@@ -1,0 +1,34 @@
+{
+  "generated_at_utc": "2026-08-09T03:52:05.243785Z",
+  "outputs": [
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_eta_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_qn_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_Qn_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_waveform_error_vs_h.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_bed_projection_error_vs_h.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r5_runtime_vs_h.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional-spatial-frozen-terrain-v5/frozen_terrain_v5_metrics.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r5_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional-spatial-frozen-terrain-v5"
+}
