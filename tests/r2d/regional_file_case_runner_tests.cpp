@@ -763,6 +763,7 @@ $EndElements
             tsunami::r2d_case::RegionalFileCaseRunPolicy{
                 tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
                 tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
+            tsunami::r2d::RegionalReconstructionPolicy{},
             overwrite,
             std::nullopt,
             {}};
@@ -809,6 +810,7 @@ TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[
     auto first = tsunami::r2d_case::run_regional_case_from_files(request_for(fixture, "run-a"));
     REQUIRE(first.has_value());
     CHECK(first.value().diagnostics.case_id == "synthetic-kamaishi-r2d");
+    CHECK(first.value().diagnostics.reconstruction_scheme == "first_order");
     CHECK(first.value().diagnostics.corridor_id == "corridor-file-runner");
     CHECK(first.value().diagnostics.terrain_id == "terrain-file-runner");
     CHECK(first.value().diagnostics.mesh_id == "gmsh:regional-square.msh");
@@ -842,6 +844,12 @@ TEST_CASE("file-driven Regional2D runner produces deterministic CSV outputs", "[
           read_text(second.value().output_artifacts.diagnostics_csv));
     CHECK(read_text(first.value().output_artifacts.snapshots_csv) ==
           read_text(second.value().output_artifacts.snapshots_csv));
+
+    auto limited_request = request_for(fixture, "run-c");
+    limited_request.reconstruction.scheme = tsunami::r2d::RegionalReconstructionScheme::limited_linear;
+    auto limited = tsunami::r2d_case::run_regional_case_from_files(limited_request);
+    REQUIRE(limited.has_value());
+    CHECK(limited.value().diagnostics.reconstruction_scheme == "limited_linear");
     std::filesystem::remove_all(fixture.root);
 }
 
@@ -1178,6 +1186,7 @@ TEST_CASE("file-driven Regional2D runner covers request, preflight and overwrite
             tsunami::r2d_case::RegionalFileCaseRunPolicy{
                 tsunami::r2d::RegionalCasePreparationPolicy{0.0, 1.0e-6, 1.0e-9, 1.0e-12, 1.0e-12},
                 tsunami::r2d::RegionalRasterCellTransferPolicy{1.0e-7, 1.0e-12, 16U}},
+            tsunami::r2d::RegionalReconstructionPolicy{},
             false,
             std::nullopt,
             {}};

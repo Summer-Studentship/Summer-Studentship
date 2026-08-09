@@ -31,6 +31,7 @@ namespace tsunami::r2d_case
         std::optional<std::filesystem::path> corridor_record_path;
         tsunami::core::RunId run_id;
         RegionalFileCaseRunPolicy policy;
+        tsunami::r2d::RegionalReconstructionPolicy reconstruction;
         bool overwrite_existing_outputs{};
         std::optional<tsunami::coupling::RegionalCouplingSectionRequest> coupling_section;
         std::stop_token stop_token{};
@@ -67,6 +68,7 @@ namespace tsunami::r2d_case
         std::uint64_t terrain_revision{};
         std::string mesh_id;
         std::string run_id;
+        std::string reconstruction_scheme;
         RegionalFileTerrainArtifactDiagnostics terrain_artifacts;
         tsunami::r2d::RegionalGeometryPreflightReport preflight;
         tsunami::r2d::RegionalTerrainTransferDiagnostics terrain_transfer;

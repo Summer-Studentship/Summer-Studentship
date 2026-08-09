@@ -60,6 +60,7 @@ namespace
         tsunami::core::RunId run_id,
         const tsunami::r2d::RegionalCasePreparationPolicy &preparation,
         const tsunami::r2d::RegionalRasterCellTransferPolicy &transfer,
+        const tsunami::r2d::RegionalReconstructionPolicy &reconstruction,
         bool overwrite,
         std::optional<tsunami::coupling::RegionalCouplingSectionRequest> coupling_section)
         -> tsunami::r2d_case::RegionalFileCaseRunRequest
@@ -71,9 +72,19 @@ namespace
             corridor_record,
             std::move(run_id),
             tsunami::r2d_case::RegionalFileCaseRunPolicy{preparation, transfer},
+            reconstruction,
             overwrite,
             std::move(coupling_section),
             {}};
+    }
+
+    [[nodiscard]] auto parse_reconstruction_scheme(std::string_view value)
+        -> tsunami::r2d::RegionalReconstructionScheme
+    {
+        if (value == "limited_linear") {
+            return tsunami::r2d::RegionalReconstructionScheme::limited_linear;
+        }
+        return tsunami::r2d::RegionalReconstructionScheme::first_order;
     }
 } // namespace
 
@@ -89,6 +100,7 @@ auto main(int argc, char **argv) -> int
     auto overwrite = false;
     auto preparation = tsunami::r2d::RegionalCasePreparationPolicy{};
     auto transfer = tsunami::r2d::RegionalRasterCellTransferPolicy{};
+    auto reconstruction_scheme = std::string{"first_order"};
 
     CLI::App app{"Run a file-driven Regional2D case"};
     app.add_option("--case-root", case_root, "Case root containing case.json")->required();
@@ -132,6 +144,8 @@ auto main(int argc, char **argv) -> int
            transfer.maximum_contributors_per_cell,
            "Maximum terrain cells contributing to one mesh cell")
         ->required();
+    app.add_option("--reconstruction", reconstruction_scheme, "Regional2D hydrodynamic reconstruction policy")
+        ->check(CLI::IsMember({"first_order", "limited_linear"}));
     app.add_flag("--overwrite", overwrite, "Allow existing Regional2D CSV outputs to be replaced");
 
     try {
@@ -190,6 +204,7 @@ auto main(int argc, char **argv) -> int
             *std::move(strong_run_id),
             preparation,
             transfer,
+            tsunami::r2d::RegionalReconstructionPolicy{.scheme = parse_reconstruction_scheme(reconstruction_scheme)},
             overwrite,
             coupling_section
                 ? std::optional<tsunami::coupling::RegionalCouplingSectionRequest>{
@@ -211,6 +226,7 @@ auto main(int argc, char **argv) -> int
               << "corridor_id=" << run.diagnostics.corridor_id << '\n'
               << "terrain_id=" << run.diagnostics.terrain_id << '\n'
               << "mesh_id=" << run.diagnostics.mesh_id << '\n'
+              << "reconstruction=" << run.diagnostics.reconstruction_scheme << '\n'
               << "steps=" << run.diagnostics.solve.accepted_step_count << '\n'
               << "final_time=" << run.final_simulation_time << '\n'
               << "output_dir=" << run.output_directory.generic_string() << '\n';

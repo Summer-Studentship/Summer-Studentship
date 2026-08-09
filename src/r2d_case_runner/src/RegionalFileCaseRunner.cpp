@@ -64,6 +64,19 @@ namespace tsunami::r2d_case
             return "unknown";
         }
 
+        [[nodiscard]] auto reconstruction_scheme_text(tsunami::r2d::RegionalReconstructionScheme scheme) noexcept -> std::string_view
+        {
+            switch (scheme) {
+            case tsunami::r2d::RegionalReconstructionScheme::first_order:
+                return "first_order";
+            case tsunami::r2d::RegionalReconstructionScheme::limited_linear:
+                return "limited_linear";
+            case tsunami::r2d::RegionalReconstructionScheme::unlimited_linear_for_verification:
+                return "unlimited_linear_for_verification";
+            }
+            return "unknown";
+        }
+
         [[nodiscard]] auto timing_output_path() -> std::filesystem::path
         {
             const auto *path = std::getenv("TSUNAMI_R2D_TIMING_JSON");
@@ -293,6 +306,17 @@ namespace tsunami::r2d_case
                     tsunami::core::DiagnosticCategory::validation,
                     "request",
                     request,
+                    false));
+            }
+            auto reconstruction_valid = tsunami::r2d::validate_reconstruction_policy(request.reconstruction);
+            if (!reconstruction_valid) {
+                return tsunami::core::failure(wrap_failure(
+                    "r2d.file_case.request_invalid",
+                    "regional file case reconstruction policy is invalid",
+                    tsunami::core::DiagnosticCategory::validation,
+                    "request",
+                    request,
+                    reconstruction_valid.error(),
                     false));
             }
             return tsunami::core::success();
@@ -1623,6 +1647,7 @@ namespace tsunami::r2d_case
                     output_state_changed,
                     outputs));
             }
+            solve_request.value().time_policy.reconstruction = request.reconstruction;
 
             if (tsunami::r2d::regional_performance_timing_enabled()) {
                 tsunami::r2d::reset_regional_performance_timing();
@@ -1728,6 +1753,7 @@ namespace tsunami::r2d_case
             diagnostics.terrain_revision = terrain_record.value().identity.terrain_revision;
             diagnostics.mesh_id = imported_mesh.value().mesh.summary().id.value;
             diagnostics.run_id = request.run_id.str();
+            diagnostics.reconstruction_scheme = std::string{reconstruction_scheme_text(request.reconstruction.scheme)};
             diagnostics.terrain_artifacts = artifact_summary(terrain_artifacts.value().diagnostics);
             diagnostics.preflight = preflight.value();
             diagnostics.terrain_transfer = transfer.value().diagnostics;
