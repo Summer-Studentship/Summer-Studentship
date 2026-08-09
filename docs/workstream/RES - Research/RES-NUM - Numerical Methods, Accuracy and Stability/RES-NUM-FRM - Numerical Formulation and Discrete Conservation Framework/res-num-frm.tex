@@ -468,13 +468,14 @@ The selected regional solver composition is:
 
 \begin{itemize}
   \item unstructured triangular or polygonal control volumes;
-  \item second-order MUSCL reconstruction;
-  \item weighted least-squares gradients;
-  \item Barth--Jespersen limiting;
+  \item default first-order hydrodynamic reconstruction;
+  \item opt-in limited-linear hydrodynamic reconstruction;
+  \item weighted least-squares gradients for the limited-linear path;
+  \item Barth--Jespersen limiting for the limited-linear path;
   \item well-balanced hydrostatic reconstruction;
   \item positivity-preserving wet/dry treatment;
-  \item HLLC primary flux with HLL/HLLE fallback near dry or unsafe
-    states;
+  \item Rusanov local Lax--Friedrichs flux in the verified production
+    path;
   \item SSPRK(3,3) transport;
   \item Strang-split semi-implicit Manning friction;
   \item characteristic or radiation open boundaries;
@@ -540,7 +541,8 @@ open:
 
 \begin{itemize}
   \item dry-depth tolerance;
-  \item exact HLL/HLLC wave-speed safeguards;
+  \item event-level adequacy of the verified Rusanov plus
+    limited-linear Regional2D discretisation;
   \item final mesh refinement levels;
   \item final CFL value after positivity and wet/dry verification;
   \item optional dispersive extension and its activation gate;
@@ -566,8 +568,9 @@ requirements:
 \begin{itemize}
   \item `RES-NUM-MSH` shall define unstructured mesh, local grading and
     adaptive-mesh strategy;
-  \item `RES-NUM-FLX` shall compare HLL, HLLC, central-upwind and
-    related shoreline-aware fluxes;
+  \item `RES-NUM-FLX` shall document the verified first-order and
+    limited-linear Rusanov paths and defer alternative flux families
+    unless later convergence evidence requires them;
   \item `RES-NUM-SRC` shall formalise bed-slope, friction and Coriolis
     integration;
   \item `RES-NUM-TIM` shall select the SSP-RK order and any

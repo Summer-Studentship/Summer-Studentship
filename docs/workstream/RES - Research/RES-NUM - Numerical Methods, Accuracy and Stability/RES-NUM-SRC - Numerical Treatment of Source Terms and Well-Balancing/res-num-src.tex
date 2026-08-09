@@ -55,8 +55,11 @@ The regional bed source is discretised with hydrostatic reconstruction.
 At each face, the common hydrostatic bed and reconstructed depths are
 defined by
 \cref{eq:res-num-spec-regional-hydrostatic-face-bed,eq:res-num-spec-regional-hydrostatic-left-depth,eq:res-num-spec-regional-hydrostatic-right-depth}.
-The second-order bed-gradient source uses
-\cref{eq:res-num-spec-regional-second-order-bed-source}.
+In the verified Regional2D implementation, bed-slope balance is carried
+through the hydrostatic reconstruction and associated pressure
+corrections in the conservative residual. The C1A-R9 limited-linear
+upgrade reconstructs hydrodynamic $\eta$, $u$ and $v$ face states while
+leaving the bed state first order inside this hydrostatic treatment.
 
 Manning friction is advanced by the split semi-implicit update owned by
 `RES-NUM-TIM`. Sponge damping is represented by
@@ -132,7 +135,8 @@ The selected regional source-term approach is:
 
 \begin{itemize}
   \item hydrostatic reconstruction for bed-slope balance;
-  \item matching second-order bed-gradient source in cells;
+  \item pressure-correction source contribution paired with the
+    hydrostatic face states;
   \item dynamic bed updates at Runge--Kutta stage times;
   \item Strang-split Manning friction;
   \item polynomial sponge ramp with baseline $p=2$,

@@ -51,13 +51,58 @@
 \subsection{Discrete Formulation}
 \label{sec:res-num-flx-discrete-formulation}
 
-The regional reconstruction state is
-$\mathbf{W}=[\eta,u,v,b]^{\mathsf{T}}$. The selected reconstruction is
-MUSCL piecewise-linear reconstruction using weighted least-squares
-gradients and a Barth--Jespersen limiter, as defined in
-\cref{eq:res-num-spec-regional-reconstruction-state,eq:res-num-spec-regional-muscl-reconstruction,eq:res-num-spec-regional-ls-gradient}.
-Reconstruction reverts to first order near wet/dry fronts where needed
-for positivity.
+The implemented regional production baseline entering C1A-R10 contains
+two hydrodynamic face-state reconstruction options for the same
+cell-centred NLSWE finite-volume model. The historical and default path
+is first order: each face uses the owner and neighbour cell averages for
+$h$, $q_x$ and $q_y$, composed with the existing hydrostatic
+well-balanced reconstruction and Rusanov local Lax--Friedrichs flux. The
+C1A-R8 global manufactured-solution benchmark verified this path as a
+globally first-order approximation of the accepted mathematical model.
+
+The C1A-R9 candidate path is opt-in limited-linear reconstruction. It
+reconstructs the primitive hydrodynamic variables
+$\eta$, $u$ and $v$, not the conserved momenta directly. For scalar
+$\phi\in\{\eta,u,v\}$ the face value from cell $i$ is
+
+\begin{align}
+  \phi_{i,f}
+  &=
+  \phi_i
+  +
+  \alpha_i^{\phi}
+  \nabla\phi_i
+  \cdot
+  \left(
+    \mathbf{x}_f-\mathbf{x}_i
+  \right)
+  \label{eq:res-num-flx-r9-face-reconstruction}
+\end{align}
+
+where $\alpha_i^{\phi}$ is the scalar Barth--Jespersen limiter. The
+depth used by the Riemann solve is then recovered from the reconstructed
+free surface and the bed elevation. In the verified implementation, the
+bed value passed into the hydrostatic reconstruction remains the
+cell-local first-order bed value. The higher-order hydrodynamic
+reconstruction is therefore composed with, rather than substituted for,
+the well-balanced hydrostatic treatment.
+
+Weighted least-squares gradients are formed on the unstructured
+cell-centred mesh from face-neighbour samples. For an internal face the
+sample is the neighbouring cell centroid and scalar value. For a
+boundary face the sample is the boundary face centroid and the already
+constructed boundary exterior scalar value, when finite. The weights are
+inverse-square-distance weights,
+$w=1/\max(\|\mathbf{x}_s-\mathbf{x}_i\|^2,\epsilon_w)$. Cells with
+fewer than two valid samples, non-finite data, or an ill-conditioned
+$2\times2$ normal system fall back to a zero gradient. This is a local
+loss of formal order, not a change in the governing model.
+
+The limiter bounds each reconstructed face value by the local cell and
+face-neighbour extrema. It preserves constants, suppresses nonphysical
+new extrema at steep gradients, and supports positivity treatment near
+wet/dry transitions. The limiter may locally reduce the formal order
+near extrema or strongly varying states.
 
 \subsection{Conservation Properties}
 \label{sec:res-num-flx-conservation-properties}
@@ -72,11 +117,12 @@ for positivity.
 \subsection{Stability Requirements}
 \label{sec:res-num-flx-stability-requirements}
 
-HLLC is selected as the primary flux in wet, valid states. HLL or HLLE
-is the fallback near dry, degenerate or unsafe states. Face states are
-rotated into normal/tangential coordinates before the Riemann solve, as
-recorded in
-\cref{eq:res-num-spec-regional-normal-velocity,eq:res-num-spec-regional-rotated-state}.
+The verified production Regional2D path uses the Rusanov local
+Lax--Friedrichs flux with face states rotated into normal/tangential
+coordinates. C1A-R9 intentionally did not change the approximate Riemann
+solver, SSPRK3 integration, CFL policy, bed-slope physics, Manning
+friction, earthquake-source treatment, boundary roles, sponge residuals,
+wet/dry handling, coupling variables, or OpenMP residual assembly.
 
 \subsection{Mesh and Time-Step Requirements}
 \label{sec:res-num-flx-mesh-time-step-requirements}
@@ -127,17 +173,19 @@ recorded in
 % TODO: Record the selected approach only after sufficient evidence exists.
 % State the alternatives rejected and the reasons for rejection.
 
-Selected regional flux/reconstruction hierarchy:
+Selected regional flux/reconstruction hierarchy for the verified
+implementation:
 
 \begin{itemize}
-  \item second-order MUSCL reconstruction in smooth wet regions;
-  \item weighted least-squares gradients on polygonal meshes;
-  \item Barth--Jespersen multidimensional limiting;
-  \item hydrostatically reconstructed face states before fluxing;
-  \item HLLC for the normal shallow-water Riemann problem in valid wet
-    states;
-  \item HLL/HLLE fallback for dry, nearly dry or otherwise unsafe
-    states.
+  \item first-order piecewise-constant hydrodynamic reconstruction as
+    the default and reference path;
+  \item opt-in limited-linear reconstruction in smooth wet regions;
+  \item weighted least-squares gradients on the face-neighbour stencil;
+  \item scalar Barth--Jespersen limiting;
+  \item first-order bed values inside the existing hydrostatic
+    reconstruction;
+  \item Rusanov local Lax--Friedrichs numerical flux;
+  \item conservative face-based residual assembly and SSPRK3 transport.
 \end{itemize}
 
 \subsection{Unresolved Decisions}
@@ -145,10 +193,13 @@ Selected regional flux/reconstruction hierarchy:
 
 % TODO: Record unresolved questions, required evidence and decision owners.
 
-The flux family, reconstruction family and limiter family are no longer
-open. Exact HLLC wave-speed estimates, dry-state switching constants and
-case-specific limiter safeguards remain verification and implementation
-parameters.
+The first-order and limited-linear reconstruction paths are no longer
+open for controlled verification: C1A-R8 verified the former as globally
+first order and C1A-R9 verified the latter as approximately second order
+on smooth MMS benchmarks. Their event-level behaviour in the
+Tōhoku--Kamaishi forcing corridor remains the R10 numerical question.
+Alternative flux families such as HLLC remain deferred research options,
+not the verified R10 production candidate.
 
 \subsection{Requirements and Handoffs}
 \label{sec:res-num-flx-requirements}

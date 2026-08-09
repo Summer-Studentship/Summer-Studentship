@@ -2,7 +2,8 @@
 
 Date: 2026-07-07
 
-Status: Research specification complete; implementation/validation pending
+Status: Research specification complete; later implementation
+verification recorded in C1A-R8/R9
 
 ## Decision
 
@@ -13,10 +14,14 @@ shallow-water equations with conserved state `[h, q_x, q_y]^T`.
 
 The model lock covers the governing equations, positive-upward bathymetry
 convention, source-term catalogue, dynamic moving-bed source treatment,
-polygonal finite-volume update, reconstruction and limiter, hydrostatic
-reconstruction, HLLC/HLL flux strategy, wetting/drying, SSPRK(3,3)
-transport, Strang-split Manning friction, CFL timestep, open/radiation
-boundary treatment, sponge-layer damping and mesh-refinement principles.
+polygonal finite-volume update, reconstruction and limiter family,
+hydrostatic reconstruction, wetting/drying, SSPRK(3,3) transport,
+Manning friction, CFL timestep, open/radiation boundary treatment,
+sponge-layer damping and mesh-refinement principles. Subsequent C1A-R8
+and C1A-R9 implementation verification established the current
+production numerical paths as first-order and opt-in limited-linear
+hydrodynamic reconstruction with Rusanov flux; that numerical-method
+evidence does not alter the locked NLSWE mathematical model.
 
 ## Closed Research Gate
 

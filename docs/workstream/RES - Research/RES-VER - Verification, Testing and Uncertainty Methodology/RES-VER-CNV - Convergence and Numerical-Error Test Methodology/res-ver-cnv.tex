@@ -15,19 +15,63 @@
 \subsection{Purpose and Scope}
 \label{sec:res-ver-cnv-purpose}
 
-% TODO: Define what this Deliverable covers and explicitly excludes.
+This Deliverable defines how the project separates numerical
+convergence evidence from physical validation evidence. For the
+Regional2D solver it covers spatial and temporal discretisation tests,
+controlled manufactured-solution benchmarks, event-level
+Tōhoku--Kamaishi forcing comparisons, and the interpretation of
+mesh-to-mesh differences in exported coupling quantities. It does not
+use observations, tune Manning friction, alter earthquake-source
+amplitude, change bathymetric datasets, or calibrate the physical model.
+
+The governing Regional2D mathematical model remains the accepted
+nonlinear shallow-water system with conserved state
+$\mathbf{U}=[h,q_x,q_y]^{\mathsf{T}}$, bed-slope physics, Manning
+bottom friction, passive coseismic free-surface transfer, accepted
+open/damped artificial boundary roles, wet/dry capability, and one-way
+Regional2D-to-Local3D coupling quantities. The distinction between this
+mathematical model and its numerical discretisation is mandatory:
+first-order and limited-linear reconstruction are alternative numerical
+methods for the same model, not different physical models.
 
 \subsection{Research Questions}
 \label{sec:res-ver-cnv-research-questions}
 
-% TODO: State the questions that must be answered before the Deliverable
-% can be accepted.
+The Regional2D convergence programme asks:
+
+\begin{enumerate}
+  \item whether the implemented finite-volume solver is a consistent
+    approximation of the accepted NLSWE model;
+  \item whether event-specific forcing histories are stable under mesh
+    refinement;
+  \item whether mesh-to-mesh differences arise primarily from physical
+    model fidelity, mesh geometry, source/terrain projection, temporal
+    error, coupling extraction, or spatial discretisation error;
+  \item whether a verified higher-order reconstruction reduces the
+    event-level amplitude and phase sensitivity seen in the original
+    first-order Tōhoku family;
+  \item whether a spatially qualified Regional2D configuration can be
+    frozen before any observational comparison or calibration.
+\end{enumerate}
 
 \subsection{Terminology and Definitions}
 \label{sec:res-ver-cnv-definitions}
 
-% TODO: Define the technical terminology, symbols, quantities and
-% classifications used in this Deliverable.
+\begin{description}
+  \item[Mathematical model] The continuous NLSWE, source, friction,
+    terrain, boundary-role and coupling-variable specification.
+  \item[Numerical discretisation] The finite-volume mesh, face-state
+    reconstruction, hydrostatic reconstruction, numerical flux, SSPRK3
+    time integration, CFL/timestep policy and mesh-size sequence.
+  \item[Global solution convergence] The measured decrease in complete
+    evolved-solution error under mesh refinement.
+  \item[Local semi-discrete operator order] The order of a residual or
+    truncation benchmark at fixed exact state. It is diagnostic evidence
+    but is not by itself proof of global inconsistency.
+  \item[Spatial qualification] A decision that the event-level forcing
+    outputs are sufficiently insensitive to the selected mesh refinement
+    sequence for the project tolerance and intended downstream use.
+\end{description}
 
 \subsection{Literature Evidence}
 \label{sec:res-ver-cnv-literature-evidence}
@@ -41,17 +85,154 @@
 \subsection{Governing Relations and Quantitative Definitions}
 \label{sec:res-ver-cnv-governing-relations}
 
-% TODO: Record relevant equations, dimensionless groups, empirical models,
-% extraction rules or quantitative definitions.
-%
-% Use align environments for displayed equations.
-% Every displayed equation must have a unique \label{eq:...}.
-% Do not place punctuation after displayed equations.
+The primary event forcing window is fixed as:
+
+\begin{align}
+  245
+  \le
+  t
+  \le
+  545~\mathrm{s}
+  \label{eq:res-ver-cnv-r10-forcing-window}
+\end{align}
+
+The primary coupling quantities are the free surface $\eta(s,t)$, the
+section-normal discharge per unit width $q_n(s,t)$, the integrated
+normal discharge $Q_n(t)$ and the section-mean value $\bar{q}_n(t)$:
+
+\begin{align}
+  Q_n(t)
+  &=
+  \int_{\Gamma_c}
+  q_n(s,t)
+  \,\dd s
+  \label{eq:res-ver-cnv-integrated-discharge}
+  \\
+  \bar{q}_n(t)
+  &=
+  \frac{Q_n(t)}{W}
+  \label{eq:res-ver-cnv-mean-normal-discharge}
+\end{align}
+
+Distributed relative errors for two mesh levels $a$ and $b$ use the
+established common-support definitions:
+
+\begin{align}
+  E_{\eta}
+  &=
+  \left[
+    \frac{
+      \int\!\!\int
+      \left(
+        \eta_a-\eta_b
+      \right)^2
+      \,\dd s\,\dd t
+    }{
+      \int\!\!\int
+      \eta_b^2
+      \,\dd s\,\dd t
+    }
+  \right]^{1/2}
+  \label{eq:res-ver-cnv-distributed-eta-error}
+  \\
+  E_q
+  &=
+  \left[
+    \frac{
+      \int\!\!\int
+      \left(
+        q_{n,a}-q_{n,b}
+      \right)^2
+      \,\dd s\,\dd t
+    }{
+      \int\!\!\int
+      q_{n,b}^2
+      \,\dd s\,\dd t
+    }
+  \right]^{1/2}
+  \label{eq:res-ver-cnv-distributed-qn-error}
+\end{align}
 
 \subsection{Test Objective}
 \label{sec:res-ver-cnv-test-objective}
 
-% TODO: Complete this RES-VER Domain-specific subsection.
+The C1A Regional2D objective is to establish a numerical baseline before
+using any observational validation data. The original production method
+was a cell-centred finite-volume scheme with piecewise-constant
+hydrodynamic reconstruction, hydrostatic well-balanced reconstruction,
+Rusanov flux, conservative face-based residual assembly and SSPRK3
+hydrodynamic time integration. C1A-R8 verified this original method as a
+globally first-order approximation of the accepted NLSWE model, with
+finest-pair L2 orders approximately $0.9038$ for mass, $0.9129$ for
+$q_x$ and $0.9574$ for $q_y$.
+
+The event-level first-order Tōhoku family did not enter an asymptotic
+forcing-convergence regime. With frozen terrain, source, physics,
+domain and coupling extraction, the best first-order tested actual
+characteristic mesh was approximately $260.45~\mathrm{m}$ for requested
+h400. Adjacent R5 $Q_n$ waveform NRMSE values were approximately
+$26.4\%$ for h600 to h500, $19.7\%$ for h500 to h450, and $21.6\%$ for
+h450 to h400. This sequence was non-monotonic and must not be described
+as mesh converged.
+
+The R4D/R5 diagnosis excluded earthquake-source projection,
+coupling-section extraction, independent $Q_n$ integration,
+common-support interpolation, mass conservation, simple temporal phase
+shift and poor h400 geometric mesh quality as primary causes. The
+retained diagnosis was mixed spatial error: finite-volume
+diffusion/dispersion as the primary mechanism and mesh-dependent
+projection of the frozen bathymetry as a secondary mechanism. R6 mesh
+quality supported this interpretation: minimum-angle p01 values were
+approximately $44.18^\circ$ for h600, $45.51^\circ$ for h500,
+$43.59^\circ$ for h450 and $45.88^\circ$ for h400, with no material
+h400 radius-ratio degradation. The frozen processed terrain resolution
+was $1000~\mathrm{m}$ while the solver actual characteristic sizes
+reached approximately $388$, $325$, $296$ and $260~\mathrm{m}$; solver
+mesh refinement therefore interpolated a fixed terrain representation
+and was not equivalent to refining the physical terrain data.
+
+The model/implementation traceability audit concluded
+\texttt{MODEL\_CONSISTENT\_WITH\_DOCUMENTATION\_FIXES}, with
+\texttt{MISMATCH = 0} and
+\texttt{NOT\_IMPLEMENTED\_REQUIRED = 0}. This cleared the mathematical
+model decision and left numerical discretisation as the appropriate
+target for convergence improvement.
+
+The R7 exact semi-discrete benchmark initially showed sub-first-order
+local operator/truncation behaviour, but R8 separated local
+semi-discrete operator order from global evolving-solution convergence.
+R8 found a geometric closure residual of $0.0$, maximum first-moment
+geometry residual of about $2.84\times10^{-14}$, face-orientation error
+of $0.0$, and exact-face-quadrature final L2 errors of about
+$9.07\times10^{-15}$ for mass, $3.59\times10^{-13}$ for $q_x$ and
+$3.68\times10^{-13}$ for $q_y$. These results excluded mesh geometry
+and exact physical-flux integration as fundamental defects and opened
+the gate to investigate a higher-order reconstruction.
+
+C1A-R9 introduced the opt-in \texttt{limited\_linear} reconstruction
+while preserving \texttt{first\_order} as the default/reference path and
+retaining \texttt{unlimited\_linear\_for\_verification} for controlled
+checks. The method reconstructs $\eta$, $u$ and $v$ using weighted
+least-squares gradients and a Barth--Jespersen limiter, leaves bed
+states first order inside the hydrostatic reconstruction, and preserves
+the Rusanov flux, SSPRK3, source physics, Manning friction, boundary
+roles, wet/dry handling, coupling quantities and OpenMP residual
+assembly. The controlled MMS finest-pair L2 orders were $2.3226$ for
+mass, $2.2164$ for $q_x$ and $2.1614$ for $q_y$, giving classification
+\texttt{SECOND\_ORDER\_VERIFIED}. At equal n32 resolution the L2 error
+was reduced by approximately $30.37\times$, $8.63\times$ and
+$6.05\times$ for mass, $q_x$ and $q_y$. A controlled smooth-wave proxy
+reduced amplitude error by $5.35\times$ and phase-proxy error by
+$17.43\times$. The measured medium-level runtime overhead was
+approximately $1.223$, or about $22.3\%$, for substantially improved
+controlled-problem accuracy.
+
+The R10 event-level hypothesis is therefore precise: the
+limited-linear reconstruction may reduce the first-order method's
+Tōhoku--Kamaishi amplitude diffusion, phase dispersion and waveform
+morphology sensitivity, but that must be measured on the frozen
+h600/h500/h400 event mesh family before spatial qualification or any
+temporal-convergence gate can be opened.
 
 \subsubsection{Numerical and Physical Sensitivity Requirements}
 \label{sec:res-ver-cnv-local-sensitivity-requirements}
@@ -114,17 +295,58 @@ as equivalent physical refinement.
 \subsection{Error Metrics}
 \label{sec:res-ver-cnv-error-metrics}
 
-% TODO: Complete this RES-VER Domain-specific subsection.
+For each event mesh pair, the analysis shall report RMSE, NRMSE,
+correlation, peak value, peak time and peak-time difference for
+$\eta$, $q_n$, $Q_n$ and $\bar{q}_n$. Formal convergence remains based
+on physical-time waveforms; diagnostic phase alignment may be reported
+separately through physical-time NRMSE, optimal lag, phase-aligned NRMSE
+and phase contribution.
+
+First-order histories are historical same-mesh comparisons, not
+references for the limited-linear convergence estimate. The required
+method-impact comparison is first-order versus limited-linear at the
+same h600, h500 and h400 meshes, using peak amplitudes, phase,
+waveform morphology and, where useful, spectral content.
 
 \subsection{Tolerance and Acceptance Criteria}
 \label{sec:res-ver-cnv-tolerance-acceptance-criteria}
 
-% TODO: Complete this RES-VER Domain-specific subsection.
+The project target for medium-to-fine principal forcing differences is
+approximately $2\%$. For R10 the primary spatial pair is h500 to h400,
+because h400 is the fine member of the minimum-cost limited-linear
+event family. Spatial qualification requires principal h500--h400
+forcing differences near or below this threshold, no material waveform
+morphology change, no large unresolved physical-time phase difference,
+stable distributed forcing, and passing terrain/source/domain
+invariance. Qualification shall not be granted from peak $\eta$ alone.
+
+If h500--h400 is slightly above $2\%$ but monotonic, strongly reduced
+relative to first order, and clearly approaching an asymptotic regime,
+the result shall be classified as
+\texttt{APPROACHING\_SPATIAL\_QUALIFICATION}, not qualified. Strongly
+oscillatory behaviour shall be classified as
+\texttt{SPATIAL\_NON\_ASYMPTOTIC}. Temporal convergence may proceed
+only after \texttt{SPATIAL\_QUALIFIED}.
 
 \subsection{Execution Handoff}
 \label{sec:res-ver-cnv-execution-handoff}
 
-% TODO: Complete this RES-VER Domain-specific subsection.
+R10 shall use the exact frozen R4/R5 physical family: conditioned
+terrain SHA-256
+\texttt{45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363},
+source SHA-256
+\texttt{88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498},
+the same domain, Manning coefficient, gravity, boundary policy, sponge
+policy, wet/dry settings, coupling section, output cadence and
+$600~\mathrm{s}$ horizon. The required meshes are the historical h600,
+h500 and h400 artefacts where available, enabling direct first-order
+versus limited-linear same-mesh comparison. Requested h450 is excluded
+from the minimum R10 family because its previous actual refinement ratio
+provided weak convergence leverage for substantial additional compute.
+
+The R10 production candidate must select
+\texttt{reconstruction = limited\_linear} explicitly. The first-order
+method remains available as a backend and historical comparator.
 
 \subsection{Candidate Approaches}
 \label{sec:res-ver-cnv-candidate-approaches}
@@ -151,8 +373,17 @@ as equivalent physical refinement.
 \subsection{Project-Specific Conclusions}
 \label{sec:res-ver-cnv-conclusions}
 
-% TODO: Convert the evidence into conclusions specific to the Studentship
-% project. Do not merely restate literature findings.
+Entering R10, the project conclusion is that the original Regional2D
+implementation was a verified globally first-order finite-volume
+approximation of the accepted NLSWE mathematical model, but it exhibited
+large non-asymptotic forcing sensitivity in the Tōhoku--Kamaishi
+corridor. A limited-linear reconstruction was scientifically justified
+as a numerical-discretisation improvement, not as a physical-model
+change. Controlled C1A-R9 MMS and smooth-wave tests verified
+approximately second-order behaviour and substantially reduced
+amplitude and phase error. The remaining numerical question is whether
+that controlled improvement restores practical spatial convergence for
+the event-specific Tōhoku--Kamaishi forcing.
 
 \subsection{Selected Approach and Rationale}
 \label{sec:res-ver-cnv-selected-approach}
@@ -168,8 +399,14 @@ as equivalent physical refinement.
 \subsection{Requirements and Handoffs}
 \label{sec:res-ver-cnv-requirements}
 
-% TODO: State requirements passed to other Research Domains, Software,
-% verification activities or later execution work.
+The Software C1A evidence tree is the authority for detailed numerical
+metrics:
+\texttt{docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/}.
+R10 shall add event evidence there, keep raw outputs under an external
+R10 root, and update this Research workstream only after actual event
+results are available. No observational comparison, calibration,
+Local3D run or h300 run may proceed from this Deliverable unless the
+Regional2D numerical gates explicitly allow it.
 
 \subsection{Deliverable Completion Record}
 \label{sec:res-ver-cnv-completion-record}

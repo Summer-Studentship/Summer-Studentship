@@ -63,10 +63,12 @@ Completed:
 - FVM reviewed and selected as the regional numerical family.
 - Regional 2D NLSWE mathematical and numerical model established at
   research-specification level.
-- Regional HLLC/HLL flux strategy, MUSCL/least-squares/Barth--Jespersen
-  reconstruction, hydrostatic reconstruction, wetting--drying,
-  SSPRK(3,3), Strang-split Manning friction, CFL timestep, open/radiation
-  boundaries, sponge damping and mesh-refinement principles specified.
+- Verified Regional2D first-order and opt-in limited-linear
+  reconstruction paths recorded, using weighted least-squares gradients
+  and Barth--Jespersen limiting for the higher-order option, hydrostatic
+  reconstruction, Rusanov flux, wetting--drying, SSPRK(3,3), Manning
+  friction, CFL timestep, open/radiation boundaries, sponge damping and
+  mesh-refinement principles.
 - LBM/DBM reviewed and removed from the active regional shortlist.
 - VOLNA contextual validation reviewed.
 - OpenFOAM adopted as the local 3D software and architectural reference.
@@ -83,7 +85,8 @@ In progress:
 Not yet started or unresolved:
 
 - Final regional dry-depth tolerance and velocity regularisation constants.
-- Final regional HLL/HLLC wave-speed safeguards.
+- Event-level adequacy of the verified Rusanov plus limited-linear
+  Regional2D discretisation.
 - Final regional mesh levels, CFL value and domain-specific sponge placement.
 - Final bathymetry/topography and fault-source dataset selections.
 - Local free-surface method.

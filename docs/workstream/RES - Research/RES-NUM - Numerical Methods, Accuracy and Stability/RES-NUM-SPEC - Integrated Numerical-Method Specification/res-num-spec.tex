@@ -132,11 +132,12 @@ algorithms provisional or unresolved.
     &
     selected
     &
-    Polygonal finite-volume update with triangular and quadrilateral
-    practical meshes, MUSCL reconstruction, weighted least-squares
-    gradients, Barth--Jespersen limiter, hydrostatic reconstruction,
-    HLLC primary flux with HLL/HLLE fallback, wet/dry positivity
-    controls, SSPRK(3,3) transport, Strang-split Manning friction,
+    Polygonal finite-volume update with triangular practical meshes,
+    default first-order hydrodynamic reconstruction, opt-in
+    limited-linear reconstruction using weighted least-squares gradients
+    and Barth--Jespersen limiting, hydrostatic reconstruction with
+    first-order bed states, Rusanov local Lax--Friedrichs flux,
+    wet/dry positivity controls, SSPRK(3,3) transport, Manning friction,
     CFL timestep, open/radiation boundaries and optional sponge damping
     \\
     Finite difference for production regional solver
@@ -427,7 +428,18 @@ For a counter-clockwise quadrilateral:
 \paragraph{Reconstruction and Flux.}
 \label{sec:res-num-spec-regional-reconstruction-flux}
 
-The reconstructed variables are:
+The accepted mathematical model remains the nonlinear shallow-water
+system with conserved state
+$\mathbf{U}=[h,q_x,q_y]^{\mathsf{T}}$, bed-slope physics, Manning
+friction, passive coseismic free-surface transfer, wetting and drying,
+accepted artificial-boundary roles, and one-way Regional2D-to-Local3D
+coupling variables. The reconstruction choice below is a numerical
+discretisation choice only; changing from first-order face states to the
+limited-linear option does not change this mathematical model.
+
+The default and historical implementation uses piecewise-constant
+hydrodynamic face states. The opt-in C1A-R9 limited-linear candidate
+reconstructs the primitive hydrodynamic variables:
 
 \begin{align}
   \mathbf{W}
@@ -435,8 +447,7 @@ The reconstructed variables are:
   \left[
     \eta,\,
     u,\,
-    v,\,
-    b
+    v
   \right]^{\mathsf{T}}
   \label{eq:res-num-spec-regional-reconstruction-state}
 \end{align}
@@ -457,31 +468,36 @@ For scalar $\phi$, the face value is reconstructed as:
   \label{eq:res-num-spec-regional-muscl-reconstruction}
 \end{align}
 
-Weighted least-squares gradients are selected:
+Weighted least-squares gradients are selected on the face-neighbour
+stencil. Internal faces contribute the neighbouring cell centroid and
+cell value. Boundary faces contribute the boundary face centroid and the
+pre-existing exterior boundary value when that value is finite. With
+$\mathbf{d}_{is}=\mathbf{x}_s-\mathbf{x}_i$ and
+$w_{is}=1/\max(\|\mathbf{d}_{is}\|^2,\epsilon_w)$:
 
 \begin{align}
-  \mathbf{d}_{ij}
+  \mathbf{d}_{is}
   &=
-  \mathbf{x}_j
+  \mathbf{x}_s
   -
   \mathbf{x}_i
   \label{eq:res-num-spec-regional-neighbour-displacement}
   \\
   \mathbf{M}_i
   &=
-  \sum_{j\in\mathcal{N}(i)}
-  w_{ij}
-  \mathbf{d}_{ij}
-  \mathbf{d}_{ij}^{\mathsf{T}}
+  \sum_{s\in\mathcal{S}(i)}
+  w_{is}
+  \mathbf{d}_{is}
+  \mathbf{d}_{is}^{\mathsf{T}}
   \label{eq:res-num-spec-regional-ls-matrix}
   \\
   \mathbf{r}_i
   &=
-  \sum_{j\in\mathcal{N}(i)}
-  w_{ij}
-  \mathbf{d}_{ij}
+  \sum_{s\in\mathcal{S}(i)}
+  w_{is}
+  \mathbf{d}_{is}
   \left(
-    \phi_j-\phi_i
+    \phi_s-\phi_i
   \right)
   \label{eq:res-num-spec-regional-ls-rhs}
   \\
@@ -492,12 +508,15 @@ Weighted least-squares gradients are selected:
   \label{eq:res-num-spec-regional-ls-gradient}
 \end{align}
 
-The baseline limiter is Barth--Jespersen. Reconstruction is reverted to
-first order near wet/dry fronts where required for positivity.
+The limited-linear path applies a scalar Barth--Jespersen limiter. The
+limiter preserves constants and bounds reconstructed face values by
+local stencil extrema, while allowing the method to fall back locally
+towards first order near extrema, steep gradients or wet/dry-sensitive
+states. Cells with an underdetermined or ill-conditioned least-squares
+system use a zero gradient.
 
-HLLC is the primary face flux for wet, valid states. HLL or HLLE is the
-fallback near dry, degenerate or unsafe states. Each face flux is solved
-in normal/tangential coordinates:
+The verified production flux is Rusanov local Lax--Friedrichs. Each
+face flux is solved in normal/tangential coordinates:
 
 \begin{align}
   u_n
@@ -560,18 +579,11 @@ Hydrostatic reconstruction uses:
   \label{eq:res-num-spec-regional-hydrostatic-right-depth}
 \end{align}
 
-The second-order bed source is:
-
-\begin{align}
-  \mathbf{S}_{\mathrm{b},i}^{(2)}
-  &=
-  \left[
-    0,\,
-    -g h_i (b_x)_i,\,
-    -g h_i (b_y)_i
-  \right]^{\mathsf{T}}
-  \label{eq:res-num-spec-regional-second-order-bed-source}
-\end{align}
+In the verified C1A-R9 implementation, the bed values entering
+\cref{eq:res-num-spec-regional-hydrostatic-face-bed} remain the
+cell-local first-order bed states. This preserves the established
+well-balanced lake-at-rest behaviour while the hydrodynamic face states
+are reconstructed at limited-linear order.
 
 The sponge source uses:
 
@@ -733,9 +745,11 @@ The CFL timestep is:
     \\
     \hline
     Regional 2D NLSWE finite-volume formulation; polygonal geometry;
-    triangle/quadrilateral practical meshes; reconstruction and limiter;
-    hydrostatic reconstruction; HLLC/HLL flux strategy; wetting/drying;
-    dynamic bed treatment; SSPRK(3,3) transport with split Manning;
+    triangular practical meshes; first-order and limited-linear
+    hydrodynamic reconstruction; weighted least-squares gradients;
+    Barth--Jespersen limiter; hydrostatic reconstruction; Rusanov flux
+    strategy; wetting/drying; dynamic bed treatment; SSPRK(3,3)
+    transport with Manning;
     CFL timestep; open/radiation and sponge treatment; mesh-refinement
     principles
     &
@@ -816,12 +830,16 @@ The active breadth-first branches are:
 % TODO: Convert the evidence into conclusions specific to the Studentship
 % project. Do not merely restate literature findings.
 
-The project has selected the regional finite-volume family, completed
-the regional 2D NLSWE numerical model at research-specification level,
-and selected the local three-dimensional two-phase finite-volume solver
-family. It has not completed structural, dimensional-coupling or FSI
-numerical-method selection. The numerical architecture shall remain
-modular while implementation and validation work proceeds.
+The project has selected the regional finite-volume family and
+established two verified Regional2D numerical reconstruction paths for
+the same NLSWE mathematical model: the default first-order path and the
+opt-in limited-linear path. The latter is verified on controlled smooth
+benchmarks but still requires event-level Tōhoku--Kamaishi convergence
+assessment. The project has also selected the local three-dimensional
+two-phase finite-volume solver family. It has not completed structural,
+dimensional-coupling or FSI numerical-method selection. The numerical
+architecture shall remain modular while implementation and validation
+work proceeds.
 
 \subsection{Selected Approach and Rationale}
 \label{sec:res-num-spec-selected-approach}
@@ -1211,7 +1229,8 @@ The unresolved scientific and numerical decisions are:
 \begin{itemize}
   \item final regional dry-depth tolerance and velocity regularisation
     constants;
-  \item final regional HLL/HLLC wave-speed safeguards;
+  \item event-level adequacy of the verified Rusanov plus limited-linear
+    Regional2D discretisation, with alternative flux families deferred;
   \item final regional mesh levels and domain-specific sponge placement;
   \item exact local interface-advection algorithm;
   \item exact local pressure-correction sequence;
