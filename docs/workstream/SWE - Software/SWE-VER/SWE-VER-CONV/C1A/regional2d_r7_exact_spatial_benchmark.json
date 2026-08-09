@@ -1,0 +1,248 @@
+{
+  "artifact_sha256": "77499febc1bdf1f666b4a4b0ac712add243fe111fa4a54ead9e4e35e3af0ea02",
+  "benchmark_definition": {
+    "bed": "flat b=0",
+    "boundary_treatment": "exact analytical boundary face states are supplied; norms use a fixed interior window 0.2<=x,y<=0.8",
+    "cell_average_method": "Duffy-mapped tensor Gauss-Legendre quadrature for U* cell averages",
+    "domain": "[0,1] x [0,1]",
+    "operator": "L_h(U*) = production-style piecewise-constant Rusanov finite-volume residual on flat bed",
+    "reference": "cell-average div(F(U*)) from high-order edge quadrature",
+    "sources": "none; no Manning, Coriolis, sponge, earthquake, wet/dry activation, or time integration",
+    "state": {
+      "h": "2.0 + 0.18 sin(2*pi*x) cos(2*pi*y)",
+      "minimum_h": ">= 1.82 analytically",
+      "qx": "0.35 + 0.09 cos(2*pi*x) sin(4*pi*y)",
+      "qy": "-0.22 + 0.07 sin(4*pi*x) cos(2*pi*y)"
+    }
+  },
+  "docs_payload_hash_placeholder": "",
+  "final_r7_classification": "BASELINE_ORDER_UNRESOLVED",
+  "first_order_gate": {
+    "acceptance_band_l1_l2": [
+      0.8,
+      1.2
+    ],
+    "baseline_first_order_verified": false,
+    "component_monotonicity": {
+      "mass": {
+        "l1": true,
+        "l2": true,
+        "linf": true
+      },
+      "qx": {
+        "l1": true,
+        "l2": true,
+        "linf": true
+      },
+      "qy": {
+        "l1": true,
+        "l2": true,
+        "linf": true
+      }
+    },
+    "errors_monotonic_l1_l2": true,
+    "failure_classification": "geometry/operator inconsistency",
+    "finest_pair_orders": {
+      "mass": {
+        "l1": 0.1439989977518552,
+        "l2": 0.20203104303711092,
+        "linf": 0.35439071970962166
+      },
+      "qx": {
+        "l1": 0.7199235845332452,
+        "l2": 0.668967626701232,
+        "linf": 0.6347961582577143
+      },
+      "qy": {
+        "l1": 0.7966620631889274,
+        "l2": 0.7748469392778206,
+        "linf": 0.7345452644622842
+      }
+    },
+    "quadrature_error_to_finest_l2_error": {
+      "mass": 3.899280548244492e-14,
+      "qx": 1.4465689116277287e-12,
+      "qy": 1.651699842612836e-12
+    },
+    "reference_error_floor_remaining": false,
+    "stop_before_muscl": true
+  },
+  "generated_at_utc": "2026-08-09T08:59:48.459468Z",
+  "levels": [
+    {
+      "actual_h": 0.08838834764831845,
+      "cells": 128,
+      "columns": 8,
+      "faces": 208,
+      "interior_cell_count": 50,
+      "level": "n8",
+      "mass_l1": 1.1934895357659017,
+      "mass_l2": 1.4834182541449115,
+      "mass_linf": 3.1591921035870634,
+      "mesh_sha256": "4f5cc97af38a832ae5c4995fd7297f899376ff181672810aa036ed126e5c5eaf",
+      "p_mass_l1_from_previous": "",
+      "p_mass_l2_from_previous": "",
+      "p_mass_linf_from_previous": "",
+      "p_qx_l1_from_previous": "",
+      "p_qx_l2_from_previous": "",
+      "p_qx_linf_from_previous": "",
+      "p_qy_l1_from_previous": "",
+      "p_qy_l2_from_previous": "",
+      "p_qy_linf_from_previous": "",
+      "qx_l1": 2.6980091194227445,
+      "qx_l2": 3.21569402141052,
+      "qx_linf": 7.824304344561369,
+      "qy_l1": 2.8100237509420922,
+      "qy_l2": 3.26884829108779,
+      "qy_linf": 6.313699022306494,
+      "refinement_ratio_from_previous": "",
+      "rows": 8
+    },
+    {
+      "actual_h": 0.04419417382415922,
+      "cells": 512,
+      "columns": 16,
+      "faces": 800,
+      "interior_cell_count": 200,
+      "level": "n16",
+      "mass_l1": 0.7675331814885369,
+      "mass_l2": 0.9240099822647522,
+      "mass_linf": 1.9361365892192843,
+      "mesh_sha256": "355d6220c684d8df674db6d215e38afc3493a007c8d22c104e35eab3deb7398a",
+      "p_mass_l1_from_previous": 0.6368848906814644,
+      "p_mass_l2_from_previous": 0.6829450847022416,
+      "p_mass_linf_from_previous": 0.7063749324431093,
+      "p_qx_l1_from_previous": 0.8753657447813352,
+      "p_qx_l2_from_previous": 0.8284277107210133,
+      "p_qx_linf_from_previous": 0.8071190468126903,
+      "p_qy_l1_from_previous": 0.9244287485351319,
+      "p_qy_l2_from_previous": 0.9120375989295847,
+      "p_qy_linf_from_previous": 0.8042299909490739,
+      "qx_l1": 1.4707270051964991,
+      "qx_l2": 1.8108944096607018,
+      "qx_linf": 4.471762110655994,
+      "qy_l1": 1.480570897464284,
+      "qy_l2": 1.7371770801754705,
+      "qy_linf": 3.615651171955853,
+      "refinement_ratio_from_previous": 2.0,
+      "rows": 16
+    },
+    {
+      "actual_h": 0.02209708691207961,
+      "cells": 2048,
+      "columns": 32,
+      "faces": 3136,
+      "interior_cell_count": 722,
+      "level": "n32",
+      "mass_l1": 0.5600701025265202,
+      "mass_l2": 0.659813816198263,
+      "mass_linf": 1.3180672160882771,
+      "mesh_sha256": "4e2222e2ad739500404c237b9dc20b5b1ce3dc07d0047dee49c6da802ece3d2f",
+      "p_mass_l1_from_previous": 0.45462170459174667,
+      "p_mass_l2_from_previous": 0.4858494498580926,
+      "p_mass_linf_from_previous": 0.5547567906260309,
+      "p_qx_l1_from_previous": 0.9091514901463749,
+      "p_qx_l2_from_previous": 0.8848553942226368,
+      "p_qx_linf_from_previous": 0.8075254187735839,
+      "p_qy_l1_from_previous": 0.9365850223065249,
+      "p_qy_l2_from_previous": 0.9168683583361883,
+      "p_qy_linf_from_previous": 0.8336841071096385,
+      "qx_l1": 0.7831594591419636,
+      "qx_l2": 0.9806750190307509,
+      "qx_linf": 2.5549906697631286,
+      "qy_l1": 0.7735511272004194,
+      "qy_l2": 0.9201088603443739,
+      "qy_linf": 2.028722291068691,
+      "refinement_ratio_from_previous": 2.0,
+      "rows": 32
+    },
+    {
+      "actual_h": 0.011048543456039806,
+      "cells": 8192,
+      "columns": 64,
+      "faces": 12416,
+      "interior_cell_count": 2888,
+      "level": "n64",
+      "mass_l1": 0.5068674145774383,
+      "mass_l2": 0.5735932094205283,
+      "mass_linf": 1.0309920614453176,
+      "mesh_sha256": "9651f1d61e8281a1c47be189d99f08aab4cc3ef198fa6df124ff1123aadca403",
+      "p_mass_l1_from_previous": 0.1439989977518552,
+      "p_mass_l2_from_previous": 0.20203104303711092,
+      "p_mass_linf_from_previous": 0.35439071970962166,
+      "p_qx_l1_from_previous": 0.7199235845332452,
+      "p_qx_l2_from_previous": 0.668967626701232,
+      "p_qx_linf_from_previous": 0.6347961582577143,
+      "p_qy_l1_from_previous": 0.7966620631889274,
+      "p_qy_l2_from_previous": 0.7748469392778206,
+      "p_qy_linf_from_previous": 0.7345452644622842,
+      "qx_l1": 0.4754792886010017,
+      "qx_l2": 0.6168020248964418,
+      "qx_linf": 1.6454952530108695,
+      "qy_l1": 0.44531758571464,
+      "qy_l2": 0.5377582007664723,
+      "qy_linf": 1.219277173678348,
+      "refinement_ratio_from_previous": 2.0,
+      "rows": 64
+    }
+  ],
+  "mathematical_model": "unchanged NLSWE; verification-only semi-discrete spatial operator benchmark",
+  "quadrature_verification": {
+    "coarse_quadrature_order": 24,
+    "columns": 64,
+    "fine_quadrature_order": 36,
+    "reference_difference_norms": {
+      "mass": {
+        "l1": 1.7401900173238186e-14,
+        "l2": 2.2366008440985953e-14,
+        "linf": 9.947598300641403e-14
+      },
+      "qx": {
+        "l1": 6.950328278437855e-13,
+        "l2": 8.92246633844225e-13,
+        "linf": 3.637978807091713e-12
+      },
+      "qy": {
+        "l1": 6.916864741787035e-13,
+        "l2": 8.882151355697441e-13,
+        "linf": 3.183231456205249e-12
+      }
+    }
+  },
+  "r6_error_floor_diagnosis": {
+    "analytical_reference": "small-amplitude linear shallow-water residual evaluated at cell centroids",
+    "background_depth": 1.0,
+    "boundary_conditions": "fixed analytical boundary states at face centroids; interior-only x-window norms",
+    "cell_state_representation": "centroid point values used as cell states",
+    "domain": "1.0 m by 0.25 m structured triangular strip",
+    "error_evaluation": "cell residual divided by area compared to centroid linearized reference",
+    "linearisation_error_estimate": {
+      "linear_qx_residual_scale": 0.006163804786343175,
+      "material": false,
+      "nonlinear_qx_residual_scale": 6.163804786343175e-07,
+      "relative_scale": 0.0001
+    },
+    "mesh_family": "nested structured triangular meshes with columns 16, 32, 64, 128 in evidence",
+    "plausible_error_floor_sources": [
+      "linearized analytical solution compared with nonlinear SWE flux",
+      "finite-volume cell averages silently represented by centroid point values",
+      "reference flux divergence sampled at centroids rather than cell averaged",
+      "one-dimensional wave did not exercise nontrivial y-derivatives",
+      "boundary states were face-centroid samples, though boundary cells were excluded"
+    ],
+    "r6_benchmark": "smooth_linear_wave_semidiscrete_residual",
+    "r7_resolution": "Replace the R6 centroid/linearized reference with a nonlinear manufactured state, high-order quadrature cell averages, and high-order boundary-integral cell-average div(F(U*)) references on an interior physical window.",
+    "reference_or_quadrature_error_material": true,
+    "reference_sampling": "centroid point reference, not cell-average flux-divergence reference",
+    "temporal_error_material": false,
+    "time_treatment": "semi-discrete residual at t=0; no time integration",
+    "wave_amplitude": 0.0001
+  },
+  "schema": {
+    "name": "tsunami.c1a_r7_exact_spatial_benchmark",
+    "version": "1.0.0"
+  },
+  "second_order_artifacts_created": false,
+  "second_order_gate_opened": false,
+  "study_id": "regional2d-spatial-upgrade-r7"
+}

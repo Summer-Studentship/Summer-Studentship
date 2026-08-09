@@ -1,0 +1,6 @@
+{
+  "description": "Single-panel log-log first-order exact manufactured residual error.",
+  "source": "regional2d_r7_exact_spatial_benchmark.json",
+  "source_sha256": "77499febc1bdf1f666b4a4b0ac712add243fe111fa4a54ead9e4e35e3af0ea02",
+  "study_id": "regional2d-spatial-upgrade-r7"
+}

@@ -1,0 +1,21 @@
+{
+  "figures": [
+    {
+      "path": "deliverables/figures/convergence/c1a_r7_first_order_exact_error_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r7_first_order_exact_error_vs_h.provenance.json",
+      "provenance_sha256": "260ca93f5f94bda64cfe11a679fefbbab115c9e94e8e41a764799d7d138efd1c",
+      "sha256": "caeb5fe5e546cf39113e7b8e42de1f345fb13ae3365f5203f3680ce42ca0d975"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r7_first_order_order_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r7_first_order_order_vs_h.provenance.json",
+      "provenance_sha256": "bbd622b46b1efa67db22bb11ab623c4674ff11139610340a6a714728290e286c",
+      "sha256": "68e00505bfa41351bcf05c604e0900b6c9354b15525002fb6d02bac4a2a61dea"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r7_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-spatial-upgrade-r7"
+}
