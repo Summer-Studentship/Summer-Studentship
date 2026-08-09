@@ -1,0 +1,39 @@
+{
+  "figures": [
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_r7_local_error_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_r7_local_error_vs_h.provenance.json",
+      "sha256": "6d10fe246961cf21fe02709f948bd08fc19736519072bcffb8a757f1be899107"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_global_solution_error_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_global_solution_error_vs_h.provenance.json",
+      "sha256": "be51e051800be24b7f5e5f3ce705b06205e0334722146e5a632a2275b3aaf6b8"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_local_vs_global_order.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_local_vs_global_order.provenance.json",
+      "sha256": "574b218ed80604d1a6a71069d5bb5815ed0b1710705156234402b24ab14613a9"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_central_operator_error_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_central_operator_error_vs_h.provenance.json",
+      "sha256": "2de33837f5ff6e5c91792649b3bdb350c9df02b448c53370507b5b3ee61a2768"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_rusanov_dissipation_norm_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_rusanov_dissipation_norm_vs_h.provenance.json",
+      "sha256": "26e82b8fc2b284315e62b7f7194f08747ac2343f4dbb3f6a6de12ee9f4fa64c9"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r8_mms_temporal_contamination.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r8_mms_temporal_contamination.provenance.json",
+      "sha256": "b7ae2205ba88ad27aed93c38913e31afd25443a52207440d457ca0719719f54b"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r8_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-order-resolution-r8"
+}

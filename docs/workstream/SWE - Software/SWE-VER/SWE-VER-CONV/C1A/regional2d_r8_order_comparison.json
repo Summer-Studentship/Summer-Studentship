@@ -1,0 +1,30 @@
+{
+  "comparison": [
+    {
+      "global_exceeds_local": true,
+      "global_mms_r8_l2_order": 0.9037655984450095,
+      "quantity": "mass",
+      "semi_discrete_r7_l2_order": 0.20203104303711092
+    },
+    {
+      "global_exceeds_local": true,
+      "global_mms_r8_l2_order": 0.9129293302475793,
+      "quantity": "qx",
+      "semi_discrete_r7_l2_order": 0.668967626701232
+    },
+    {
+      "global_exceeds_local": true,
+      "global_mms_r8_l2_order": 0.9573603872147863,
+      "quantity": "qy",
+      "semi_discrete_r7_l2_order": 0.7748469392778206
+    }
+  ],
+  "final_numerical_classification": "GLOBAL_FIRST_ORDER_VERIFIED",
+  "interpretation": "Global MMS L1/L2 order exceeds the R7 local truncation diagnostic, supporting structured cancellation on the nested triangular family.",
+  "muscl_gate": "OPEN",
+  "schema": {
+    "name": "tsunami.c1a_r8_order_comparison",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-order-resolution-r8"
+}

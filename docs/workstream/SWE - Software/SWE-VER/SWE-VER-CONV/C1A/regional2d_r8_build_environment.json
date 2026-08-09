@@ -1,0 +1,38 @@
+{
+  "cmake": {
+    "command": [
+      "cmake",
+      "--version"
+    ],
+    "output": "cmake version 4.4.0\n\nCMake suite maintained and supported by Kitware (kitware.com/cmake).",
+    "returncode": 0
+  },
+  "gcc": {
+    "command": [
+      "gcc",
+      "--version"
+    ],
+    "output": "gcc (GCC) 16.1.1 20260625\nCopyright (C) 2026 Free Software Foundation, Inc.\nThis is free software; see the source for copying conditions.  There is NO\nwarranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.",
+    "returncode": 0
+  },
+  "r8_release_failure_root_cause": "vcpkg bootstrap/install fails during linux-gcc-release CMake regeneration and writes an empty vcpkg-bootstrap.log; vcpkg executable and bootstrap script are present, so no source-controlled root cause was identified without destructive build-cache cleanup.",
+  "release_build_attempt": {
+    "command": [
+      "cmake",
+      "--build",
+      "--preset",
+      "linux-gcc-release-build"
+    ],
+    "output": "[0/1] Re-running CMake...\n-- Bootstrapping vcpkg before install\n-- Bootstrapping vcpkg before install - failed\nCMake Error at /home/helios/vcpkg/scripts/buildsystems/vcpkg.cmake:984 (message):\n  vcpkg install failed.  See logs for more information:\n  /home/helios/Projects/Summer-Studentship/build/linux-gcc-release/vcpkg-bootstrap.log\nCall Stack (most recent call first):\n  /usr/share/cmake/Modules/CMakeDetermineSystem.cmake:152 (include)\n  CMakeLists.txt:3 (project)\n\n\n-- Configuring incomplete, errors occurred!\nFAILED: [code=1] build.ninja /home/helios/Projects/Summer-Studentship/build/linux-gcc-release/cmake_install.cmake /home/helios/Projects/Summer-Studentship/build/linux-gcc-release/src/cmake_install.cmake /home/helios/Projects/Summer-Studentship/build/linux-gcc-release/apps/tsunami_cli/cmake_install.cmake \n/usr/bin/cmake --regenerate-during-build -S/home/helios/Projects/Summer-Studentship -B/home/helios/Projects/Summer-Studentship/build/linux-gcc-release\nninja: error: rebuilding 'build.ninja': subcommand failed",
+    "returncode": 1
+  },
+  "schema": {
+    "name": "tsunami.c1a_r8_build_environment",
+    "version": "1.0.0"
+  },
+  "vcpkg_bootstrap_log": "build/linux-gcc-release/vcpkg-bootstrap.log",
+  "vcpkg_bootstrap_log_bytes": 0,
+  "vcpkg_bootstrap_script_exists": true,
+  "vcpkg_executable_exists": true,
+  "vcpkg_root": "/home/helios/vcpkg"
+}
