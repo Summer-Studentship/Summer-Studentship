@@ -10,6 +10,7 @@ methods, GUI presentation or concrete scientific file adapters.
 - [SWE-DAT-MAN - Dataset manifest](SWE-DAT-MAN/g1_dataset_manifest_v1.0.0.md)
 - [SWE-DAT-SCH - Regional2D result layout](SWE-DAT-SCH/regional2d_result_layout_v0.1.md)
 - [SWE-DAT-SCH - Regional2D HDF5 schema](SWE-DAT-SCH/regional2d_hdf5_schema_v1.0.0.md)
+- [SWE-DAT-XDMF - Regional2D XDMF handoff](SWE-DAT-XDMF/regional2d_xdmf_handoff_v0.1.md)
 
 ## Baseline Documents
 
@@ -19,6 +20,7 @@ methods, GUI presentation or concrete scientific file adapters.
 - [Dataset manifest verification v0.1](SWE-DAT-MAN/dataset_manifest_verification_v0.1.md)
 - [Regional2D result layout v0.1](SWE-DAT-SCH/regional2d_result_layout_v0.1.md)
 - [Regional2D HDF5 result schema v1.0.0](SWE-DAT-SCH/regional2d_hdf5_schema_v1.0.0.md)
+- [Regional2D XDMF handoff v0.1](SWE-DAT-XDMF/regional2d_xdmf_handoff_v0.1.md)
 
 ## Handoffs
 
