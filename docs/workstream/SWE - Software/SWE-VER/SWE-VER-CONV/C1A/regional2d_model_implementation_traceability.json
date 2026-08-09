@@ -1,0 +1,1077 @@
+{
+  "audit_id": "C1A-MODEL-IMPLEMENTATION-TRACEABILITY-001",
+  "title": "Regional2D/Local3D mathematical model to implementation traceability audit",
+  "generated_by": "tools/verification/convergence/model_traceability_audit.py",
+  "scope": [
+    "Regional2D NLSWE governing equations and source terms",
+    "Regional2D boundary roles and numerical method choices",
+    "Regional-to-Local3D one-way replay coupling",
+    "Local3D OpenFOAM URANS-VOF baseline configuration"
+  ],
+  "explicit_exclusions": [
+    "h300 temporal production simulations",
+    "Local3D production solver execution",
+    "calibration or observation validation",
+    "physics or numerical changes"
+  ],
+  "classification_allowed_values": [
+    "DEFERRED",
+    "DISCRETE_EQUIVALENT",
+    "DOCUMENTATION_AMBIGUITY",
+    "EXACT_MATCH",
+    "IMPLEMENTATION_EXTENSION",
+    "MISMATCH",
+    "NOT_IMPLEMENTED_REQUIRED",
+    "OPTIONAL_DISABLED"
+  ],
+  "model_freeze_classification": "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+  "model_freeze_rationale": "No MISMATCH or NOT_IMPLEMENTED_REQUIRED rows were found in core governing equations, physical source model, baseline boundary roles, or one-way coupling. Two documentation ambiguities require wording updates but do not change the accepted implementation decision.",
+  "classification_counts": {
+    "DEFERRED": 5,
+    "DISCRETE_EQUIVALENT": 25,
+    "DOCUMENTATION_AMBIGUITY": 2,
+    "EXACT_MATCH": 12,
+    "IMPLEMENTATION_EXTENSION": 2,
+    "MISMATCH": 0,
+    "NOT_IMPLEMENTED_REQUIRED": 0,
+    "OPTIONAL_DISABLED": 2
+  },
+  "core_acceptance": {
+    "status_by_area": {
+      "governing_equations": {
+        "row_count": 5,
+        "blocking_rows": [],
+        "status": "clear"
+      },
+      "physical_source_model": {
+        "row_count": 7,
+        "blocking_rows": [],
+        "status": "clear"
+      },
+      "baseline_boundary_roles": {
+        "row_count": 9,
+        "blocking_rows": [],
+        "status": "clear"
+      },
+      "one_way_coupling": {
+        "row_count": 6,
+        "blocking_rows": [],
+        "status": "clear"
+      }
+    },
+    "blocking_rows": [],
+    "may_proceed_to_numerical_scheme_improvement": true
+  },
+  "authority_documents": [
+    "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/res-mod.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-EQS - Governing Equations and State Variables/res-mod-eqs.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/res-mod-src.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-IBC - Initial, Boundary and Interface Condition Models/res-mod-ibc.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-MUL - Multidimensional and Multifidelity Coupling Strategy/res-mod-mul.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-ASM - Assumptions, Applicability and Model Limitations/res-mod-asm.tex",
+    "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SPEC - Integrated Mathematical Model Specification/res-mod-spec.tex",
+    "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md",
+    "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md",
+    "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.csv"
+  ],
+  "traceability_rows": [
+    {
+      "requirement_id": "R2D-STATE-001",
+      "scope": "Regional2D",
+      "component": "Conserved state",
+      "model_requirement": "The regional NLSWE state is U=[h,qx,qy]^T with q=h u.",
+      "implementation_route": "RegionalConservedState and ShallowWaterState store depth, momentum_x, momentum_y.",
+      "classification": "EXACT_MATCH",
+      "finding": "The implementation uses the same conserved variables and wet-state primitive recovery.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:280",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:292",
+        "src/r2d/src/RegionalConservedState.cpp",
+        "src/r2d/src/ShallowWaterState.cpp"
+      ],
+      "impact": "No model-code issue.",
+      "recommended_action": "Keep as baseline.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-STATE-002",
+      "scope": "Regional2D",
+      "component": "Free surface",
+      "model_requirement": "Free-surface elevation is eta=h+b with bed elevation positive upward.",
+      "implementation_route": "FreeSurfaceElevation and snapshot/export writers compute/store bed_elevation and free_surface_elevation.",
+      "classification": "EXACT_MATCH",
+      "finding": "The sign convention and eta relation are preserved in state preparation, snapshots, and coupling export.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:280",
+        "src/r2d/src/FreeSurfaceElevation.cpp",
+        "src/r2d_io/src/RegionalCsvOutputWriter.cpp:328",
+        "src/r2d_case_runner/src/RegionalFileCaseRunner.cpp:1074"
+      ],
+      "impact": "No model-code issue.",
+      "recommended_action": "Keep eta=h+b explicit in future case evidence.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-EQS-001",
+      "scope": "Regional2D",
+      "component": "Continuity equation",
+      "model_requirement": "dh/dt + div(q)=source-free mass evolution except boundary/relaxation terms.",
+      "implementation_route": "Well-balanced finite-volume residual updates depth by net face mass flux and relaxation source where configured.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The continuous conservation law is implemented as a conservative cell residual.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:302",
+        "src/r2d/src/WellBalancedResidualEvaluation.cpp",
+        "src/r2d/src/WetDryUpdate.cpp",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:5"
+      ],
+      "impact": "No governing-equation mismatch.",
+      "recommended_action": "Proceed with numerical method changes as discretisation work.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-EQS-002",
+      "scope": "Regional2D",
+      "component": "Momentum equations",
+      "model_requirement": "dqx/dt and dqy/dt use advective momentum flux, hydrostatic pressure, bed slope, friction, optional Coriolis, and relaxation.",
+      "implementation_route": "Normal flux, hydrostatic reconstruction, local sources, and relaxation residual jointly implement the momentum balance.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "Momentum physics are represented through standard finite-volume operators rather than pointwise Cartesian derivatives.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:302",
+        "src/r2d/src/ShallowWaterFlux.cpp:76",
+        "src/r2d/src/HydrostaticReconstruction.cpp:31",
+        "src/r2d/src/RegionalSourceUpdate.cpp:117",
+        "src/r2d/src/RegionalRelaxationZone.cpp"
+      ],
+      "impact": "No governing-equation mismatch.",
+      "recommended_action": "Numerical-order work may target flux/reconstruction without changing the model.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-FLUX-001",
+      "scope": "Regional2D",
+      "component": "Cartesian fluxes",
+      "model_requirement": "F(U) and G(U) contain qx, qy, qx^2/h, qx*qy/h, qy^2/h and 0.5*g*h^2 pressure terms.",
+      "implementation_route": "ShallowWaterFlux evaluates the physical normal flux from U and the unit face normal.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The code evaluates F n_x + G n_y directly, which is the face-normal finite-volume equivalent.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:310",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:452",
+        "src/r2d/src/ShallowWaterFlux.cpp:105"
+      ],
+      "impact": "No flux-model mismatch.",
+      "recommended_action": "Keep flux changes restricted to numerical flux/reconstruction experiments.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-FLUX-002",
+      "scope": "Regional2D",
+      "component": "Normal velocity and wave speed",
+      "model_requirement": "The Rusanov speed is max(|u_n|+sqrt(g h)) over left/right states.",
+      "implementation_route": "characteristic_signal_speed and maximum_characteristic_signal_speed use the same expression.",
+      "classification": "EXACT_MATCH",
+      "finding": "The local Lax-Friedrichs wave speed matches the documented baseline.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:448",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:468",
+        "src/r2d/src/ShallowWaterFlux.cpp:130"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep as reference when testing alternative fluxes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-FLUX-003",
+      "scope": "Regional2D",
+      "component": "Rusanov numerical flux",
+      "model_requirement": "The baseline numerical flux is local Lax-Friedrichs/Rusanov.",
+      "implementation_route": "RusanovFlux computes half-sum physical flux minus half alpha state jump.",
+      "classification": "EXACT_MATCH",
+      "finding": "The documented numerical flux is implemented algebraically.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:461",
+        "src/r2d/src/RusanovFlux.cpp:15",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:6"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Retain Rusanov as the frozen reference for convergence comparisons.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-BED-001",
+      "scope": "Regional2D",
+      "component": "Bathymetric source",
+      "model_requirement": "Bed source is S_b=[0,-g h b_x,-g h b_y]^T.",
+      "implementation_route": "Hydrostatic reconstruction uses b_f=max(b_L,b_R) and pressure corrections in the residual.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The bed slope is not differenced as a raw gradient; it is represented by a well-balanced hydrostatic discretisation.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:326",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:477",
+        "src/r2d/src/HydrostaticReconstruction.cpp:78",
+        "src/r2d/src/WellBalancedResidualEvaluation.cpp"
+      ],
+      "impact": "No physics mismatch; this is the accepted discrete equivalent.",
+      "recommended_action": "Keep lake-at-rest tests as mandatory evidence for changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-FRIC-001",
+      "scope": "Regional2D",
+      "component": "Manning friction",
+      "model_requirement": "Manning bottom friction damps qx and qy as -g n_M^2 q |q| / h^(7/3) in wet cells.",
+      "implementation_route": "RegionalSourceUpdate computes k=g*n^2/h^(7/3), rate=k*|q|, and scales momentum by 1/(1+k|q|dt).",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The update is a semi-implicit exact damping form for the same algebraic source direction.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:336",
+        "src/r2d/src/RegionalSourceTerms.cpp",
+        "src/r2d/src/RegionalSourceUpdate.cpp:162",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:9"
+      ],
+      "impact": "No physical-source mismatch.",
+      "recommended_action": "Document the semi-implicit source discretisation in numerical-method notes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-COR-001",
+      "scope": "Regional2D",
+      "component": "Coriolis forcing",
+      "model_requirement": "Coriolis may be included for sufficiently long propagation scales.",
+      "implementation_route": "Coriolis source fields and rotation update exist, but the Kamaishi/frozen-terrain baseline disables them.",
+      "classification": "OPTIONAL_DISABLED",
+      "finding": "The optional term is implemented but not active in accepted C1A/G6 baselines.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:350",
+        "src/r2d/src/RegionalSourceTerms.cpp",
+        "src/r2d/src/RegionalSourceUpdate.cpp:177",
+        "cases/kamaishi_delivery/case_spec.json:107"
+      ],
+      "impact": "No blocker because the model marks Coriolis optional.",
+      "recommended_action": "Keep disabled unless event/domain evidence requires it.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-VISC-001",
+      "scope": "Regional2D",
+      "component": "Explicit lateral eddy viscosity",
+      "model_requirement": "Lateral eddy viscosity is not part of the baseline regional source model.",
+      "implementation_route": "No explicit lateral viscosity source is active; numerical diffusion comes only from the flux.",
+      "classification": "OPTIONAL_DISABLED",
+      "finding": "The source catalogue explicitly excludes lateral eddy viscosity from the baseline.",
+      "evidence": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/res-mod-src.tex:409",
+        "src/r2d/src/RusanovFlux.cpp:15"
+      ],
+      "impact": "No source-model mismatch.",
+      "recommended_action": "Do not conflate Rusanov numerical diffusion with a physical eddy-viscosity closure.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-EQ-001",
+      "scope": "Regional2D",
+      "component": "Earthquake source wording",
+      "model_requirement": "Some RES-MOD text names dynamic moving-bed earthquake bathymetry, while the consolidated selected baseline permits static passive transfer.",
+      "implementation_route": "The implementation applies effective displacement during initialization and then advances a fixed post-event bathymetry.",
+      "classification": "DOCUMENTATION_AMBIGUITY",
+      "finding": "There is a wording conflict between older RES-MOD source text and accepted G6/consolidated baseline evidence.",
+      "evidence": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/res-mod-src.tex:495",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:362",
+        "src/r2d/src/RegionalEarthquakeInitialisation.cpp:550",
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:22"
+      ],
+      "impact": "Documentation ambiguity only; accepted implementation decision is unambiguous.",
+      "recommended_action": "Update RES-MOD-SRC to state instantaneous passive initial transfer is current baseline and dynamic moving bed is deferred.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-EQ-002",
+      "scope": "Regional2D",
+      "component": "Passive free-surface transfer",
+      "model_requirement": "The simplest selected baseline maps finite-fault-derived vertical seabed displacement to eta(x,y,0).",
+      "implementation_route": "surface_perturbation copies effective_bed_displacement unless a prescribed surface is supplied.",
+      "classification": "EXACT_MATCH",
+      "finding": "The code implements the accepted passive transfer baseline.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:364",
+        "src/r2d/src/RegionalEarthquakeInitialisation.cpp:550",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:13"
+      ],
+      "impact": "No earthquake-source mismatch for the accepted baseline.",
+      "recommended_action": "Keep dynamic rupture as a separate future feature, not a hidden model requirement.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-SRC-EQ-003",
+      "scope": "Regional2D",
+      "component": "Post-event bed and initial state",
+      "model_requirement": "After source initialization, terrain is fixed for propagation; q starts from zero.",
+      "implementation_route": "The initializer constructs post-event bathymetry, post-event depth, and zero post_qx/post_qy.",
+      "classification": "EXACT_MATCH",
+      "finding": "The propagation model starts from the expected passive earthquake initial condition.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:366",
+        "src/r2d/src/RegionalEarthquakeInitialisation.cpp:566",
+        "src/r2d/src/RegionalEarthquakeInitialisation.cpp:630"
+      ],
+      "impact": "No blocker.",
+      "recommended_action": "Keep source metadata in case outputs to prevent double-application.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-BC-001",
+      "scope": "Regional2D",
+      "component": "Boundary roles",
+      "model_requirement": "Offshore/source, inland/outflow, and artificial lateral boundaries should be open/radiation; laterals must not be rigid coastal walls.",
+      "implementation_route": "Regional boundary overrides provide transmissive and characteristic radiation states; relaxation zones can damp artificial boundaries.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The baseline boundary roles are implemented through characteristic exterior states plus optional sponge residuals.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:373",
+        "src/r2d/src/RegionalBoundaryCondition.cpp:309",
+        "src/r2d/src/RegionalRelaxationZone.cpp",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:11"
+      ],
+      "impact": "No baseline boundary-role mismatch.",
+      "recommended_action": "Keep reflection tests tied to boundary policy changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-BC-002",
+      "scope": "Regional2D",
+      "component": "Sponge/relaxation source",
+      "model_requirement": "S_r=-sigma(x)(U-U_ref), with sigma zero in the interior and increasing through the sponge.",
+      "implementation_route": "RegionalRelaxationZone adds area*rate*(current-reference) to the residual, yielding damping in the update.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The sign convention is consistent with residual-form explicit updates.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:375",
+        "src/r2d/src/RegionalRelaxationZone.cpp"
+      ],
+      "impact": "No source-sign mismatch.",
+      "recommended_action": "Keep profile parameters in case evidence.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-BC-003",
+      "scope": "Regional2D",
+      "component": "Exact radiation/sponge selection",
+      "model_requirement": "The consolidated model leaves exact radiation condition and sponge profile unresolved pending reflection tests.",
+      "implementation_route": "Characteristic radiation and relaxation parameters are selected in implementation and supported by accepted G6 evidence.",
+      "classification": "DOCUMENTATION_AMBIGUITY",
+      "finding": "The implementation is accepted, but the consolidated text still describes this as unresolved.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:387",
+        "src/r2d/src/RegionalBoundaryCondition.cpp:309",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:32",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:33"
+      ],
+      "impact": "Documentation ambiguity only; not a mathematical mismatch.",
+      "recommended_action": "Update model text to cite the accepted characteristic/open-ocean damped policies.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-WD-001",
+      "scope": "Regional2D",
+      "component": "Wet/dry treatment",
+      "model_requirement": "Dry cells use h<h_dry, avoid division by vanishing depth, enforce nonnegative depths, and control momentum.",
+      "implementation_route": "Hydrostatic reconstruction clips depths and WetDryUpdate/PositivityTimestep enforce admissible updates.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The required wet/dry behavior is represented by discrete positivity and canonicalisation rules.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:495",
+        "src/r2d/src/HydrostaticReconstruction.cpp:81",
+        "src/r2d/src/WetDryUpdate.cpp",
+        "src/r2d/src/PositivityTimestep.cpp"
+      ],
+      "impact": "No model mismatch.",
+      "recommended_action": "Maintain shoreline regression tests before changing reconstruction.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-RECON-001",
+      "scope": "Regional2D",
+      "component": "Piecewise-constant verification baseline",
+      "model_requirement": "The numerical formulation should begin with piecewise-constant states for verification.",
+      "implementation_route": "Current Regional2D residual uses cell-local owner/neighbour states with hydrostatic reconstruction.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "This is the accepted low-order baseline used by the frozen-terrain convergence evidence.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:435",
+        "src/r2d/src/WellBalancedResidualEvaluation.cpp",
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_numerical_method_audit.json"
+      ],
+      "impact": "The R6 non-convergence diagnosis is a numerical-method limitation, not a model mismatch.",
+      "recommended_action": "Treat higher-order reconstruction as a scheme improvement.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-RECON-002",
+      "scope": "Regional2D",
+      "component": "Limited linear reconstruction",
+      "model_requirement": "Limited linear reconstruction may be introduced after constant/linear manufactured-field evidence.",
+      "implementation_route": "No production MUSCL/limited-gradient Regional2D solver is active in the baseline.",
+      "classification": "DEFERRED",
+      "finding": "The model text frames this as a later numerical upgrade, not a required physical model feature.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:437",
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r6_diagnosis.json"
+      ],
+      "impact": "This is the intended next numerical scheme improvement area.",
+      "recommended_action": "Proceed only as a numerical-discretisation change with frozen physics and terrain.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-TIME-001",
+      "scope": "Regional2D",
+      "component": "Explicit SSP Runge-Kutta",
+      "model_requirement": "The baseline uses explicit FE for component tests and SSPRK2/SSPRK3 for production.",
+      "implementation_route": "RegionalTimeIntegration supports FE, SSPRK2, and SSPRK3 with stable timestep checks.",
+      "classification": "EXACT_MATCH",
+      "finding": "The documented explicit time-integration family is implemented.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:513",
+        "src/r2d/src/RegionalTimeIntegration.cpp:453",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:5"
+      ],
+      "impact": "No model mismatch.",
+      "recommended_action": "Temporal-convergence work remains separate from spatial scheme changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-TIME-002",
+      "scope": "Regional2D",
+      "component": "CFL and positivity restrictions",
+      "model_requirement": "A gravity-wave CFL timestep is used, with additional source/relaxation restrictions.",
+      "implementation_route": "CflTimestep, PositivityTimestep, RegionalSourceTimestep, and RelaxationTimestep estimates are combined.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The implementation uses the documented timestep controls in discrete form.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:515",
+        "src/r2d/src/RegionalTimeIntegration.cpp:88",
+        "src/r2d/src/RegionalTimeIntegration.cpp:156",
+        "src/r2d/src/CflTimestep.cpp"
+      ],
+      "impact": "No blocker.",
+      "recommended_action": "Preserve timestep policy when isolating spatial convergence.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-TIME-003",
+      "scope": "Regional2D",
+      "component": "Accept/retry step sequence",
+      "model_requirement": "The model solve sequence allows accepting a step or reducing dt and retrying.",
+      "implementation_route": "attempt_regional_explicit_step returns accepted or retry_with_smaller_timestep based on stable estimates.",
+      "classification": "IMPLEMENTATION_EXTENSION",
+      "finding": "The retry machinery is an implementation robustness mechanism around the explicit model.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:529",
+        "src/r2d/src/RegionalTimeIntegration.cpp:172",
+        "src/r2d/src/RegionalTimeIntegration.cpp:523"
+      ],
+      "impact": "No physics-model issue.",
+      "recommended_action": "Keep retry diagnostics out of physical-parameter invariance checks.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-PARAM-001",
+      "scope": "Regional2D",
+      "component": "Gravity",
+      "model_requirement": "The regional shallow-water pressure and wave speed use gravitational acceleration g.",
+      "implementation_route": "Case policy sets gravity_m_per_s2=9.80665 for Kamaishi and C1A frozen-terrain baselines.",
+      "classification": "EXACT_MATCH",
+      "finding": "The accepted baseline parameter is explicitly configured.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:315",
+        "cases/kamaishi_delivery/case_spec.json:95",
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/physical_parameter_invariance.json"
+      ],
+      "impact": "No parameter mismatch.",
+      "recommended_action": "Keep gravity frozen for spatial-method experiments.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "R2D-PARAM-002",
+      "scope": "Regional2D",
+      "component": "Manning coefficient",
+      "model_requirement": "Manning coefficients are case-data inputs; spatial variation is unresolved.",
+      "implementation_route": "Accepted Kamaishi and frozen-terrain baselines use uniform n=0.025.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "Uniform roughness is a case-data simplification within the documented input space.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:348",
+        "cases/kamaishi_delivery/case_spec.json:106",
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/physical_parameter_invariance.json"
+      ],
+      "impact": "No model mismatch.",
+      "recommended_action": "Do not vary roughness in frozen spatial-convergence studies.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-EXPORT-001",
+      "scope": "Coupling",
+      "component": "Regional handoff variables",
+      "model_requirement": "The regional model exports h, eta, qx, qy, and b along the local inlet section.",
+      "implementation_route": "Coupling exporter writes metadata and samples with depth, momentum_x, momentum_y, bed_elevation, free_surface_elevation.",
+      "classification": "EXACT_MATCH",
+      "finding": "The export contract contains the required handoff variables.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:552",
+        "src/r2d_case_runner/src/RegionalFileCaseRunner.cpp:1011",
+        "src/r2d_case_runner/src/RegionalFileCaseRunner.cpp:1074"
+      ],
+      "impact": "No coupling-contract mismatch.",
+      "recommended_action": "Keep contract_version increments for future schema changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-MAP-001",
+      "scope": "Coupling",
+      "component": "Normal and tangential projection",
+      "model_requirement": "Regional q is projected onto the local inlet normal and tangential directions.",
+      "implementation_route": "openfoam_replay computes qn and qt from momentum_x/y and configured normal/tangent vectors.",
+      "classification": "EXACT_MATCH",
+      "finding": "The projection matches the one-way coupling operator.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:588",
+        "tools/openfoam/openfoam_replay.py:751",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:19"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Retain projection diagnostics for replay regression tests.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-MAP-002",
+      "scope": "Coupling",
+      "component": "Depth-uniform velocity lift",
+      "model_requirement": "A depth-uniform vertical inlet profile is the simplest shallow-water-consistent baseline.",
+      "implementation_route": "Replay conversion requires mapping.velocity_profile=depth_uniform and sets vertical_velocity to the configured value, defaulting to zero.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The implementation uses the documented simplest baseline and rescales to preserve discrete discharge over wet faces.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:607",
+        "tools/openfoam/openfoam_replay.py:358",
+        "tools/openfoam/openfoam_replay.py:772",
+        "tests/fixtures/openfoam/synthetic_replay/replay_config_production.json:57"
+      ],
+      "impact": "No coupling-model mismatch.",
+      "recommended_action": "Document depth-uniform lift as accepted, not merely unresolved.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-MAP-003",
+      "scope": "Coupling",
+      "component": "Free-surface alpha reconstruction",
+      "model_requirement": "alpha_in is 1 below eta_R and 0 above eta_R, with a resolved transition across local interface cells.",
+      "implementation_route": "Replay conversion computes per-face alpha fractions from eta, bed elevation, and vertical face bounds.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The discrete face-fraction mapping is the finite-volume equivalent of the Heaviside alpha rule.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:597",
+        "tools/openfoam/openfoam_replay.py:678",
+        "tools/openfoam/openfoam_replay.py:793"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep alpha bounds tests for replay changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-MAP-004",
+      "scope": "Coupling",
+      "component": "Discharge preservation",
+      "model_requirement": "The inlet mapping preserves section-integrated normal discharge.",
+      "implementation_route": "Replay conversion records target and reconstructed normal/tangential discharge residuals.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The implementation preserves discharge in the discrete support/face quadrature used by the local inlet.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:588",
+        "tools/openfoam/openfoam_replay.py:817",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:21"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Use residual diagnostics as replay acceptance evidence.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "CPL-ONEWAY-001",
+      "scope": "Coupling",
+      "component": "One-way replay",
+      "model_requirement": "Regional-to-local coupling is one-way; local reflections are not fed back to Regional2D.",
+      "implementation_route": "OpenFOAM replay consumes archived Regional2D boundaryData and never updates Regional2D state.",
+      "classification": "EXACT_MATCH",
+      "finding": "The implementation matches the accepted one-way coupling assumption.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:609",
+        "tools/openfoam/openfoam_replay.py:1301",
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:40"
+      ],
+      "impact": "No one-way-coupling mismatch.",
+      "recommended_action": "Keep two-way coupling deferred unless reflection evidence requires it.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-EQS-001",
+      "scope": "Local3D",
+      "component": "Incompressible two-phase URANS",
+      "model_requirement": "The local model solves incompressible immiscible two-phase Navier-Stokes/URANS with VOF.",
+      "implementation_route": "OpenFOAM Foundation 11 incompressibleVoF dictionaries are generated by openfoam_replay.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The repository configures an adopted solver backend for the documented equations.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:638",
+        "docs/workstream/SWE - Software/SWE-L3D/g6_openfoam_authority_record.json",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:22"
+      ],
+      "impact": "No local governing-equation mismatch.",
+      "recommended_action": "Keep backend/version authority records with future OpenFOAM changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-VOF-001",
+      "scope": "Local3D",
+      "component": "VOF phase transport",
+      "model_requirement": "The physical alpha equation is advective and bounded between 0 and 1.",
+      "implementation_route": "OpenFOAM alpha.water transport is configured and post-run acceptance checks bound alpha.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The adopted backend implements bounded finite-volume VOF transport.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:661",
+        "tools/openfoam/openfoam_replay.py:1564",
+        "tools/openfoam/openfoam_replay.py:2507",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:24"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep alpha boundedness acceptance checks.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-VOF-002",
+      "scope": "Local3D",
+      "component": "Interface compression",
+      "model_requirement": "The finite-volume VOF implementation adds bounded interface compression.",
+      "implementation_route": "OpenFOAM incompressibleVoF provides the production compressive VOF implementation.",
+      "classification": "IMPLEMENTATION_EXTENSION",
+      "finding": "Compression is a documented numerical extension of the physical alpha advection equation.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:669",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:24"
+      ],
+      "impact": "No physical-model mismatch.",
+      "recommended_action": "Do not interpret compression as an additional physical phase source.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-SST-001",
+      "scope": "Local3D",
+      "component": "k-omega SST turbulence",
+      "model_requirement": "The selected turbulence baseline is Menter k-omega SST URANS.",
+      "implementation_route": "Generated OpenFOAM momentumTransport sets simulationType RAS and model kOmegaSST.",
+      "classification": "EXACT_MATCH",
+      "finding": "The configured turbulence model matches the selected local closure.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:678",
+        "tools/openfoam/openfoam_replay.py:1473",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:27"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep LES comparison deferred.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-MAT-001",
+      "scope": "Local3D",
+      "component": "Water-air mixture properties",
+      "model_requirement": "Mixture properties depend on alpha for water and air density/viscosity.",
+      "implementation_route": "Generated OpenFOAM phaseProperties and physicalProperties files configure water and air phases.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The backend receives the required two-phase material-property configuration.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:630",
+        "tools/openfoam/openfoam_replay.py:1470",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:25"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Record any future material calibration separately.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-IN-001",
+      "scope": "Local3D",
+      "component": "Coupling inlet",
+      "model_requirement": "The local inlet is forced by one-way regional replay.",
+      "implementation_route": "Generated U and alpha.water inlet patches use timeVaryingMappedFixedValue from boundaryData.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The local inlet receives the mapped regional time series through OpenFOAM native boundaryData.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:728",
+        "tools/openfoam/openfoam_replay.py:1476",
+        "docs/workstream/SWE - Software/SWE-L3D/g6_openfoam_authority_record.json:93"
+      ],
+      "impact": "No baseline boundary mismatch.",
+      "recommended_action": "Keep one-way inlet as immutable when testing Regional2D scheme changes.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-OUT-001",
+      "scope": "Local3D",
+      "component": "Outlet boundary",
+      "model_requirement": "The local outlet is open/radiation with absorption where required.",
+      "implementation_route": "Production replay uses pressureInletOutletVelocity, prghTotalPressure p0=0, variableHeightFlowRate, turbulence inletOutlet, and outlet isotropicDamping.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The selected OpenFOAM open-ocean policy implements the intended outlet role.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:729",
+        "tools/openfoam/openfoam_replay.py:1479",
+        "tools/openfoam/openfoam_replay.py:1491",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:32"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep reflection coefficients in boundary-policy evidence.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-SIDE-001",
+      "scope": "Local3D",
+      "component": "Lateral boundary",
+      "model_requirement": "Artificial side boundaries represent continuation of the ocean/coastal field and are not rigid walls.",
+      "implementation_route": "Production replay uses open-ocean field conditions and lateral isotropicDamping zones; legacy symmetry remains only for schema 1.0.0 fixtures.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The accepted production policy matches the documented physical role.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:730",
+        "tools/openfoam/openfoam_replay.py:1494",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:33"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Do not regress production laterals to rigid or symmetry-only behavior.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-TOP-001",
+      "scope": "Local3D",
+      "component": "Atmosphere boundary",
+      "model_requirement": "The top boundary is open atmosphere with reference pressure and suitable phase/velocity treatment.",
+      "implementation_route": "Generated atmosphere patch uses open velocity/pressure/alpha policies.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The OpenFOAM boundary choices implement the intended open atmospheric role.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:731",
+        "tools/openfoam/openfoam_replay.py:1506",
+        "tools/openfoam/openfoam_replay.py:1522",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:34"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep top boundary policy in generated boundary_policy.json.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-TERRAIN-001",
+      "scope": "Local3D",
+      "component": "Terrain wall",
+      "model_requirement": "Fixed terrain/topography is impermeable with wall shear treatment.",
+      "implementation_route": "Generated terrain wall fields use noSlip, fixedFluxPressure, zeroGradient alpha, and wall functions.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The OpenFOAM wall policy implements fixed terrain with wall-shear closure.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:732",
+        "tools/openfoam/openfoam_replay.py:1485",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:35"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep wall-function evidence with production Local3D runs.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-BC-BARRIER-001",
+      "scope": "Local3D",
+      "component": "Rigid barrier wall",
+      "model_requirement": "The barrier is a fixed rigid obstacle with pressure and viscous traction extraction.",
+      "implementation_route": "Generated barrier patch is a wall and enables the OpenFOAM forces function object when present.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The rigid-wall local model is implemented through OpenFOAM wall patches and forces extraction.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:733",
+        "tools/openfoam/openfoam_replay.py:1610",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:36"
+      ],
+      "impact": "No issue.",
+      "recommended_action": "Keep deformable/porous barriers out of current baseline claims.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-FRC-001",
+      "scope": "Local3D",
+      "component": "Force and moment extraction",
+      "model_requirement": "Hydrodynamic loading is extracted from pressure and viscous tractions on the barrier.",
+      "implementation_route": "OpenFOAM forces function object is configured over the barrier patch.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "Integrated force/moment extraction is available, while full load convergence remains a verification task.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:733",
+        "tools/openfoam/openfoam_replay.py:1612",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:38"
+      ],
+      "impact": "No model mismatch; downstream validation remains open.",
+      "recommended_action": "Do not require full force convergence before Regional2D spatial-scheme work.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "L3D-TIME-001",
+      "scope": "Local3D",
+      "component": "Adaptive timestep/CFL control",
+      "model_requirement": "Local3D uses adaptive timestep/CFL controls for stable VOF evolution.",
+      "implementation_route": "Generated controlDict and timestep_policy evidence configure maxCo, maxAlphaCo, and maxDeltaT policy around OpenFOAM controls.",
+      "classification": "DISCRETE_EQUIVALENT",
+      "finding": "The local solver timestep policy is implemented through backend configuration and repository evidence.",
+      "evidence": [
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:65",
+        "tools/openfoam/openfoam_replay.py:1559",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:37"
+      ],
+      "impact": "No blocker for Regional2D spatial work.",
+      "recommended_action": "Keep formal Local3D timestep convergence deferred.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "HLD-BIDIR-001",
+      "scope": "Hybrid",
+      "component": "Two-way coupling",
+      "model_requirement": "Two-way coupling is necessary only if local reflection materially changes the incident regional field.",
+      "implementation_route": "No two-way Regional2D feedback path is implemented.",
+      "classification": "DEFERRED",
+      "finding": "The model explicitly accepts one-way replay as the current baseline.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:611",
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:40"
+      ],
+      "impact": "No current-baseline mismatch.",
+      "recommended_action": "Revisit only if reflection/placement evidence invalidates one-way replay.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "HLD-LES-001",
+      "scope": "Hybrid",
+      "component": "Production LES",
+      "model_requirement": "LES may be used as a later high-fidelity comparison.",
+      "implementation_route": "The implemented operational local baseline is URANS k-omega SST.",
+      "classification": "DEFERRED",
+      "finding": "LES is outside the G6/C1A accepted baseline.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:678",
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:93"
+      ],
+      "impact": "No blocker.",
+      "recommended_action": "Keep LES in future verification/validation planning.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "HLD-FSI-001",
+      "scope": "Hybrid",
+      "component": "Fluid-structure interaction and structural damage",
+      "model_requirement": "FSI, deformable structures, damage, scour, and full impact metrics are outside the current gate.",
+      "implementation_route": "No FSI/damage/scour solver is implemented.",
+      "classification": "DEFERRED",
+      "finding": "These features are excluded from the accepted theoretical-model gate.",
+      "evidence": [
+        "docs/workstream/wbs-reconciliation/g6_theoretical_model_gate.md:90",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex"
+      ],
+      "impact": "No blocker for numerical scheme work.",
+      "recommended_action": "Keep excluded features out of model-consistency acceptance criteria.",
+      "blocking_for_numerical_scheme_work": false
+    },
+    {
+      "requirement_id": "HLD-DISP-001",
+      "scope": "Hybrid",
+      "component": "Regional dispersive correction",
+      "model_requirement": "No dispersive regional baseline is selected.",
+      "implementation_route": "Regional2D implements NLSWE, not Boussinesq/dispersive propagation.",
+      "classification": "DEFERRED",
+      "finding": "Dispersive physics are a future model extension, not a missing required term.",
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex",
+        "src/r2d/src/ShallowWaterFlux.cpp"
+      ],
+      "impact": "No current-baseline mismatch.",
+      "recommended_action": "Do not introduce dispersive terms as part of spatial-order repairs.",
+      "blocking_for_numerical_scheme_work": false
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "ASM-001",
+      "assumption": "The accepted model authority is the consolidated model plus G6 traceability/gate evidence where newer than fragmented RES-MOD wording.",
+      "basis": "G6 accepted traceability explicitly records passive earthquake transfer, one-way replay, and Local3D policies.",
+      "impact": "Older RES-MOD wording can be a documentation ambiguity without blocking numerical scheme work."
+    },
+    {
+      "id": "ASM-002",
+      "assumption": "C1A frozen-terrain spatial studies keep terrain, earthquake source, Manning, Coriolis, boundary policy, and replay contracts fixed.",
+      "basis": "The audit is a model-to-code traceability check before numerical scheme changes.",
+      "impact": "Observed C1A spatial behavior is attributed to discretisation unless a listed core mismatch appears."
+    },
+    {
+      "id": "ASM-003",
+      "assumption": "OpenFOAM Foundation 11 is treated as an adopted implementation authority for the local incompressibleVoF/SST equations.",
+      "basis": "Existing G6 authority records and replay tests exercise generated dictionaries rather than reimplementing URANS/VOF in repository code.",
+      "impact": "Traceability cites generated configuration and authority evidence for Local3D operators."
+    },
+    {
+      "id": "ASM-004",
+      "assumption": "The current Regional2D earthquake baseline is instantaneous initialization, not finite-rise-time moving-bed forcing.",
+      "basis": "Consolidated model text and G6 traceability select passive free-surface transfer.",
+      "impact": "Dynamic rupture is classified as deferred/documentation repair, not a blocking implementation mismatch."
+    },
+    {
+      "id": "ASM-005",
+      "assumption": "Uniform Manning n=0.025 is a case-data decision for the accepted Kamaishi/frozen-terrain baselines.",
+      "basis": "Spatially varying roughness classes are noted as unresolved model inputs.",
+      "impact": "Roughness variation is not part of the numerical-convergence isolation."
+    },
+    {
+      "id": "ASM-006",
+      "assumption": "The Local3D production lateral/open-ocean policy supersedes the legacy synthetic schema 1.0.0 symmetry fixture.",
+      "basis": "G6 traceability records schema 1.1.0 production open_ocean_damped policy and reflection metrics.",
+      "impact": "Legacy symmetry tests remain compatibility tests, not the current physical boundary baseline."
+    }
+  ],
+  "deferred_features": [
+    {
+      "id": "DEF-001",
+      "feature": "Limited linear/MUSCL Regional2D reconstruction",
+      "reason": "Numerical scheme improvement target after P0 frozen-physics diagnosis.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-002",
+      "feature": "Dynamic moving-bed earthquake rupture",
+      "reason": "Accepted baseline uses instantaneous passive free-surface transfer.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-003",
+      "feature": "Two-way Regional2D-Local3D coupling",
+      "reason": "One-way replay is accepted unless reflection materially changes the incident field.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-004",
+      "feature": "Production LES",
+      "reason": "URANS k-omega SST is the operational Local3D baseline.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-005",
+      "feature": "FSI, structural damage, deformable barriers, scour",
+      "reason": "Excluded from the G6 theoretical-model gate.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-006",
+      "feature": "Observation calibration and validation",
+      "reason": "Explicitly outside G6 and C1A numerical convergence scope.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-007",
+      "feature": "Dispersive regional propagation",
+      "reason": "Current regional model is NLSWE.",
+      "current_classification": "DEFERRED"
+    },
+    {
+      "id": "DEF-008",
+      "feature": "Surrogate/ML optimisation and full impact metric suite",
+      "reason": "Later workstream outside current model-code consistency gate.",
+      "current_classification": "DEFERRED"
+    }
+  ],
+  "numerical_vs_model_choices": [
+    {
+      "id": "NUM-001",
+      "choice": "Rusanov flux",
+      "model_or_numerical": "numerical discretisation",
+      "classification": "EXACT_MATCH",
+      "decision": "Retained as robust reference flux; alternatives such as HLL/HLLC are controlled future scheme tests."
+    },
+    {
+      "id": "NUM-002",
+      "choice": "Hydrostatic reconstruction",
+      "model_or_numerical": "numerical discretisation of bed source",
+      "classification": "DISCRETE_EQUIVALENT",
+      "decision": "Accepted discrete equivalent of the continuous bed-slope source and well-balancing requirement."
+    },
+    {
+      "id": "NUM-003",
+      "choice": "Piecewise-constant state reconstruction",
+      "model_or_numerical": "numerical discretisation",
+      "classification": "DISCRETE_EQUIVALENT",
+      "decision": "Current P0 baseline; R6 evidence points to numerical-order limits, not missing physics."
+    },
+    {
+      "id": "NUM-004",
+      "choice": "Limited linear/MUSCL reconstruction",
+      "model_or_numerical": "numerical discretisation",
+      "classification": "DEFERRED",
+      "decision": "Legitimate next C1A improvement if physics/terrain remain frozen."
+    },
+    {
+      "id": "NUM-005",
+      "choice": "Manning semi-implicit split update",
+      "model_or_numerical": "numerical source integration",
+      "classification": "DISCRETE_EQUIVALENT",
+      "decision": "Implements the same damping source direction with a stable update."
+    },
+    {
+      "id": "NUM-006",
+      "choice": "VOF interface compression",
+      "model_or_numerical": "Local3D numerical discretisation",
+      "classification": "IMPLEMENTATION_EXTENSION",
+      "decision": "Backend numerical mechanism for bounded interface capturing, not extra physical forcing."
+    },
+    {
+      "id": "NUM-007",
+      "choice": "One-way replay",
+      "model_or_numerical": "coupling architecture",
+      "classification": "EXACT_MATCH",
+      "decision": "Accepted hybrid baseline; two-way feedback is a deferred model extension."
+    }
+  ],
+  "documentation_conflicts": [
+    {
+      "id": "DOC-CONFLICT-001",
+      "topic": "Earthquake source formulation",
+      "source_a": "RES-MOD-SRC selected approach says dynamic moving-bed earthquake source b=b0+sum_m Delta b_m R_m(t).",
+      "source_b": "Consolidated model and G6 matrix select static/passive finite-fault displacement mapped to initial eta with q=0.",
+      "implemented_reality": "RegionalEarthquakeInitialisation computes effective displacement, builds post-event bed/depth, and zeroes post-event momentum at initialization.",
+      "classification": "DOCUMENTATION_AMBIGUITY",
+      "recommended_resolution": "Revise RES-MOD-SRC to state instantaneous passive initial transfer is the current accepted baseline; mark dynamic moving-bed rupture as deferred.",
+      "blocking_for_numerical_scheme_work": false,
+      "evidence": [
+        "docs/workstream/RES - Research/RES-MOD - Mathematical Model and Coupling/RES-MOD-SRC - Physical Source Terms and Constitutive Closures/res-mod-src.tex:502",
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:364",
+        "src/r2d/src/RegionalEarthquakeInitialisation.cpp:550"
+      ]
+    },
+    {
+      "id": "DOC-CONFLICT-002",
+      "topic": "Radiation/sponge policy selection",
+      "source_a": "Consolidated model v1.0 still marks exact radiation condition and sponge profile as unresolved.",
+      "source_b": "G6 traceability records accepted characteristic/open-ocean damped Regional2D/Local3D boundary evidence and reflection metrics.",
+      "implemented_reality": "Regional2D characteristic radiation and relaxation zones exist; Local3D production replay uses open_ocean_damped with isotropicDamping.",
+      "classification": "DOCUMENTATION_AMBIGUITY",
+      "recommended_resolution": "Update consolidated/RES-MOD boundary wording to cite accepted G6 boundary policy and leave only parameter tuning as future evidence.",
+      "blocking_for_numerical_scheme_work": false,
+      "evidence": [
+        "docs/Latex/Proposed Model/studentship_consolidated_mathematical_model_v1.0.tex:387",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:32",
+        "docs/workstream/wbs-reconciliation/g6_model_traceability_matrix.md:33"
+      ]
+    }
+  ],
+  "proceed_decision": "Proceed to Regional2D numerical scheme improvement under frozen G6 terrain/physics constraints. Do not alter physical source terms, baseline boundary roles, or coupling semantics as part of that work."
+}
