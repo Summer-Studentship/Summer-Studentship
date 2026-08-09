@@ -415,23 +415,12 @@ def legacy_from_csv(output_dir: Path, mesh_path: Path, *, metadata: Mapping[str,
 
     cells = r4.parse_msh_surface_cells(mesh_path)
     mesh = r4.parse_msh_triangles(mesh_path)
-    points = []
-    connectivity = []
-    point_index: dict[tuple[float, float], int] = {}
-    for cell in cells:
-        tri = []
-        for key in (("vertex0_x_m", "vertex0_y_m"), ("vertex1_x_m", "vertex1_y_m"), ("vertex2_x_m", "vertex2_y_m")):
-            coord = (float(cell[key[0]]), float(cell[key[1]]))
-            if coord not in point_index:
-                point_index[coord] = len(points)
-                points.append(coord)
-            tri.append(point_index[coord])
-        connectivity.append(tri)
+    points, connectivity = _read_gmsh_points_and_triangles(mesh_path)
 
     rows: list[dict[str, str]]
     with snapshot_path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
-    times = sorted({float(row["time_s"]) for row in rows})
+    times = sorted({float(row["time"]) for row in rows})
     cell_count = len(cells)
     h = np.zeros((len(times), cell_count), dtype="float64")
     qx = np.zeros_like(h)
@@ -439,25 +428,62 @@ def legacy_from_csv(output_dir: Path, mesh_path: Path, *, metadata: Mapping[str,
     bed = np.zeros(cell_count, dtype="float64")
     time_index = {value: index for index, value in enumerate(times)}
     for row in rows:
-        ti = time_index[float(row["time_s"])]
-        ci = int(row["cell_index"])
+        ti = time_index[float(row["time"])]
+        ci = int(row["cell"])
         bed[ci] = float(row["bed_elevation"])
-        h[ti, ci] = float(row["water_depth"])
+        h[ti, ci] = float(row["depth"])
         qx[ti, ci] = float(row["momentum_x"])
         qy[ti, ci] = float(row["momentum_y"])
 
     with samples_path.open(newline="", encoding="utf-8") as handle:
         sample_rows = list(csv.DictReader(handle))
-    s = np.asarray([float(row.get("offset_m", row.get("s_m", index))) for index, row in enumerate(sample_rows)], dtype="float64")
+    metadata_path = coupling_dir / "metadata.json"
+    coupling_metadata = json.loads(metadata_path.read_text(encoding="utf-8")) if metadata_path.is_file() else {"samples": []}
+    case_root = output_dir.parents[3]
+    corridor = json.loads((case_root / "manifests/corridors/kamaishi-delivery-corridor-evidence.json").read_text(encoding="utf-8"))
+    normal = (
+        float(corridor["basis"]["centreline_unit"]["x"]),
+        float(corridor["basis"]["centreline_unit"]["y"]),
+    )
+    cross = (
+        float(corridor["basis"]["left_normal_unit"]["x"]),
+        float(corridor["basis"]["left_normal_unit"]["y"]),
+    )
+    origin = corridor["selected_nearshore_interface"]["projected_m"]
+    offsets = {
+        int(sample["local_index"]): (float(sample["x_m"]) - float(origin["x"])) * cross[0]
+        + (float(sample["y_m"]) - float(origin["y"])) * cross[1]
+        for sample in coupling_metadata.get("samples", [])
+    }
+    face_lengths = r4.parse_boundary_face_lengths(mesh_path, r4.COUPLING_PATCH, coupling_metadata.get("samples", []))
+    by_time: dict[float, list[dict[str, str]]] = {}
+    for row in sample_rows:
+        by_time.setdefault(float(row["time"]), []).append(row)
+    sample_indices = sorted({int(row["local_index"]) for row in sample_rows})
+    s = np.asarray([offsets.get(index, float(index)) for index in sample_indices], dtype="float64")
+    sample_pos = {index: pos for pos, index in enumerate(sample_indices)}
     with history_path.open(newline="", encoding="utf-8") as handle:
         history = list(csv.DictReader(handle))
-    ctime = np.asarray([float(row["time_s"]) for row in history], dtype="float64")
-    qn_series = np.asarray([float(row["normal_discharge_m2_per_s"]) for row in history], dtype="float64")
-    eta_series = np.asarray([float(row["free_surface_elevation_m"]) for row in history], dtype="float64")
-    qn = np.tile(qn_series[:, None], (1, len(s)))
-    eta_c = np.tile(eta_series[:, None], (1, len(s)))
-    qbar = qn.mean(axis=1)
-    qn_total = qn.sum(axis=1)
+    ctime = np.asarray([float(row["time"]) for row in history], dtype="float64")
+    baseline_time = min(by_time)
+    baseline = {int(row["local_index"]): row for row in by_time[baseline_time]}
+    eta_c = np.zeros((len(ctime), len(sample_indices)), dtype="float64")
+    qn = np.zeros_like(eta_c)
+    for ti, time_value in enumerate(ctime):
+        rows = by_time.get(float(time_value), [])
+        for row in rows:
+            local_index = int(row["local_index"])
+            pos = sample_pos[local_index]
+            base = baseline[local_index]
+            eta_c[ti, pos] = float(row["free_surface_elevation"]) - float(base["free_surface_elevation"])
+            normal_discharge = float(row["momentum_x"]) * normal[0] + float(row["momentum_y"]) * normal[1]
+            base_discharge = float(base["momentum_x"]) * normal[0] + float(base["momentum_y"]) * normal[1]
+            qn[ti, pos] = normal_discharge - base_discharge
+    qn_total = np.asarray(
+        [sum(qn[ti, pos] * face_lengths.get(local_index, 0.0) for local_index, pos in sample_pos.items()) for ti in range(qn.shape[0])],
+        dtype="float64",
+    )
+    qbar = qn_total / r4.SECTION_WIDTH_M
 
     diagnostics_time = np.asarray(times, dtype="float64")
     return Regional2DResult(
@@ -472,8 +498,8 @@ def legacy_from_csv(output_dir: Path, mesh_path: Path, *, metadata: Mapping[str,
             "data_class": "LEGACY_CONVERTED",
             "source_format": "legacy_csv",
         },
-        points=np.asarray(points, dtype="float64"),
-        connectivity=np.asarray(connectivity, dtype="int64"),
+        points=points,
+        connectivity=connectivity,
         cell_centres=np.asarray([[cell["centroid_x_m"], cell["centroid_y_m"]] for cell in cells], dtype="float64"),
         bed_elevation=bed,
         region_tags=np.ones(cell_count, dtype="int64"),
@@ -491,12 +517,51 @@ def legacy_from_csv(output_dir: Path, mesh_path: Path, *, metadata: Mapping[str,
                 "snapshots_csv_sha256": sha256(snapshot_path),
                 "samples_csv_sha256": sha256(samples_path),
                 "history_csv_sha256": sha256(history_path),
+                "metadata_json_sha256": sha256(metadata_path) if metadata_path.is_file() else None,
                 "mesh_sha256": mesh["mesh_sha256"],
             },
             "converter": "tools.results.regional2d_result.legacy_from_csv",
             "converter_git_sha": git_sha() or "unknown",
         },
     )
+
+
+def _read_gmsh_points_and_triangles(mesh_path: Path) -> tuple[np.ndarray, np.ndarray]:
+    lines = mesh_path.read_text(encoding="utf-8", errors="replace").splitlines()
+    nodes: dict[int, tuple[float, float]] = {}
+    triangles: list[tuple[int, int, int]] = []
+    index = 0
+    while index < len(lines):
+        marker = lines[index]
+        if marker == "$Nodes":
+            block_count, _, _, _ = map(int, lines[index + 1].split())
+            index += 2
+            for _ in range(block_count):
+                _, _, _, node_count = map(int, lines[index].split())
+                index += 1
+                tags = [int(lines[index + offset]) for offset in range(node_count)]
+                index += node_count
+                coords = [tuple(float(value) for value in lines[index + offset].split()[:2]) for offset in range(node_count)]
+                index += node_count
+                nodes.update(dict(zip(tags, coords)))
+        elif marker == "$Elements":
+            block_count, _, _, _ = map(int, lines[index + 1].split())
+            index += 2
+            for _ in range(block_count):
+                entity_dim, _, element_type, element_count = map(int, lines[index].split())
+                index += 1
+                for _ in range(element_count):
+                    values = [int(value) for value in lines[index].split()]
+                    index += 1
+                    if entity_dim == 2 and element_type == 2:
+                        triangles.append((values[1], values[2], values[3]))
+        else:
+            index += 1
+    ordered_tags = sorted(nodes)
+    tag_to_index = {tag: i for i, tag in enumerate(ordered_tags)}
+    points = np.asarray([nodes[tag] for tag in ordered_tags], dtype="float64")
+    connectivity = np.asarray([[tag_to_index[a], tag_to_index[b], tag_to_index[c]] for a, b, c in triangles], dtype="int64")
+    return points, connectivity
 
 
 def _main(argv: Sequence[str] | None = None) -> int:
