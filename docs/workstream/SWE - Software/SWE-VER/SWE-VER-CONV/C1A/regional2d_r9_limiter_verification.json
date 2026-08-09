@@ -1,0 +1,55 @@
+{
+  "limiter": "Barth-Jespersen scalar limiter on eta/u/v with positivity floor on reconstructed depth",
+  "schema": {
+    "name": "tsunami.c1a_r9_limiter_verification",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-reconstruction-r9",
+  "tests": [
+    {
+      "active_fraction": 0.0,
+      "case": "constant",
+      "constant_unchanged": true,
+      "maximum_reconstructed_value": 2.0,
+      "min_phi": 1.0,
+      "minimum_reconstructed_value": 2.0,
+      "no_negative_depth": true
+    },
+    {
+      "active_fraction": 0.0,
+      "case": "monotonic_linear",
+      "constant_unchanged": true,
+      "maximum_reconstructed_value": 1.9375,
+      "min_phi": 0.9999999999999993,
+      "minimum_reconstructed_value": 0.0625,
+      "no_negative_depth": true
+    },
+    {
+      "active_fraction": 0.0625,
+      "case": "smooth_extremum",
+      "constant_unchanged": true,
+      "maximum_reconstructed_value": 0.4388744212962963,
+      "min_phi": 0.0,
+      "minimum_reconstructed_value": 0.0034722222222222203,
+      "no_negative_depth": true
+    },
+    {
+      "active_fraction": 0.125,
+      "case": "sharp_gradient",
+      "constant_unchanged": true,
+      "maximum_reconstructed_value": 1.0,
+      "min_phi": 0.0,
+      "minimum_reconstructed_value": 0.0,
+      "no_negative_depth": true
+    },
+    {
+      "active_fraction": 0.0,
+      "case": "near_dry_depth",
+      "constant_unchanged": true,
+      "maximum_reconstructed_value": 0.03,
+      "min_phi": 0.9999999999999909,
+      "minimum_reconstructed_value": 0.02,
+      "no_negative_depth": true
+    }
+  ]
+}

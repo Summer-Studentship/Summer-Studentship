@@ -1,0 +1,116 @@
+{
+  "classification": "SECOND_ORDER_VERIFIED",
+  "equal_mesh_error_reduction": [
+    {
+      "level": "n4",
+      "mass_l2_reduction": 2.179482193127153,
+      "qx_l2_reduction": 1.0875823493945447,
+      "qy_l2_reduction": 0.8362265706777801
+    },
+    {
+      "level": "n8",
+      "mass_l2_reduction": 4.298362499372649,
+      "qx_l2_reduction": 1.6365937048841002,
+      "qy_l2_reduction": 1.2686890969601168
+    },
+    {
+      "level": "n16",
+      "mass_l2_reduction": 11.358668653268431,
+      "qx_l2_reduction": 3.4953873647534754,
+      "qy_l2_reduction": 2.626053616981655
+    },
+    {
+      "level": "n32",
+      "mass_l2_reduction": 30.369903748275366,
+      "qx_l2_reduction": 8.627108323462533,
+      "qy_l2_reduction": 6.049906432297846
+    }
+  ],
+  "fresh_gcc_release_executable_sha256": "cde2d260e5fca89b7088c29b9f1b406e5e80d5c7b2ef915808841de53e5da8a0",
+  "runtime_overhead_medium_level": 1.223278054292246,
+  "schema": {
+    "name": "tsunami.c1a_r9_scheme_verification",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-reconstruction-r9",
+  "temporal_contamination": {
+    "base": {
+      "actual_h": 0.04419417382415922,
+      "cells": 512,
+      "cfl": 0.04,
+      "dt": 0.0003448275862068966,
+      "final_time": 0.01,
+      "gradient_limiter_seconds": 0.7087995949259493,
+      "level": "n16",
+      "limiter_active_fraction": 0.21694653975095787,
+      "limiter_min": 0.0,
+      "mass_l1": 0.0002892754492408124,
+      "mass_l2": 0.00039150352548680166,
+      "mass_linf": 0.001929436641393778,
+      "qx_l1": 0.0018665664694925512,
+      "qx_l2": 0.0025796889643181172,
+      "qx_linf": 0.011161597005146351,
+      "qy_l1": 0.0019208381739066944,
+      "qy_l2": 0.002536281607796396,
+      "qy_linf": 0.010197096490599022,
+      "refinement_ratio_from_previous": "",
+      "scheme": "limited_linear",
+      "steps": 29,
+      "wall_seconds": 4.973971165003604
+    },
+    "half_dt": {
+      "actual_h": 0.04419417382415922,
+      "cells": 512,
+      "cfl": 0.04,
+      "dt": 0.00017543859649122808,
+      "final_time": 0.01,
+      "gradient_limiter_seconds": 1.3855315079708816,
+      "level": "n16",
+      "limiter_active_fraction": 0.2170748050682261,
+      "limiter_min": 0.0,
+      "mass_l1": 0.00028927617351831667,
+      "mass_l2": 0.00039150325885003236,
+      "mass_linf": 0.0019294528144397916,
+      "qx_l1": 0.001866559540635768,
+      "qx_l2": 0.0025796824268709455,
+      "qx_linf": 0.011160789225536205,
+      "qy_l1": 0.0019208266915707217,
+      "qy_l2": 0.002536268991409357,
+      "qy_linf": 0.010197201408956802,
+      "refinement_ratio_from_previous": "",
+      "scheme": "limited_linear",
+      "steps": 57,
+      "wall_seconds": 9.708089945997926
+    },
+    "level": "n16",
+    "maximum_l1_l2_change": 5.977773728489704e-06,
+    "relative_error_change": {
+      "mass": {
+        "l1": 2.5037641673075418e-06,
+        "l2": 6.810584118569909e-07,
+        "linf": 8.382263333535284e-06
+      },
+      "qx": {
+        "l1": 3.712086816353097e-06,
+        "l2": 2.5341997667698606e-06,
+        "linf": 7.237132910042599e-05
+      },
+      "qy": {
+        "l1": 5.977773728489704e-06,
+        "l2": 4.974363651288847e-06,
+        "linf": 1.0289042363795337e-05
+      }
+    }
+  },
+  "traceability": {
+    "boundary_roles": "unchanged",
+    "change_classification": "NUMERICAL DISCRETISATION CHANGE ONLY",
+    "coupling": "unchanged",
+    "mathematical_model": "unchanged",
+    "physical_source_terms": "unchanged",
+    "spatial_numerical_options": [
+      "first_order",
+      "limited_linear candidate"
+    ]
+  }
+}

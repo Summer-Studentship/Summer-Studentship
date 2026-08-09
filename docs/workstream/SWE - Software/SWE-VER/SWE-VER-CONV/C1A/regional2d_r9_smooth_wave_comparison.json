@@ -1,0 +1,14 @@
+{
+  "amplitude_error_reduction": 5.347518148000729,
+  "first_order_amplitude_error": 0.004204356389509112,
+  "first_order_phase_proxy_l2": 0.00202872912155726,
+  "limited_linear_amplitude_error": 0.0007862257355930602,
+  "limited_linear_phase_proxy_l2": 0.00011642312147083718,
+  "phase_proxy_error_reduction": 17.425482979044126,
+  "proxy": "inexpensive smooth fully wet MMS propagation at n24",
+  "schema": {
+    "name": "tsunami.c1a_r9_smooth_wave_comparison",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-reconstruction-r9"
+}

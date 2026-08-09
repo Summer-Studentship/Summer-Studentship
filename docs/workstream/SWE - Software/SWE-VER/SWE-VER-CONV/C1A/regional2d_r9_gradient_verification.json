@@ -1,0 +1,38 @@
+{
+  "schema": {
+    "name": "tsunami.c1a_r9_gradient_verification",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-reconstruction-r9",
+  "tests": [
+    {
+      "all_valid": true,
+      "case": "constant",
+      "max_abs_gx_error": 0.0,
+      "max_abs_gy_error": 0.0
+    },
+    {
+      "all_valid": true,
+      "case": "linear_x",
+      "max_abs_gx_error": 1.3322676295501878e-15,
+      "max_abs_gy_error": 1.3620791737299377e-15
+    },
+    {
+      "all_valid": true,
+      "case": "linear_y",
+      "max_abs_gx_error": 1.310679959626921e-15,
+      "max_abs_gy_error": 1.6653345369377348e-15
+    },
+    {
+      "all_valid": true,
+      "case": "mixed_linear",
+      "max_abs_gx_error": 3.3306690738754696e-15,
+      "max_abs_gy_error": 2.4424906541753444e-15
+    },
+    {
+      "all_finite": true,
+      "case": "nonlinear",
+      "valid_fraction": 1.0
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "figures": [
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_mass_first_vs_limited_mms_error.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_mass_first_vs_limited_mms_error.provenance.json",
+      "sha256": "7657d3c0747ed0389713ae900764d59d5c09dcc256fff2e599243b4ae6a144e0"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_qx_first_vs_limited_mms_error.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_qx_first_vs_limited_mms_error.provenance.json",
+      "sha256": "a398855f22528a1062baf5a059c58c1d2784842d888be25d5e4f4654df80c915"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_qy_first_vs_limited_mms_error.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_qy_first_vs_limited_mms_error.provenance.json",
+      "sha256": "ddc7c884878eeba6e3ab998f470ee8b2e8686c4504048099ec8c9588934b46bd"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_first_vs_limited_measured_order.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_first_vs_limited_measured_order.provenance.json",
+      "sha256": "33bce05e9a3ac3244dcc06acc209012ad54d372a6dadaadf860ba7086731822e"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_error_reduction_factor_vs_h.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_error_reduction_factor_vs_h.provenance.json",
+      "sha256": "f4d0faba51a66da059376f1a466efe9e4b50274c05051ac9482bed004f93fec8"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_smooth_wave_amplitude_error.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_smooth_wave_amplitude_error.provenance.json",
+      "sha256": "ceef9fb6bfe99daeb1cd117d365c3db678792df26c4194afa7e85807ca4d3679"
+    },
+    {
+      "path": "deliverables/figures/convergence/c1a_r9_smooth_wave_phase_error.svg",
+      "provenance_path": "deliverables/figures/convergence/c1a_r9_smooth_wave_phase_error.provenance.json",
+      "sha256": "4feb9eb125bb1352f0d77e99ab594e19105eafd8a5e4e4b583951b4dde2703e9"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r9_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-reconstruction-r9"
+}
