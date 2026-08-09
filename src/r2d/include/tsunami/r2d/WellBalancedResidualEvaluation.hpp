@@ -10,6 +10,7 @@
 #include <tsunami/r2d/RegionalExteriorState.hpp>
 #include <tsunami/r2d/RegionalRelaxationZone.hpp>
 #include <tsunami/r2d/RegionalResidualEvaluation.hpp>
+#include <tsunami/r2d/RegionalSpatialReconstruction.hpp>
 
 namespace tsunami::r2d
 {
@@ -107,7 +108,8 @@ namespace tsunami::r2d
         tsunami::fvm::CellScalarField &destination_spectral_sum,
         tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
         tsunami::core::Real &destination_maximum_signal_speed,
-        WellBalancedResidualWorkspace &workspace) -> tsunami::core::Result<void>;
+        WellBalancedResidualWorkspace &workspace,
+        const RegionalReconstructionPolicy &reconstruction_policy = {}) -> tsunami::core::Result<void>;
 
     auto evaluate_well_balanced_rusanov_residual(
         const tsunami::fvm::FiniteVolumeMesh &mesh,
@@ -121,6 +123,7 @@ namespace tsunami::r2d
         tsunami::fvm::CellScalarField &destination_spectral_sum,
         tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
         tsunami::core::Real &destination_maximum_signal_speed,
-        PhysicalBoundaryResidualWorkspace &workspace) -> tsunami::core::Result<void>;
+        PhysicalBoundaryResidualWorkspace &workspace,
+        const RegionalReconstructionPolicy &reconstruction_policy = {}) -> tsunami::core::Result<void>;
 
 } // namespace tsunami::r2d

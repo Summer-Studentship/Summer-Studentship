@@ -242,6 +242,184 @@ namespace tsunami::r2d
             const auto found = std::ranges::find(patch.faces, face_id);
             return static_cast<std::size_t>(found - patch.faces.begin());
         }
+
+        struct ReconstructionBundle
+        {
+            bool enabled{false};
+            std::vector<tsunami::core::Real> eta;
+            std::vector<tsunami::core::Real> velocity_x;
+            std::vector<tsunami::core::Real> velocity_y;
+            std::vector<tsunami::core::Real> bed;
+            RegionalScalarReconstruction eta_reconstruction;
+            RegionalScalarReconstruction velocity_x_reconstruction;
+            RegionalScalarReconstruction velocity_y_reconstruction;
+            RegionalScalarReconstruction bed_reconstruction;
+        };
+
+        struct ReconstructedSide
+        {
+            ConservedVariables2D state;
+            tsunami::core::Real bed{};
+        };
+
+        [[nodiscard]] auto empty_reconstruction_bundle() -> ReconstructionBundle
+        {
+            return ReconstructionBundle{};
+        }
+
+        [[nodiscard]] auto boundary_face_values(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> patches) -> std::vector<tsunami::core::Real>
+        {
+            auto values = std::vector<tsunami::core::Real>(mesh.summary().face_count, std::numeric_limits<tsunami::core::Real>::quiet_NaN());
+            for (std::size_t patch_index = 0; patch_index < patches.size(); ++patch_index) {
+                const auto patch_id = tsunami::fvm::BoundaryPatchId{patch_index};
+                const auto &patch = mesh.boundary_patch(patch_id);
+                for (std::size_t local_index = 0; local_index < patch.faces.size(); ++local_index) {
+                    values[patch.faces[local_index].value] = patches[patch_index].at(local_index);
+                }
+            }
+            return values;
+        }
+
+        [[nodiscard]] auto velocity_boundary_face_values(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> depth_patches,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> momentum_patches,
+            const ShallowWaterStatePolicy &policy) -> std::vector<tsunami::core::Real>
+        {
+            auto values = std::vector<tsunami::core::Real>(mesh.summary().face_count, std::numeric_limits<tsunami::core::Real>::quiet_NaN());
+            for (std::size_t patch_index = 0; patch_index < depth_patches.size(); ++patch_index) {
+                const auto patch_id = tsunami::fvm::BoundaryPatchId{patch_index};
+                const auto &patch = mesh.boundary_patch(patch_id);
+                for (std::size_t local_index = 0; local_index < patch.faces.size(); ++local_index) {
+                    const auto depth = depth_patches[patch_index].at(local_index);
+                    const auto momentum = momentum_patches[patch_index].at(local_index);
+                    values[patch.faces[local_index].value] = depth > policy.dry_depth ? momentum / depth : 0.0;
+                }
+            }
+            return values;
+        }
+
+        [[nodiscard]] auto eta_boundary_face_values(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> depth_patches,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> bed_patches) -> std::vector<tsunami::core::Real>
+        {
+            auto values = std::vector<tsunami::core::Real>(mesh.summary().face_count, std::numeric_limits<tsunami::core::Real>::quiet_NaN());
+            for (std::size_t patch_index = 0; patch_index < depth_patches.size(); ++patch_index) {
+                const auto patch_id = tsunami::fvm::BoundaryPatchId{patch_index};
+                const auto &patch = mesh.boundary_patch(patch_id);
+                for (std::size_t local_index = 0; local_index < patch.faces.size(); ++local_index) {
+                    values[patch.faces[local_index].value] =
+                        depth_patches[patch_index].at(local_index) + bed_patches[patch_index].at(local_index);
+                }
+            }
+            return values;
+        }
+
+        [[nodiscard]] auto make_reconstruction_bundle(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            const RegionalConservedState &state,
+            const RegionalBathymetry &bathymetry,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> depth_patches,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> momentum_x_patches,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> momentum_y_patches,
+            std::span<tsunami::fvm::BoundaryPatchField<tsunami::core::Real>> bed_patches,
+            const ShallowWaterStatePolicy &policy,
+            const RegionalReconstructionPolicy &reconstruction_policy) -> tsunami::core::Result<ReconstructionBundle>
+        {
+            auto reconstruction_validation = validate_reconstruction_policy(reconstruction_policy);
+            if (!reconstruction_validation) {
+                return tsunami::core::failure<ReconstructionBundle>(reconstruction_validation.error());
+            }
+            if (reconstruction_policy.scheme == RegionalReconstructionScheme::first_order) {
+                return tsunami::core::success(empty_reconstruction_bundle());
+            }
+
+            auto bundle = ReconstructionBundle{};
+            bundle.enabled = true;
+            bundle.eta.reserve(mesh.summary().cell_count);
+            bundle.velocity_x.reserve(mesh.summary().cell_count);
+            bundle.velocity_y.reserve(mesh.summary().cell_count);
+            bundle.bed.reserve(mesh.summary().cell_count);
+            for (std::size_t index = 0; index < mesh.summary().cell_count; ++index) {
+                const auto cell_id = tsunami::fvm::CellId{index};
+                const auto local = state.local_state(cell_id);
+                auto primitive = recover_primitive_variables(local, policy);
+                if (!primitive) {
+                    return tsunami::core::failure<ReconstructionBundle>(primitive.error());
+                }
+                const auto local_bed = bathymetry.local_bed_elevation(cell_id);
+                bundle.eta.push_back(local.depth + local_bed);
+                bundle.velocity_x.push_back(primitive.value().velocity_x);
+                bundle.velocity_y.push_back(primitive.value().velocity_y);
+                bundle.bed.push_back(local_bed);
+            }
+
+            const auto boundary_eta = eta_boundary_face_values(mesh, depth_patches, bed_patches);
+            const auto boundary_u = velocity_boundary_face_values(mesh, depth_patches, momentum_x_patches, policy);
+            const auto boundary_v = velocity_boundary_face_values(mesh, depth_patches, momentum_y_patches, policy);
+            const auto boundary_bed = boundary_face_values(mesh, bed_patches);
+
+            auto eta = make_regional_scalar_reconstruction(mesh, bundle.eta, boundary_eta, reconstruction_policy);
+            auto u = make_regional_scalar_reconstruction(mesh, bundle.velocity_x, boundary_u, reconstruction_policy);
+            auto v = make_regional_scalar_reconstruction(mesh, bundle.velocity_y, boundary_v, reconstruction_policy);
+            auto bed = make_regional_scalar_reconstruction(mesh, bundle.bed, boundary_bed, reconstruction_policy);
+            if (!eta) {
+                return tsunami::core::failure<ReconstructionBundle>(eta.error());
+            }
+            if (!u) {
+                return tsunami::core::failure<ReconstructionBundle>(u.error());
+            }
+            if (!v) {
+                return tsunami::core::failure<ReconstructionBundle>(v.error());
+            }
+            if (!bed) {
+                return tsunami::core::failure<ReconstructionBundle>(bed.error());
+            }
+            bundle.eta_reconstruction = std::move(eta).value();
+            bundle.velocity_x_reconstruction = std::move(u).value();
+            bundle.velocity_y_reconstruction = std::move(v).value();
+            bundle.bed_reconstruction = std::move(bed).value();
+            return tsunami::core::success(std::move(bundle));
+        }
+
+        [[nodiscard]] auto reconstructed_cell_side(
+            const tsunami::fvm::FiniteVolumeMesh &mesh,
+            tsunami::fvm::CellId cell_id,
+            tsunami::fvm::FaceId face_id,
+            ConservedVariables2D first_order_state,
+            tsunami::core::Real first_order_bed,
+            const ShallowWaterStatePolicy &policy,
+            const ReconstructionBundle &bundle) -> tsunami::core::Result<ReconstructedSide>
+        {
+            if (!bundle.enabled) {
+                return tsunami::core::success(ReconstructedSide{.state = first_order_state, .bed = first_order_bed});
+            }
+            const auto eta = reconstruct_cell_scalar_to_face(mesh, cell_id, face_id, bundle.eta, bundle.eta_reconstruction);
+            const auto u = reconstruct_cell_scalar_to_face(mesh, cell_id, face_id, bundle.velocity_x, bundle.velocity_x_reconstruction);
+            const auto v = reconstruct_cell_scalar_to_face(mesh, cell_id, face_id, bundle.velocity_y, bundle.velocity_y_reconstruction);
+            const auto bed = first_order_bed;
+            const auto depth = std::max(tsunami::core::Real{0.0}, eta - bed);
+            auto state = ConservedVariables2D{
+                .depth = depth,
+                .momentum_x = depth > policy.dry_depth ? depth * u : 0.0,
+                .momentum_y = depth > policy.dry_depth ? depth * v : 0.0};
+            auto accepted = validate_and_canonicalise_state(state, policy, cell_id);
+            if (!accepted || !finite(bed)) {
+                const auto id = mesh_id(mesh);
+                return tsunami::core::failure<ReconstructedSide>(detail::r2d_error(
+                    "r2d.reconstruction.state_invalid",
+                    "reconstructed face state is not finite or admissible",
+                    "evaluate_well_balanced_rusanov_residual",
+                    "SWE-R2D-RECON",
+                    &id,
+                    cell_id,
+                    face_id));
+            }
+            return tsunami::core::success(ReconstructedSide{.state = accepted.value(), .bed = bed});
+        }
     } // namespace
 
     WellBalancedResidualWorkspace::WellBalancedResidualWorkspace(
@@ -362,7 +540,8 @@ namespace tsunami::r2d
         tsunami::fvm::CellScalarField &destination_spectral_sum,
         tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
         tsunami::core::Real &destination_maximum_signal_speed,
-        WellBalancedResidualWorkspace &workspace) -> tsunami::core::Result<void>
+        WellBalancedResidualWorkspace &workspace,
+        const RegionalReconstructionPolicy &reconstruction_policy) -> tsunami::core::Result<void>
     {
         const auto id = mesh_id(mesh);
         auto policy_validation = validate_policy(policy);
@@ -445,6 +624,20 @@ namespace tsunami::r2d
             return tsunami::core::failure(bed_apply.error());
         }
 
+        auto reconstruction = make_reconstruction_bundle(
+            mesh,
+            state,
+            bathymetry,
+            workspace.depth_patches(),
+            workspace.momentum_x_patches(),
+            workspace.momentum_y_patches(),
+            workspace.bed_elevation_patches(),
+            policy,
+            reconstruction_policy);
+        if (!reconstruction) {
+            return tsunami::core::failure(reconstruction.error());
+        }
+
         workspace.residual().fill(ConservedVariables2D{});
         workspace.spectral_sum().fill(0.0);
         workspace.outgoing_mass_rate().fill(0.0);
@@ -481,6 +674,21 @@ namespace tsunami::r2d
                         return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
                     }
                     right = exterior.value();
+                }
+
+                auto left_reconstructed = reconstructed_cell_side(mesh, face.owner, face.id, left, left_bed, policy, reconstruction.value());
+                if (!left_reconstructed) {
+                    return tsunami::core::failure(left_reconstructed.error());
+                }
+                left = left_reconstructed.value().state;
+                left_bed = left_reconstructed.value().bed;
+                if (face.neighbour) {
+                    auto right_reconstructed = reconstructed_cell_side(mesh, *face.neighbour, face.id, right, right_bed, policy, reconstruction.value());
+                    if (!right_reconstructed) {
+                        return tsunami::core::failure(right_reconstructed.error());
+                    }
+                    right = right_reconstructed.value().state;
+                    right_bed = right_reconstructed.value().bed;
                 }
 
                 auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
@@ -563,6 +771,22 @@ namespace tsunami::r2d
                     }
                     right = exterior.value();
                 }
+                const auto left_reconstructed = reconstructed_cell_side(mesh, face.owner, face.id, left, left_bed, policy, reconstruction.value());
+                if (!left_reconstructed) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+                left = left_reconstructed.value().state;
+                left_bed = left_reconstructed.value().bed;
+                if (face.neighbour) {
+                    const auto right_reconstructed = reconstructed_cell_side(mesh, *face.neighbour, face.id, right, right_bed, policy, reconstruction.value());
+                    if (!right_reconstructed) {
+                        record_parallel_failure(result_failed_face, index);
+                        continue;
+                    }
+                    right = right_reconstructed.value().state;
+                    right_bed = right_reconstructed.value().bed;
+                }
                 const auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normals[index], policy);
                 if (!reconstructed) {
                     record_parallel_failure(result_failed_face, index);
@@ -644,7 +868,8 @@ namespace tsunami::r2d
         tsunami::fvm::CellScalarField &destination_spectral_sum,
         tsunami::fvm::CellScalarField &destination_outgoing_mass_rate,
         tsunami::core::Real &destination_maximum_signal_speed,
-        PhysicalBoundaryResidualWorkspace &workspace) -> tsunami::core::Result<void>
+        PhysicalBoundaryResidualWorkspace &workspace,
+        const RegionalReconstructionPolicy &reconstruction_policy) -> tsunami::core::Result<void>
     {
         const auto id = mesh_id(mesh);
         auto policy_validation = validate_policy(policy);
@@ -705,6 +930,20 @@ namespace tsunami::r2d
             return tsunami::core::failure(exterior.error());
         }
 
+        auto reconstruction = make_reconstruction_bundle(
+            mesh,
+            state,
+            bathymetry,
+            workspace.exterior_workspace().depth_patches(),
+            workspace.exterior_workspace().momentum_x_patches(),
+            workspace.exterior_workspace().momentum_y_patches(),
+            workspace.exterior_workspace().bed_elevation_patches(),
+            policy,
+            reconstruction_policy);
+        if (!reconstruction) {
+            return tsunami::core::failure(reconstruction.error());
+        }
+
         workspace.residual().fill(ConservedVariables2D{});
         workspace.spectral_sum().fill(0.0);
         workspace.outgoing_mass_rate().fill(0.0);
@@ -741,6 +980,21 @@ namespace tsunami::r2d
                         return tsunami::core::failure(detail::r2d_error("r2d.well_balanced.boundary_state_invalid", "exterior boundary state or bed is invalid", "evaluate_well_balanced_rusanov_residual", "SWE-R2D-WB", &id, std::nullopt, face.id, patch_id));
                     }
                     right = exterior_state.value();
+                }
+
+                auto left_reconstructed = reconstructed_cell_side(mesh, face.owner, face.id, left, left_bed, policy, reconstruction.value());
+                if (!left_reconstructed) {
+                    return tsunami::core::failure(left_reconstructed.error());
+                }
+                left = left_reconstructed.value().state;
+                left_bed = left_reconstructed.value().bed;
+                if (face.neighbour) {
+                    auto right_reconstructed = reconstructed_cell_side(mesh, *face.neighbour, face.id, right, right_bed, policy, reconstruction.value());
+                    if (!right_reconstructed) {
+                        return tsunami::core::failure(right_reconstructed.error());
+                    }
+                    right = right_reconstructed.value().state;
+                    right_bed = right_reconstructed.value().bed;
                 }
 
                 auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normal.value(), policy);
@@ -820,6 +1074,22 @@ namespace tsunami::r2d
                         continue;
                     }
                     right = exterior_state.value();
+                }
+                const auto left_reconstructed = reconstructed_cell_side(mesh, face.owner, face.id, left, left_bed, policy, reconstruction.value());
+                if (!left_reconstructed) {
+                    record_parallel_failure(result_failed_face, index);
+                    continue;
+                }
+                left = left_reconstructed.value().state;
+                left_bed = left_reconstructed.value().bed;
+                if (face.neighbour) {
+                    const auto right_reconstructed = reconstructed_cell_side(mesh, *face.neighbour, face.id, right, right_bed, policy, reconstruction.value());
+                    if (!right_reconstructed) {
+                        record_parallel_failure(result_failed_face, index);
+                        continue;
+                    }
+                    right = right_reconstructed.value().state;
+                    right_bed = right_reconstructed.value().bed;
                 }
                 const auto reconstructed = hydrostatic_reconstruction(left, right, left_bed, right_bed, normals[index], policy);
                 if (!reconstructed) {

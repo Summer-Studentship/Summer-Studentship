@@ -81,7 +81,8 @@ namespace tsunami::r2d
                 workspace.spectral_sum(),
                 workspace.outgoing_mass_rate(),
                 limit.maximum_signal_speed,
-                workspace);
+                workspace,
+                time_policy.reconstruction);
             if (!residual) {
                 return tsunami::core::failure<StageLimit>(residual.error());
             }
@@ -133,7 +134,8 @@ namespace tsunami::r2d
                 workspace.spectral_sum(),
                 workspace.outgoing_mass_rate(),
                 limit.maximum_signal_speed,
-                workspace);
+                workspace,
+                time_policy.reconstruction);
             if (!residual) {
                 return tsunami::core::failure<StageLimit>(residual.error());
             }
@@ -374,6 +376,10 @@ namespace tsunami::r2d
     auto validate_regional_time_integration_policy(const RegionalTimeIntegrationPolicy &policy)
         -> tsunami::core::Result<void>
     {
+        auto reconstruction_validation = validate_reconstruction_policy(policy.reconstruction);
+        if (!reconstruction_validation) {
+            return tsunami::core::failure(reconstruction_validation.error());
+        }
         if (!std::isfinite(policy.courant_number) || policy.courant_number <= 0.0 || policy.courant_number > 1.0 ||
             !std::isfinite(policy.positivity_safety_factor) || policy.positivity_safety_factor <= 0.0 || policy.positivity_safety_factor > 1.0 ||
             !std::isfinite(policy.relaxation_safety_factor) || policy.relaxation_safety_factor <= 0.0 ||

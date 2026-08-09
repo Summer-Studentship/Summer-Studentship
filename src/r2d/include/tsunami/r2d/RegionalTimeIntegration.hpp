@@ -22,6 +22,7 @@ namespace tsunami::r2d
         tsunami::core::Real maximum_timestep{1.0};
         tsunami::core::Real retry_factor{0.5};
         std::size_t maximum_stage_retries{16};
+        RegionalReconstructionPolicy reconstruction{};
     };
 
     enum class RegionalStepAttemptStatus

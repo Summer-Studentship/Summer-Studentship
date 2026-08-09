@@ -198,6 +198,7 @@ add_library(tsunami_r2d STATIC
     r2d/src/RegionalSnapshot.cpp
     r2d/src/RegionalSeabedDisplacement.cpp
     r2d/src/RegionalSolveLoop.cpp
+    r2d/src/RegionalSpatialReconstruction.cpp
     r2d/src/RegionalSourceTerms.cpp
     r2d/src/RegionalSourceTimestep.cpp
     r2d/src/RegionalSourceUpdate.cpp
