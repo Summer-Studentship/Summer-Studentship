@@ -1,0 +1,26 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "points",
+    "connectivity"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/mesh/synthetic_mesh.svg",
+  "figure_type": "mesh",
+  "generated_at_utc": "2026-08-09T20:39:02.349685Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "7d0639a80038dac9ce3881cbd89febc7e8abfa789cefae6bbd94de3da09b98d2",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": null,
+  "units": {
+    "x": "m",
+    "y": "m"
+  }
+}

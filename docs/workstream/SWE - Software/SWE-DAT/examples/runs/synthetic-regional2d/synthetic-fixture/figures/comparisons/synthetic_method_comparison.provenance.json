@@ -1,0 +1,26 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "Qn",
+    "time"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/comparisons/synthetic_method_comparison.svg",
+  "figure_type": "method_comparison",
+  "generated_at_utc": "2026-08-09T20:39:02.980184Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "8e37019e7fe19b35838e380496c92a7ed2c68ae116b6c91bb78325bb28b15443",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": null,
+  "units": {
+    "Qn": "m^3/s",
+    "time": "s"
+  }
+}

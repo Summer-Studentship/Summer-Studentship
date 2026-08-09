@@ -1,0 +1,31 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "eta",
+    "s",
+    "time"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_eta_heatmap.svg",
+  "figure_type": "coupling_heatmap",
+  "generated_at_utc": "2026-08-09T20:39:02.659516Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "afb6bb0ba744a6d4e82c3bfe362a97fbb08e696ea005a838ada9941be838f74a",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": [
+    0.0,
+    2.0
+  ],
+  "units": {
+    "eta": "m",
+    "s": "m",
+    "time": "s"
+  }
+}

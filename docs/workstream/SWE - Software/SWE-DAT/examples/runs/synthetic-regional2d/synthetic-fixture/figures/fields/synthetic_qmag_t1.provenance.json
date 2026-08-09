@@ -1,0 +1,27 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "qmag"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_qmag_t1.svg",
+  "figure_type": "field",
+  "generated_at_utc": "2026-08-09T20:39:02.567641Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "5f66be2b337f2d2d51c57d33151093f9746d7c81b73bb35cb62b9bd0a0aeb92b",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": [
+    1.0,
+    1.0
+  ],
+  "units": {
+    "qmag": "m^2/s"
+  }
+}

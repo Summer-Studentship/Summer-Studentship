@@ -1,0 +1,29 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "Qn",
+    "time"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_Qn_history.svg",
+  "figure_type": "Qn_history",
+  "generated_at_utc": "2026-08-09T20:39:02.717486Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "3bdb2db332043fb137c4b62825cb96377b78cb978cc9e9e00ae849e15879d4ca",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": [
+    0.0,
+    2.0
+  ],
+  "units": {
+    "Qn": "m^3/s",
+    "time": "s"
+  }
+}

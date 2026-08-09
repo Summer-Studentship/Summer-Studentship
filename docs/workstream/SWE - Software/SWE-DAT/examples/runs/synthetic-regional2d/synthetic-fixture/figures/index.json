@@ -1,0 +1,61 @@
+{
+  "data_classification": "SYNTHETIC",
+  "figures": [
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/mesh/synthetic_mesh.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/mesh/synthetic_mesh.provenance.json",
+      "sha256": "7d0639a80038dac9ce3881cbd89febc7e8abfa789cefae6bbd94de3da09b98d2"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_h_t1.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_h_t1.provenance.json",
+      "sha256": "c64682ca35073efe76887b03dcffcc64e03017f3a415795356a68824d6b4e1a6"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_eta_t1.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_eta_t1.provenance.json",
+      "sha256": "f45b3408e2858b3728e3d4ddab5e5fef25f5da861745d3445080bd29e23d529e"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_qmag_t1.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_qmag_t1.provenance.json",
+      "sha256": "5f66be2b337f2d2d51c57d33151093f9746d7c81b73bb35cb62b9bd0a0aeb92b"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_eta_heatmap.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_eta_heatmap.provenance.json",
+      "sha256": "afb6bb0ba744a6d4e82c3bfe362a97fbb08e696ea005a838ada9941be838f74a"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_Qn_history.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/coupling/synthetic_Qn_history.provenance.json",
+      "sha256": "3bdb2db332043fb137c4b62825cb96377b78cb978cc9e9e00ae849e15879d4ca"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/convergence/synthetic_error_vs_h.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/convergence/synthetic_error_vs_h.provenance.json",
+      "sha256": "28dcf7adde716644d4e3268aeba0b0aecd85dcd8664b0ed22e6d1a1b90e2530c"
+    },
+    {
+      "data_classification": "SYNTHETIC",
+      "figure": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/comparisons/synthetic_method_comparison.svg",
+      "provenance": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/comparisons/synthetic_method_comparison.provenance.json",
+      "sha256": "8e37019e7fe19b35838e380496c92a7ed2c68ae116b6c91bb78325bb28b15443"
+    }
+  ],
+  "generated_at_utc": "2026-08-09T20:39:02.980412Z",
+  "publication_directory_policy": "reserved; no automatic outputs",
+  "schema": {
+    "name": "tsunami.regional2d.figure_index",
+    "version": "1.0.0"
+  },
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture"
+}

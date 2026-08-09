@@ -1,0 +1,27 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "h"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/fields/synthetic_h_t1.svg",
+  "figure_type": "field",
+  "generated_at_utc": "2026-08-09T20:39:02.428690Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "c64682ca35073efe76887b03dcffcc64e03017f3a415795356a68824d6b4e1a6",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": [
+    1.0,
+    1.0
+  ],
+  "units": {
+    "h": "m"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "data_classification": "SYNTHETIC",
+  "fields_used": [
+    "h",
+    "error"
+  ],
+  "figure_path": "docs/workstream/SWE - Software/SWE-DAT/examples/runs/synthetic-regional2d/synthetic-fixture/figures/convergence/synthetic_error_vs_h.svg",
+  "figure_type": "convergence",
+  "generated_at_utc": "2026-08-09T20:39:02.920374Z",
+  "generating_script": "tools/results/regional2d_visualisation.py",
+  "git_sha": "7ffe6d1b06601b6f269330fe30d3ed042e5e03ae",
+  "input_files": [],
+  "input_hashes": {},
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "sha256": "28dcf7adde716644d4e3268aeba0b0aecd85dcd8664b0ed22e6d1a1b90e2530c",
+  "source_case_id": "synthetic-regional2d",
+  "source_run_id": "synthetic-fixture",
+  "time_range_used": null,
+  "units": {
+    "error": "%",
+    "h": "m"
+  }
+}
