@@ -4,11 +4,11 @@
     "eta"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot.svg",
-  "figure_sha256": "eb9c6801c8de71106f28bab02749d3c4c4797dc3cb5197ab2b2a1bd77e956b47",
+  "figure_sha256": "5cbf4b187e77e3df338872ea23d348760f0fd3196d56785987f51a528339ef22",
   "figure_type": "regional_eta_snapshot",
-  "generated_at_utc": "2026-08-10T21:34:03.167472Z",
+  "generated_at_utc": "2026-08-10T21:35:26.244592Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "time=300s",
   "schema": {
     "name": "tsunami.figure_provenance",

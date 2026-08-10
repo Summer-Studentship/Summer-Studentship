@@ -4,11 +4,11 @@
     "eta"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_regional_pseudo3d.svg",
-  "figure_sha256": "1d85ce792c4ca36116af35565002e677c983c4bdcf8b58dc57c3ad069b2944e4",
+  "figure_sha256": "bd2ff616125f98af2166faa24d89372a4ccef645945bca0a74202e4db84ecab8",
   "figure_type": "regional_pseudo3d",
-  "generated_at_utc": "2026-08-10T21:34:03.278563Z",
+  "generated_at_utc": "2026-08-10T21:35:26.344788Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "Pseudo-3D rendering only; numerical data unchanged.",
   "schema": {
     "name": "tsunami.figure_provenance",

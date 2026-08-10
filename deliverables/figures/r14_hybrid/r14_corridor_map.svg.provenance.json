@@ -6,11 +6,11 @@
     "kamaishi_proxy"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_corridor_map.svg",
-  "figure_sha256": "afbc3386c06df909460846b432d14bf5326f78560a898fa56ae79397dc844b50",
+  "figure_sha256": "4e87c9bfd70f9eabd13d90aaec60b7e4e59225cffbe8387adea6c9c28267a727",
   "figure_type": "corridor_map",
-  "generated_at_utc": "2026-08-10T21:34:02.741074Z",
+  "generated_at_utc": "2026-08-10T21:35:25.876931Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

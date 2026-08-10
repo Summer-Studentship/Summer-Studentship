@@ -8,11 +8,11 @@
         "kamaishi_proxy"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_corridor_map.svg",
-      "figure_sha256": "afbc3386c06df909460846b432d14bf5326f78560a898fa56ae79397dc844b50",
+      "figure_sha256": "4e87c9bfd70f9eabd13d90aaec60b7e4e59225cffbe8387adea6c9c28267a727",
       "figure_type": "corridor_map",
-      "generated_at_utc": "2026-08-10T21:34:02.741074Z",
+      "generated_at_utc": "2026-08-10T21:35:25.876931Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -31,11 +31,11 @@
         "bed_elevation"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_bathymetry_plan_view.svg",
-      "figure_sha256": "4439518f5fb267298827421cb88f50c3c20d9536b800d5216de83bb71435b0b1",
+      "figure_sha256": "67861dc659baa19f26da61d71be986dd4a0da9d731945feb96ddbedc3b5ea612",
       "figure_type": "bathymetry_plan",
-      "generated_at_utc": "2026-08-10T21:34:02.881567Z",
+      "generated_at_utc": "2026-08-10T21:35:26.005187Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -56,11 +56,11 @@
         "h250_bed_m"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_longitudinal_bathymetry.svg",
-      "figure_sha256": "c7804b9cd947db64548c7e91fba1408dcd76ddc8f1209240597f443dd3e6fcf6",
+      "figure_sha256": "833a6cd88c48223e54ec290c15ae7cfdc03134a1f3c53384e312399449def321",
       "figure_type": "longitudinal_bathymetry",
-      "generated_at_utc": "2026-08-10T21:34:02.964567Z",
+      "generated_at_utc": "2026-08-10T21:35:26.073877Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -79,11 +79,11 @@
         "L2"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_terrain_fidelity_limit.svg",
-      "figure_sha256": "2c30201cbb6a215d6661bc66b82487780e1c3233ab937de74328fe41dd1f353e",
+      "figure_sha256": "416eb5ef06c7f0b898c334d4375a76a851692460b939a23b53e85993752409b5",
       "figure_type": "terrain_fidelity",
-      "generated_at_utc": "2026-08-10T21:34:03.023118Z",
+      "generated_at_utc": "2026-08-10T21:35:26.123057Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -102,11 +102,11 @@
         "eta"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot.svg",
-      "figure_sha256": "eb9c6801c8de71106f28bab02749d3c4c4797dc3cb5197ab2b2a1bd77e956b47",
+      "figure_sha256": "5cbf4b187e77e3df338872ea23d348760f0fd3196d56785987f51a528339ef22",
       "figure_type": "regional_eta_snapshot",
-      "generated_at_utc": "2026-08-10T21:34:03.167472Z",
+      "generated_at_utc": "2026-08-10T21:35:26.244592Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "time=300s",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -125,11 +125,11 @@
         "eta"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_regional_pseudo3d.svg",
-      "figure_sha256": "1d85ce792c4ca36116af35565002e677c983c4bdcf8b58dc57c3ad069b2944e4",
+      "figure_sha256": "bd2ff616125f98af2166faa24d89372a4ccef645945bca0a74202e4db84ecab8",
       "figure_type": "regional_pseudo3d",
-      "generated_at_utc": "2026-08-10T21:34:03.278563Z",
+      "generated_at_utc": "2026-08-10T21:35:26.344788Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "Pseudo-3D rendering only; numerical data unchanged.",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -150,11 +150,11 @@
         "s"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_coupling_eta_heatmap.svg",
-      "figure_sha256": "28df17ed3d10c0ad7c9e1226a63f07fd1db1dd3fb3dc3da619682ea49bf4add0",
+      "figure_sha256": "e67e49c6d0e485c62e01cac808d9e0754006a90b53cd36f870ffeb3d8dd07582",
       "figure_type": "coupling_eta_heatmap",
-      "generated_at_utc": "2026-08-10T21:34:03.436961Z",
+      "generated_at_utc": "2026-08-10T21:35:26.499184Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -175,11 +175,11 @@
         "s"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_coupling_qn_heatmap.svg",
-      "figure_sha256": "e7f5bd0f49dfc1aba5eb409481d449944e4cd8e9a29e04a16038b150e448346e",
+      "figure_sha256": "0d18a14eb5bfad5fa595b3bcd85bcbedbdebc2ed1faa2cd47e8069df82c0549b",
       "figure_type": "coupling_qn_heatmap",
-      "generated_at_utc": "2026-08-10T21:34:03.585593Z",
+      "generated_at_utc": "2026-08-10T21:35:26.663053Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -199,11 +199,11 @@
         "time"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_Qn_history.svg",
-      "figure_sha256": "57783e7bce0dea6b3141d5aab7ff6790477732f34fbc6709c5a5df2bddfcdd28",
+      "figure_sha256": "a8453818b72efe6e955c82888fb9a9b548ea647f56d9f50d7adf89c010fefd33",
       "figure_type": "Qn_history",
-      "generated_at_utc": "2026-08-10T21:34:03.661693Z",
+      "generated_at_utc": "2026-08-10T21:35:26.739091Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -223,11 +223,11 @@
         "forcing_status"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_replay_mapping.svg",
-      "figure_sha256": "c5e50a05557d803d24bfb5c6e2c0b564b6f446ebcc666953e07795fcdeb80886",
+      "figure_sha256": "3659df17cbcafed12d1a46781f9a951963853188e94a21aab1066c891afc8c4b",
       "figure_type": "replay_mapping",
-      "generated_at_utc": "2026-08-10T21:34:03.706281Z",
+      "generated_at_utc": "2026-08-10T21:35:26.779963Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -246,11 +246,11 @@
         "verification_status"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg",
-      "figure_sha256": "96e0d3e0a1a63939a0af5678ba5213a464f6d6043c2b283d52ce46442619bc98",
+      "figure_sha256": "f786a2e2059cf2d8ebcdc9573a95f55143225b0a148e13e8b8782b58460348c4",
       "figure_type": "numerical_methodology",
-      "generated_at_utc": "2026-08-10T21:34:03.764553Z",
+      "generated_at_utc": "2026-08-10T21:35:26.812405Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -269,11 +269,11 @@
         "validation_targets"
       ],
       "figure": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
-      "figure_sha256": "39462b580401410caefdab7765467fb1a4041c79d8eee1b2b24486b73c43459a",
+      "figure_sha256": "7bd068e8ba7f0c4697cdb23ad5ebab40fdf32b07df2476f028b3daccfdb124a1",
       "figure_type": "validation_targets",
-      "generated_at_utc": "2026-08-10T21:34:03.801965Z",
+      "generated_at_utc": "2026-08-10T21:35:26.834973Z",
       "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
       "notes": "",
       "schema": {
         "name": "tsunami.figure_provenance",
@@ -287,7 +287,7 @@
       }
     }
   ],
-  "generated_at_utc": "2026-08-10T21:34:03.803953Z",
+  "generated_at_utc": "2026-08-10T21:35:26.836599Z",
   "schema": {
     "name": "tsunami.c1a_r14_figure_manifest",
     "version": "1.0.0"

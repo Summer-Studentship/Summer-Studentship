@@ -4,11 +4,11 @@
     "validation_targets"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
-  "figure_sha256": "39462b580401410caefdab7765467fb1a4041c79d8eee1b2b24486b73c43459a",
+  "figure_sha256": "7bd068e8ba7f0c4697cdb23ad5ebab40fdf32b07df2476f028b3daccfdb124a1",
   "figure_type": "validation_targets",
-  "generated_at_utc": "2026-08-10T21:34:03.801965Z",
+  "generated_at_utc": "2026-08-10T21:35:26.834973Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

@@ -4,11 +4,11 @@
     "verification_status"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg",
-  "figure_sha256": "96e0d3e0a1a63939a0af5678ba5213a464f6d6043c2b283d52ce46442619bc98",
+  "figure_sha256": "f786a2e2059cf2d8ebcdc9573a95f55143225b0a148e13e8b8782b58460348c4",
   "figure_type": "numerical_methodology",
-  "generated_at_utc": "2026-08-10T21:34:03.764553Z",
+  "generated_at_utc": "2026-08-10T21:35:26.812405Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

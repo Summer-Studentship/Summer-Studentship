@@ -496,6 +496,8 @@ def save_svg(fig: Any, path: Path) -> None:
     import matplotlib.pyplot as plt
 
     plt.close(fig)
+    lines = path.read_text(encoding="utf-8").splitlines()
+    path.write_text("\n".join(line.rstrip() for line in lines) + "\n", encoding="utf-8")
 
 
 def generate_figures() -> dict[str, Any]:

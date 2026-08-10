@@ -4,11 +4,11 @@
     "bed_elevation"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_bathymetry_plan_view.svg",
-  "figure_sha256": "4439518f5fb267298827421cb88f50c3c20d9536b800d5216de83bb71435b0b1",
+  "figure_sha256": "67861dc659baa19f26da61d71be986dd4a0da9d731945feb96ddbedc3b5ea612",
   "figure_type": "bathymetry_plan",
-  "generated_at_utc": "2026-08-10T21:34:02.881567Z",
+  "generated_at_utc": "2026-08-10T21:35:26.005187Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

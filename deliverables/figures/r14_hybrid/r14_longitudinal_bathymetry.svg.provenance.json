@@ -6,11 +6,11 @@
     "h250_bed_m"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_longitudinal_bathymetry.svg",
-  "figure_sha256": "c7804b9cd947db64548c7e91fba1408dcd76ddc8f1209240597f443dd3e6fcf6",
+  "figure_sha256": "833a6cd88c48223e54ec290c15ae7cfdc03134a1f3c53384e312399449def321",
   "figure_type": "longitudinal_bathymetry",
-  "generated_at_utc": "2026-08-10T21:34:02.964567Z",
+  "generated_at_utc": "2026-08-10T21:35:26.073877Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

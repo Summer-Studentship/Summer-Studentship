@@ -4,11 +4,11 @@
     "L2"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_terrain_fidelity_limit.svg",
-  "figure_sha256": "2c30201cbb6a215d6661bc66b82487780e1c3233ab937de74328fe41dd1f353e",
+  "figure_sha256": "416eb5ef06c7f0b898c334d4375a76a851692460b939a23b53e85993752409b5",
   "figure_type": "terrain_fidelity",
-  "generated_at_utc": "2026-08-10T21:34:03.023118Z",
+  "generated_at_utc": "2026-08-10T21:35:26.123057Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",

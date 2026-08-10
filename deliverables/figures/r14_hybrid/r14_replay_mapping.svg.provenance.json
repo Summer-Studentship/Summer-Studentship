@@ -5,11 +5,11 @@
     "forcing_status"
   ],
   "figure": "deliverables/figures/r14_hybrid/r14_replay_mapping.svg",
-  "figure_sha256": "c5e50a05557d803d24bfb5c6e2c0b564b6f446ebcc666953e07795fcdeb80886",
+  "figure_sha256": "3659df17cbcafed12d1a46781f9a951963853188e94a21aab1066c891afc8c4b",
   "figure_type": "replay_mapping",
-  "generated_at_utc": "2026-08-10T21:34:03.706281Z",
+  "generated_at_utc": "2026-08-10T21:35:26.779963Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
-  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
   "notes": "",
   "schema": {
     "name": "tsunami.figure_provenance",
