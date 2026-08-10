@@ -1,0 +1,14 @@
+{
+  "data_class": "REAL_SIMULATION",
+  "field": "initial_free_surface",
+  "figure": "deliverables/figures/convergence/c1a_r13_along_corridor_source.svg",
+  "generated_at_utc": "2026-08-10T20:52:21.658630Z",
+  "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+  "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+  "units": "m"
+}

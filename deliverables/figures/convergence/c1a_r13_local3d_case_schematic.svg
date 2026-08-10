@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="860" height="460" viewBox="0 0 860 460">
+<rect width="100%" height="100%" fill="white"/>
+<text x="48" y="62" font-size="24" font-family="sans-serif" fill="#24292f">Generated Local3D rigid-barrier replay case</text>
+<line x1="80" y1="250" x2="780" y2="250" stroke="#4c78a8" stroke-width="4"/>
+<circle cx="150" cy="250" r="18" fill="#9467bd"/>
+<circle cx="710" cy="250" r="18" fill="#f58518"/>
+<text x="80" y="330" font-size="15" font-family="sans-serif" fill="#24292f">R13 evidence package: exploratory, not validated historical prediction.</text>
+</svg>
