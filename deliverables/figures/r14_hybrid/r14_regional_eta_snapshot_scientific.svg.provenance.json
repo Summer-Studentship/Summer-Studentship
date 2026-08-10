@@ -6,9 +6,9 @@
   "figure": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot_scientific.svg",
   "figure_sha256": "5cbf4b187e77e3df338872ea23d348760f0fd3196d56785987f51a528339ef22",
   "figure_type": "r14_regional_eta_snapshot_scientific",
-  "generated_at_utc": "2026-08-10T21:59:38.912559Z",
+  "generated_at_utc": "2026-08-10T22:02:10.458460Z",
   "generating_script": "tools/verification/convergence/c1a_r14b_scope_completion_audit.py",
-  "git_sha": "30267431cc045826c391dc81b985729129fd4e10",
+  "git_sha": "1103134d13824d35b5c91e0ee80a45f49fb39584",
   "notes": "R14B named variant of an existing R14 publication-ready figure; no scientific data altered.",
   "schema": {
     "name": "tsunami.figure_provenance",

@@ -5,9 +5,9 @@
   "poster_handoff": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_poster_handoff.md",
   "poster_handoff_sha256": "4b8a6b483f86dd1040085c1ad158750c058c766dcfae1270097c14f2952f95f4",
   "poster_shortlist": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_poster_asset_shortlist.json",
-  "poster_shortlist_sha256": "02187263e457d90464ade0eed158ca8c29b9108daa0d8cba0021e13655bfa54b",
+  "poster_shortlist_sha256": "a5040b2bf18390aecc5b971163422ec39052dccaad5e70b0549dc1266810a847",
   "scope_completion_audit": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_scope_completion_audit.json",
-  "scope_completion_audit_sha256": "365dc7978b1dda1bd928124d3327aabf4e46501fbe2250c46c00579eac4c038c",
+  "scope_completion_audit_sha256": "d22b1dd4de8d5b7df0cbcd200e78f04acc362d64dcd124df295fb253e271a542",
   "video": "deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
   "video_sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
   "video_status": "QR_ASSET_READY_FOR_HOSTING"

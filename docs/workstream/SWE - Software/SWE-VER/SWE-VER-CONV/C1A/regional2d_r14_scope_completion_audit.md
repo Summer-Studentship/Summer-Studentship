@@ -1,15 +1,15 @@
 # R14B Scope Completion Audit
 
-Generated: `2026-08-10T21:59:38.940989Z`
-Git SHA at generation: `30267431cc045826c391dc81b985729129fd4e10`
+Generated: `2026-08-10T22:02:10.485801Z`
+Git SHA at generation: `1103134d13824d35b5c91e0ee80a45f49fb39584`
 
 ## Summary
 
 - total: `111`
 - COMPLETE: `102`
-- BLOCKED_BY_LOCAL3D_REPLAY: `5`
+- BLOCKED_BY_LOCAL3D_REPLAY: `4`
 - DEFERRED_ARCHITECTURAL: `1`
-- NOT_APPLICABLE: `3`
+- NOT_APPLICABLE: `4`
 
 No `READY` or `IN_PROGRESS` states remain.
 
@@ -117,7 +117,7 @@ No `READY` or `IN_PROGRESS` states remain.
 | VID-08 | Video infrastructure | ffprobe validation | local3d MP4 | ffprobe metadata | tools/results/r14_hybrid_video.py | COMPLETE | PASSED | None. | Audited in R14B. | COMPLETE |
 | VID-09 | Video infrastructure | Regional preview MP4 | Regional frame export | regional MP4 | not present | NOT_APPLICABLE | Not required because Local3D G6 proof validates video pipeline without Regional rerun. | Optional future outreach asset. | Audited in R14B. | NOT_APPLICABLE |
 | VID-10 | Video infrastructure | Local3D preview MP4 | accepted G6 frames | local3d_g6_preview.mp4 | deliverables/video/r14_hybrid/local3d_g6_preview.mp4 | COMPLETE | Accepted G6 Local3D preview MP4 generated. | None. | Audited in R14B. | COMPLETE |
-| VID-11 | Video infrastructure | hybrid preview MP4 | full accepted current hybrid replay | hybrid MP4 | not present | BLOCKED_BY_LOCAL3D_REPLAY | Current full Local3D replay blocked; G6 Local3D MP4 proves reusable video path. | None. | Audited in R14B. | BLOCKED_BY_LOCAL3D_REPLAY |
+| VID-11 | Video infrastructure | hybrid preview MP4 | optional G6 hybrid assembly | hybrid MP4 | not present | NOT_APPLICABLE | R14B allowed stopping after the accepted G6 Local3D preview when hybrid assembly became disproportionate; Local3D MP4 proves the reusable video path. | Optional future outreach asset. | Audited in R14B. | NOT_APPLICABLE |
 | VID-12 | Video infrastructure | video provenance | MP4 | video_provenance.json | deliverables/video/r14_hybrid/video_provenance.json | COMPLETE | SHA, duration, resolution, fps and command recorded. | None. | Audited in R14B. | COMPLETE |
 | VID-13 | Video infrastructure | QR-readiness metadata | validated MP4 | qr_asset_metadata.json | deliverables/video/r14_hybrid/qr_asset_metadata.json | COMPLETE | QR_ASSET_READY_FOR_HOSTING for local3d_g6_preview.mp4. | None. | Audited in R14B. | COMPLETE |
 | POST-01 | Poster handoff | poster shortlist | R14 assets | poster handoff and shortlist | regional2d_r14_poster_asset_shortlist.json | COMPLETE | R14B poster shortlist/handoff records paths, captions, claim statuses and caveats. | None. | Audited in R14B. | COMPLETE |

@@ -11,14 +11,14 @@
     "provenance/"
   ],
   "counts": {
-    "BLOCKED_BY_LOCAL3D_REPLAY": 5,
+    "BLOCKED_BY_LOCAL3D_REPLAY": 4,
     "COMPLETE": 102,
     "DEFERRED_ARCHITECTURAL": 1,
-    "NOT_APPLICABLE": 3,
+    "NOT_APPLICABLE": 4,
     "total": 111
   },
-  "generated_at_utc": "2026-08-10T21:59:38.940989Z",
-  "git_sha": "30267431cc045826c391dc81b985729129fd4e10",
+  "generated_at_utc": "2026-08-10T22:02:10.485801Z",
+  "git_sha": "1103134d13824d35b5c91e0ee80a45f49fb39584",
   "items": [
     {
       "ID": "L3D-01",
@@ -1324,13 +1324,13 @@
       "ID": "VID-11",
       "action taken in R14B": "Audited in R14B.",
       "actual artifact found": "not present",
-      "dependency": "full accepted current hybrid replay",
-      "evidence": "Current full Local3D replay blocked; G6 Local3D MP4 proves reusable video path.",
+      "dependency": "optional G6 hybrid assembly",
+      "evidence": "R14B allowed stopping after the accepted G6 Local3D preview when hybrid assembly became disproportionate; Local3D MP4 proves the reusable video path.",
       "expected artifact": "hybrid MP4",
-      "final status": "BLOCKED_BY_LOCAL3D_REPLAY",
-      "missing work": "None.",
+      "final status": "NOT_APPLICABLE",
+      "missing work": "Optional future outreach asset.",
       "original requirement": "hybrid preview MP4",
-      "status": "BLOCKED_BY_LOCAL3D_REPLAY",
+      "status": "NOT_APPLICABLE",
       "workstream": "Video infrastructure"
     },
     {
