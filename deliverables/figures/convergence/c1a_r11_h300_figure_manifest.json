@@ -1,0 +1,27 @@
+{
+  "classification": "SPATIAL_NOT_QUALIFIED_INVESTIGATE",
+  "generated_at_utc": "2026-08-10T14:27:55.423690Z",
+  "outputs": [
+    {
+      "figure": "deliverables/figures/convergence/c1a_r11_h300_eta_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-h300-r11/diagnostics/h300_spatial_qualification_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r11_h300_qn_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-h300-r11/diagnostics/h300_spatial_qualification_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r11_h300_Qn_convergence.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-h300-r11/diagnostics/h300_spatial_qualification_metrics.json"
+    },
+    {
+      "figure": "deliverables/figures/convergence/c1a_r11_h300_waveform_error_vs_h.svg",
+      "source_metrics": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-h300-r11/diagnostics/h300_spatial_qualification_metrics.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r11_h300_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-h300-r11"
+}
