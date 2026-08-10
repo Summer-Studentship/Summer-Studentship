@@ -1,0 +1,41 @@
+{
+  "coupling_hdf5": {
+    "path": "/home/helios/SimulationData/Summer-Studentship/r14-hybrid/runs/r10-h400-limited-linear/coupling_replay.h5",
+    "sha256": "9766f61076a95dcb79cbc45084ad7a95bdf6bd8d04b7ca617987eea8e50206cb"
+  },
+  "coupling_hdf5_status": "COMPLETE",
+  "generated_at_utc": "2026-08-10T21:28:15.470366Z",
+  "h400_hdf5": {
+    "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+    "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b",
+    "validation": {
+      "cell_count": 14536,
+      "data_class": "LEGACY_CONVERTED",
+      "schema_name": "tsunami.regional2d.result",
+      "schema_version": "1.0.0",
+      "time_count": 121
+    }
+  },
+  "legacy_converter_status": "COMPLETE",
+  "local3d_storage_status": "MANIFEST_ONLY_PER_R14_SCOPE",
+  "production_writer_status": "RUNTIME_HDF5_INTEGRATION_DEFERRED",
+  "regional_schema_status": "COMPLETE",
+  "resultdataset_probe": {
+    "eta_sample_min": -1.266512549781055,
+    "mesh_cell_count": 14536,
+    "qmag_sample_max": 0.0,
+    "time_count": 121
+  },
+  "resultdataset_status": "COMPLETE",
+  "schema": {
+    "name": "tsunami.c1a_r14_result_storage_audit",
+    "version": "1.0.0"
+  },
+  "writer_status": "COMPLETE_FOR_SCHEMA_AND_VALIDATED_CONVERTER",
+  "xdmf": {
+    "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.xdmf",
+    "sha256": "f40e0f1f5042c32b8dfce194628594a669a6a1a1ba6a7198ed1ecf0bc1eb659c",
+    "xml_parse": "PASSED"
+  },
+  "xdmf_status": "COMPLETE"
+}
