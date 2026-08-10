@@ -1,0 +1,2897 @@
+{
+  "best_available_regional_solution": "R10 h400 limited_linear, BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+  "branch": "feat/r13-fidelity-hybrid-replay",
+  "external_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13",
+  "figure_manifest": {
+    "figures": [
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "bed_elevation",
+        "figure": "deliverables/figures/convergence/c1a_r13_along_corridor_bathymetry.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.657467Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m"
+      },
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "initial_free_surface",
+        "figure": "deliverables/figures/convergence/c1a_r13_along_corridor_source.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.658630Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m"
+      },
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "normal_discharge",
+        "figure": "deliverables/figures/convergence/c1a_r13_replay_forcing_history.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.659973Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m3/s"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "corridor",
+        "figure": "deliverables/figures/convergence/c1a_r13_corridor_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.661353Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "eta",
+        "figure": "deliverables/figures/convergence/c1a_r13_regional_field_snapshot.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.662554Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "coupling",
+        "figure": "deliverables/figures/convergence/c1a_r13_hybrid_replay_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.663661Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "local3d",
+        "figure": "deliverables/figures/convergence/c1a_r13_local3d_case_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.664830Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "methodology",
+        "figure": "deliverables/figures/convergence/c1a_r13_methodology_status.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.666092Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "validation_targets",
+        "figure": "deliverables/figures/convergence/c1a_r13_validation_targets.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.667419Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "bed_elevation",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_along_corridor_bathymetry.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.679061Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m"
+      },
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "initial_free_surface",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_along_corridor_source.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.680382Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m"
+      },
+      {
+        "data_class": "REAL_SIMULATION",
+        "field": "normal_discharge",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_replay_forcing_history.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.681645Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "m3/s"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "corridor",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_corridor_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.682991Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "eta",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_regional_field_snapshot.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.684311Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "coupling",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_hybrid_replay_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.685638Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "local3d",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_local3d_case_schematic.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.686980Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "methodology",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_methodology_status.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.688360Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      },
+      {
+        "data_class": "SCHEMATIC",
+        "field": "validation_targets",
+        "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_validation_targets.svg",
+        "generated_at_utc": "2026-08-10T20:52:21.689688Z",
+        "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
+        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "schema": {
+          "name": "tsunami.figure_provenance",
+          "version": "1.0.0"
+        },
+        "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json",
+        "units": "n/a"
+      }
+    ],
+    "generated_at_utc": "2026-08-10T20:52:21.689836Z",
+    "schema": {
+      "name": "tsunami.c1a_r13_figure_manifest",
+      "version": "1.0.0"
+    }
+  },
+  "final_regional_mechanism": {
+    "another_full_regional_production_run_before_wednesday": "NO",
+    "classification": "TERRAIN_SOURCE_FIDELITY_DOMINANT",
+    "confidence": "MODERATE"
+  },
+  "forcing_manifest": {
+    "actual_h_m": 260.44852485382444,
+    "allowed_use": "exploratory hybrid replay",
+    "binary_sha256": "1415c3e01956249e8af92881d3a530ea558b8c942c57dca62c07ef5ac1865417",
+    "git_sha": "d29c7c79096304956648aa7a456340a970ecd6e5",
+    "manifest_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/forcing/regional_h400_limited_linear_forcing_authority.json",
+    "manifest_sha256": "6c6c621e0d4664115ced3a1bdffb78597b258a5deada45c6a4252baf41edf677",
+    "mesh_sha256": "6431004341b17656f8be10f22135bff5d427fc782529d099be49252fcde20982",
+    "prohibited_use": "physical calibration / decision-grade validation",
+    "qualification": "NOT_SPATIALLY_QUALIFIED",
+    "r10_h500_to_h400_uncertainty_metrics": {
+      "Qn_waveform": {
+        "candidate_peak_abs": 46294.77525957936,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9995274524280521,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 3765.748875024201,
+        "nrmse": 0.09128460136668014,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 0.0,
+          "phase_aligned_nrmse": 0.09128460136668014,
+          "phase_error_fraction": 0.0,
+          "unshifted_nrmse": 0.09128460136668014
+        },
+        "reference_peak_abs": 47761.317504203194,
+        "reference_peak_time_s": 545.0,
+        "rmse": 3267.7483948793433,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "arrival_time_proxy_difference_s": 0.0,
+      "bed_projection_common_support": {
+        "bias_m": 0.243121732382512,
+        "common_support_width_m": 8000.0,
+        "max_abs_difference_m": 6.689786554150146,
+        "nrmse": 0.01697024725628226,
+        "rmse_m": 1.272618021584242,
+        "support_point_count": 401
+      },
+      "coarse_level": "h500",
+      "eta_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.12321544859455535,
+        "nrmse": 0.027605944675546893,
+        "quantity": "eta",
+        "rmse": 0.028654168860636365,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "eta_waveform": {
+        "candidate_peak_abs": 1.0174389252350853,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9913882196914429,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.053137012879608925,
+        "nrmse": 0.07007439394376061,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 0.0,
+          "phase_aligned_nrmse": 0.07007439394376061,
+          "phase_error_fraction": 0.0,
+          "unshifted_nrmse": 0.07007439394376061
+        },
+        "reference_peak_abs": 1.0658014339753592,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.030173287401479686,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "fine_level": "h400",
+      "qbar_waveform": {
+        "candidate_peak_abs": 5.78684690744742,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.9995274524280521,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.4707186093780251,
+        "nrmse": 0.09128460136668015,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 0.0,
+          "phase_aligned_nrmse": 0.09128460136668015,
+          "phase_error_fraction": 0.0,
+          "unshifted_nrmse": 0.09128460136668015
+        },
+        "reference_peak_abs": 5.970164688025399,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.40846854935991794,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "qn_distributed_common_support": {
+        "common_support_width_m": 8000.0,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 2.6416119281540795,
+        "nrmse": 0.0572192705490681,
+        "quantity": "qn",
+        "rmse": 0.8834136153465832,
+        "support_point_count": 401,
+        "time_sample_count": 61
+      },
+      "qn_waveform": {
+        "candidate_peak_abs": 14.370637373960438,
+        "candidate_peak_time_s": 545.0,
+        "correlation": 0.997739423492428,
+        "formal_metric_shifted": false,
+        "max_abs_difference": 0.8599207185155011,
+        "nrmse": 0.05280088902681078,
+        "phase_alignment": {
+          "formal_metric_shifted": false,
+          "optimal_lag_s": 0.0,
+          "phase_aligned_nrmse": 0.05280088902681078,
+          "phase_error_fraction": 0.0,
+          "unshifted_nrmse": 0.05280088902681078
+        },
+        "reference_peak_abs": 15.143013526430408,
+        "reference_peak_time_s": 545.0,
+        "rmse": 0.5894533441461459,
+        "sample_count": 61,
+        "time_window_s": [
+          245.0,
+          545.0
+        ]
+      },
+      "refinement_ratio_actual_h": 1.2472572649343499,
+      "source_projection": {
+        "absolute_centroid_shift_m": 0.02193269915141104,
+        "integrated_surface_perturbation_relative_change": 4.925919926743015e-16,
+        "maximum_absolute_surface_perturbation_relative_change": 0.0,
+        "signed_centroid_shift_m": 0.02193269915141104
+      }
+    },
+    "r11_h400_to_h300_reversal_metrics": {
+      "Qn_waveform": 0.4784379614303039,
+      "eta_distributed": 0.14317153704071578,
+      "eta_waveform": 0.5043090175725431,
+      "qbar_waveform": 0.47843796143030376,
+      "qn_distributed": 0.2496688889318955,
+      "qn_waveform": 1.225976541239782
+    },
+    "r12_r13_spatial_fidelity_diagnosis": {
+      "r12": "PHYSICAL_NUMERICAL_SPATIAL_FIDELITY_LIMITATION_NOT_POSTPROCESSING",
+      "r13_projection": {
+        "combined": "PROJECTION_FIDELITY_CEILING",
+        "fields": {
+          "bed": {
+            "L2_by_level": {
+              "h250": 10.4705835702291,
+              "h300": 8.280995497232107,
+              "h400": 7.748679131490961,
+              "h500": 7.74716941711725
+            },
+            "classification": "PROJECTION_FIDELITY_CEILING",
+            "h250_improves_h300": false
+          },
+          "source": {
+            "L2_by_level": {
+              "h250": 0.0034666702924086744,
+              "h300": 0.002865267531883682,
+              "h400": 0.0027763940021288064,
+              "h500": 0.0030509842524578065
+            },
+            "classification": "PROJECTION_FIDELITY_CEILING",
+            "h250_improves_h300": false
+          }
+        }
+      }
+    },
+    "reconstruction": "limited_linear",
+    "schema": {
+      "name": "tsunami.r13_regional_forcing_authority",
+      "version": "1.0.0"
+    },
+    "source_output_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-limited-linear-event-r10/case/runs/r10-limited-linear-h400/outputs/regional2d",
+    "source_run": "R10 h400",
+    "source_sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+    "status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+  },
+  "generated_at_utc": "2026-08-10T20:52:21.643364Z",
+  "limiter_diagnostic": {
+    "h300_diagnostic_run": "not_started",
+    "h400_diagnostic_run": "not_started",
+    "interpretation": "The R13 mechanism classification therefore rests on projection-only fidelity plus R12 hydrodynamic chronology. Limiter amplification is not promoted to dominant without production counter evidence.",
+    "method": "R13 did not launch a new production Regional diagnostic solve. Limiter counters remain an opt-in instrumentation target; projection-only evidence was prioritised for the poster deadline.",
+    "numerical_equivalence_gate": "not_run_no_instrumented_binary_built",
+    "projection_context": {
+      "combined": "PROJECTION_FIDELITY_CEILING",
+      "fields": {
+        "bed": {
+          "L2_by_level": {
+            "h250": 10.4705835702291,
+            "h300": 8.280995497232107,
+            "h400": 7.748679131490961,
+            "h500": 7.74716941711725
+          },
+          "classification": "PROJECTION_FIDELITY_CEILING",
+          "h250_improves_h300": false
+        },
+        "source": {
+          "L2_by_level": {
+            "h250": 0.0034666702924086744,
+            "h300": 0.002865267531883682,
+            "h400": 0.0027763940021288064,
+            "h500": 0.0030509842524578065
+          },
+          "classification": "PROJECTION_FIDELITY_CEILING",
+          "h250_improves_h300": false
+        }
+      }
+    },
+    "status": "UNRESOLVED"
+  },
+  "local3d_execution": {
+    "accepted_smoke": false,
+    "boundary_roles_unchanged": true,
+    "exploratory_not_validated": true,
+    "interpretation": "Current-forcing rigid-barrier smoke runs reached the requested end times and exported VTK, but did not satisfy the repository alpha.water bounds tolerance.",
+    "no_defence": {
+      "boundary_roles": "unchanged G6 open_ocean_damped inlet/outlet/laterals/atmosphere/terrain/barrier policy",
+      "case_hash": "828cc9b3109f826ccba6c995b1576ae8e36bef2afa27bd7a3ea80e692c24e07f",
+      "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/no_defence",
+      "case_summary": {
+        "alpha_tolerance": 5e-05,
+        "barrier": null,
+        "boundary_data_time_range": [
+          0.0,
+          300.0
+        ],
+        "boundary_mode": "open_ocean_damped",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/no_defence",
+        "cell_counts": {
+          "span": 60,
+          "streamwise": 40,
+          "vertical": 16
+        },
+        "cell_dimensions_m": {
+          "minimum_m": 6.272281163044898,
+          "span_m": 116.60833333332558,
+          "streamwise_m": 19.315429177713213,
+          "vertical_m": 6.272281163044898
+        },
+        "damping": {
+          "damping_does_not_overlap_barrier": true,
+          "damping_does_not_overlap_inlet": true,
+          "damping_does_not_overlap_primary_comparison_probes": true,
+          "enabled": true,
+          "limitations": [
+            "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+          ],
+          "model": "isotropicDamping",
+          "profile": "halfCosineRamp",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "zones": [
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "lambda_per_s": 0.9951730208838543,
+              "model": "isotropicDamping",
+              "name": "outlet",
+              "origin": [
+                656.7245920422492,
+                0.0,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 4.019401567425366,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 656.7245920422492,
+              "width_m": 115.89257506627928
+            },
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "lambda_per_s": 0.1648440849377913,
+              "model": "isotropicDamping",
+              "name": "sideLeft",
+              "origin": [
+                0.0,
+                699.6499999999535,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 24.265353540040678,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 5597.199999999628,
+              "width_m": 699.6499999999535
+            },
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lambda_per_s": 0.1648440849377913,
+              "model": "isotropicDamping",
+              "name": "sideRight",
+              "origin": [
+                0.0,
+                6296.849999999581,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 24.265353540040678,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 5597.199999999628,
+              "width_m": 699.6499999999535
+            }
+          ]
+        },
+        "dimensions_m": {
+          "height": 100.35649860871837,
+          "length": 772.6171671085285,
+          "span": 6996.499999999534
+        },
+        "end_time": 300.0,
+        "field_boundary_types": {
+          "U": {
+            "atmosphere": "pressureInletOutletVelocity",
+            "inlet": "timeVaryingMappedFixedValue",
+            "outlet": "pressureInletOutletVelocity",
+            "sideLeft": "pressureInletOutletVelocity",
+            "sideRight": "pressureInletOutletVelocity",
+            "terrain": "noSlip"
+          },
+          "alpha.water": {
+            "atmosphere": "inletOutlet",
+            "inlet": "timeVaryingMappedFixedValue",
+            "outlet": "variableHeightFlowRate",
+            "sideLeft": "variableHeightFlowRate",
+            "sideRight": "variableHeightFlowRate",
+            "terrain": "zeroGradient"
+          },
+          "k": {
+            "atmosphere": "inletOutlet",
+            "inlet": "fixedValue",
+            "outlet": "inletOutlet",
+            "sideLeft": "inletOutlet",
+            "sideRight": "inletOutlet",
+            "terrain": "kqRWallFunction"
+          },
+          "nut": {
+            "atmosphere": "calculated",
+            "inlet": "calculated",
+            "outlet": "calculated",
+            "sideLeft": "calculated",
+            "sideRight": "calculated",
+            "terrain": "nutUSpaldingWallFunction"
+          },
+          "omega": {
+            "atmosphere": "inletOutlet",
+            "inlet": "fixedValue",
+            "outlet": "inletOutlet",
+            "sideLeft": "inletOutlet",
+            "sideRight": "inletOutlet",
+            "terrain": "omegaWallFunction"
+          },
+          "p_rgh": {
+            "atmosphere": "prghTotalPressure",
+            "inlet": "fixedFluxPressure",
+            "outlet": "prghTotalPressure",
+            "sideLeft": "prghTotalPressure",
+            "sideRight": "prghTotalPressure",
+            "terrain": "fixedFluxPressure"
+          }
+        },
+        "has_barrier": false,
+        "initial_timestep": 0.002,
+        "initial_water_level": 38.630858355426426,
+        "k": 0.0001539828754730644,
+        "major_replay_peak_time": 240.0,
+        "maximum_alpha_courant_number": 0.25,
+        "maximum_courant_number": 0.25,
+        "maximum_timestep": 0.026990758299791622,
+        "mesh_patch_types": {
+          "atmosphere": "patch",
+          "inlet": "patch",
+          "outlet": "patch",
+          "sideLeft": "patch",
+          "sideRight": "patch",
+          "terrain": "wall"
+        },
+        "minimum_timestep": 1e-07,
+        "omega": 0.011729276465526949,
+        "patches": [
+          "inlet",
+          "outlet",
+          "sideLeft",
+          "sideRight",
+          "atmosphere",
+          "terrain"
+        ],
+        "replay_schema": {
+          "name": "tsunami.openfoam_replay_configuration",
+          "version": "1.1.0"
+        },
+        "timestep_policy": {
+          "adjustTimeStep": true,
+          "cell_dimensions_m": {
+            "minimum_m": 6.272281163044898,
+            "span_m": 116.60833333332558,
+            "streamwise_m": 19.315429177713213,
+            "vertical_m": 6.272281163044898
+          },
+          "characteristic_speed_m_per_s": 29.04828151444212,
+          "derived_pre_run_timestep_cap_s": 0.026990758299791622,
+          "diagnostic_diffusive_margin": 242931985.28248084,
+          "diagnostic_viscous_timescale_s": 6556918.498047976,
+          "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+          "g6_disposition": {
+            "baseline_theoretical_timestep_control": "implemented and accepted",
+            "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+            "formal_timestep_convergence": "post-G6 verification"
+          },
+          "gravity_wave_speed_m_per_s": 28.630653152056656,
+          "maxAlphaCo": 0.25,
+          "maxCo": 0.25,
+          "maxDeltaT": 0.026990758299791622,
+          "maximum_mapped_speed_m_per_s": 0.4176283623854627,
+          "maximum_reconstructed_depth_m": 83.58759616315172,
+          "minimum_accepted_timestep_s": 1e-07,
+          "observed_maximum_Co": null,
+          "observed_maximum_alpha_Co": null,
+          "observed_timestep_range_s": [
+            null,
+            null
+          ],
+          "openfoam_controlled_constraints": [
+            "internal Co calculation",
+            "internal interface Co calculation",
+            "immediate timestep reduction",
+            "damped timestep increase",
+            "fvModel maxDeltaT contribution"
+          ],
+          "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "repository_controlled_constraints": [
+            "pre-run gravity/advective estimate",
+            "configured maxDeltaT",
+            "configured maxCo",
+            "configured maxAlphaCo",
+            "minimum-timestep failure threshold",
+            "post-run acceptance"
+          ],
+          "schema": {
+            "name": "tsunami.openfoam_timestep_policy",
+            "version": "1.0.0"
+          }
+        },
+        "tutorial_authority": [
+          "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
+          "/opt/openfoam11/tutorials/incompressibleVoF/damBreakPorousBaffle",
+          "/opt/openfoam11/tutorials/incompressibleVoF/waterChannel",
+          "/opt/openfoam11/tutorials/incompressibleFluid/pitzDailySteadyExperimentalInlet",
+          "/opt/openfoam11/tutorials/incompressibleVoF/DTCHull",
+          "/opt/openfoam11/tutorials/incompressibleVoF/sloshingTank3D"
+        ],
+        "variant": "no_defence",
+        "wall_function_policy": {
+          "expected_wall_patches": [
+            "terrain"
+          ],
+          "field_types": {
+            "k": {
+              "terrain": "kqRWallFunction"
+            },
+            "nut": {
+              "terrain": "nutUSpaldingWallFunction"
+            },
+            "omega": {
+              "terrain": "omegaWallFunction"
+            }
+          },
+          "limitations": [
+            "This does not eliminate mesh dependence; wall-function convergence remains post-G6."
+          ],
+          "mode": "continuous_spalding",
+          "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "schema": {
+            "name": "tsunami.openfoam_wall_function_policy",
+            "version": "1.0.0"
+          }
+        },
+        "write_interval": 60.0
+      },
+      "no_fsi": true,
+      "status": "generated_not_executed",
+      "turbulence_configuration": "unchanged G6 kOmegaSST / continuous Spalding wall functions"
+    },
+    "no_fsi": true,
+    "simple_rigid_barrier": {
+      "boundary_roles": "unchanged G6 open_ocean_damped inlet/outlet/laterals/atmosphere/terrain/barrier policy",
+      "case_hash": "ceced95c1b9706335b49883199a157bce86ed047b7f1fdbdda4f7f882686eeba",
+      "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/simple_rigid_barrier",
+      "case_summary": {
+        "alpha_tolerance": 5e-05,
+        "barrier": {
+          "height_m": 19.315429177713213,
+          "span_fraction": 1.0,
+          "streamwise_position_m": 463.5703002651171,
+          "thickness_m": 38.630858355426426
+        },
+        "boundary_data_time_range": [
+          0.0,
+          300.0
+        ],
+        "boundary_mode": "open_ocean_damped",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/simple_rigid_barrier",
+        "cell_counts": {
+          "span": 60,
+          "streamwise": 40,
+          "vertical": 16
+        },
+        "cell_dimensions_m": {
+          "minimum_m": 6.272281163044898,
+          "span_m": 116.60833333332558,
+          "streamwise_m": 19.315429177713213,
+          "vertical_m": 6.272281163044898
+        },
+        "damping": {
+          "damping_does_not_overlap_barrier": true,
+          "damping_does_not_overlap_inlet": true,
+          "damping_does_not_overlap_primary_comparison_probes": true,
+          "enabled": true,
+          "limitations": [
+            "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+          ],
+          "model": "isotropicDamping",
+          "profile": "halfCosineRamp",
+          "value": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "zones": [
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                1.0,
+                0.0,
+                0.0
+              ],
+              "lambda_per_s": 0.9951730208838543,
+              "model": "isotropicDamping",
+              "name": "outlet",
+              "origin": [
+                656.7245920422492,
+                0.0,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 4.019401567425366,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 656.7245920422492,
+              "width_m": 115.89257506627928
+            },
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                0.0,
+                -1.0,
+                0.0
+              ],
+              "lambda_per_s": 0.1648440849377913,
+              "model": "isotropicDamping",
+              "name": "sideLeft",
+              "origin": [
+                0.0,
+                699.6499999999535,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 24.265353540040678,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 5597.199999999628,
+              "width_m": 699.6499999999535
+            },
+            {
+              "cell_count": 6.0,
+              "characteristic_speed_m_per_s": 28.833291006679502,
+              "direction": [
+                0.0,
+                1.0,
+                0.0
+              ],
+              "lambda_per_s": 0.1648440849377913,
+              "model": "isotropicDamping",
+              "name": "sideRight",
+              "origin": [
+                0.0,
+                6296.849999999581,
+                0.0
+              ],
+              "profile": "halfCosineRamp",
+              "residence_time_s": 24.265353540040678,
+              "target_e_folds": 4.0,
+              "undamped_core_width_m": 5597.199999999628,
+              "width_m": 699.6499999999535
+            }
+          ]
+        },
+        "dimensions_m": {
+          "height": 100.35649860871837,
+          "length": 772.6171671085285,
+          "span": 6996.499999999534
+        },
+        "end_time": 300.0,
+        "field_boundary_types": {
+          "U": {
+            "atmosphere": "pressureInletOutletVelocity",
+            "barrier": "noSlip",
+            "inlet": "timeVaryingMappedFixedValue",
+            "outlet": "pressureInletOutletVelocity",
+            "sideLeft": "pressureInletOutletVelocity",
+            "sideRight": "pressureInletOutletVelocity",
+            "terrain": "noSlip"
+          },
+          "alpha.water": {
+            "atmosphere": "inletOutlet",
+            "barrier": "zeroGradient",
+            "inlet": "timeVaryingMappedFixedValue",
+            "outlet": "variableHeightFlowRate",
+            "sideLeft": "variableHeightFlowRate",
+            "sideRight": "variableHeightFlowRate",
+            "terrain": "zeroGradient"
+          },
+          "k": {
+            "atmosphere": "inletOutlet",
+            "barrier": "kqRWallFunction",
+            "inlet": "fixedValue",
+            "outlet": "inletOutlet",
+            "sideLeft": "inletOutlet",
+            "sideRight": "inletOutlet",
+            "terrain": "kqRWallFunction"
+          },
+          "nut": {
+            "atmosphere": "calculated",
+            "barrier": "nutUSpaldingWallFunction",
+            "inlet": "calculated",
+            "outlet": "calculated",
+            "sideLeft": "calculated",
+            "sideRight": "calculated",
+            "terrain": "nutUSpaldingWallFunction"
+          },
+          "omega": {
+            "atmosphere": "inletOutlet",
+            "barrier": "omegaWallFunction",
+            "inlet": "fixedValue",
+            "outlet": "inletOutlet",
+            "sideLeft": "inletOutlet",
+            "sideRight": "inletOutlet",
+            "terrain": "omegaWallFunction"
+          },
+          "p_rgh": {
+            "atmosphere": "prghTotalPressure",
+            "barrier": "fixedFluxPressure",
+            "inlet": "fixedFluxPressure",
+            "outlet": "prghTotalPressure",
+            "sideLeft": "prghTotalPressure",
+            "sideRight": "prghTotalPressure",
+            "terrain": "fixedFluxPressure"
+          }
+        },
+        "has_barrier": true,
+        "initial_timestep": 0.002,
+        "initial_water_level": 38.630858355426426,
+        "k": 0.0001539828754730644,
+        "major_replay_peak_time": 240.0,
+        "maximum_alpha_courant_number": 0.25,
+        "maximum_courant_number": 0.25,
+        "maximum_timestep": 0.026990758299791622,
+        "mesh_patch_types": {
+          "atmosphere": "patch",
+          "barrier": "wall",
+          "inlet": "patch",
+          "outlet": "patch",
+          "sideLeft": "patch",
+          "sideRight": "patch",
+          "terrain": "wall"
+        },
+        "minimum_timestep": 1e-07,
+        "omega": 0.011729276465526949,
+        "patches": [
+          "inlet",
+          "outlet",
+          "sideLeft",
+          "sideRight",
+          "atmosphere",
+          "terrain",
+          "barrier"
+        ],
+        "replay_schema": {
+          "name": "tsunami.openfoam_replay_configuration",
+          "version": "1.1.0"
+        },
+        "timestep_policy": {
+          "adjustTimeStep": true,
+          "cell_dimensions_m": {
+            "minimum_m": 6.272281163044898,
+            "span_m": 116.60833333332558,
+            "streamwise_m": 19.315429177713213,
+            "vertical_m": 6.272281163044898
+          },
+          "characteristic_speed_m_per_s": 29.04828151444212,
+          "derived_pre_run_timestep_cap_s": 0.026990758299791622,
+          "diagnostic_diffusive_margin": 242931985.28248084,
+          "diagnostic_viscous_timescale_s": 6556918.498047976,
+          "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+          "g6_disposition": {
+            "baseline_theoretical_timestep_control": "implemented and accepted",
+            "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+            "formal_timestep_convergence": "post-G6 verification"
+          },
+          "gravity_wave_speed_m_per_s": 28.630653152056656,
+          "maxAlphaCo": 0.25,
+          "maxCo": 0.25,
+          "maxDeltaT": 0.026990758299791622,
+          "maximum_mapped_speed_m_per_s": 0.4176283623854627,
+          "maximum_reconstructed_depth_m": 83.58759616315172,
+          "minimum_accepted_timestep_s": 1e-07,
+          "observed_maximum_Co": null,
+          "observed_maximum_alpha_Co": null,
+          "observed_timestep_range_s": [
+            null,
+            null
+          ],
+          "openfoam_controlled_constraints": [
+            "internal Co calculation",
+            "internal interface Co calculation",
+            "immediate timestep reduction",
+            "damped timestep increase",
+            "fvModel maxDeltaT contribution"
+          ],
+          "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "repository_controlled_constraints": [
+            "pre-run gravity/advective estimate",
+            "configured maxDeltaT",
+            "configured maxCo",
+            "configured maxAlphaCo",
+            "minimum-timestep failure threshold",
+            "post-run acceptance"
+          ],
+          "schema": {
+            "name": "tsunami.openfoam_timestep_policy",
+            "version": "1.0.0"
+          }
+        },
+        "tutorial_authority": [
+          "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
+          "/opt/openfoam11/tutorials/incompressibleVoF/damBreakPorousBaffle",
+          "/opt/openfoam11/tutorials/incompressibleVoF/waterChannel",
+          "/opt/openfoam11/tutorials/incompressibleFluid/pitzDailySteadyExperimentalInlet",
+          "/opt/openfoam11/tutorials/incompressibleVoF/DTCHull",
+          "/opt/openfoam11/tutorials/incompressibleVoF/sloshingTank3D"
+        ],
+        "variant": "simple_rigid_barrier",
+        "wall_function_policy": {
+          "expected_wall_patches": [
+            "terrain",
+            "barrier"
+          ],
+          "field_types": {
+            "k": {
+              "barrier": "kqRWallFunction",
+              "terrain": "kqRWallFunction"
+            },
+            "nut": {
+              "barrier": "nutUSpaldingWallFunction",
+              "terrain": "nutUSpaldingWallFunction"
+            },
+            "omega": {
+              "barrier": "omegaWallFunction",
+              "terrain": "omegaWallFunction"
+            }
+          },
+          "limitations": [
+            "This does not eliminate mesh dependence; wall-function convergence remains post-G6."
+          ],
+          "mode": "continuous_spalding",
+          "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "schema": {
+            "name": "tsunami.openfoam_wall_function_policy",
+            "version": "1.0.0"
+          }
+        },
+        "write_interval": 60.0
+      },
+      "no_fsi": true,
+      "status": "generated_not_executed",
+      "turbulence_configuration": "unchanged G6 kOmegaSST / continuous Spalding wall functions"
+    },
+    "smoke_attempts": [
+      {
+        "alpha_bounds_accepted": false,
+        "alpha_tolerance": 5e-05,
+        "case_hash": "778b10d385b386e7a3b6b27a4a73014df9fe2a5860b7cac0af4c623884e9ccd3",
+        "case_name": "simple_rigid_barrier",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier",
+        "ended_normally": true,
+        "final_alpha_max": 1.000465925,
+        "final_alpha_min": -0.0003782604591,
+        "final_time_s": 5.0,
+        "foam_fatal_error": false,
+        "log_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier/log.foamRun",
+        "observed_maximum_Co": 0.06233920901,
+        "observed_maximum_alpha_Co": 0.06233920901,
+        "status": "completed_vtk_exported_validator_failed_alpha_bounds",
+        "variant": "simple_rigid_barrier",
+        "vtk_exported": true,
+        "vtk_file_count": 2
+      },
+      {
+        "alpha_bounds_accepted": false,
+        "alpha_tolerance": 5e-05,
+        "case_hash": "cd9a45c935e6c45cc01996297a2d26171f71a7ae7d947bc39e98bb154a0dfd45",
+        "case_name": "simple_rigid_barrier_1s",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier_1s",
+        "ended_normally": true,
+        "final_alpha_max": 1.000087482,
+        "final_alpha_min": -8.737632442e-05,
+        "final_time_s": 1.0,
+        "foam_fatal_error": false,
+        "log_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier_1s/log.foamRun",
+        "observed_maximum_Co": 0.004167655029,
+        "observed_maximum_alpha_Co": 0.002503948562,
+        "status": "completed_vtk_exported_validator_failed_alpha_bounds",
+        "variant": "simple_rigid_barrier",
+        "vtk_exported": true,
+        "vtk_file_count": 2
+      }
+    ],
+    "smoke_result": "completed_not_accepted_alpha_bounds",
+    "turbulence_configuration_unchanged": true
+  },
+  "poster_handoff": {
+    "allowed_claims": [
+      "implemented solver/pipeline/replay/framework",
+      "verified Regional numerical method",
+      "exploratory current replay package"
+    ],
+    "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_poster_handoff.md",
+    "prohibited_claims": [
+      "historical validation complete",
+      "current forcing mesh-converged",
+      "defence-impact prediction validated"
+    ],
+    "sha256": "617120453274ab6a04cc912e3f758d7daca3e3113b317bff6f6276239ea07a45"
+  },
+  "projection": {
+    "all_mesh_quality": {
+      "h250": {
+        "actual_characteristic_h_m": 163.48069954712705,
+        "aspect_ratio_statistics": {
+          "count": 36894,
+          "max": 2.112758091700253,
+          "mean": 1.1932457854883702,
+          "median": 1.1556304660663392,
+          "min": 1.1547005383796283,
+          "p05": 1.154700601261015,
+          "p95": 1.427011179454228
+        },
+        "boundary_faces": 1052,
+        "cells": 36894,
+        "domain_area_m2": 986026798.0562787,
+        "faces": 55867,
+        "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/projection-h250/case/meshes/r4-h250.msh",
+        "mesh_sha256": "ff99323e599049782fd78a59a45bf1124adb7c3915442ec1d71dce23d4f06186",
+        "minimum_angle_statistics_deg": {
+          "count": 36894,
+          "max": 59.999999999988304,
+          "mean": 58.64577617500975,
+          "median": 59.9620937319896,
+          "min": 39.382377003992225,
+          "p05": 50.20920422224475,
+          "p95": 59.99999708388445
+        },
+        "radius_ratio_statistics": {
+          "count": 36894,
+          "max": 1.0000000000000004,
+          "mean": 0.9957671733242989,
+          "median": 0.9999994764805079,
+          "min": 0.7947178073678427,
+          "p05": 0.965730807345786,
+          "p95": 0.9999999999999972
+        }
+      },
+      "h300": {
+        "actual_characteristic_h_m": 196.24898195699717,
+        "aspect_ratio_statistics": {
+          "count": 25602,
+          "max": 2.294436731399291,
+          "mean": 1.2144709153713298,
+          "median": 1.1723822415290228,
+          "min": 1.1547005383795805,
+          "p05": 1.1554096845424238,
+          "p95": 1.469123118332036
+        },
+        "boundary_faces": 878,
+        "cells": 25602,
+        "domain_area_m2": 986026798.056278,
+        "faces": 38842,
+        "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-h300-r11/case/meshes/r4-h300.msh",
+        "mesh_sha256": "9e370bc10b3d0034b55fa96e469731baf5b557db62f59d1bd84e4a0aac0932dd",
+        "minimum_angle_statistics_deg": {
+          "count": 25602,
+          "max": 59.99999999998119,
+          "mean": 57.77829141379822,
+          "median": 59.16847171712847,
+          "min": 39.888014999267234,
+          "p05": 49.06815856801491,
+          "p95": 59.96844999046228
+        },
+        "radius_ratio_statistics": {
+          "count": 25602,
+          "max": 1.0000000000000002,
+          "mean": 0.9938872721503413,
+          "median": 0.9997721178530772,
+          "min": 0.7423056972775408,
+          "p05": 0.9554732317664476,
+          "p95": 0.9999996565966822
+        }
+      },
+      "h400": {
+        "actual_characteristic_h_m": 260.44852485382444,
+        "aspect_ratio_statistics": {
+          "count": 14536,
+          "max": 2.0999185864799497,
+          "mean": 1.2168754818606924,
+          "median": 1.1552278749719975,
+          "min": 1.1547005383793234,
+          "p05": 1.15470053837968,
+          "p95": 1.4928195738660233
+        },
+        "boundary_faces": 658,
+        "cells": 14536,
+        "domain_area_m2": 986026798.0562788,
+        "faces": 22133,
+        "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-limited-linear-event-r10/case/meshes/r4-h400.msh",
+        "mesh_sha256": "6431004341b17656f8be10f22135bff5d427fc782529d099be49252fcde20982",
+        "minimum_angle_statistics_deg": {
+          "count": 14536,
+          "max": 59.99999999999506,
+          "mean": 57.8375291685843,
+          "median": 59.97728494665798,
+          "min": 39.91127906522048,
+          "p05": 48.65660020314157,
+          "p95": 59.99999999998026
+        },
+        "radius_ratio_statistics": {
+          "count": 14536,
+          "max": 1.0000000000000007,
+          "mean": 0.992926865595621,
+          "median": 0.9999998047188432,
+          "min": 0.7990698847432252,
+          "p05": 0.9545175155391861,
+          "p95": 1.0000000000000002
+        }
+      },
+      "h500": {
+        "actual_characteristic_h_m": 324.8463147653671,
+        "aspect_ratio_statistics": {
+          "count": 9344,
+          "max": 2.085662446435449,
+          "mean": 1.2289250431372705,
+          "median": 1.1559842305346182,
+          "min": 1.1547005383794278,
+          "p05": 1.1547005383803939,
+          "p95": 1.508718791037038
+        },
+        "boundary_faces": 526,
+        "cells": 9344,
+        "domain_area_m2": 986026798.0562836,
+        "faces": 14279,
+        "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-limited-linear-event-r10/case/meshes/r4-h500.msh",
+        "mesh_sha256": "c1140e32db3baf8625d6bb172acc397c2c6046b743ac8ef789701dac05526cf3",
+        "minimum_angle_statistics_deg": {
+          "count": 9344,
+          "max": 59.9999999999961,
+          "mean": 57.43072175551733,
+          "median": 59.94666744696207,
+          "min": 41.13322639427532,
+          "p05": 48.026476396026226,
+          "p95": 59.99999999994315
+        },
+        "radius_ratio_statistics": {
+          "count": 9344,
+          "max": 1.0000000000000007,
+          "mean": 0.9914070093804779,
+          "median": 0.9999989855666326,
+          "min": 0.803256569511626,
+          "p05": 0.9506124567939245,
+          "p95": 1.0
+        }
+      }
+    },
+    "classification": {
+      "combined": "PROJECTION_FIDELITY_CEILING",
+      "fields": {
+        "bed": {
+          "L2_by_level": {
+            "h250": 10.4705835702291,
+            "h300": 8.280995497232107,
+            "h400": 7.748679131490961,
+            "h500": 7.74716941711725
+          },
+          "classification": "PROJECTION_FIDELITY_CEILING",
+          "h250_improves_h300": false
+        },
+        "source": {
+          "L2_by_level": {
+            "h250": 0.0034666702924086744,
+            "h300": 0.002865267531883682,
+            "h400": 0.0027763940021288064,
+            "h500": 0.0030509842524578065
+          },
+          "classification": "PROJECTION_FIDELITY_CEILING",
+          "h250_improves_h300": false
+        }
+      }
+    },
+    "h250_mesh": {
+      "actual_characteristic_h_m": 163.48069954712705,
+      "aspect_ratio_statistics": {
+        "count": 36894,
+        "max": 2.112758091700253,
+        "mean": 1.1932457854883702,
+        "median": 1.1556304660663392,
+        "min": 1.1547005383796283,
+        "p05": 1.154700601261015,
+        "p95": 1.427011179454228
+      },
+      "boundary_faces": 1052,
+      "cells": 36894,
+      "domain_area_m2": 986026798.0562787,
+      "faces": 55867,
+      "mesh_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/projection-h250/case/meshes/r4-h250.msh",
+      "mesh_sha256": "ff99323e599049782fd78a59a45bf1124adb7c3915442ec1d71dce23d4f06186",
+      "minimum_angle_statistics_deg": {
+        "count": 36894,
+        "max": 59.999999999988304,
+        "mean": 58.64577617500975,
+        "median": 59.9620937319896,
+        "min": 39.382377003992225,
+        "p05": 50.20920422224475,
+        "p95": 59.99999708388445
+      },
+      "radius_ratio_statistics": {
+        "count": 36894,
+        "max": 1.0000000000000004,
+        "mean": 0.9957671733242989,
+        "median": 0.9999994764805079,
+        "min": 0.7947178073678427,
+        "p05": 0.965730807345786,
+        "p95": 0.9999999999999972
+      }
+    },
+    "metrics": {
+      "overall": {
+        "bed": {
+          "h250": {
+            "L1": 7.147665544340132,
+            "L2": 10.4705835702291,
+            "Linf": 33.0,
+            "bias": 4.646185106705276,
+            "count": 801,
+            "local_extrema_count": 81,
+            "nrmse": 0.010754703298864972,
+            "rms_gradient": 0.050643842217396144,
+            "short_scale_roughness_rms": 11.36713313319941,
+            "status": "computed",
+            "total_variation": 2707.5241428520153
+          },
+          "h300": {
+            "L1": 6.873324608990014,
+            "L2": 8.280995497232107,
+            "Linf": 28.476610319474673,
+            "bias": -2.3863469616013124,
+            "count": 801,
+            "local_extrema_count": 362,
+            "nrmse": 0.008505700660772192,
+            "rms_gradient": 0.04024812768045649,
+            "short_scale_roughness_rms": 9.738704040226152,
+            "status": "computed",
+            "total_variation": 3130.438451424083
+          },
+          "h400": {
+            "L1": 6.838005146811909,
+            "L2": 7.748679131490961,
+            "Linf": 21.01373223214506,
+            "bias": -1.0243309925592932,
+            "count": 801,
+            "local_extrema_count": 40,
+            "nrmse": 0.007958939867901613,
+            "rms_gradient": 0.0284452137870148,
+            "short_scale_roughness_rms": 5.960101318540226,
+            "status": "computed",
+            "total_variation": 1451.8800893567484
+          },
+          "h500": {
+            "L1": 6.768061358856651,
+            "L2": 7.74716941711725,
+            "Linf": 33.91952870306814,
+            "bias": -0.9883289447685171,
+            "count": 801,
+            "local_extrema_count": 34,
+            "nrmse": 0.00795738918736443,
+            "rms_gradient": 0.028858693881302588,
+            "short_scale_roughness_rms": 5.870720637852531,
+            "status": "computed",
+            "total_variation": 1383.871443816359
+          }
+        },
+        "source": {
+          "h250": {
+            "L1": 0.0021282612395455867,
+            "L2": 0.0034666702924086744,
+            "Linf": 0.024201766911887024,
+            "bias": 0.000842717363824814,
+            "count": 801,
+            "local_extrema_count": 73,
+            "nrmse": 0.010557997908942476,
+            "rms_gradient": 2.287128563776181e-05,
+            "short_scale_roughness_rms": 0.0046377261630354905,
+            "status": "computed",
+            "total_variation": 1.033042038342164
+          },
+          "h300": {
+            "L1": 0.002168090860098688,
+            "L2": 0.002865267531883682,
+            "Linf": 0.014886874444756448,
+            "bias": 1.1642695730237134e-05,
+            "count": 801,
+            "local_extrema_count": 345,
+            "nrmse": 0.008726381818436409,
+            "rms_gradient": 2.0382271163139474e-05,
+            "short_scale_roughness_rms": 0.004439128757355533,
+            "status": "computed",
+            "total_variation": 1.3700988463363633
+          },
+          "h400": {
+            "L1": 0.0022151488608655712,
+            "L2": 0.0027763940021288064,
+            "Linf": 0.015684866376919016,
+            "bias": -7.733636473738787e-05,
+            "count": 801,
+            "local_extrema_count": 33,
+            "nrmse": 0.008455710983841304,
+            "rms_gradient": 1.6542600607288545e-05,
+            "short_scale_roughness_rms": 0.003212199543053331,
+            "status": "computed",
+            "total_variation": 0.7200925169346819
+          },
+          "h500": {
+            "L1": 0.0023130498780670567,
+            "L2": 0.0030509842524578065,
+            "Linf": 0.016778839688884495,
+            "bias": -0.00011537852758550567,
+            "count": 801,
+            "local_extrema_count": 29,
+            "nrmse": 0.009291995673255836,
+            "rms_gradient": 1.715107449143303e-05,
+            "short_scale_roughness_rms": 0.0033597636162759313,
+            "status": "computed",
+            "total_variation": 0.7394880628498832
+          }
+        }
+      },
+      "regions": {
+        "continental_slope_shelf_break": {
+          "bed": {
+            "h250": {
+              "L1": 7.741967937829696,
+              "L2": 10.868629788056209,
+              "Linf": 26.45366243165995,
+              "bias": 5.7823097804094425,
+              "count": 558,
+              "local_extrema_count": 70,
+              "nrmse": 0.016151258695073157,
+              "rms_gradient": 0.056533385266054274,
+              "short_scale_roughness_rms": 12.80198045739637,
+              "status": "computed",
+              "total_variation": 2248.024785010002
+            },
+            "h300": {
+              "L1": 7.3645127663590335,
+              "L2": 8.64647502926435,
+              "Linf": 22.886375285350482,
+              "bias": -2.9845486842291864,
+              "count": 558,
+              "local_extrema_count": 201,
+              "nrmse": 0.012849039641740766,
+              "rms_gradient": 0.03796100868076817,
+              "short_scale_roughness_rms": 9.065467596586771,
+              "status": "computed",
+              "total_variation": 1958.9073737085744
+            },
+            "h400": {
+              "L1": 7.375433815961448,
+              "L2": 8.153545621480813,
+              "Linf": 21.01373223214506,
+              "bias": -1.046136060370739,
+              "count": 558,
+              "local_extrema_count": 36,
+              "nrmse": 0.01211652500661444,
+              "rms_gradient": 0.03032730450405127,
+              "short_scale_roughness_rms": 6.49619287752698,
+              "status": "computed",
+              "total_variation": 1130.501358916528
+            },
+            "h500": {
+              "L1": 7.359922524154203,
+              "L2": 8.082649012107707,
+              "Linf": 25.80433626355324,
+              "bias": -0.9167858476700281,
+              "count": 558,
+              "local_extrema_count": 19,
+              "nrmse": 0.012011169547746302,
+              "rms_gradient": 0.02667047355486815,
+              "short_scale_roughness_rms": 5.536194134703193,
+              "status": "computed",
+              "total_variation": 895.4553210383483
+            }
+          },
+          "source": {
+            "h250": {
+              "L1": 0.001809568941289767,
+              "L2": 0.0031328216355780885,
+              "Linf": 0.024201766911887024,
+              "bias": 0.00042479699810039293,
+              "count": 558,
+              "local_extrema_count": 62,
+              "nrmse": 0.009541237408689788,
+              "rms_gradient": 2.5043346101456963e-05,
+              "short_scale_roughness_rms": 0.005025865492115247,
+              "status": "computed",
+              "total_variation": 0.7897675455660221
+            },
+            "h300": {
+              "L1": 0.001772176359916945,
+              "L2": 0.0025568590943962403,
+              "Linf": 0.014886874444756448,
+              "bias": 9.51254662564458e-05,
+              "count": 558,
+              "local_extrema_count": 171,
+              "nrmse": 0.007787101366752552,
+              "rms_gradient": 1.9585578115415362e-05,
+              "short_scale_roughness_rms": 0.0038680204311981716,
+              "status": "computed",
+              "total_variation": 0.7331304383278052
+            },
+            "h400": {
+              "L1": 0.0018502378581587164,
+              "L2": 0.0025358073248010187,
+              "Linf": 0.015684866376919016,
+              "bias": -6.339034242171811e-05,
+              "count": 558,
+              "local_extrema_count": 27,
+              "nrmse": 0.007722986662838366,
+              "rms_gradient": 1.8207128701312025e-05,
+              "short_scale_roughness_rms": 0.0035024085748475656,
+              "status": "computed",
+              "total_variation": 0.5498406491535093
+            },
+            "h500": {
+              "L1": 0.0020139671426757464,
+              "L2": 0.0029211626062350684,
+              "Linf": 0.016778839688884495,
+              "bias": -6.810088725832779e-05,
+              "count": 558,
+              "local_extrema_count": 12,
+              "nrmse": 0.00889661435523531,
+              "rms_gradient": 1.8417319129131473e-05,
+              "short_scale_roughness_rms": 0.0035432299122795836,
+              "status": "computed",
+              "total_variation": 0.5119649940988893
+            }
+          }
+        },
+        "coupling_section_neighbourhood": {
+          "bed": {
+            "h250": {
+              "L1": 10.563511198215075,
+              "L2": 16.430859606933446,
+              "Linf": 33.0,
+              "bias": -10.563511198215075,
+              "count": 41,
+              "local_extrema_count": 3,
+              "nrmse": 0.21264974288462887,
+              "rms_gradient": 0.047062792536227756,
+              "short_scale_roughness_rms": 9.546071109844677,
+              "status": "computed",
+              "total_variation": 111.44130026083221
+            },
+            "h300": {
+              "L1": 10.315156593029164,
+              "L2": 12.318755208543335,
+              "Linf": 28.476610319474673,
+              "bias": -1.1582639920376003,
+              "count": 41,
+              "local_extrema_count": 25,
+              "nrmse": 0.15943049788156063,
+              "rms_gradient": 0.0691402868308216,
+              "short_scale_roughness_rms": 17.274794925428395,
+              "status": "computed",
+              "total_variation": 309.3117135407905
+            },
+            "h400": {
+              "L1": 9.788909775505168,
+              "L2": 11.169565719595429,
+              "Linf": 18.65300792822164,
+              "bias": -1.77572469928529,
+              "count": 41,
+              "local_extrema_count": 0,
+              "nrmse": 0.1445575785580111,
+              "rms_gradient": 0.03262690560560023,
+              "short_scale_roughness_rms": 5.744421279500437,
+              "status": "computed",
+              "total_variation": 75.93794655037135
+            },
+            "h500": {
+              "L1": 9.22783125164635,
+              "L2": 11.6941483143854,
+              "Linf": 33.91952870306814,
+              "bias": -2.5205646649658893,
+              "count": 41,
+              "local_extrema_count": 3,
+              "nrmse": 0.15134677623679632,
+              "rms_gradient": 0.06431887702689165,
+              "short_scale_roughness_rms": 12.46694696122254,
+              "status": "computed",
+              "total_variation": 189.39046350829642
+            }
+          },
+          "source": {
+            "h250": {
+              "L1": 0.0027208513849071017,
+              "L2": 0.004065708494659715,
+              "Linf": 0.008548718408714073,
+              "bias": -0.0027208513849071017,
+              "count": 41,
+              "local_extrema_count": 3,
+              "nrmse": 0.20073464529667745,
+              "rms_gradient": 1.9057264687723824e-05,
+              "short_scale_roughness_rms": 0.004157479993565356,
+              "status": "computed",
+              "total_variation": 0.04701673894753222
+            },
+            "h300": {
+              "L1": 0.003228502766203946,
+              "L2": 0.0035611291174151077,
+              "Linf": 0.006065385904370224,
+              "bias": -0.00016920413553202197,
+              "count": 41,
+              "local_extrema_count": 28,
+              "nrmse": 0.17582224381775835,
+              "rms_gradient": 2.12620837951476e-05,
+              "short_scale_roughness_rms": 0.005371490489924674,
+              "status": "computed",
+              "total_variation": 0.10037562411139511
+            },
+            "h400": {
+              "L1": 0.002962983174090592,
+              "L2": 0.003112165833292784,
+              "Linf": 0.005668324725642826,
+              "bias": -0.00025807331589413024,
+              "count": 41,
+              "local_extrema_count": 0,
+              "nrmse": 0.15365575408837873,
+              "rms_gradient": 6.825521084315422e-06,
+              "short_scale_roughness_rms": 0.0012551996983243877,
+              "status": "computed",
+              "total_variation": 0.017080184544153276
+            },
+            "h500": {
+              "L1": 0.0025704519622503233,
+              "L2": 0.002976431240393624,
+              "Linf": 0.006058702082670897,
+              "bias": -0.00021187390287284082,
+              "count": 41,
+              "local_extrema_count": 4,
+              "nrmse": 0.14695418278884015,
+              "rms_gradient": 1.4576326744875535e-05,
+              "short_scale_roughness_rms": 0.0030568039249988335,
+              "status": "computed",
+              "total_variation": 0.04508425377077785
+            }
+          }
+        },
+        "shelf": {
+          "bed": {
+            "h250": {
+              "L1": 4.812663527627014,
+              "L2": 7.322926496889945,
+              "Linf": 16.711611337802992,
+              "bias": 4.594897881828092,
+              "count": 202,
+              "local_extrema_count": 8,
+              "nrmse": 0.033668377486874054,
+              "rms_gradient": 0.030178372962758018,
+              "short_scale_roughness_rms": 6.4644766691486,
+              "status": "computed",
+              "total_variation": 348.05805758118123
+            },
+            "h300": {
+              "L1": 4.817888454744875,
+              "L2": 5.882399120027754,
+              "Linf": 18.366949656598948,
+              "bias": -0.9831531028179386,
+              "count": 202,
+              "local_extrema_count": 133,
+              "nrmse": 0.027045312305901553,
+              "rms_gradient": 0.038302165597321886,
+              "short_scale_roughness_rms": 9.455299304929113,
+              "status": "computed",
+              "total_variation": 846.7574162093581
+            },
+            "h400": {
+              "L1": 4.7544789727432635,
+              "L2": 5.396426513389446,
+              "Linf": 17.36444265524804,
+              "bias": -0.8115865875367554,
+              "count": 202,
+              "local_extrema_count": 4,
+              "nrmse": 0.024810972090206686,
+              "rms_gradient": 0.02095088797024461,
+              "short_scale_roughness_rms": 4.170345570120132,
+              "status": "computed",
+              "total_variation": 236.6646742896916
+            },
+            "h500": {
+              "L1": 4.63385791410214,
+              "L2": 5.45655501867353,
+              "Linf": 19.203740814111598,
+              "bias": -0.8749595569114113,
+              "count": 202,
+              "local_extrema_count": 12,
+              "nrmse": 0.025087422934617843,
+              "rms_gradient": 0.022810125340484967,
+              "short_scale_roughness_rms": 4.6917149466646615,
+              "status": "computed",
+              "total_variation": 299.02565926971425
+            }
+          },
+          "source": {
+            "h250": {
+              "L1": 0.0028883310735402664,
+              "L2": 0.004145855550989068,
+              "Linf": 0.009488700122742055,
+              "bias": 0.002720469258736871,
+              "count": 202,
+              "local_extrema_count": 8,
+              "nrmse": 0.03245239994239328,
+              "rms_gradient": 1.6483997429122058e-05,
+              "short_scale_roughness_rms": 0.0034856607326398227,
+              "status": "computed",
+              "total_variation": 0.19625775382860955
+            },
+            "h300": {
+              "L1": 0.003046523547975407,
+              "L2": 0.003452741810531426,
+              "Linf": 0.008721385817142546,
+              "bias": -0.0001822615907641778,
+              "count": 202,
+              "local_extrema_count": 142,
+              "nrmse": 0.027026932500447937,
+              "rms_gradient": 2.229624944356039e-05,
+              "short_scale_roughness_rms": 0.005549077221027044,
+              "status": "computed",
+              "total_variation": 0.5315948037829514
+            },
+            "h400": {
+              "L1": 0.0030713821909061603,
+              "L2": 0.0032920341755162323,
+              "Linf": 0.008015934910478473,
+              "bias": -7.917629273103782e-05,
+              "count": 202,
+              "local_extrema_count": 6,
+              "nrmse": 0.02576896574758675,
+              "rms_gradient": 1.2663274551025446e-05,
+              "short_scale_roughness_rms": 0.0026035030697040863,
+              "status": "computed",
+              "total_variation": 0.15132718998998484
+            },
+            "h500": {
+              "L1": 0.003086983941912785,
+              "L2": 0.0033972666717042685,
+              "Linf": 0.007913218351373819,
+              "bias": -0.0002263914628121617,
+              "count": 202,
+              "local_extrema_count": 13,
+              "nrmse": 0.026592691275702608,
+              "rms_gradient": 1.3730821135293377e-05,
+              "short_scale_roughness_rms": 0.002879517265940381,
+              "status": "computed",
+              "total_variation": 0.18243881498021608
+            }
+          }
+        }
+      }
+    },
+    "profile_csv": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/projection/projection_profiles.csv",
+    "source_sha256": "88f58bb256c8e5ff7baa8ec662118572b1e6a1b38b0fdd9b85a0541ddf6f6498",
+    "status": "computed",
+    "terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+  },
+  "replay_package": {
+    "boundary_data_hash": "984e00d12881fbf2a201f773bafb482e147b7bdaa1603a8889fbf27747b73ff4",
+    "boundary_data_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/openfoam-boundaryData",
+    "config_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/replay_config_r13_h400_limited_linear.json",
+    "config_sha256": "f9ea1d7f823c58950e1fc0185c08973a756aaccd6c26d56b43c4f48c8de2bbe9",
+    "conversion": {
+      "conversion_timestamp": "2026-08-10T20:52:21Z",
+      "converter_version": "0.1.0",
+      "discharge_tolerances": {
+        "absolute": 1e-10,
+        "relative": 1e-08
+      },
+      "dry_depth_threshold_m": 1e-06,
+      "eta_tolerance_m": 1e-08,
+      "generated_field_names": [
+        "U",
+        "alpha.water"
+      ],
+      "local_inlet_dimensions": {
+        "span_cells": 60,
+        "span_max_m": 6996.499999999534,
+        "span_min_m": 0.0,
+        "vertical_cells": 16,
+        "vertical_max_m": 100.35649860871837,
+        "vertical_min_m": 0.0
+      },
+      "local_inlet_face_count": 960,
+      "local_point_ordering": "span-major-then-vertical",
+      "mapping_configuration": {
+        "barrier": {
+          "height_m": 19.315429177713213,
+          "span_fraction": 1.0,
+          "streamwise_position_m": 463.5703002651171,
+          "thickness_m": 38.630858355426426
+        },
+        "boundary_policy": {
+          "atmosphere": "open_atmosphere",
+          "laterals": "open_ocean",
+          "mode": "open_ocean_damped",
+          "outlet": "open_ocean",
+          "policy_version": "1.0.0"
+        },
+        "damping_policy": {
+          "enabled": true,
+          "lateral_width_fraction": 0.1,
+          "model": "isotropicDamping",
+          "outlet_width_fraction": 0.15,
+          "profile": "halfCosineRamp",
+          "target_e_folds": 4.0
+        },
+        "derived_dimensions": {
+          "local3d_disclaimer": "representative Kamaishi-forced local replay with flat rigid bed and simplified wall-type barrier",
+          "maximum_bed_m": -5.826644905911958,
+          "maximum_free_surface_m": 0.012779022248629701,
+          "minimum_bed_m": -83.6262003538394,
+          "regional_span_length_m": 6996.499999999534,
+          "representative_wet_depth_m": 38.630858355426426,
+          "vertical_freeboard_m": 16.717519232630345
+        },
+        "local": {
+          "inward_axis": [
+            1.0,
+            0.0,
+            0.0
+          ],
+          "origin_m": [
+            0.0,
+            0.0,
+            0.0
+          ],
+          "span_axis": [
+            0.0,
+            1.0,
+            0.0
+          ],
+          "span_cells": 60,
+          "span_max_m": 6996.499999999534,
+          "span_min_m": 0.0,
+          "vertical_axis": [
+            0.0,
+            0.0,
+            1.0
+          ],
+          "vertical_cells": 16,
+          "vertical_max_m": 100.35649860871837,
+          "vertical_min_m": 0.0
+        },
+        "local_case": {
+          "alpha_tolerance": 5e-05,
+          "end_time_s": 300.0,
+          "initial_timestep_s": 0.002,
+          "initial_water_level_m": 38.630858355426426,
+          "maximum_alpha_courant_number": 0.25,
+          "maximum_courant_number": 0.25,
+          "maximum_timestep_s": 0.026990758299791622,
+          "minimum_timestep_s": 1e-07,
+          "span_cells": 60,
+          "streamwise_cells": 40,
+          "streamwise_length_m": 772.6171671085285,
+          "timestep_derivation": {
+            "calculated_timestep_limit_s": 0.026990758299791622,
+            "conservative_cap_s": 0.05,
+            "derived_characteristic_speed_m_per_s": 29.04828151444212,
+            "gravity_wave_speed_m_per_s": 28.630653152056656,
+            "maximum_mapped_inlet_speed_m_per_s": 0.4176283623854627,
+            "maximum_reconstructed_water_depth_m": 83.58759616315172,
+            "minimum_local_cell_dimension_m": 6.272281163044898,
+            "safety_factor": 0.5,
+            "selected_maximum_timestep_s": 0.026990758299791622,
+            "target_alpha_courant_limit": 0.25,
+            "target_courant_limit": 0.25
+          },
+          "vertical_cells": 16,
+          "write_interval_s": 60.0
+        },
+        "mapping": {
+          "outside_span": "clamp",
+          "preserve_discrete_discharge": true,
+          "spatial_interpolation": "piecewise_linear_along_section",
+          "velocity_profile": "depth_uniform",
+          "vertical_velocity_m_per_s": 0.0
+        },
+        "openfoam_patch": "inlet",
+        "regional": {
+          "dry_depth_m": 1e-06,
+          "eta_consistency_tolerance_m": 1e-08,
+          "inward_normal_xy": [
+            -0.37450442951286683,
+            0.9272251249158654
+          ],
+          "tangent_xy": [
+            -0.9272251249158654,
+            -0.37450442951286683
+          ],
+          "vertical_datum_origin_m": -83.6262003538394
+        },
+        "replay_window": {
+          "peak_shifted_time_s": 240.0,
+          "selected_source_end_s": 545.0,
+          "selected_source_start_s": 245.0,
+          "selected_time_count": 61,
+          "shifted_duration_s": 300.0,
+          "source_history_sha256": "65e032dff944529f9707ad18eb5dcd4204e8378bed5e41dbb25f8aaa830e75d3",
+          "source_metadata_sha256": "d55986a4c63f5181eeffc62a1145b6953924396955f2bfab7c99cd2507fbdba9",
+          "source_samples_sha256": "fd01543a4b6f70c2095c443903fcaff730a0425a60ab1d58a8b6303aeb1d0089"
+        },
+        "schema": {
+          "name": "tsunami.openfoam_replay_configuration",
+          "version": "1.1.0"
+        },
+        "section_id": "kamaishi-nearshore-interface",
+        "timestep_policy": {
+          "adjust_time_step": true,
+          "minimum_timestep_s": 1e-07,
+          "target_max_alpha_co": 0.25,
+          "target_max_co": 0.25
+        },
+        "turbulence": {
+          "intensity": 0.05,
+          "length_scale_m": 1.9315429177713215,
+          "minimum_speed_m_per_s": 0.01
+        },
+        "wall_function_policy": {
+          "k": "kqRWallFunction",
+          "mode": "continuous_spalding",
+          "nut": "nutUSpaldingWallFunction",
+          "omega": "omegaWallFunction"
+        }
+      },
+      "maximum_boundary_speed_m_per_s": 0.20263785462284806,
+      "regional_sample_ordering": [
+        18,
+        1,
+        4,
+        3,
+        0,
+        7,
+        13,
+        9,
+        15,
+        11,
+        17,
+        10,
+        14,
+        8,
+        12,
+        6,
+        5,
+        16,
+        2,
+        19
+      ],
+      "regional_support_widths": [
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 18,
+          "projected_tangent_m": -2166505.43815792,
+          "support_max_m": -2166305.53815792,
+          "support_min_m": -2166705.3381579197,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 1,
+          "projected_tangent_m": -2166105.63815792,
+          "support_max_m": -2165905.73815792,
+          "support_min_m": -2166305.53815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 4,
+          "projected_tangent_m": -2165705.83815792,
+          "support_max_m": -2165505.9381579203,
+          "support_min_m": -2165905.73815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 3,
+          "projected_tangent_m": -2165306.0381579204,
+          "support_max_m": -2165106.13815792,
+          "support_min_m": -2165505.9381579203,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 0,
+          "projected_tangent_m": -2164906.23815792,
+          "support_max_m": -2164706.33815792,
+          "support_min_m": -2165106.13815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 7,
+          "projected_tangent_m": -2164506.4381579207,
+          "support_max_m": -2164306.5381579204,
+          "support_min_m": -2164706.33815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 13,
+          "projected_tangent_m": -2164106.63815792,
+          "support_max_m": -2163906.73815792,
+          "support_min_m": -2164306.5381579204,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 9,
+          "projected_tangent_m": -2163706.83815792,
+          "support_max_m": -2163506.9381579203,
+          "support_min_m": -2163906.73815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 15,
+          "projected_tangent_m": -2163307.0381579204,
+          "support_max_m": -2163107.1381579204,
+          "support_min_m": -2163506.9381579203,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 11,
+          "projected_tangent_m": -2162907.2381579205,
+          "support_max_m": -2162707.33815792,
+          "support_min_m": -2163107.1381579204,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 17,
+          "projected_tangent_m": -2162507.4381579203,
+          "support_max_m": -2162307.5381579204,
+          "support_min_m": -2162707.33815792,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 10,
+          "projected_tangent_m": -2162107.6381579204,
+          "support_max_m": -2161907.7381579205,
+          "support_min_m": -2162307.5381579204,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 14,
+          "projected_tangent_m": -2161707.8381579206,
+          "support_max_m": -2161507.9381579207,
+          "support_min_m": -2161907.7381579205,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 8,
+          "projected_tangent_m": -2161308.0381579204,
+          "support_max_m": -2161108.1381579204,
+          "support_min_m": -2161507.9381579207,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 12,
+          "projected_tangent_m": -2160908.2381579205,
+          "support_max_m": -2160708.3381579206,
+          "support_min_m": -2161108.1381579204,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 6,
+          "projected_tangent_m": -2160508.4381579207,
+          "support_max_m": -2160308.5381579204,
+          "support_min_m": -2160708.3381579206,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 5,
+          "projected_tangent_m": -2160108.6381579204,
+          "support_max_m": -2159908.7381579205,
+          "support_min_m": -2160308.5381579204,
+          "support_width_m": 399.79999999981374
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 16,
+          "projected_tangent_m": -2159708.83815792,
+          "support_max_m": -2159508.9381579203,
+          "support_min_m": -2159908.7381579205,
+          "support_width_m": 399.8000000002794
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 2,
+          "projected_tangent_m": -2159309.0381579204,
+          "support_max_m": -2159109.138157921,
+          "support_min_m": -2159508.9381579203,
+          "support_width_m": 399.7999999993481
+        },
+        {
+          "derivation": "midpoint_voronoi_tangent_support",
+          "local_index": 19,
+          "projected_tangent_m": -2158909.238157921,
+          "support_max_m": -2158709.338157921,
+          "support_min_m": -2159109.138157921,
+          "support_width_m": 399.79999999981374
+        }
+      ],
+      "schema": {
+        "name": "tsunami.openfoam_replay_conversion",
+        "version": "1.0.0"
+      },
+      "section_id": "kamaishi-nearshore-interface",
+      "snapshot_count": 61,
+      "source_contract_version": 1,
+      "source_coupling_paths": {
+        "history_csv": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/selected-window/history.csv",
+        "metadata_json": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/selected-window/metadata.json",
+        "samples_csv": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/selected-window/samples.csv"
+      },
+      "source_mesh_id": "gmsh:r4-h400.msh",
+      "source_sha256": {
+        "history_csv": "65e032dff944529f9707ad18eb5dcd4204e8378bed5e41dbb25f8aaa830e75d3",
+        "metadata_json": "d55986a4c63f5181eeffc62a1145b6953924396955f2bfab7c99cd2507fbdba9",
+        "samples_csv": "fd01543a4b6f70c2095c443903fcaff730a0425a60ab1d58a8b6303aeb1d0089"
+      },
+      "time_range": [
+        0.0,
+        300.0
+      ],
+      "turbulence_inputs": {
+        "intensity": 0.05,
+        "length_scale_m": 1.9315429177713215,
+        "minimum_speed_m_per_s": 0.01
+      }
+    },
+    "coupling_variable_verification": {
+      "diagnostics_csv": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/openfoam-boundaryData/replay_diagnostics.csv",
+      "maximum_boundary_speed_m_per_s": 0.20263785462284806,
+      "status": "passed",
+      "variables": [
+        "h",
+        "eta",
+        "qx",
+        "qy",
+        "qn",
+        "Qn"
+      ]
+    },
+    "execution_status": "generated_cases_only_openfoam_runtime_not_started_by_default",
+    "forcing_manifest_sha256": "6c6c621e0d4664115ced3a1bdffb78597b258a5deada45c6a4252baf41edf677",
+    "local3d_cases": {
+      "no_defence": {
+        "boundary_roles": "unchanged G6 open_ocean_damped inlet/outlet/laterals/atmosphere/terrain/barrier policy",
+        "case_hash": "828cc9b3109f826ccba6c995b1576ae8e36bef2afa27bd7a3ea80e692c24e07f",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/no_defence",
+        "case_summary": {
+          "alpha_tolerance": 5e-05,
+          "barrier": null,
+          "boundary_data_time_range": [
+            0.0,
+            300.0
+          ],
+          "boundary_mode": "open_ocean_damped",
+          "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/no_defence",
+          "cell_counts": {
+            "span": 60,
+            "streamwise": 40,
+            "vertical": 16
+          },
+          "cell_dimensions_m": {
+            "minimum_m": 6.272281163044898,
+            "span_m": 116.60833333332558,
+            "streamwise_m": 19.315429177713213,
+            "vertical_m": 6.272281163044898
+          },
+          "damping": {
+            "damping_does_not_overlap_barrier": true,
+            "damping_does_not_overlap_inlet": true,
+            "damping_does_not_overlap_primary_comparison_probes": true,
+            "enabled": true,
+            "limitations": [
+              "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+            ],
+            "model": "isotropicDamping",
+            "profile": "halfCosineRamp",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "zones": [
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.9951730208838543,
+                "model": "isotropicDamping",
+                "name": "outlet",
+                "origin": [
+                  656.7245920422492,
+                  0.0,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 4.019401567425366,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 656.7245920422492,
+                "width_m": 115.89257506627928
+              },
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.1648440849377913,
+                "model": "isotropicDamping",
+                "name": "sideLeft",
+                "origin": [
+                  0.0,
+                  699.6499999999535,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 24.265353540040678,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 5597.199999999628,
+                "width_m": 699.6499999999535
+              },
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.1648440849377913,
+                "model": "isotropicDamping",
+                "name": "sideRight",
+                "origin": [
+                  0.0,
+                  6296.849999999581,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 24.265353540040678,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 5597.199999999628,
+                "width_m": 699.6499999999535
+              }
+            ]
+          },
+          "dimensions_m": {
+            "height": 100.35649860871837,
+            "length": 772.6171671085285,
+            "span": 6996.499999999534
+          },
+          "end_time": 300.0,
+          "field_boundary_types": {
+            "U": {
+              "atmosphere": "pressureInletOutletVelocity",
+              "inlet": "timeVaryingMappedFixedValue",
+              "outlet": "pressureInletOutletVelocity",
+              "sideLeft": "pressureInletOutletVelocity",
+              "sideRight": "pressureInletOutletVelocity",
+              "terrain": "noSlip"
+            },
+            "alpha.water": {
+              "atmosphere": "inletOutlet",
+              "inlet": "timeVaryingMappedFixedValue",
+              "outlet": "variableHeightFlowRate",
+              "sideLeft": "variableHeightFlowRate",
+              "sideRight": "variableHeightFlowRate",
+              "terrain": "zeroGradient"
+            },
+            "k": {
+              "atmosphere": "inletOutlet",
+              "inlet": "fixedValue",
+              "outlet": "inletOutlet",
+              "sideLeft": "inletOutlet",
+              "sideRight": "inletOutlet",
+              "terrain": "kqRWallFunction"
+            },
+            "nut": {
+              "atmosphere": "calculated",
+              "inlet": "calculated",
+              "outlet": "calculated",
+              "sideLeft": "calculated",
+              "sideRight": "calculated",
+              "terrain": "nutUSpaldingWallFunction"
+            },
+            "omega": {
+              "atmosphere": "inletOutlet",
+              "inlet": "fixedValue",
+              "outlet": "inletOutlet",
+              "sideLeft": "inletOutlet",
+              "sideRight": "inletOutlet",
+              "terrain": "omegaWallFunction"
+            },
+            "p_rgh": {
+              "atmosphere": "prghTotalPressure",
+              "inlet": "fixedFluxPressure",
+              "outlet": "prghTotalPressure",
+              "sideLeft": "prghTotalPressure",
+              "sideRight": "prghTotalPressure",
+              "terrain": "fixedFluxPressure"
+            }
+          },
+          "has_barrier": false,
+          "initial_timestep": 0.002,
+          "initial_water_level": 38.630858355426426,
+          "k": 0.0001539828754730644,
+          "major_replay_peak_time": 240.0,
+          "maximum_alpha_courant_number": 0.25,
+          "maximum_courant_number": 0.25,
+          "maximum_timestep": 0.026990758299791622,
+          "mesh_patch_types": {
+            "atmosphere": "patch",
+            "inlet": "patch",
+            "outlet": "patch",
+            "sideLeft": "patch",
+            "sideRight": "patch",
+            "terrain": "wall"
+          },
+          "minimum_timestep": 1e-07,
+          "omega": 0.011729276465526949,
+          "patches": [
+            "inlet",
+            "outlet",
+            "sideLeft",
+            "sideRight",
+            "atmosphere",
+            "terrain"
+          ],
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "timestep_policy": {
+            "adjustTimeStep": true,
+            "cell_dimensions_m": {
+              "minimum_m": 6.272281163044898,
+              "span_m": 116.60833333332558,
+              "streamwise_m": 19.315429177713213,
+              "vertical_m": 6.272281163044898
+            },
+            "characteristic_speed_m_per_s": 29.04828151444212,
+            "derived_pre_run_timestep_cap_s": 0.026990758299791622,
+            "diagnostic_diffusive_margin": 242931985.28248084,
+            "diagnostic_viscous_timescale_s": 6556918.498047976,
+            "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+            "g6_disposition": {
+              "baseline_theoretical_timestep_control": "implemented and accepted",
+              "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+              "formal_timestep_convergence": "post-G6 verification"
+            },
+            "gravity_wave_speed_m_per_s": 28.630653152056656,
+            "maxAlphaCo": 0.25,
+            "maxCo": 0.25,
+            "maxDeltaT": 0.026990758299791622,
+            "maximum_mapped_speed_m_per_s": 0.4176283623854627,
+            "maximum_reconstructed_depth_m": 83.58759616315172,
+            "minimum_accepted_timestep_s": 1e-07,
+            "observed_maximum_Co": null,
+            "observed_maximum_alpha_Co": null,
+            "observed_timestep_range_s": [
+              null,
+              null
+            ],
+            "openfoam_controlled_constraints": [
+              "internal Co calculation",
+              "internal interface Co calculation",
+              "immediate timestep reduction",
+              "damped timestep increase",
+              "fvModel maxDeltaT contribution"
+            ],
+            "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+            "replay_schema": {
+              "name": "tsunami.openfoam_replay_configuration",
+              "version": "1.1.0"
+            },
+            "repository_controlled_constraints": [
+              "pre-run gravity/advective estimate",
+              "configured maxDeltaT",
+              "configured maxCo",
+              "configured maxAlphaCo",
+              "minimum-timestep failure threshold",
+              "post-run acceptance"
+            ],
+            "schema": {
+              "name": "tsunami.openfoam_timestep_policy",
+              "version": "1.0.0"
+            }
+          },
+          "tutorial_authority": [
+            "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
+            "/opt/openfoam11/tutorials/incompressibleVoF/damBreakPorousBaffle",
+            "/opt/openfoam11/tutorials/incompressibleVoF/waterChannel",
+            "/opt/openfoam11/tutorials/incompressibleFluid/pitzDailySteadyExperimentalInlet",
+            "/opt/openfoam11/tutorials/incompressibleVoF/DTCHull",
+            "/opt/openfoam11/tutorials/incompressibleVoF/sloshingTank3D"
+          ],
+          "variant": "no_defence",
+          "wall_function_policy": {
+            "expected_wall_patches": [
+              "terrain"
+            ],
+            "field_types": {
+              "k": {
+                "terrain": "kqRWallFunction"
+              },
+              "nut": {
+                "terrain": "nutUSpaldingWallFunction"
+              },
+              "omega": {
+                "terrain": "omegaWallFunction"
+              }
+            },
+            "limitations": [
+              "This does not eliminate mesh dependence; wall-function convergence remains post-G6."
+            ],
+            "mode": "continuous_spalding",
+            "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+            "replay_schema": {
+              "name": "tsunami.openfoam_replay_configuration",
+              "version": "1.1.0"
+            },
+            "schema": {
+              "name": "tsunami.openfoam_wall_function_policy",
+              "version": "1.0.0"
+            }
+          },
+          "write_interval": 60.0
+        },
+        "no_fsi": true,
+        "status": "generated_not_executed",
+        "turbulence_configuration": "unchanged G6 kOmegaSST / continuous Spalding wall functions"
+      },
+      "simple_rigid_barrier": {
+        "boundary_roles": "unchanged G6 open_ocean_damped inlet/outlet/laterals/atmosphere/terrain/barrier policy",
+        "case_hash": "ceced95c1b9706335b49883199a157bce86ed047b7f1fdbdda4f7f882686eeba",
+        "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/simple_rigid_barrier",
+        "case_summary": {
+          "alpha_tolerance": 5e-05,
+          "barrier": {
+            "height_m": 19.315429177713213,
+            "span_fraction": 1.0,
+            "streamwise_position_m": 463.5703002651171,
+            "thickness_m": 38.630858355426426
+          },
+          "boundary_data_time_range": [
+            0.0,
+            300.0
+          ],
+          "boundary_mode": "open_ocean_damped",
+          "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d/simple_rigid_barrier",
+          "cell_counts": {
+            "span": 60,
+            "streamwise": 40,
+            "vertical": 16
+          },
+          "cell_dimensions_m": {
+            "minimum_m": 6.272281163044898,
+            "span_m": 116.60833333332558,
+            "streamwise_m": 19.315429177713213,
+            "vertical_m": 6.272281163044898
+          },
+          "damping": {
+            "damping_does_not_overlap_barrier": true,
+            "damping_does_not_overlap_inlet": true,
+            "damping_does_not_overlap_primary_comparison_probes": true,
+            "enabled": true,
+            "limitations": [
+              "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+            ],
+            "model": "isotropicDamping",
+            "profile": "halfCosineRamp",
+            "value": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "zones": [
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  1.0,
+                  0.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.9951730208838543,
+                "model": "isotropicDamping",
+                "name": "outlet",
+                "origin": [
+                  656.7245920422492,
+                  0.0,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 4.019401567425366,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 656.7245920422492,
+                "width_m": 115.89257506627928
+              },
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  0.0,
+                  -1.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.1648440849377913,
+                "model": "isotropicDamping",
+                "name": "sideLeft",
+                "origin": [
+                  0.0,
+                  699.6499999999535,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 24.265353540040678,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 5597.199999999628,
+                "width_m": 699.6499999999535
+              },
+              {
+                "cell_count": 6.0,
+                "characteristic_speed_m_per_s": 28.833291006679502,
+                "direction": [
+                  0.0,
+                  1.0,
+                  0.0
+                ],
+                "lambda_per_s": 0.1648440849377913,
+                "model": "isotropicDamping",
+                "name": "sideRight",
+                "origin": [
+                  0.0,
+                  6296.849999999581,
+                  0.0
+                ],
+                "profile": "halfCosineRamp",
+                "residence_time_s": 24.265353540040678,
+                "target_e_folds": 4.0,
+                "undamped_core_width_m": 5597.199999999628,
+                "width_m": 699.6499999999535
+              }
+            ]
+          },
+          "dimensions_m": {
+            "height": 100.35649860871837,
+            "length": 772.6171671085285,
+            "span": 6996.499999999534
+          },
+          "end_time": 300.0,
+          "field_boundary_types": {
+            "U": {
+              "atmosphere": "pressureInletOutletVelocity",
+              "barrier": "noSlip",
+              "inlet": "timeVaryingMappedFixedValue",
+              "outlet": "pressureInletOutletVelocity",
+              "sideLeft": "pressureInletOutletVelocity",
+              "sideRight": "pressureInletOutletVelocity",
+              "terrain": "noSlip"
+            },
+            "alpha.water": {
+              "atmosphere": "inletOutlet",
+              "barrier": "zeroGradient",
+              "inlet": "timeVaryingMappedFixedValue",
+              "outlet": "variableHeightFlowRate",
+              "sideLeft": "variableHeightFlowRate",
+              "sideRight": "variableHeightFlowRate",
+              "terrain": "zeroGradient"
+            },
+            "k": {
+              "atmosphere": "inletOutlet",
+              "barrier": "kqRWallFunction",
+              "inlet": "fixedValue",
+              "outlet": "inletOutlet",
+              "sideLeft": "inletOutlet",
+              "sideRight": "inletOutlet",
+              "terrain": "kqRWallFunction"
+            },
+            "nut": {
+              "atmosphere": "calculated",
+              "barrier": "nutUSpaldingWallFunction",
+              "inlet": "calculated",
+              "outlet": "calculated",
+              "sideLeft": "calculated",
+              "sideRight": "calculated",
+              "terrain": "nutUSpaldingWallFunction"
+            },
+            "omega": {
+              "atmosphere": "inletOutlet",
+              "barrier": "omegaWallFunction",
+              "inlet": "fixedValue",
+              "outlet": "inletOutlet",
+              "sideLeft": "inletOutlet",
+              "sideRight": "inletOutlet",
+              "terrain": "omegaWallFunction"
+            },
+            "p_rgh": {
+              "atmosphere": "prghTotalPressure",
+              "barrier": "fixedFluxPressure",
+              "inlet": "fixedFluxPressure",
+              "outlet": "prghTotalPressure",
+              "sideLeft": "prghTotalPressure",
+              "sideRight": "prghTotalPressure",
+              "terrain": "fixedFluxPressure"
+            }
+          },
+          "has_barrier": true,
+          "initial_timestep": 0.002,
+          "initial_water_level": 38.630858355426426,
+          "k": 0.0001539828754730644,
+          "major_replay_peak_time": 240.0,
+          "maximum_alpha_courant_number": 0.25,
+          "maximum_courant_number": 0.25,
+          "maximum_timestep": 0.026990758299791622,
+          "mesh_patch_types": {
+            "atmosphere": "patch",
+            "barrier": "wall",
+            "inlet": "patch",
+            "outlet": "patch",
+            "sideLeft": "patch",
+            "sideRight": "patch",
+            "terrain": "wall"
+          },
+          "minimum_timestep": 1e-07,
+          "omega": 0.011729276465526949,
+          "patches": [
+            "inlet",
+            "outlet",
+            "sideLeft",
+            "sideRight",
+            "atmosphere",
+            "terrain",
+            "barrier"
+          ],
+          "replay_schema": {
+            "name": "tsunami.openfoam_replay_configuration",
+            "version": "1.1.0"
+          },
+          "timestep_policy": {
+            "adjustTimeStep": true,
+            "cell_dimensions_m": {
+              "minimum_m": 6.272281163044898,
+              "span_m": 116.60833333332558,
+              "streamwise_m": 19.315429177713213,
+              "vertical_m": 6.272281163044898
+            },
+            "characteristic_speed_m_per_s": 29.04828151444212,
+            "derived_pre_run_timestep_cap_s": 0.026990758299791622,
+            "diagnostic_diffusive_margin": 242931985.28248084,
+            "diagnostic_viscous_timescale_s": 6556918.498047976,
+            "diffusion_disposition": "Momentum diffusion is assembled implicitly in the adopted OpenFOAM stress-divergence path; an explicit diffusion-stability limit is not a governing timestep restriction for the adopted baseline discretisation.",
+            "g6_disposition": {
+              "baseline_theoretical_timestep_control": "implemented and accepted",
+              "exact_rollback_retry_supervisor": "optional post-G6 robustness extension",
+              "formal_timestep_convergence": "post-G6 verification"
+            },
+            "gravity_wave_speed_m_per_s": 28.630653152056656,
+            "maxAlphaCo": 0.25,
+            "maxCo": 0.25,
+            "maxDeltaT": 0.026990758299791622,
+            "maximum_mapped_speed_m_per_s": 0.4176283623854627,
+            "maximum_reconstructed_depth_m": 83.58759616315172,
+            "minimum_accepted_timestep_s": 1e-07,
+            "observed_maximum_Co": null,
+            "observed_maximum_alpha_Co": null,
+            "observed_timestep_range_s": [
+              null,
+              null
+            ],
+            "openfoam_controlled_constraints": [
+              "internal Co calculation",
+              "internal interface Co calculation",
+              "immediate timestep reduction",
+              "damped timestep increase",
+              "fvModel maxDeltaT contribution"
+            ],
+            "rejected_step_disposition": "Foundation 11 performs pre-emptive adaptive timestep reduction from current/previous Courant information; the adopted generic foamRun/incompressibleVoF baseline does not expose exact rollback and re-solve of an already failed physical timestep.",
+            "replay_schema": {
+              "name": "tsunami.openfoam_replay_configuration",
+              "version": "1.1.0"
+            },
+            "repository_controlled_constraints": [
+              "pre-run gravity/advective estimate",
+              "configured maxDeltaT",
+              "configured maxCo",
+              "configured maxAlphaCo",
+              "minimum-timestep failure threshold",
+              "post-run acceptance"
+            ],
+            "schema": {
+              "name": "tsunami.openfoam_timestep_policy",
+              "version": "1.0.0"
+            }
+          },
+          "tutorial_authority": [
+            "/opt/openfoam11/tutorials/incompressibleVoF/damBreakWithObstacle",
+            "/opt/openfoam11/tutorials/incompressibleVoF/damBreakPorousBaffle",
+            "/opt/openfoam11/tutorials/incompressibleVoF/waterChannel",
+            "/opt/openfoam11/tutorials/incompressibleFluid/pitzDailySteadyExperimentalInlet",
+            "/opt/openfoam11/tutorials/incompressibleVoF/DTCHull",
+            "/opt/openfoam11/tutorials/incompressibleVoF/sloshingTank3D"
+          ],
+          "variant": "simple_rigid_barrier",
+          "wall_function_policy": {
+            "expected_wall_patches": [
+              "terrain",
+              "barrier"
+            ],
+            "field_types": {
+              "k": {
+                "barrier": "kqRWallFunction",
+                "terrain": "kqRWallFunction"
+              },
+              "nut": {
+                "barrier": "nutUSpaldingWallFunction",
+                "terrain": "nutUSpaldingWallFunction"
+              },
+              "omega": {
+                "barrier": "omegaWallFunction",
+                "terrain": "omegaWallFunction"
+              }
+            },
+            "limitations": [
+              "This does not eliminate mesh dependence; wall-function convergence remains post-G6."
+            ],
+            "mode": "continuous_spalding",
+            "rationale": "The production baseline uses a continuous Spalding-law nut wall function so the theoretical model does not assume every future mesh lies wholly in the logarithmic layer.",
+            "replay_schema": {
+              "name": "tsunami.openfoam_replay_configuration",
+              "version": "1.1.0"
+            },
+            "schema": {
+              "name": "tsunami.openfoam_wall_function_policy",
+              "version": "1.0.0"
+            }
+          },
+          "write_interval": 60.0
+        },
+        "no_fsi": true,
+        "status": "generated_not_executed",
+        "turbulence_configuration": "unchanged G6 kOmegaSST / continuous Spalding wall functions"
+      }
+    },
+    "package_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
+    "package_sha256": "29b6a20d21971af34fec8f95f49e619887af211fd95e07a17d6c9c6d689b76a2",
+    "replay_schema": {
+      "name": "tsunami.openfoam_replay_conversion",
+      "version": "1.0.0"
+    },
+    "schema": {
+      "name": "tsunami.r13_h400_openfoam_replay_package",
+      "version": "1.0.0"
+    },
+    "selected_window": {
+      "destination_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/selected-window",
+      "history_count": 61,
+      "history_sha256": "65e032dff944529f9707ad18eb5dcd4204e8378bed5e41dbb25f8aaa830e75d3",
+      "metadata_sha256": "d55986a4c63f5181eeffc62a1145b6953924396955f2bfab7c99cd2507fbdba9",
+      "sample_count": 1220,
+      "samples_sha256": "fd01543a4b6f70c2095c443903fcaff730a0425a60ab1d58a8b6303aeb1d0089",
+      "schema": {
+        "name": "tsunami.r13_selected_replay_window",
+        "version": "1.0.0"
+      },
+      "shifted_window_s": [
+        0.0,
+        300.0
+      ],
+      "source_coupling_dir": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-limited-linear-event-r10/case/runs/r10-limited-linear-h400/outputs/regional2d/coupling/kamaishi-nearshore-interface",
+      "source_window_s": [
+        245.0,
+        545.0
+      ],
+      "time_mapping": "t_3D = t_2D - 245 s"
+    },
+    "time_mapping_verification": {
+      "formula": "t_3D = t_2D - 245 s",
+      "openfoam_boundary_time_range_s": [
+        0.0,
+        300.0
+      ],
+      "source_window_s": [
+        245.0,
+        545.0
+      ],
+      "status": "passed"
+    }
+  },
+  "restrictions": {
+    "mathematical_model_unchanged": true,
+    "no_h250_production_run": true,
+    "no_new_600s_regional_run": true,
+    "no_numerical_method_redesign": true,
+    "no_physical_calibration": true,
+    "no_temporal_convergence": true
+  },
+  "schema": {
+    "name": "tsunami.c1a_r13_fidelity_hybrid_replay",
+    "version": "1.0.0"
+  },
+  "starting_head": "81a168a560874f279191d6aa61a8fbe21431c140",
+  "study_id": "regional2d-fidelity-hybrid-r13",
+  "validation_readiness": {
+    "comparison_quantities_prepared": [
+      "arrival_time",
+      "crest_amplitude",
+      "trough_amplitude",
+      "waveform_RMSE",
+      "MAE",
+      "bias",
+      "correlation",
+      "peak_time_error",
+      "runup_inundation_where_available"
+    ],
+    "observational_datasets_catalogued": "not_found_in_R13_local_repository_scan",
+    "uncalibrated_historical_comparison_can_begin_next": true
+  }
+}
