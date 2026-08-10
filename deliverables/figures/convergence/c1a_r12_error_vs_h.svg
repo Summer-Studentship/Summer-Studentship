@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="780" height="430" viewBox="0 0 780 430">
+<rect width="100%" height="100%" fill="white"/>
+<text x="70" y="24" font-size="16" font-family="sans-serif" fill="#24292f">C1A-R12 adjacent-pair error vs h</text>
+<line x1="78" y1="370.00" x2="746" y2="370.00" stroke="#d0d7de"/>
+<text x="70" y="374.00" text-anchor="end" font-size="12">-6.83</text>
+<line x1="78" y1="288.00" x2="746" y2="288.00" stroke="#d0d7de"/>
+<text x="70" y="292.00" text-anchor="end" font-size="12">27.9</text>
+<line x1="78" y1="206.00" x2="746" y2="206.00" stroke="#d0d7de"/>
+<text x="70" y="210.00" text-anchor="end" font-size="12">62.7</text>
+<line x1="78" y1="124.00" x2="746" y2="124.00" stroke="#d0d7de"/>
+<text x="70" y="128.00" text-anchor="end" font-size="12">97.4</text>
+<line x1="78" y1="42.00" x2="746" y2="42.00" stroke="#d0d7de"/>
+<text x="70" y="46.00" text-anchor="end" font-size="12">132</text>
+<polyline points="746.00,337.36 78.00,234.90" fill="none" stroke="#555555" stroke-width="2.1"/>
+<text x="658" y="50.00" font-size="12" fill="#555555">eta_waveform</text>
+<polyline points="746.00,341.43 78.00,64.62" fill="none" stroke="#555555" stroke-width="2.1"/>
+<text x="658" y="68.00" font-size="12" fill="#555555">qn_waveform</text>
+<polyline points="746.00,332.35 78.00,241.00" fill="none" stroke="#555555" stroke-width="2.1"/>
+<text x="658" y="86.00" font-size="12" fill="#555555">Qn_waveform</text>
+<polyline points="746.00,347.38 78.00,320.11" fill="none" stroke="#555555" stroke-width="2.1"/>
+<text x="658" y="104.00" font-size="12" fill="#555555">eta_distributed</text>
+<polyline points="746.00,340.39 78.00,294.98" fill="none" stroke="#555555" stroke-width="2.1"/>
+<text x="658" y="122.00" font-size="12" fill="#555555">qn_distributed</text>
+<line x1="78" y1="370" x2="746" y2="370" stroke="#24292f"/>
+<line x1="78" y1="42" x2="78" y2="370" stroke="#24292f"/>
+<text x="390.0" y="420" text-anchor="middle" font-size="13">actual characteristic h (m)</text>
+<text x="18" y="215.0" transform="rotate(-90 18 215.0)" text-anchor="middle" font-size="13">NRMSE (%)</text>
+</svg>

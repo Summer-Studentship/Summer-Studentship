@@ -1,0 +1,35 @@
+{
+  "generated_at_utc": "2026-08-10T19:22:26.975392Z",
+  "outputs": [
+    {
+      "external_figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-spatial-divergence-r12/figures/c1a_r12_eta_coupling_waveform.svg",
+      "figure": "deliverables/figures/convergence/c1a_r12_eta_coupling_waveform.svg",
+      "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r12_spatial_divergence_diagnosis.json"
+    },
+    {
+      "external_figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-spatial-divergence-r12/figures/c1a_r12_qn_coupling_waveform.svg",
+      "figure": "deliverables/figures/convergence/c1a_r12_qn_coupling_waveform.svg",
+      "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r12_spatial_divergence_diagnosis.json"
+    },
+    {
+      "external_figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-spatial-divergence-r12/figures/c1a_r12_Qn_coupling_waveform.svg",
+      "figure": "deliverables/figures/convergence/c1a_r12_Qn_coupling_waveform.svg",
+      "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r12_spatial_divergence_diagnosis.json"
+    },
+    {
+      "external_figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-spatial-divergence-r12/figures/c1a_r12_coupling_bed_projection.svg",
+      "figure": "deliverables/figures/convergence/c1a_r12_coupling_bed_projection.svg",
+      "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r12_spatial_divergence_diagnosis.json"
+    },
+    {
+      "external_figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-spatial-divergence-r12/figures/c1a_r12_error_vs_h.svg",
+      "figure": "deliverables/figures/convergence/c1a_r12_error_vs_h.svg",
+      "source_metrics": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r12_spatial_divergence_diagnosis.json"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.c1a_r12_figure_manifest",
+    "version": "1.0.0"
+  },
+  "study_id": "regional2d-spatial-divergence-r12"
+}
