@@ -1,14 +1,38 @@
 {
   "accepted_g6_discovery_manifest": "/home/helios/SimulationData/Summer-Studentship/r14-hybrid/renders/g6_barrier_scientific.png.manifest.json",
+  "accepted_g6_ocean_frame": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_ocean.png",
+  "accepted_g6_ocean_manifest": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_ocean.png.manifest.json",
+  "accepted_g6_render_status": "DEMONSTRATED_G6_HYBRID_REPLAY",
+  "accepted_g6_scientific_frame": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_scientific.png",
+  "accepted_g6_scientific_manifest": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_scientific.png.manifest.json",
+  "camera_presets": [
+    "overview",
+    "barrier_oblique",
+    "barrier_side",
+    "inlet_to_barrier"
+  ],
   "current_diagnostic_discovery_manifest": "/home/helios/SimulationData/Summer-Studentship/r14-hybrid/renders/r13_current_diagnostic_smoke.png.manifest.json",
+  "current_diagnostic_frame": "deliverables/figures/r14_hybrid/local3d/r14_current_diagnostic_scientific.png",
+  "current_diagnostic_manifest": "deliverables/figures/r14_hybrid/local3d/r14_current_diagnostic_scientific.png.manifest.json",
+  "current_diagnostic_status": "CURRENT-FORCING DIAGNOSTIC",
   "current_generation_render_status": "DEFERRED_BOUNDEDNESS_GATE_CLOSED",
-  "generated_at_utc": "2026-08-10T21:30:17.950385Z",
-  "ocean_style": "optional alpha=0.72, pale ocean background; cosmetic only",
+  "free_surface_extraction": {
+    "isovalue": 0.5,
+    "method": "alpha.water contour",
+    "note": "Derived visual surface only; no numerical field alteration."
+  },
+  "generated_at_utc": "2026-08-10T21:55:00Z",
+  "ocean_style": "alpha.water scalar colouring, water_opacity=0.72, specular=0.45, pale ocean background; cosmetic only",
+  "poster_style": "alpha.water scalar colouring, water_opacity=0.88, warm neutral background; cosmetic only",
   "pvpython_discovery_test": "PASSED_WITH_MPI_UCX_SANDBOX_WARNINGS",
+  "reproducible_commands": [
+    "pvpython tools/openfoam/r14_local3d_paraview.py --case-root /home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier --output /tmp/r14b_g6_local3d_scientific.png --style scientific --camera barrier_oblique --time 300 --surface-mode alpha-contour --resolution 1280 720",
+    "pvpython tools/openfoam/r14_local3d_paraview.py --case-root /home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier --output /tmp/r14b_g6_local3d_ocean.png --style ocean --camera barrier_oblique --time 300 --surface-mode alpha-contour --resolution 1280 720"
+  ],
   "renderer": "tools/openfoam/r14_local3d_paraview.py",
   "schema": {
     "name": "tsunami.c1a_r14_paraview_handoff",
     "version": "1.0.0"
   },
-  "scientific_style": "alpha.water scalar colouring, white background, reproducible camera"
+  "scientific_style": "alpha.water scalar colouring, white background, water_opacity=1.0, reproducible camera"
 }

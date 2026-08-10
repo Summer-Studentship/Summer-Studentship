@@ -1,0 +1,54 @@
+{
+  "camera": "barrier_oblique",
+  "camera_preset": {
+    "focal_point": [
+      350.0,
+      3550.0,
+      45.0
+    ],
+    "position": [
+      900.0,
+      2700.0,
+      420.0
+    ],
+    "view_up": [
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "case_root": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier",
+  "free_surface_extraction": {
+    "isovalue": 0.5,
+    "method": "alpha.water contour",
+    "note": "Derived free-surface visualisation only; source fields are not changed.",
+    "status": "REQUESTED"
+  },
+  "generated_at_utc": "2026-08-10T21:49:23.215687Z",
+  "output": "/tmp/r14b_g6_local3d_scientific.png",
+  "requested_time_s": 300.0,
+  "resolution": [
+    1280,
+    720
+  ],
+  "schema": {
+    "name": "tsunami.r14.local3d_paraview_render",
+    "version": "1.0.0"
+  },
+  "selected_time_s": 300.0,
+  "source_vtk": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/VTK/case_17656.vtk",
+  "source_vtk_sha256": "d5115a71231ecd02c403ab6eca10555d59278501b0a192d917bc2417071477c5",
+  "style": "scientific",
+  "style_profile": {
+    "background": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "barrier_shading": "neutral",
+    "specular": 0.05,
+    "terrain_shading": "neutral",
+    "water_colour": "alpha.water scalar colouring",
+    "water_opacity": 1.0
+  }
+}

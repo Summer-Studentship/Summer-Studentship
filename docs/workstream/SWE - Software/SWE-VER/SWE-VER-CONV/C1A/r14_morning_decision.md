@@ -6,6 +6,9 @@ WHAT COMPLETED
 - R13 forcing/replay authority hashes were verified.
 - h400 HDF5/XDMF/ResultDataset workflow was validated.
 - Regional and coupling poster figures were generated with provenance.
+- R14B completed a full scope audit: every original R14 item is now classified as `COMPLETE`, `BLOCKED_BY_LOCAL3D_REPLAY`, `DEFERRED_ARCHITECTURAL`, or `NOT_APPLICABLE`.
+- Accepted G6 Local3D scientific/ocean render frames were generated with reproducible ParaView manifests.
+- A short accepted G6 Local3D preview MP4 was assembled and ffprobe-validated.
 
 WHAT FAILED
 - Full current-generation 300 s Local3D replay was not launched because the boundedness gate is closed.
@@ -19,6 +22,7 @@ WHAT CAN GO ON THE POSTER TODAY
 - R14 Regional/coupling figures in `deliverables/figures/r14_hybrid`.
 - G6 hybrid replay as demonstrated baseline.
 - Current h400 replay package as diagnostic/current-forcing preparation.
+- The R14B poster shortlist in `regional2d_r14_poster_asset_shortlist.json`.
 
 WHAT CANNOT BE CLAIMED
 - Historical Tohoku validation.
@@ -27,13 +31,17 @@ WHAT CANNOT BE CLAIMED
 - Calibrated or decision-grade defence-impact prediction.
 
 WHAT FIGURES ARE READY
-- 12 R14 figures with provenance.
+- R14 Regional/coupling/methodology/validation figures with provenance.
+- R14B named scientific/poster variants for the corridor and Regional eta figures.
+- Accepted G6 Local3D scientific/ocean frames.
 
 WHETHER VIDEO IS READY
-- No. Video status is `VIDEO_LEVEL_0`; validated static figures only.
+- Yes for the accepted G6 Local3D demonstration: `deliverables/video/r14_hybrid/local3d_g6_preview.mp4`.
+- No for the current-generation full hybrid replay: the boundedness gate remains closed.
 
 WHETHER QR HOSTING CAN BEGIN
-- Not for video. Static figure/package hosting can begin if desired.
+- Yes for the accepted G6 Local3D preview MP4 after choosing a hosting location.
+- No public URL is claimed in the repository.
 
 THE SINGLE HIGHEST-VALUE TUESDAY TASK
-- Decide whether to run a tightly instrumented OpenFOAM boundedness diagnostic or accept deferral of current-generation full replay for the poster.
+- Decide how prominently to frame the verified numerical-methodology figure versus the accepted G6 Local3D demonstration, while keeping the current h400 full replay explicitly diagnostic/deferred.

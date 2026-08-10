@@ -1,0 +1,27 @@
+{
+  "data_class": "DEMONSTRATED_G6_HYBRID_REPLAY",
+  "ffmpeg_command_template": "ffmpeg -y -framerate 2 -i deliverables/video/r14_hybrid/frames/local3d_g6/frame_%03d.png -vf format=yuv420p -movflags +faststart deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
+  "ffprobe": {
+    "duration_s": 3.0,
+    "ffprobe_returncode": 0,
+    "fps": "2/1",
+    "frame_count": 6,
+    "path": "deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
+    "resolution": [
+      1280,
+      720
+    ],
+    "sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
+    "status": "PASSED"
+  },
+  "generated_at_utc": "2026-08-10T21:59:38.940599Z",
+  "hybrid_preview_mp4_status": "BLOCKED_BY_LOCAL3D_REPLAY",
+  "local3d_preview_mp4_status": "COMPLETE",
+  "regional_preview_mp4_status": "NOT_APPLICABLE",
+  "schema": {
+    "name": "tsunami.r14b.video_provenance",
+    "version": "1.0.0"
+  },
+  "short_description": "Short proof-of-concept MP4 assembled from accepted G6 Local3D ParaView frames.",
+  "title": "Accepted G6 Local3D rigid-barrier replay preview"
+}

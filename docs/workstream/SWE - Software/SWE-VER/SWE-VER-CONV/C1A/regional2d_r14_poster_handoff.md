@@ -29,3 +29,21 @@ Validation target:
 
 Figure manifest:
 `deliverables/figures/r14_hybrid/r14_figure_manifest.json`
+
+R14B scope audit:
+`docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_scope_completion_audit.md`
+
+Poster shortlist:
+`docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_poster_asset_shortlist.json`
+
+Strongest poster asset:
+`deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg`
+
+Accepted Local3D visual:
+`deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_ocean.png`
+
+Video:
+`deliverables/video/r14_hybrid/local3d_g6_preview.mp4`
+
+Video/QR status:
+`QR_ASSET_READY_FOR_HOSTING` for the accepted G6 Local3D preview MP4. No public URL is claimed.

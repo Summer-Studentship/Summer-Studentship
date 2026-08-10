@@ -1,0 +1,54 @@
+{
+  "camera": "inlet_to_barrier",
+  "camera_preset": {
+    "focal_point": [
+      350.0,
+      3500.0,
+      35.0
+    ],
+    "position": [
+      350.0,
+      -850.0,
+      260.0
+    ],
+    "view_up": [
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "case_root": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier",
+  "free_surface_extraction": {
+    "isovalue": 0.5,
+    "method": "alpha.water contour",
+    "note": "Derived free-surface visualisation only; source fields are not changed.",
+    "status": "REQUESTED"
+  },
+  "generated_at_utc": "2026-08-10T21:50:53.541723Z",
+  "output": "/tmp/r14b_frames_g6/frame_000.png",
+  "requested_time_s": 0.0,
+  "resolution": [
+    1280,
+    720
+  ],
+  "schema": {
+    "name": "tsunami.r14.local3d_paraview_render",
+    "version": "1.0.0"
+  },
+  "selected_time_s": 0.0,
+  "source_vtk": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/VTK/case_0.vtk",
+  "source_vtk_sha256": "3bb5f797929c965add810e0940efcbf58878051a3c7e9394c456afce89528ae2",
+  "style": "ocean",
+  "style_profile": {
+    "background": [
+      0.88,
+      0.94,
+      1.0
+    ],
+    "barrier_shading": "matte grey",
+    "specular": 0.45,
+    "terrain_shading": "muted seabed",
+    "water_colour": "alpha.water scalar colouring",
+    "water_opacity": 0.72
+  }
+}

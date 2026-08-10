@@ -1,0 +1,54 @@
+{
+  "camera": "barrier_oblique",
+  "camera_preset": {
+    "focal_point": [
+      350.0,
+      3550.0,
+      45.0
+    ],
+    "position": [
+      900.0,
+      2700.0,
+      420.0
+    ],
+    "view_up": [
+      0.0,
+      0.0,
+      1.0
+    ]
+  },
+  "case_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier",
+  "free_surface_extraction": {
+    "isovalue": 0.5,
+    "method": "alpha.water contour",
+    "note": "Derived free-surface visualisation only; source fields are not changed.",
+    "status": "REQUESTED"
+  },
+  "generated_at_utc": "2026-08-10T21:50:12.718249Z",
+  "output": "/tmp/r14b_current_diagnostic_scientific.png",
+  "requested_time_s": 5.0,
+  "resolution": [
+    1280,
+    720
+  ],
+  "schema": {
+    "name": "tsunami.r14.local3d_paraview_render",
+    "version": "1.0.0"
+  },
+  "selected_time_s": 5.0,
+  "source_vtk": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier/VTK/case_195.vtk",
+  "source_vtk_sha256": "1ddd05f1489d227b71b3a7fea1adee4bb5078ff640570e1d0576e398bf196a11",
+  "style": "scientific",
+  "style_profile": {
+    "background": [
+      1.0,
+      1.0,
+      1.0
+    ],
+    "barrier_shading": "neutral",
+    "specular": 0.05,
+    "terrain_shading": "neutral",
+    "water_colour": "alpha.water scalar colouring",
+    "water_opacity": 1.0
+  }
+}

@@ -9,7 +9,7 @@
   "generated_at_utc": "2026-08-10T21:35:26.344788Z",
   "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
   "git_sha": "a48be30004eb1467c6c0c6450d952913bbf826a8",
-  "notes": "Pseudo-3D rendering only; numerical data unchanged.",
+  "notes": "Pseudo-3D rendering only; numerical data unchanged. Vertical exaggeration factor = 1.0.",
   "schema": {
     "name": "tsunami.figure_provenance",
     "version": "1.0.0"
@@ -19,5 +19,6 @@
   ],
   "source_sha256": {
     "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
-  }
+  },
+  "vertical_exaggeration_factor": 1.0
 }

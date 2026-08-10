@@ -1,0 +1,37 @@
+{
+  "data_class": "DEMONSTRATED_G6_HYBRID_REPLAY",
+  "frame_count": 6,
+  "frames": [
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_000.png",
+      "sha256": "c59dbb63db8885d34fe3fa113fb2f15c87c714f46cbfb4b4616475c4ac1c7721"
+    },
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_001.png",
+      "sha256": "2eac2dc175fe8c082181e40424ccab2dd7b65c272b75f595933c6e6ac6d8b971"
+    },
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_002.png",
+      "sha256": "387670dd938d3145f6184a26233a5a9abd92e06af27c61222f9bc52897da18aa"
+    },
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_003.png",
+      "sha256": "9ec5332cb83d2667b72ea8cd0fad45ce6997158c387721fac1a80658d7531cd4"
+    },
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_004.png",
+      "sha256": "66d965bf601245579e604b2db55c7f016268a73e23e8cdcb1da40c2127f60689"
+    },
+    {
+      "path": "deliverables/video/r14_hybrid/frames/local3d_g6/frame_005.png",
+      "sha256": "81af8a79c4e3f65bc46a5c9a5da3e8b019599639a617a2daffd0449d91ab099c"
+    }
+  ],
+  "generated_at_utc": "2026-08-10T21:59:38.940527Z",
+  "schema": {
+    "name": "tsunami.r14b.frame_manifest",
+    "version": "1.0.0"
+  },
+  "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier",
+  "source_status": "accepted G6 replay"
+}

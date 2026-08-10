@@ -1,0 +1,20 @@
+{
+  "duration_s": 3.0,
+  "fps": "2/1",
+  "generated_at_utc": "2026-08-10T21:59:38.940602Z",
+  "public_url": null,
+  "resolution": [
+    1280,
+    720
+  ],
+  "schema": {
+    "name": "tsunami.r14b.qr_asset_metadata",
+    "version": "1.0.0"
+  },
+  "sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
+  "short_description": "Short proof-of-concept MP4 assembled from accepted G6 Local3D ParaView frames.",
+  "status": "QR_ASSET_READY_FOR_HOSTING",
+  "suggested_hosting_filename": "local3d_g6_preview.mp4",
+  "title": "Accepted G6 Local3D rigid-barrier replay preview",
+  "video_path": "deliverables/video/r14_hybrid/local3d_g6_preview.mp4"
+}

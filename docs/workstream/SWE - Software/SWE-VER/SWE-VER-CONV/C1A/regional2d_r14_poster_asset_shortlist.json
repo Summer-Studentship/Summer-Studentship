@@ -1,0 +1,73 @@
+{
+  "assets": [
+    {
+      "caption": "Real-data Tohoku-Kamaishi Regional corridor and Local3D coupling section.",
+      "caveat": "Geometry/forcing setup figure; not validation evidence.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Orient the Tohoku source, Regional corridor, Kamaishi and coupling section.",
+      "path": "deliverables/figures/r14_hybrid/r14_corridor_map_poster.svg",
+      "recommended_poster_section": "Study domain and workflow"
+    },
+    {
+      "caption": "Along-corridor bathymetry from the source-side corridor toward Kamaishi.",
+      "caveat": "Uses the project terrain representation; not a field observation comparison.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Show the deep-ocean to nearshore bathymetric pathway.",
+      "path": "deliverables/figures/r14_hybrid/r14_longitudinal_bathymetry.svg",
+      "recommended_poster_section": "Terrain and source fidelity"
+    },
+    {
+      "caption": "R10 h400 limited-linear free-surface elevation snapshot.",
+      "caveat": "Best available numerically uncertain real-event forcing; not spatially qualified or historically validated.",
+      "claim_status": "DEMONSTRATED",
+      "one_line_purpose": "Show the strongest h400 real-event free-surface field snapshot.",
+      "path": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot_poster.svg",
+      "recommended_poster_section": "Regional2D result"
+    },
+    {
+      "caption": "Verified method improvement and event-fidelity limitation: p ~= 1 to p ~= 2, 5.35x amplitude-error reduction, 17.43x phase-proxy reduction, 2.76% best event distributed eta difference, and h300/h250 projection ceiling.",
+      "caveat": "The 2.76% value is an event comparison metric, not a claim of overall spatial convergence.",
+      "claim_status": "VERIFIED",
+      "one_line_purpose": "Summarise p ~= 1, p ~= 2 and the fidelity ceiling in one compact figure.",
+      "path": "deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg",
+      "recommended_poster_section": "Numerical verification"
+    },
+    {
+      "caption": "One-way mapping from R10 h400 Regional forcing at the coupling section into the Local3D replay window.",
+      "caveat": "No two-way coupling is implied.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Explain the one-way Regional 245-545 s to Local3D 0-300 s mapping.",
+      "path": "deliverables/figures/r14_hybrid/r14_replay_mapping.svg",
+      "recommended_poster_section": "Hybrid coupling"
+    },
+    {
+      "caption": "Accepted G6 rigid-barrier Local3D replay rendered with the R14B ocean profile.",
+      "caveat": "This is accepted G6 evidence, not an accepted current h400 replay.",
+      "claim_status": "DEMONSTRATED",
+      "one_line_purpose": "Show the accepted G6 Local3D replay render pipeline.",
+      "path": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_ocean.png",
+      "recommended_poster_section": "Local3D demonstration"
+    },
+    {
+      "caption": "Historical validation framework: DART/open ocean, Kamaishi/NOWPHAS and run-up/inundation targets.",
+      "caveat": "Framework only; no validation-results claim.",
+      "claim_status": "VALIDATION TARGET",
+      "one_line_purpose": "Show target observation classes and intended comparison quantities.",
+      "path": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
+      "recommended_poster_section": "Validation plan"
+    }
+  ],
+  "claim_status_vocabulary": [
+    "IMPLEMENTED",
+    "DEMONSTRATED",
+    "VERIFIED",
+    "DIAGNOSTIC",
+    "VALIDATION TARGET",
+    "FUTURE"
+  ],
+  "generated_at_utc": "2026-08-10T21:59:38.942309Z",
+  "schema": {
+    "name": "tsunami.r14b.poster_asset_shortlist",
+    "version": "1.0.0"
+  }
+}
