@@ -2,9 +2,9 @@
   "data_class": "SCHEMATIC",
   "field": "coupling",
   "figure": "deliverables/figures/convergence/c1a_r13_hybrid_replay_schematic.svg",
-  "generated_at_utc": "2026-08-10T20:52:21.663661Z",
+  "generated_at_utc": "2026-08-10T20:56:21.729710Z",
   "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-  "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+  "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
   "schema": {
     "name": "tsunami.figure_provenance",
     "version": "1.0.0"

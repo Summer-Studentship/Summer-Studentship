@@ -8,9 +8,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "bed_elevation",
         "figure": "deliverables/figures/convergence/c1a_r13_along_corridor_bathymetry.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.657467Z",
+        "generated_at_utc": "2026-08-10T20:56:21.722424Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -22,9 +22,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "initial_free_surface",
         "figure": "deliverables/figures/convergence/c1a_r13_along_corridor_source.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.658630Z",
+        "generated_at_utc": "2026-08-10T20:56:21.724016Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -36,9 +36,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "normal_discharge",
         "figure": "deliverables/figures/convergence/c1a_r13_replay_forcing_history.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.659973Z",
+        "generated_at_utc": "2026-08-10T20:56:21.725409Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -50,9 +50,9 @@
         "data_class": "SCHEMATIC",
         "field": "corridor",
         "figure": "deliverables/figures/convergence/c1a_r13_corridor_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.661353Z",
+        "generated_at_utc": "2026-08-10T20:56:21.726913Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -64,9 +64,9 @@
         "data_class": "SCHEMATIC",
         "field": "eta",
         "figure": "deliverables/figures/convergence/c1a_r13_regional_field_snapshot.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.662554Z",
+        "generated_at_utc": "2026-08-10T20:56:21.728370Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -78,9 +78,9 @@
         "data_class": "SCHEMATIC",
         "field": "coupling",
         "figure": "deliverables/figures/convergence/c1a_r13_hybrid_replay_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.663661Z",
+        "generated_at_utc": "2026-08-10T20:56:21.729710Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -92,9 +92,9 @@
         "data_class": "SCHEMATIC",
         "field": "local3d",
         "figure": "deliverables/figures/convergence/c1a_r13_local3d_case_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.664830Z",
+        "generated_at_utc": "2026-08-10T20:56:21.731225Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -106,9 +106,9 @@
         "data_class": "SCHEMATIC",
         "field": "methodology",
         "figure": "deliverables/figures/convergence/c1a_r13_methodology_status.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.666092Z",
+        "generated_at_utc": "2026-08-10T20:56:21.732681Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -120,9 +120,9 @@
         "data_class": "SCHEMATIC",
         "field": "validation_targets",
         "figure": "deliverables/figures/convergence/c1a_r13_validation_targets.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.667419Z",
+        "generated_at_utc": "2026-08-10T20:56:21.733931Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -134,9 +134,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "bed_elevation",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_along_corridor_bathymetry.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.679061Z",
+        "generated_at_utc": "2026-08-10T20:56:21.751077Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -148,9 +148,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "initial_free_surface",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_along_corridor_source.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.680382Z",
+        "generated_at_utc": "2026-08-10T20:56:21.752464Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -162,9 +162,9 @@
         "data_class": "REAL_SIMULATION",
         "field": "normal_discharge",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_replay_forcing_history.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.681645Z",
+        "generated_at_utc": "2026-08-10T20:56:21.753809Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -176,9 +176,9 @@
         "data_class": "SCHEMATIC",
         "field": "corridor",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_corridor_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.682991Z",
+        "generated_at_utc": "2026-08-10T20:56:21.755334Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -190,9 +190,9 @@
         "data_class": "SCHEMATIC",
         "field": "eta",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_regional_field_snapshot.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.684311Z",
+        "generated_at_utc": "2026-08-10T20:56:21.756999Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -204,9 +204,9 @@
         "data_class": "SCHEMATIC",
         "field": "coupling",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_hybrid_replay_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.685638Z",
+        "generated_at_utc": "2026-08-10T20:56:21.758429Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -218,9 +218,9 @@
         "data_class": "SCHEMATIC",
         "field": "local3d",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_local3d_case_schematic.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.686980Z",
+        "generated_at_utc": "2026-08-10T20:56:21.759713Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -232,9 +232,9 @@
         "data_class": "SCHEMATIC",
         "field": "methodology",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_methodology_status.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.688360Z",
+        "generated_at_utc": "2026-08-10T20:56:21.761200Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -246,9 +246,9 @@
         "data_class": "SCHEMATIC",
         "field": "validation_targets",
         "figure": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/figures/c1a_r13_validation_targets.svg",
-        "generated_at_utc": "2026-08-10T20:52:21.689688Z",
+        "generated_at_utc": "2026-08-10T20:56:21.762716Z",
         "generation_tool": "tools/verification/convergence/c1a_r13_fidelity_hybrid_replay.py",
-        "git_sha": "81a168a560874f279191d6aa61a8fbe21431c140",
+        "git_sha": "924d4640b725de29c0618313cbbcf3fe27c97a11",
         "schema": {
           "name": "tsunami.figure_provenance",
           "version": "1.0.0"
@@ -257,7 +257,7 @@
         "units": "n/a"
       }
     ],
-    "generated_at_utc": "2026-08-10T20:52:21.689836Z",
+    "generated_at_utc": "2026-08-10T20:56:21.762856Z",
     "schema": {
       "name": "tsunami.c1a_r13_figure_manifest",
       "version": "1.0.0"
@@ -273,8 +273,10 @@
     "allowed_use": "exploratory hybrid replay",
     "binary_sha256": "1415c3e01956249e8af92881d3a530ea558b8c942c57dca62c07ef5ac1865417",
     "git_sha": "d29c7c79096304956648aa7a456340a970ecd6e5",
+    "manifest_file_sha256": "aac08422684e1ebbc3f4940c703225ec3c4e14d0b686ac081b21da93ef8eecb7",
     "manifest_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/forcing/regional_h400_limited_linear_forcing_authority.json",
     "manifest_sha256": "6c6c621e0d4664115ced3a1bdffb78597b258a5deada45c6a4252baf41edf677",
+    "manifest_sha256_scope": "payload_before_embedded_path_and_hash_fields",
     "mesh_sha256": "6431004341b17656f8be10f22135bff5d427fc782529d099be49252fcde20982",
     "prohibited_use": "physical calibration / decision-grade validation",
     "qualification": "NOT_SPATIALLY_QUALIFIED",
@@ -457,7 +459,7 @@
     "status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
     "terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
   },
-  "generated_at_utc": "2026-08-10T20:52:21.643364Z",
+  "generated_at_utc": "2026-08-10T20:56:21.706433Z",
   "limiter_diagnostic": {
     "h300_diagnostic_run": "not_started",
     "h400_diagnostic_run": "not_started",
@@ -1817,12 +1819,12 @@
     "terrain_sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
   },
   "replay_package": {
-    "boundary_data_hash": "984e00d12881fbf2a201f773bafb482e147b7bdaa1603a8889fbf27747b73ff4",
+    "boundary_data_hash": "c4fe1d2762c109935641de55d38db6408e90f5540520868e3fea791d73110c1e",
     "boundary_data_root": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/openfoam-boundaryData",
     "config_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/replay_config_r13_h400_limited_linear.json",
     "config_sha256": "f9ea1d7f823c58950e1fc0185c08973a756aaccd6c26d56b43c4f48c8de2bbe9",
     "conversion": {
-      "conversion_timestamp": "2026-08-10T20:52:21Z",
+      "conversion_timestamp": "2026-08-10T20:56:21Z",
       "converter_version": "0.1.0",
       "discharge_tolerances": {
         "absolute": 1e-10,
@@ -2820,8 +2822,10 @@
         "turbulence_configuration": "unchanged G6 kOmegaSST / continuous Spalding wall functions"
       }
     },
+    "package_file_sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6",
     "package_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
-    "package_sha256": "29b6a20d21971af34fec8f95f49e619887af211fd95e07a17d6c9c6d689b76a2",
+    "package_sha256": "c91946024edbb8f9e9113f1906ecba7a7ac2260aed0799f831416b2c86527865",
+    "package_sha256_scope": "payload_before_embedded_path_and_hash_fields",
     "replay_schema": {
       "name": "tsunami.openfoam_replay_conversion",
       "version": "1.0.0"

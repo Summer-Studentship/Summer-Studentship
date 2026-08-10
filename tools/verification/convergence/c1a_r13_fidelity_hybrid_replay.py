@@ -495,7 +495,9 @@ def forcing_authority_manifest(args: argparse.Namespace, runs: dict[str, dict[st
     write_json(path, manifest)
     manifest["manifest_path"] = str(path)
     manifest["manifest_sha256"] = file_sha256(path)
+    manifest["manifest_sha256_scope"] = "payload_before_embedded_path_and_hash_fields"
     write_json(path, manifest)
+    manifest["manifest_file_sha256"] = file_sha256(path)
     return manifest
 
 
@@ -561,7 +563,9 @@ def replay_package(args: argparse.Namespace, runs: dict[str, dict[str, Any]], fo
     write_json(package_path, package)
     package["package_path"] = str(package_path)
     package["package_sha256"] = file_sha256(package_path)
+    package["package_sha256_scope"] = "payload_before_embedded_path_and_hash_fields"
     write_json(package_path, package)
+    package["package_file_sha256"] = file_sha256(package_path)
     return package
 
 
