@@ -1,0 +1,14 @@
+{
+  "accepted_g6_discovery_manifest": "/home/helios/SimulationData/Summer-Studentship/r14-hybrid/renders/g6_barrier_scientific.png.manifest.json",
+  "current_diagnostic_discovery_manifest": "/home/helios/SimulationData/Summer-Studentship/r14-hybrid/renders/r13_current_diagnostic_smoke.png.manifest.json",
+  "current_generation_render_status": "DEFERRED_BOUNDEDNESS_GATE_CLOSED",
+  "generated_at_utc": "2026-08-10T21:30:17.950385Z",
+  "ocean_style": "optional alpha=0.72, pale ocean background; cosmetic only",
+  "pvpython_discovery_test": "PASSED_WITH_MPI_UCX_SANDBOX_WARNINGS",
+  "renderer": "tools/openfoam/r14_local3d_paraview.py",
+  "schema": {
+    "name": "tsunami.c1a_r14_paraview_handoff",
+    "version": "1.0.0"
+  },
+  "scientific_style": "alpha.water scalar colouring, white background, reproducible camera"
+}

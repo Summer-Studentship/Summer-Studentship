@@ -1,0 +1,295 @@
+{
+  "figures": [
+    {
+      "data_class": "REAL_GEOMETRY",
+      "fields_used": [
+        "corridor",
+        "epicentre",
+        "kamaishi_proxy"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_corridor_map.svg",
+      "figure_sha256": "afbc3386c06df909460846b432d14bf5326f78560a898fa56ae79397dc844b50",
+      "figure_type": "corridor_map",
+      "generated_at_utc": "2026-08-10T21:34:02.741074Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED",
+      "fields_used": [
+        "bed_elevation"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_bathymetry_plan_view.svg",
+      "figure_sha256": "4439518f5fb267298827421cb88f50c3c20d9536b800d5216de83bb71435b0b1",
+      "figure_type": "bathymetry_plan",
+      "generated_at_utc": "2026-08-10T21:34:02.881567Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "REAL_RASTER_AND_MESH_PROJECTION",
+      "fields_used": [
+        "terrain_direct_m",
+        "h400_bed_m",
+        "h250_bed_m"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_longitudinal_bathymetry.svg",
+      "figure_sha256": "c7804b9cd947db64548c7e91fba1408dcd76ddc8f1209240597f443dd3e6fcf6",
+      "figure_type": "longitudinal_bathymetry",
+      "generated_at_utc": "2026-08-10T21:34:02.964567Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/projection/projection_profiles.csv"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/projection/projection_profiles.csv": "82491c4e7a13caffcf34d7bacab4bfaf41f0c9e2926e74630d1ee4ce9f231901"
+      }
+    },
+    {
+      "data_class": "REAL_DIAGNOSTIC",
+      "fields_used": [
+        "L2"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_terrain_fidelity_limit.svg",
+      "figure_sha256": "2c30201cbb6a215d6661bc66b82487780e1c3233ab937de74328fe41dd1f353e",
+      "figure_type": "terrain_fidelity",
+      "generated_at_utc": "2026-08-10T21:34:03.023118Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_projection_metrics.csv"
+      ],
+      "source_sha256": {
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_projection_metrics.csv": "80b40f2e1a6ae49373ce689ec7eba7b322dc8e885f7a6dcd90a7e35d9ccdfb93"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED",
+      "fields_used": [
+        "eta"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot.svg",
+      "figure_sha256": "eb9c6801c8de71106f28bab02749d3c4c4797dc3cb5197ab2b2a1bd77e956b47",
+      "figure_type": "regional_eta_snapshot",
+      "generated_at_utc": "2026-08-10T21:34:03.167472Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "time=300s",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED_COSMETIC_GEOMETRY",
+      "fields_used": [
+        "eta"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_regional_pseudo3d.svg",
+      "figure_sha256": "1d85ce792c4ca36116af35565002e677c983c4bdcf8b58dc57c3ad069b2944e4",
+      "figure_type": "regional_pseudo3d",
+      "generated_at_utc": "2026-08-10T21:34:03.278563Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "Pseudo-3D rendering only; numerical data unchanged.",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED",
+      "fields_used": [
+        "eta",
+        "time",
+        "s"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_coupling_eta_heatmap.svg",
+      "figure_sha256": "28df17ed3d10c0ad7c9e1226a63f07fd1db1dd3fb3dc3da619682ea49bf4add0",
+      "figure_type": "coupling_eta_heatmap",
+      "generated_at_utc": "2026-08-10T21:34:03.436961Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED",
+      "fields_used": [
+        "qn",
+        "time",
+        "s"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_coupling_qn_heatmap.svg",
+      "figure_sha256": "e7f5bd0f49dfc1aba5eb409481d449944e4cd8e9a29e04a16038b150e448346e",
+      "figure_type": "coupling_qn_heatmap",
+      "generated_at_utc": "2026-08-10T21:34:03.585593Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "LEGACY_CONVERTED",
+      "fields_used": [
+        "Qn",
+        "time"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_Qn_history.svg",
+      "figure_sha256": "57783e7bce0dea6b3141d5aab7ff6790477732f34fbc6709c5a5df2bddfcdd28",
+      "figure_type": "Qn_history",
+      "generated_at_utc": "2026-08-10T21:34:03.661693Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+      }
+    },
+    {
+      "data_class": "SCHEMATIC_FROM_REAL_MANIFEST",
+      "fields_used": [
+        "time_mapping",
+        "forcing_status"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_replay_mapping.svg",
+      "figure_sha256": "c5e50a05557d803d24bfb5c6e2c0b564b6f446ebcc666953e07795fcdeb80886",
+      "figure_type": "replay_mapping",
+      "generated_at_utc": "2026-08-10T21:34:03.706281Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json"
+      ],
+      "source_sha256": {
+        "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6"
+      }
+    },
+    {
+      "data_class": "STATUS_SUMMARY",
+      "fields_used": [
+        "verification_status"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg",
+      "figure_sha256": "96e0d3e0a1a63939a0af5678ba5213a464f6d6043c2b283d52ce46442619bc98",
+      "figure_type": "numerical_methodology",
+      "generated_at_utc": "2026-08-10T21:34:03.764553Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json"
+      ],
+      "source_sha256": {
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json": "929eb561f0cc8ef94912f2c739b5615b0cf9c0365f5d7498c32cb2e4aef61864"
+      }
+    },
+    {
+      "data_class": "SCHEMATIC",
+      "fields_used": [
+        "validation_targets"
+      ],
+      "figure": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
+      "figure_sha256": "39462b580401410caefdab7765467fb1a4041c79d8eee1b2b24486b73c43459a",
+      "figure_type": "validation_targets",
+      "generated_at_utc": "2026-08-10T21:34:03.801965Z",
+      "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+      "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+      "notes": "",
+      "schema": {
+        "name": "tsunami.figure_provenance",
+        "version": "1.0.0"
+      },
+      "source_files": [
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json"
+      ],
+      "source_sha256": {
+        "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json": "929eb561f0cc8ef94912f2c739b5615b0cf9c0365f5d7498c32cb2e4aef61864"
+      }
+    }
+  ],
+  "generated_at_utc": "2026-08-10T21:34:03.803953Z",
+  "schema": {
+    "name": "tsunami.c1a_r14_figure_manifest",
+    "version": "1.0.0"
+  }
+}

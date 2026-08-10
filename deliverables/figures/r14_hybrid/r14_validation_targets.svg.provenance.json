@@ -1,0 +1,23 @@
+{
+  "data_class": "SCHEMATIC",
+  "fields_used": [
+    "validation_targets"
+  ],
+  "figure": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
+  "figure_sha256": "39462b580401410caefdab7765467fb1a4041c79d8eee1b2b24486b73c43459a",
+  "figure_type": "validation_targets",
+  "generated_at_utc": "2026-08-10T21:34:03.801965Z",
+  "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "notes": "",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json"
+  ],
+  "source_sha256": {
+    "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_fidelity_hybrid_replay.json": "929eb561f0cc8ef94912f2c739b5615b0cf9c0365f5d7498c32cb2e4aef61864"
+  }
+}

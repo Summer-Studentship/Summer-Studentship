@@ -512,6 +512,10 @@ def generate_figures() -> dict[str, Any]:
     polys = points[connectivity]
     centres = mesh["cell_centres"]
     bed = mesh["bed_elevation"]
+    plot_step = max(1, len(polys) // 1200)
+    plot_sample = slice(None, None, plot_step)
+    plot_polys = polys[plot_sample]
+    plot_bed = bed[plot_sample]
     times = dataset.times()
     snapshot_time = float(times[int(np.argmin(np.abs(times - 300.0)))])
     eta = dataset.field("eta", snapshot_time)
@@ -534,7 +538,7 @@ def generate_figures() -> dict[str, Any]:
     outputs.append(figure_provenance(path, figure_type="corridor_map", data_class="REAL_GEOMETRY", source=[G6_ROOT / "case/manifests/corridors/kamaishi-delivery-corridor-evidence.json"], fields=["corridor", "epicentre", "kamaishi_proxy"]))
 
     fig, ax = plt.subplots(figsize=(6.3, 5.0), constrained_layout=True)
-    collection = PolyCollection(polys, array=bed, cmap="terrain", linewidths=0.0)
+    collection = PolyCollection(plot_polys, array=plot_bed, cmap="terrain", linewidths=0.0)
     ax.add_collection(collection)
     fig.colorbar(collection, ax=ax, label="bed elevation (m)")
     ax.set_aspect("equal", adjustable="box")
@@ -576,7 +580,7 @@ def generate_figures() -> dict[str, Any]:
     outputs.append(figure_provenance(path, figure_type="terrain_fidelity", data_class="REAL_DIAGNOSTIC", source=[DOCS_ROOT / "regional2d_r13_projection_metrics.csv"], fields=["L2"]))
 
     fig, ax = plt.subplots(figsize=(6.3, 5.0), constrained_layout=True)
-    collection = PolyCollection(polys, array=eta, cmap="coolwarm", linewidths=0.0)
+    collection = PolyCollection(plot_polys, array=eta[plot_sample], cmap="coolwarm", linewidths=0.0)
     ax.add_collection(collection)
     fig.colorbar(collection, ax=ax, label="eta (m)")
     ax.set_aspect("equal", adjustable="box")
@@ -590,7 +594,7 @@ def generate_figures() -> dict[str, Any]:
 
     fig = plt.figure(figsize=(6.5, 4.8), constrained_layout=True)
     ax = fig.add_subplot(111, projection="3d")
-    sample = slice(None, None, max(1, len(centres) // 6000))
+    sample = slice(None, None, max(1, len(centres) // 500))
     ax.plot_trisurf(centres[sample, 0], centres[sample, 1], eta[sample], color="#4c78a8", linewidth=0.0, antialiased=True, alpha=0.78)
     ax.set_title("Regional Free-Surface Pseudo-3D")
     ax.set_xlabel("x (m)")

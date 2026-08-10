@@ -1,0 +1,25 @@
+{
+  "data_class": "REAL_GEOMETRY",
+  "fields_used": [
+    "corridor",
+    "epicentre",
+    "kamaishi_proxy"
+  ],
+  "figure": "deliverables/figures/r14_hybrid/r14_corridor_map.svg",
+  "figure_sha256": "afbc3386c06df909460846b432d14bf5326f78560a898fa56ae79397dc844b50",
+  "figure_type": "corridor_map",
+  "generated_at_utc": "2026-08-10T21:34:02.741074Z",
+  "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "notes": "",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json"
+  ],
+  "source_sha256": {
+    "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+  }
+}

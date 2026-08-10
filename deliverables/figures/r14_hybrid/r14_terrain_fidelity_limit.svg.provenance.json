@@ -1,0 +1,23 @@
+{
+  "data_class": "REAL_DIAGNOSTIC",
+  "fields_used": [
+    "L2"
+  ],
+  "figure": "deliverables/figures/r14_hybrid/r14_terrain_fidelity_limit.svg",
+  "figure_sha256": "2c30201cbb6a215d6661bc66b82487780e1c3233ab937de74328fe41dd1f353e",
+  "figure_type": "terrain_fidelity",
+  "generated_at_utc": "2026-08-10T21:34:03.023118Z",
+  "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "notes": "",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_projection_metrics.csv"
+  ],
+  "source_sha256": {
+    "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r13_projection_metrics.csv": "80b40f2e1a6ae49373ce689ec7eba7b322dc8e885f7a6dcd90a7e35d9ccdfb93"
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "data_class": "LEGACY_CONVERTED",
+  "fields_used": [
+    "eta",
+    "time",
+    "s"
+  ],
+  "figure": "deliverables/figures/r14_hybrid/r14_coupling_eta_heatmap.svg",
+  "figure_sha256": "28df17ed3d10c0ad7c9e1226a63f07fd1db1dd3fb3dc3da619682ea49bf4add0",
+  "figure_type": "coupling_eta_heatmap",
+  "generated_at_utc": "2026-08-10T21:34:03.436961Z",
+  "generating_script": "tools/verification/convergence/c1a_r14_hybrid_results_visualisation.py",
+  "git_sha": "1062aa065e2664247f1757741fcd61c5b094c9a7",
+  "notes": "",
+  "schema": {
+    "name": "tsunami.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+  ],
+  "source_sha256": {
+    "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+  }
+}
