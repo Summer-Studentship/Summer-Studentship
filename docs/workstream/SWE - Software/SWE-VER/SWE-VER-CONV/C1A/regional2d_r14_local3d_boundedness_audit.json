@@ -1,0 +1,298 @@
+{
+  "acceptance_rule": {
+    "exact_tolerance": 5e-05,
+    "g6_barrier_final_alpha": -5.894534065e-22,
+    "g6_barrier_final_alpha_max": 1.00000013,
+    "historical_evidence": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/evidence/g6_openfoam_acceptance.json",
+    "source": "tools/openfoam/openfoam_replay.py::validate_smoke_case and openfoam_case_summary.json::alpha_tolerance"
+  },
+  "classification": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+  "configuration_diff": {
+    "compared_keys": [
+      "dimensions_m",
+      "cell_counts",
+      "cell_dimensions_m",
+      "replay_schema",
+      "boundary_mode",
+      "mesh_patch_types",
+      "field_boundary_types",
+      "maximum_timestep",
+      "initial_timestep",
+      "minimum_timestep",
+      "maximum_courant_number",
+      "maximum_alpha_courant_number",
+      "write_interval",
+      "initial_water_level",
+      "alpha_tolerance",
+      "barrier",
+      "wall_function_policy"
+    ],
+    "g6_case_hash": "a5f53c08380b19a9af565ca47082889946dfdfd4a1d6d2c86ce2bbe81e88918d",
+    "mismatches": {},
+    "r13_case_hash": "ceced95c1b9706335b49883199a157bce86ed047b7f1fdbdda4f7f882686eeba",
+    "status": "MATCHES_EXCEPT_FOR_FORCING_DERIVED_VALUES"
+  },
+  "forcing_authority": {
+    "forcing_manifest_file_sha256": "aac08422684e1ebbc3f4940c703225ec3c4e14d0b686ac081b21da93ef8eecb7",
+    "forcing_manifest_matches_r13_authority": true,
+    "replay_package_file_sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6",
+    "replay_package_matches_r13_authority": true
+  },
+  "full_replay_gate": "CLOSED",
+  "generated_at_utc": "2026-08-10T21:27:56.198645Z",
+  "git_sha": "201cc00a72a460c1dbc3c5d4add206af988f11e0",
+  "input_replay_alpha": {
+    "maximum": {
+      "count": 960,
+      "max": 1.0,
+      "max_index": 0,
+      "min": 0.0,
+      "min_index": 14,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/openfoam-boundaryData/constant/boundaryData/inlet/0/alpha.water",
+      "time_s": 0.0
+    },
+    "minimum": {
+      "count": 960,
+      "max": 1.0,
+      "max_index": 0,
+      "min": 0.0,
+      "min_index": 14,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/openfoam-boundaryData/constant/boundaryData/inlet/0/alpha.water",
+      "time_s": 0.0
+    },
+    "status": "BOUNDED",
+    "time_count": 61
+  },
+  "repair_made": null,
+  "replay_geometry": {
+    "alpha_construction": "fractional vertical face fill from free_surface, clamped to [0, 1], with cells below bed forced dry",
+    "free_surface_equality_convention": "free_surface <= z_min gives alpha=0; free_surface >= z_max gives alpha=1; equality at lower face is dry, equality at upper face is full",
+    "status": "BOUNDED_CONSTRUCTION_CONFIRMED"
+  },
+  "retained_field_locations": {
+    "g6_barrier_final_written_field": {
+      "alpha_path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/300/alpha.water",
+      "maximum_alpha": 1.00000013,
+      "maximum_cell_index": 1067,
+      "minimum_alpha": -5.894534065e-22,
+      "minimum_cell_index": 18768,
+      "status": "COMPUTED",
+      "time_s": 300.0
+    },
+    "r13_current_1s_written_field": {
+      "alpha_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier_1s/1/alpha.water",
+      "maximum_alpha": 1.000087482,
+      "maximum_cell_index": 2544,
+      "minimum_alpha": -8.737632442e-05,
+      "minimum_cell_index": 19464,
+      "status": "COMPUTED",
+      "time_s": 1.0
+    },
+    "r13_current_5s_written_field": {
+      "alpha_path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/local3d-smoke/simple_rigid_barrier/5/alpha.water",
+      "maximum_alpha": 1.000465925,
+      "maximum_cell_index": 1104,
+      "minimum_alpha": -0.0003782604591,
+      "minimum_cell_index": 19440,
+      "status": "COMPUTED",
+      "time_s": 5.0
+    }
+  },
+  "root_cause": "current inlet alpha is bounded and case controls match G6, but internal VOF alpha excursions exceed the existing 5e-05 tolerance and are materially larger than same-horizon G6",
+  "same_horizon": {
+    "g6_barrier_1s": {
+      "first_above_one": {
+        "Co": 4.97638344e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000001,
+        "alpha_min": 0.0,
+        "time_s": 0.012882901
+      },
+      "first_above_tolerance": null,
+      "first_below_tolerance": null,
+      "first_negative": null,
+      "horizon_s": 1.0,
+      "maximum_Co": 0.02313234787,
+      "maximum_alpha": 1.000000911,
+      "maximum_alpha_Co": 0.01473885969,
+      "maximum_alpha_time_s": 0.97861968,
+      "minimum_alpha": 0.0,
+      "minimum_alpha_time_s": 0.0024,
+      "sample_count": 360,
+      "status": "COMPUTED"
+    },
+    "g6_barrier_5s": {
+      "first_above_one": {
+        "Co": 4.97638344e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000001,
+        "alpha_min": 0.0,
+        "time_s": 0.012882901
+      },
+      "first_above_tolerance": null,
+      "first_below_tolerance": null,
+      "first_negative": null,
+      "horizon_s": 5.0,
+      "maximum_Co": 0.05857560171,
+      "maximum_alpha": 1.000001363,
+      "maximum_alpha_Co": 0.04039172703,
+      "maximum_alpha_time_s": 2.3010009,
+      "minimum_alpha": 0.0,
+      "minimum_alpha_time_s": 0.0024,
+      "sample_count": 1552,
+      "status": "COMPUTED"
+    },
+    "g6_no_defence_1s": {
+      "first_above_one": {
+        "Co": 5.18903287e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000001,
+        "alpha_min": 0.0,
+        "time_s": 0.012882901
+      },
+      "first_above_tolerance": null,
+      "first_below_tolerance": null,
+      "first_negative": null,
+      "horizon_s": 1.0,
+      "maximum_Co": 0.02437477666,
+      "maximum_alpha": 1.000000483,
+      "maximum_alpha_Co": 0.01496312218,
+      "maximum_alpha_time_s": 0.97861968,
+      "minimum_alpha": 0.0,
+      "minimum_alpha_time_s": 0.0024,
+      "sample_count": 360,
+      "status": "COMPUTED"
+    },
+    "g6_no_defence_5s": {
+      "first_above_one": {
+        "Co": 5.18903287e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000001,
+        "alpha_min": 0.0,
+        "time_s": 0.012882901
+      },
+      "first_above_tolerance": null,
+      "first_below_tolerance": null,
+      "first_negative": null,
+      "horizon_s": 5.0,
+      "maximum_Co": 0.05788841104,
+      "maximum_alpha": 1.000000627,
+      "maximum_alpha_Co": 0.03959930064,
+      "maximum_alpha_time_s": 2.2740135,
+      "minimum_alpha": 0.0,
+      "minimum_alpha_time_s": 0.0024,
+      "sample_count": 1552,
+      "status": "COMPUTED"
+    },
+    "r13_current_1s": {
+      "first_above_one": {
+        "Co": 1.418476316e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000013,
+        "alpha_min": -1.28981202e-08,
+        "time_s": 0.0011990408
+      },
+      "first_above_tolerance": {
+        "Co": 0.002955022685,
+        "alphaCo": 0.001837238199,
+        "alpha_max": 1.000050021,
+        "alpha_min": -5.000921151e-05,
+        "time_s": 0.57702194
+      },
+      "first_below_tolerance": {
+        "Co": 0.002955022685,
+        "alphaCo": 0.001837238199,
+        "alpha_max": 1.000050021,
+        "alpha_min": -5.000921151e-05,
+        "time_s": 0.57702194
+      },
+      "first_negative": {
+        "Co": 1.418476316e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000013,
+        "alpha_min": -1.28981202e-08,
+        "time_s": 0.0011990408
+      },
+      "horizon_s": 1.0,
+      "maximum_Co": 0.004167655029,
+      "maximum_alpha": 1.000087482,
+      "maximum_alpha_Co": 0.002503948562,
+      "maximum_alpha_time_s": 1.0,
+      "minimum_alpha": -8.737632442e-05,
+      "minimum_alpha_time_s": 1.0,
+      "sample_count": 1640,
+      "status": "COMPUTED"
+    },
+    "r13_current_5s": {
+      "first_above_one": {
+        "Co": 2.836952633e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000026,
+        "alpha_min": -2.580861818e-08,
+        "time_s": 0.0023992322
+      },
+      "first_above_tolerance": {
+        "Co": 0.01675092751,
+        "alphaCo": 0.01111189789,
+        "alpha_max": 1.000050129,
+        "alpha_min": -5.011653446e-05,
+        "time_s": 0.59731582
+      },
+      "first_below_tolerance": {
+        "Co": 0.01675092751,
+        "alphaCo": 0.01111189789,
+        "alpha_max": 1.000050129,
+        "alpha_min": -5.011653446e-05,
+        "time_s": 0.59731582
+      },
+      "first_negative": {
+        "Co": 2.836952633e-05,
+        "alphaCo": 0.0,
+        "alpha_max": 1.000000026,
+        "alpha_min": -2.580861818e-08,
+        "time_s": 0.0023992322
+      },
+      "horizon_s": 5.0,
+      "maximum_Co": 0.06233920901,
+      "maximum_alpha": 1.000465925,
+      "maximum_alpha_Co": 0.06233920901,
+      "maximum_alpha_time_s": 5.0,
+      "minimum_alpha": -0.0003782604591,
+      "minimum_alpha_time_s": 5.0,
+      "sample_count": 1560,
+      "status": "COMPUTED"
+    }
+  },
+  "schema": {
+    "name": "tsunami.c1a_r14_local3d_boundedness",
+    "version": "1.0.0"
+  },
+  "temporal_interpolation": {
+    "endpoint_max": 1.0,
+    "endpoint_min": 0.0,
+    "reason": "OpenFOAM timeVaryingMappedFixedValue linearly interpolates scalar alpha.water between replay samples; all stored endpoint values are within [0, 1], so scalar interpolation cannot overshoot.",
+    "status": "BOUNDED_BY_CONVEX_LINEAR_INTERPOLATION"
+  },
+  "water_volume_integrity": {
+    "r13_current_1s": {
+      "final": {
+        "time_s": 1.0,
+        "volume_fraction": 0.3872305395
+      },
+      "initial": {
+        "time_s": 0.0011990408,
+        "volume_fraction": 0.3884660698
+      }
+    },
+    "r13_current_5s": {
+      "final": {
+        "time_s": 5.0,
+        "volume_fraction": 0.3771309919
+      },
+      "initial": {
+        "time_s": 0.0023992322,
+        "volume_fraction": 0.3884660705
+      }
+    }
+  }
+}
