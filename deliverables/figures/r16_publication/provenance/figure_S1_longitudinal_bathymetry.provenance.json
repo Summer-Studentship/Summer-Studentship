@@ -1,0 +1,143 @@
+{
+  "allowed_claim": "Shows the bed elevation encountered by the centreline samples used for D1/D2.",
+  "basename": "figure_S1_longitudinal_bathymetry",
+  "centreline": {
+    "coordinate_convention": "0 km at selected wet nearshore interface; positive offshore/sourceward; plotted with offshore left and nearshore right",
+    "interpolation": "nearest unstructured cell centre to centreline samples in EPSG:32654; no smoothing or temporal interpolation",
+    "nearest_distance_m": {
+      "max": 223.20212258165333,
+      "median": 90.08004472984948,
+      "min": 4.637185814173174
+    },
+    "sample_count": 155,
+    "sampling_interval_m": 800.0
+  },
+  "crs": {
+    "publication_coordinate": "distance along accepted corridor centreline",
+    "simulation": "EPSG:32654 WGS 84 / UTM zone 54N",
+    "source_terrain": "WGS 84 + EGM2008 height",
+    "vertical_positive": "up"
+  },
+  "field": "mesh/bed_elevation",
+  "figure_id": "S1",
+  "generated_at_utc": "2026-08-11T20:48:09Z",
+  "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+  "model_authority": {
+    "event_limitations": [
+      "real Tohoku event simulation",
+      "verified numerical method",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "local3d_status": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
+  },
+  "output_hashes": {
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.pdf": "8ce2f9f75d4a0f4a108af6746058ab9c19f98298d393320c720de8ca25dc7189",
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png": "fed68e1ef6a50eb0194babda2107402cd8900ef56f160c10ea4a00bc2d2c1a5e",
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.svg": "ad6e689a9d31035553be7610c1a31d9c1ccca1068bc0a9ff5e6224dcd913bad7"
+  },
+  "outputs": [
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.pdf",
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.svg",
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png"
+  ],
+  "preview": "deliverables/figures/r16_publication/previews/figure_S1_longitudinal_bathymetry.png",
+  "required_caveat": "This profile is sampled from the wet-conditioned h400 mesh, not an independent shoreline/topography validation.",
+  "schema": {
+    "name": "tsunami.r16.figure_provenance",
+    "version": "1.0.0"
+  },
+  "scientific_question": "How does seabed elevation change along the tsunami propagation path?",
+  "software": {
+    "h5py": "3.16.0",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "python": "3.14.6",
+    "qgis": {
+      "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+      "headless_environment": {
+        "QT_QPA_PLATFORM": "offscreen"
+      },
+      "proj_version": "Rel. 9.8.1, April 10th, 2026",
+      "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
+      "qgis_executable": null,
+      "qgis_process_executable": null,
+      "qgis_process_version": null,
+      "qgis_version": null,
+      "qt_status": {
+        "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
+        "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+      },
+      "recorded_at_utc": "2026-08-11T20:48:05Z",
+      "schema": {
+        "name": "tsunami.r16.qgis_runtime",
+        "version": "1.0.0"
+      },
+      "status": "QGIS_RUNTIME_BLOCKED"
+    }
+  },
+  "source_datasets": {
+    "bathymetry_authority": {
+      "bytes": 17959004,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+    },
+    "centreline_manifest": {
+      "bytes": 11568,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "sha256": "dca0427f011e4b6c0edce3c0bf64f9ab0404417d9ad27d695ff35f01e8e75c6b"
+    },
+    "corridor_geometry": {
+      "bytes": 2653,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "sha256": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+    },
+    "local3d_geometry": {
+      "bytes": 9410,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "sha256": "455dddcb82d5dbe629da1e61c81987078715545afe27fe236edc99ec286735f4"
+    },
+    "r13_replay_package": {
+      "bytes": 38509,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
+      "sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6"
+    },
+    "regional_result": {
+      "bytes": 45784856,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+      "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+    },
+    "simulation_conditioned_terrain": {
+      "bytes": 9888,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+      "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+    },
+    "validation_station_register": {
+      "bytes": 35929,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+      "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+    }
+  },
+  "status": "COMPLETE"
+}

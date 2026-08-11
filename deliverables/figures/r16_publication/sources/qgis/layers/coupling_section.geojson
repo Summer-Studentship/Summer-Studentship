@@ -1,0 +1,34 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32654"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            583203.5907474782,
+            4341594.351742764
+          ],
+          [
+            575785.7897481513,
+            4338598.316306661
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "name": "Selected wet nearshore interface",
+        "section_id": "kamaishi-nearshore-interface",
+        "selection_fallback": true,
+        "selection_reason": "selected closest fully wet ETOPO cross-section in fallback 5-50 m centreline band"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "coupling_section",
+  "type": "FeatureCollection"
+}

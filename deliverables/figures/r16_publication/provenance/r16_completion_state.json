@@ -1,0 +1,22 @@
+{
+  "generated_at_utc": "2026-08-11T20:48:09Z",
+  "no_early_exit": true,
+  "qgis_runtime_blocked": true,
+  "schema": {
+    "name": "tsunami.r16.completion_state",
+    "version": "1.0.0"
+  },
+  "task_states": {
+    "Figure A": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure B": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure C": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure D1": "COMPLETE",
+    "Figure D2": "COMPLETE",
+    "Figure E": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure F": "BLOCKED_BY_QGIS_RUNTIME",
+    "QGIS project": "BLOCKED_BY_QGIS_RUNTIME",
+    "Supporting bathymetry": "COMPLETE",
+    "handoff": "COMPLETE",
+    "provenance": "COMPLETE"
+  }
+}

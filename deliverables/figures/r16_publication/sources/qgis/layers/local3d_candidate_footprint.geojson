@@ -1,0 +1,48 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32654"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              582738.3555410515,
+              4341406.444145256
+            ],
+            [
+              576251.024954578,
+              4338786.223904169
+            ],
+            [
+              575961.6764031783,
+              4339502.6139534535
+            ],
+            [
+              582449.0069896517,
+              4342122.83419454
+            ],
+            [
+              582738.3555410515,
+              4341406.444145256
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "final_local3d_extent_fixed": false,
+        "name": "Conceptual Local3D impact-study footprint",
+        "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+        "status": "candidate_geographic_placement_for_framework_visual"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "local3d_candidate_footprint",
+  "type": "FeatureCollection"
+}

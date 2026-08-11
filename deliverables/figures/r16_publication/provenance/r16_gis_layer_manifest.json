@@ -1,0 +1,110 @@
+{
+  "crs": {
+    "conditioned_terrain": "EPSG:32654 with EGM2008 vertical metadata, positive up",
+    "derived_layers": "EPSG:32654 WGS 84 / UTM zone 54N",
+    "source_raster": "WGS 84 + EGM2008 height (EPSG:9518 compound CRS)",
+    "station_coordinates": "EPSG:4326 source, transformed to EPSG:32654 when projected_m absent"
+  },
+  "generated_at_utc": "2026-08-11T20:48:06Z",
+  "geopackage": {
+    "bytes": 221184,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg",
+    "sha256": "9e8c115ffb94f2424b87d7813e3a8369862863cfe8269522317421c40743db83"
+  },
+  "layers": {
+    "corridor_centreline": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson"
+    },
+    "corridor_polygon": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson"
+    },
+    "coupling_section": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson"
+    },
+    "event_and_kamaishi_points": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson"
+    },
+    "local3d_candidate_footprint": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/local3d_candidate_footprint.geojson"
+    },
+    "validation_stations": {
+      "ogr2ogr_code": 0,
+      "ogr2ogr_output": "",
+      "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r16.gis_layers",
+    "version": "1.0.0"
+  },
+  "source_authority": {
+    "bathymetry_authority": {
+      "bytes": 17959004,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+    },
+    "centreline_manifest": {
+      "bytes": 11568,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "sha256": "dca0427f011e4b6c0edce3c0bf64f9ab0404417d9ad27d695ff35f01e8e75c6b"
+    },
+    "corridor_geometry": {
+      "bytes": 2653,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "sha256": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+    },
+    "local3d_geometry": {
+      "bytes": 9410,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "sha256": "455dddcb82d5dbe629da1e61c81987078715545afe27fe236edc99ec286735f4"
+    },
+    "r13_replay_package": {
+      "bytes": 38509,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
+      "sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6"
+    },
+    "regional_result": {
+      "bytes": 45784856,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+      "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+    },
+    "simulation_conditioned_terrain": {
+      "bytes": 9888,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+      "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+    },
+    "validation_station_register": {
+      "bytes": 35929,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+      "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+    }
+  },
+  "status": "COMPLETE",
+  "styles": [
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/corridor.qml",
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/event_source.qml",
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/validation_stations.qml",
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/coupling.qml",
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/bathymetry.qml",
+    "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/topography.qml"
+  ]
+}

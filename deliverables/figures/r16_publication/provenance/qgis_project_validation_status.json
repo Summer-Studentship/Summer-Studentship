@@ -1,0 +1,52 @@
+{
+  "layers": {
+    "geopackage": {
+      "ogrinfo": [
+        "INFO: Open of `/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg'",
+        "      using driver `GPKG' successful.",
+        "1: corridor_polygon (Polygon)",
+        "2: corridor_centreline (Line String)",
+        "3: coupling_section (Line String)",
+        "4: local3d_candidate_footprint (Polygon)",
+        "5: event_and_kamaishi_points (Point)",
+        "6: validation_stations (Point)"
+      ],
+      "status": "PASS"
+    }
+  },
+  "project": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+  "qgis": {
+    "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+    "headless_environment": {
+      "QT_QPA_PLATFORM": "offscreen"
+    },
+    "proj_version": "Rel. 9.8.1, April 10th, 2026",
+    "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
+    "qgis_executable": null,
+    "qgis_process_executable": null,
+    "qgis_process_version": null,
+    "qgis_version": null,
+    "qt_status": {
+      "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
+      "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+    },
+    "recorded_at_utc": "2026-08-11T20:48:24Z",
+    "schema": {
+      "name": "tsunami.r16.qgis_runtime",
+      "version": "1.0.0"
+    },
+    "status": "QGIS_RUNTIME_BLOCKED"
+  },
+  "reason": "QGIS runtime/project unavailable; GeoPackage layer validation was performed where possible.",
+  "requested_layouts": [
+    "01_tohoku_event_corridor",
+    "02_corridor_bathymetry",
+    "03_validation_targets",
+    "04_hybrid_domain"
+  ],
+  "schema": {
+    "name": "tsunami.r16.qgis_project_validation",
+    "version": "1.0.0"
+  },
+  "status": "BLOCKED_BY_QGIS_RUNTIME"
+}

@@ -1,0 +1,81 @@
+{
+  "geopackage": {
+    "deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg": {
+      "ogrinfo": [
+        "INFO: Open of `/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg'",
+        "      using driver `GPKG' successful.",
+        "1: corridor_polygon (Polygon)",
+        "2: corridor_centreline (Line String)",
+        "3: coupling_section (Line String)",
+        "4: local3d_candidate_footprint (Polygon)",
+        "5: event_and_kamaishi_points (Point)",
+        "6: validation_stations (Point)"
+      ],
+      "status": "PASS"
+    }
+  },
+  "json": {
+    "deliverables/figures/r16_publication/provenance/figure_A_tohoku_kamaishi_corridor.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_B_corridor_bathymetry_plan.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_C_corridor_bathymetry_oblique.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_D1_eta_space_time.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_D2_wave_profiles_to_shore.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_E_hybrid_domain_framework.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_F_validation_geometry.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/figure_S1_longitudinal_bathymetry.provenance.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/qgis_layout_export_status.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/qgis_project_build_status.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/qgis_project_validation_status.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/qgis_runtime_status.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/r16_completion_state.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/r16_gis_layer_manifest.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/r16_validation.json": "PASS"
+  },
+  "manifest_links": {
+    "deliverables/figures/r16_publication/previews/figure_D1_eta_space_time.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_D2_wave_profiles_to_shore.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_S1_longitudinal_bathymetry.png": "PASS"
+  },
+  "pdf": {
+    "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.pdf": {
+      "bytes": 271339,
+      "status": "PASS"
+    },
+    "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.pdf": {
+      "bytes": 23565,
+      "status": "PASS"
+    },
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.pdf": {
+      "bytes": 18607,
+      "status": "PASS"
+    }
+  },
+  "png": {
+    "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.png": {
+      "height": 2484,
+      "status": "PASS",
+      "width": 3569
+    },
+    "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.png": {
+      "height": 2484,
+      "status": "PASS",
+      "width": 3576
+    },
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png": {
+      "height": 1644,
+      "status": "PASS",
+      "width": 3492
+    }
+  },
+  "schema": {
+    "name": "tsunami.r16.validation",
+    "version": "1.0.0"
+  },
+  "svg": {
+    "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.svg": "PASS"
+  },
+  "validated_at_utc": "2026-08-11T20:49:21Z"
+}

@@ -1,0 +1,34 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32654"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            625678.2047100652,
+            4225751.852112937
+          ],
+          [
+            579494.6902478148,
+            4340096.334024712
+          ]
+        ],
+        "type": "LineString"
+      },
+      "properties": {
+        "authority": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+        "distance_convention": "distance_to_selected_wet_nearshore_interface_km_positive_offshore; 0 km at interface",
+        "name": "Source-to-Kamaishi corridor centreline",
+        "nearshore_s_m": 123319.00726067042
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "corridor_centreline",
+  "type": "FeatureCollection"
+}

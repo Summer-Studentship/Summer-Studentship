@@ -1,0 +1,117 @@
+{
+  "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+  "basename": "figure_E_hybrid_domain_framework",
+  "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+  "figure_id": "E",
+  "generated_at_utc": "2026-08-11T20:48:07Z",
+  "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+  "model_authority": {
+    "event_limitations": [
+      "real Tohoku event simulation",
+      "verified numerical method",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "local3d_status": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
+  },
+  "outputs": [],
+  "preview": null,
+  "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+  "schema": {
+    "name": "tsunami.r16.figure_provenance",
+    "version": "1.0.0"
+  },
+  "scientific_question": "How does the Regional2D model connect conceptually to a local high-fidelity impact domain?",
+  "software": {
+    "h5py": "3.16.0",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.2",
+    "python": "3.14.6",
+    "qgis": {
+      "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+      "headless_environment": {
+        "QT_QPA_PLATFORM": "offscreen"
+      },
+      "proj_version": "Rel. 9.8.1, April 10th, 2026",
+      "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
+      "qgis_executable": null,
+      "qgis_process_executable": null,
+      "qgis_process_version": null,
+      "qgis_version": null,
+      "qt_status": {
+        "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
+        "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+      },
+      "recorded_at_utc": "2026-08-11T20:48:05Z",
+      "schema": {
+        "name": "tsunami.r16.qgis_runtime",
+        "version": "1.0.0"
+      },
+      "status": "QGIS_RUNTIME_BLOCKED"
+    }
+  },
+  "source_datasets": {
+    "bathymetry_authority": {
+      "bytes": 17959004,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+    },
+    "centreline_manifest": {
+      "bytes": 11568,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "sha256": "dca0427f011e4b6c0edce3c0bf64f9ab0404417d9ad27d695ff35f01e8e75c6b"
+    },
+    "corridor_geometry": {
+      "bytes": 2653,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "sha256": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+    },
+    "local3d_geometry": {
+      "bytes": 9410,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "sha256": "455dddcb82d5dbe629da1e61c81987078715545afe27fe236edc99ec286735f4"
+    },
+    "r13_replay_package": {
+      "bytes": 38509,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
+      "sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6"
+    },
+    "regional_result": {
+      "bytes": 45784856,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+      "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+    },
+    "simulation_conditioned_terrain": {
+      "bytes": 9888,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+      "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+    },
+    "validation_station_register": {
+      "bytes": 35929,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+      "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+    }
+  },
+  "status": "BLOCKED_BY_QGIS_RUNTIME"
+}

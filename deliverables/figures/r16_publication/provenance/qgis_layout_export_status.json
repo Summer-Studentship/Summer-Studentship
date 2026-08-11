@@ -1,0 +1,37 @@
+{
+  "project": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+  "qgis": {
+    "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+    "headless_environment": {
+      "QT_QPA_PLATFORM": "offscreen"
+    },
+    "proj_version": "Rel. 9.8.1, April 10th, 2026",
+    "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
+    "qgis_executable": null,
+    "qgis_process_executable": null,
+    "qgis_process_version": null,
+    "qgis_version": null,
+    "qt_status": {
+      "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
+      "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+    },
+    "recorded_at_utc": "2026-08-11T20:48:23Z",
+    "schema": {
+      "name": "tsunami.r16.qgis_runtime",
+      "version": "1.0.0"
+    },
+    "status": "QGIS_RUNTIME_BLOCKED"
+  },
+  "reason": "QGIS runtime/project unavailable; final cartographic layouts were not exported.",
+  "requested_layouts": [
+    "01_tohoku_event_corridor",
+    "02_corridor_bathymetry",
+    "03_validation_targets",
+    "04_hybrid_domain"
+  ],
+  "schema": {
+    "name": "tsunami.r16.qgis_layout_export",
+    "version": "1.0.0"
+  },
+  "status": "BLOCKED_BY_QGIS_RUNTIME"
+}

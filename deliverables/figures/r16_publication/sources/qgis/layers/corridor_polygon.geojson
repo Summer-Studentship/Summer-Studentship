@@ -1,0 +1,49 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32654"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          [
+            [
+              621969.3042104017,
+              4224253.834394885
+            ],
+            [
+              629387.1052097286,
+              4227249.869830988
+            ],
+            [
+              583203.5907474782,
+              4341594.351742764
+            ],
+            [
+              575785.7897481513,
+              4338598.316306661
+            ],
+            [
+              621969.3042104017,
+              4224253.834394885
+            ]
+          ]
+        ],
+        "type": "Polygon"
+      },
+      "properties": {
+        "authority": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+        "crs": "EPSG:32654",
+        "name": "R10 h400 Regional2D delivery corridor",
+        "status": "actual_current_corridor",
+        "width_m": 8000.0
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "corridor_polygon",
+  "type": "FeatureCollection"
+}

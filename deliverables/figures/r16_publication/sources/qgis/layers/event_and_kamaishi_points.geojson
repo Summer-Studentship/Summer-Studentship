@@ -1,0 +1,55 @@
+{
+  "crs": {
+    "properties": {
+      "name": "EPSG:32654"
+    },
+    "type": "name"
+  },
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          620060.6382673722,
+          4239660.228986675
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "event_utc": "2011-03-11T05:46:23Z",
+        "name": "2011 Tohoku event epicentre reference",
+        "role": "event_epicentre"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          576405.0287043336,
+          4347745.941305269
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "name": "Kamaishi proxy",
+        "role": "kamaishi_proxy"
+      },
+      "type": "Feature"
+    },
+    {
+      "geometry": {
+        "coordinates": [
+          579494.6902478148,
+          4340096.334024712
+        ],
+        "type": "Point"
+      },
+      "properties": {
+        "name": "Selected wet nearshore interface centre",
+        "role": "coupling_centre"
+      },
+      "type": "Feature"
+    }
+  ],
+  "name": "event_and_kamaishi_points",
+  "type": "FeatureCollection"
+}

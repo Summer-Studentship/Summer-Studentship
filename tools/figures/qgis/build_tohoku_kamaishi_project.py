@@ -29,8 +29,9 @@ LAYOUT_NAMES = [
 def build_project(*, allow_blocked: bool) -> dict[str, Any]:
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
     env = r16.qgis_environment()
-    layers = r16.prepare_gis_layers()
     if env["status"] == "QGIS_RUNTIME_BLOCKED":
+        existing_layers = r16.PROVENANCE_ROOT / "r16_gis_layer_manifest.json"
+        layers = r16.read_json(existing_layers) if existing_layers.is_file() else r16.prepare_gis_layers()
         payload = {
             "schema": {"name": "tsunami.r16.qgis_project_build", "version": "1.0.0"},
             "status": "BLOCKED_BY_QGIS_RUNTIME",
@@ -44,6 +45,8 @@ def build_project(*, allow_blocked: bool) -> dict[str, Any]:
         if allow_blocked:
             return payload
         raise RuntimeError(payload["reason"])
+
+    layers = r16.prepare_gis_layers()
 
     from qgis.core import (  # type: ignore[import-not-found]
         QgsApplication,
