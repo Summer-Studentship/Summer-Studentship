@@ -1,0 +1,82 @@
+{
+  "audit_snapshot": {
+    "branch": "feat/r17-studentship-closure",
+    "head": "27fe493",
+    "tracked_bytes": 683417200,
+    "tracked_files": 1598
+  },
+  "entries": [
+    {
+      "classification": "REVIEW_DUPLICATE_CANDIDATE",
+      "id": "R17-REV-001",
+      "priority": "P2",
+      "recommendation": "Keep now; later decide whether preview PNGs should be retained, regenerated or linked from publication outputs.",
+      "scope": "R16 preview/publication duplicate PNG pairs"
+    },
+    {
+      "classification": "REVIEW_DUPLICATE_CANDIDATE",
+      "id": "R17-REV-002",
+      "priority": "P2",
+      "recommendation": "Keep now; deduplicate only after citation, bibliography and workstream-source review.",
+      "scope": "Repeated research PDFs across research and workstream folders"
+    },
+    {
+      "classification": "REVIEW_IGNORE_RULE_CANDIDATE",
+      "id": "R17-REV-003",
+      "priority": "P3",
+      "recommendation": "Keep now; consider future ignore rules only after confirming manifests and rasters preserve required provenance.",
+      "scope": "Nine tracked .aux.xml GIS/render sidecars"
+    },
+    {
+      "classification": "REVIEW_REQUIRED",
+      "id": "R17-REV-004",
+      "path": "docs/UI Inspiration.png",
+      "priority": "P2",
+      "recommendation": "Keep now; review origin and decide whether it belongs in GUI inspiration, project history or archive documentation.",
+      "scope": "Loose pre-WBS UI inspiration image"
+    },
+    {
+      "classification": "REVIEW_DUPLICATE_CANDIDATE",
+      "id": "R17-REV-005",
+      "paths": [
+        "deliverables/figures/r16_publication/sources/python/r16_publication.py",
+        "tools/figures/r16_publication.py"
+      ],
+      "priority": "P3",
+      "recommendation": "Keep now; define whether figure source snapshots should duplicate live tools.",
+      "scope": "R16 figure source script duplicated as a source snapshot"
+    },
+    {
+      "classification": "REVIEW_MOVE_CANDIDATE",
+      "id": "R17-REV-006",
+      "path_hygiene": {
+        "non_ascii_path_count": 24,
+        "paths_with_newline": [
+          "docs/Research Papers/3d/Numerical Study on the Turbulent Structure of Tsunami Bottom Boundary Layer Using the 2011 Tohoku Tsunami Waveform\n.pdf"
+        ]
+      },
+      "priority": "P3",
+      "recommendation": "Keep now; consider path-normalisation only in a dedicated bibliographic hygiene pass.",
+      "scope": "Tracked paths with shell/tooling hygiene risks"
+    },
+    {
+      "classification": "REVIEW_REQUIRED",
+      "id": "R17-REV-007",
+      "priority": "P2",
+      "recommendation": "Keep now; future policy may separate source library storage from repository evidence, but research inputs are protected.",
+      "scope": "147 tracked PDFs, 595357566 bytes"
+    },
+    {
+      "classification": "REVIEW_REQUIRED",
+      "id": "R17-REV-008",
+      "priority": "P4",
+      "recommendation": "No tracked change; optional local Git maintenance only with explicit approval.",
+      "scope": "Zero-byte local Git metadata warning from git count-objects -vH"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.r17.repository_review_register",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE_NON_DESTRUCTIVE"
+}

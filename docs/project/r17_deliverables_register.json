@@ -1,0 +1,105 @@
+{
+  "deliverables": [
+    {
+      "id": "R17-DOC-README",
+      "path": "README.md",
+      "status": "UPDATED_FOR_R17_CLOSURE",
+      "type": "entry_point"
+    },
+    {
+      "id": "R17-DOC-STATUS",
+      "path": "docs/project/r17_studentship_status.md",
+      "status": "COMPLETE",
+      "type": "scientific_status"
+    },
+    {
+      "id": "R17-DOC-AUDIT",
+      "path": "docs/project/r17_repository_audit.md",
+      "status": "COMPLETE_NON_DESTRUCTIVE",
+      "type": "repository_audit"
+    },
+    {
+      "id": "R17-DOC-MAP",
+      "path": "docs/project/r17_repository_map.md",
+      "status": "COMPLETE",
+      "type": "repository_map"
+    },
+    {
+      "id": "R17-DOC-REVIEW-MD",
+      "path": "docs/project/r17_repository_review_register.md",
+      "status": "COMPLETE_NON_DESTRUCTIVE",
+      "type": "repository_review_register"
+    },
+    {
+      "id": "R17-DOC-REVIEW-JSON",
+      "path": "docs/project/r17_repository_review_register.json",
+      "status": "COMPLETE_NON_DESTRUCTIVE",
+      "type": "repository_review_register"
+    },
+    {
+      "id": "R17-DOC-STRUCTURE",
+      "path": "docs/project/r17_proposed_repository_structure.md",
+      "status": "COMPLETE_RECOMMENDATIONS_ONLY",
+      "type": "repository_structure_recommendation"
+    },
+    {
+      "id": "R17-DOC-DELIVERABLES-MD",
+      "path": "docs/project/r17_deliverables_register.md",
+      "status": "COMPLETE",
+      "type": "deliverables_register"
+    },
+    {
+      "id": "R17-DOC-DELIVERABLES-JSON",
+      "path": "docs/project/r17_deliverables_register.json",
+      "status": "COMPLETE",
+      "type": "deliverables_register"
+    },
+    {
+      "id": "R17-FIG-C-PNG",
+      "path": "deliverables/figures/r17_closure/publication/figure_C_corridor_bathymetry_3d.png",
+      "sha256": "ebfda8916a4f60894e54dda410e0cce579963b132c45cf2d195b3c769e6ff5df",
+      "status": "COMPLETE",
+      "type": "publication_figure"
+    },
+    {
+      "id": "R17-FIG-C-PDF",
+      "path": "deliverables/figures/r17_closure/publication/figure_C_corridor_bathymetry_3d.pdf",
+      "sha256": "27d8b25beeefeb43744353033dc054d63011a61b2758a138926cede5b0242219",
+      "status": "COMPLETE",
+      "type": "publication_figure"
+    },
+    {
+      "id": "R17-FIG-C-CONTACT",
+      "path": "deliverables/figures/r17_closure/previews/figure_C_vertical_exaggeration_contact_sheet.png",
+      "sha256": "c336ecef4b4949928c1df777678eef4cc9e736d7d45a8d654690d42a43b7e176",
+      "status": "COMPLETE",
+      "type": "visual_qc"
+    },
+    {
+      "id": "R17-FIG-C-PROVENANCE",
+      "path": "deliverables/figures/r17_closure/provenance/figure_C_corridor_bathymetry_3d.provenance.json",
+      "status": "COMPLETE",
+      "type": "provenance"
+    }
+  ],
+  "frozen_scientific_authority": {
+    "historical_validation": "NOT_CLAIMED",
+    "local3d_status": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+    "regional_authority": "R10 h400 limited_linear",
+    "regional_event_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "regional_formal_order": [
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r17.deliverables_register",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE"
+}
