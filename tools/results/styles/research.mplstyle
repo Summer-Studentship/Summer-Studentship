@@ -1,0 +1,22 @@
+figure.dpi: 120
+savefig.dpi: 300
+savefig.bbox: tight
+savefig.pad_inches: 0.04
+font.family: DejaVu Sans
+font.size: 9
+axes.titlesize: 10
+axes.labelsize: 9
+axes.linewidth: 0.8
+axes.grid: true
+grid.color: 0.85
+grid.linewidth: 0.55
+grid.alpha: 0.8
+legend.frameon: false
+lines.linewidth: 1.5
+xtick.direction: out
+ytick.direction: out
+xtick.major.size: 3
+ytick.major.size: 3
+pdf.fonttype: 42
+ps.fonttype: 42
+svg.fonttype: none

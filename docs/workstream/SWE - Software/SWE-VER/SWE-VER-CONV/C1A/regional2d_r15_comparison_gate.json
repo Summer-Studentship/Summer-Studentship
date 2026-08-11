@@ -1,0 +1,15 @@
+{
+  "direct_observation_count": 0,
+  "metrics_written": false,
+  "prohibited_adjustments": [
+    "no_time_shift",
+    "no_amplitude_scaling",
+    "no_manual_alignment"
+  ],
+  "reason": "No registered observation is both in the frozen h400 corridor and equivalent to an existing station eta(t) output.",
+  "schema": {
+    "name": "tsunami.r15.comparison_gate",
+    "version": "1.0.0"
+  },
+  "status": "NOT_APPLICABLE"
+}

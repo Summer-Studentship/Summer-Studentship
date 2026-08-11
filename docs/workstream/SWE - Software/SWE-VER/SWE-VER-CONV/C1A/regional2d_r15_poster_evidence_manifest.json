@@ -1,0 +1,163 @@
+{
+  "figure_outputs": {
+    "dart21418_observed_waveform": [
+      "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.svg",
+      "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.pdf",
+      "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.png"
+    ],
+    "station_domain_map": [
+      "deliverables/figures/r15_validation/publication/validation_station_domain_map.svg",
+      "deliverables/figures/r15_validation/publication/validation_station_domain_map.pdf",
+      "deliverables/figures/r15_validation/publication/validation_station_domain_map.png"
+    ],
+    "validation_framework_status": [
+      "deliverables/figures/r15_validation/publication/validation_framework_status.svg",
+      "deliverables/figures/r15_validation/publication/validation_framework_status.pdf",
+      "deliverables/figures/r15_validation/publication/validation_framework_status.png"
+    ]
+  },
+  "generated_at_utc": "2026-08-11T08:06:54Z",
+  "local3d_closure": {
+    "alpha_acceptance_interval": [
+      -5e-05,
+      1.00005
+    ],
+    "classification_preserved": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+    "finding": "current inlet alpha is bounded and case controls match G6, but internal VOF alpha excursions exceed the existing 5e-05 tolerance and are materially larger than same-horizon G6",
+    "full_replay_gate": "CLOSED",
+    "inspection_scope": "Existing R14/R14B evidence only; no OpenFOAM retuning, rerun or solver modification.",
+    "schema": {
+      "name": "tsunami.r15.local3d_closure_inspection",
+      "version": "1.0.0"
+    },
+    "source": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_local3d_boundedness_audit.json",
+    "source_sha256": "25338be4d803756e49b052324006c8afda542a3d796d22169b389045f567fcf4",
+    "status": "COMPLETE"
+  },
+  "mandatory_labels": [
+    "UNCALIBRATED HISTORICAL COMPARISON",
+    "REGIONAL NUMERICAL UNCERTAINTY NOT FULLY QUALIFIED"
+  ],
+  "r15_assets": [
+    {
+      "caption": "Official observation targets classified against the frozen h400 Kamaishi delivery corridor.",
+      "caveat": "No direct historical-validation claim.",
+      "claim_status": "VALIDATION FRAMEWORK",
+      "path": "deliverables/figures/r15_validation/publication/validation_station_domain_map.svg"
+    },
+    {
+      "caption": "NOAA/NCEI DART 21418 observed tsunami residual waveform.",
+      "caveat": "Outside the h400 corridor; not a direct model comparison.",
+      "claim_status": "REAL OBSERVATION",
+      "path": "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.svg"
+    },
+    {
+      "caption": "R15 observation-register eligibility status.",
+      "caveat": "Direct comparison gate did not pass.",
+      "claim_status": "VALIDATION FRAMEWORK",
+      "path": "deliverables/figures/r15_validation/publication/validation_framework_status.svg"
+    }
+  ],
+  "retained_r14_assets": [
+    {
+      "caption": "Real-data Tohoku-Kamaishi Regional corridor and Local3D coupling section.",
+      "caveat": "Geometry/forcing setup figure; not validation evidence.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Orient the Tohoku source, Regional corridor, Kamaishi and coupling section.",
+      "path": "deliverables/figures/r14_hybrid/r14_corridor_map_poster.svg",
+      "recommended_poster_section": "Study domain and workflow"
+    },
+    {
+      "caption": "Along-corridor bathymetry from the source-side corridor toward Kamaishi.",
+      "caveat": "Uses the project terrain representation; not a field observation comparison.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Show the deep-ocean to nearshore bathymetric pathway.",
+      "path": "deliverables/figures/r14_hybrid/r14_longitudinal_bathymetry.svg",
+      "recommended_poster_section": "Terrain and source fidelity"
+    },
+    {
+      "caption": "R10 h400 limited-linear free-surface elevation snapshot.",
+      "caveat": "Best available numerically uncertain real-event forcing; not spatially qualified or historically validated.",
+      "claim_status": "DEMONSTRATED",
+      "one_line_purpose": "Show the strongest h400 real-event free-surface field snapshot.",
+      "path": "deliverables/figures/r14_hybrid/r14_regional_eta_snapshot_poster.svg",
+      "recommended_poster_section": "Regional2D result"
+    },
+    {
+      "caption": "Verified method improvement and event-fidelity limitation: p ~= 1 to p ~= 2, 5.35x amplitude-error reduction, 17.43x phase-proxy reduction, 2.76% best event distributed eta difference, and h300/h250 projection ceiling.",
+      "caveat": "The 2.76% value is an event comparison metric, not a claim of overall spatial convergence.",
+      "claim_status": "VERIFIED",
+      "one_line_purpose": "Summarise p ~= 1, p ~= 2 and the fidelity ceiling in one compact figure.",
+      "path": "deliverables/figures/r14_hybrid/r14_numerical_methodology_status.svg",
+      "recommended_poster_section": "Numerical verification"
+    },
+    {
+      "caption": "One-way mapping from R10 h400 Regional forcing at the coupling section into the Local3D replay window.",
+      "caveat": "No two-way coupling is implied.",
+      "claim_status": "IMPLEMENTED",
+      "one_line_purpose": "Explain the one-way Regional 245-545 s to Local3D 0-300 s mapping.",
+      "path": "deliverables/figures/r14_hybrid/r14_replay_mapping.svg",
+      "recommended_poster_section": "Hybrid coupling"
+    },
+    {
+      "caption": "Accepted G6 rigid-barrier Local3D replay rendered with the R14B ocean profile.",
+      "caveat": "This is accepted G6 evidence, not an accepted current h400 replay.",
+      "claim_status": "DEMONSTRATED",
+      "one_line_purpose": "Show the accepted G6 Local3D replay render pipeline.",
+      "path": "deliverables/figures/r14_hybrid/local3d/r14_g6_local3d_ocean.png",
+      "recommended_poster_section": "Local3D demonstration"
+    },
+    {
+      "caption": "Historical validation framework: DART/open ocean, Kamaishi/NOWPHAS and run-up/inundation targets.",
+      "caveat": "Framework only; no validation-results claim.",
+      "claim_status": "VALIDATION TARGET",
+      "one_line_purpose": "Show target observation classes and intended comparison quantities.",
+      "path": "deliverables/figures/r14_hybrid/r14_validation_targets.svg",
+      "recommended_poster_section": "Validation plan"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.r15.poster_evidence_manifest",
+    "version": "1.0.0"
+  },
+  "video": {
+    "note": "R15 retains the accepted R14B G6 Local3D preview because current h400 Local3D replay remains unresolved.",
+    "qr_status": "QR_ASSET_READY_FOR_HOSTING",
+    "r14_video_provenance": {
+      "data_class": "DEMONSTRATED_G6_HYBRID_REPLAY",
+      "ffmpeg_command_template": "ffmpeg -y -framerate 2 -i deliverables/video/r14_hybrid/frames/local3d_g6/frame_%03d.png -vf format=yuv420p -movflags +faststart deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
+      "ffprobe": {
+        "duration_s": 3.0,
+        "ffprobe_returncode": 0,
+        "fps": "2/1",
+        "frame_count": 6,
+        "path": "deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
+        "resolution": [
+          1280,
+          720
+        ],
+        "sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
+        "status": "PASSED"
+      },
+      "generated_at_utc": "2026-08-10T22:02:10.485400Z",
+      "hybrid_preview_mp4_status": "BLOCKED_BY_LOCAL3D_REPLAY",
+      "local3d_preview_mp4_status": "COMPLETE",
+      "regional_preview_mp4_status": "NOT_APPLICABLE",
+      "schema": {
+        "name": "tsunami.r14b.video_provenance",
+        "version": "1.0.0"
+      },
+      "short_description": "Short proof-of-concept MP4 assembled from accepted G6 Local3D ParaView frames.",
+      "title": "Accepted G6 Local3D rigid-barrier replay preview"
+    },
+    "schema": {
+      "name": "tsunami.r15.video_qr_metadata",
+      "version": "1.0.0"
+    },
+    "sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
+    "source_sha256": "cc42f8d1f81745c1ef9efea8466c1c0b9c92d0a3953fa87befd53b35b313347e",
+    "source_video": "deliverables/video/r14_hybrid/local3d_g6_preview.mp4",
+    "status": "ACCEPTED_G6_VIDEO_REUSED",
+    "video_path": "deliverables/video/r15_validation/hybrid_g6_poster.mp4"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "data_class": "REAL_OBSERVATION_NO_DIRECT_COMPARISON",
+  "generated_at_utc": "2026-08-11T08:06:54Z",
+  "git_sha": "d7139c361b0fcee0aca3e1fce5d2cb8c044351c8",
+  "outputs": [
+    "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.svg",
+    "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.pdf",
+    "deliverables/figures/r15_validation/publication/dart21418_observed_waveform.png"
+  ],
+  "schema": {
+    "name": "tsunami.r15.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ncei_dart21418_20110301to20110320_meter.txt",
+    "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/processed/dart21418_event_window.csv"
+  ],
+  "source_sha256": {
+    "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/processed/dart21418_event_window.csv": "f6916b8df5fd0cf02a000a55e578a9cd4eaa07cf86884746d909c865251c6ae9",
+    "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ncei_dart21418_20110301to20110320_meter.txt": "137061048c0d92b459f9e4ce865193bddf063309841e1876070a63bf3a269333"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "direct_comparison_status": "NOT_APPLICABLE",
+  "external_root": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15",
+  "generated_at_utc": "2026-08-11T08:06:54Z",
+  "observation_register": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+  "poster_manifest": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_poster_evidence_manifest.json",
+  "prohibited_scope_confirmed_absent": [
+    "new Regional mesh refinement",
+    "600 s solve",
+    "h250 production",
+    "temporal convergence",
+    "native C++ HDF5 writer",
+    "OpenFOAM retuning"
+  ],
+  "schema": {
+    "name": "tsunami.r15.handoff_manifest",
+    "version": "1.0.0"
+  },
+  "scientific_statuses_preserved": [
+    "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+    "GLOBAL_FIRST_ORDER_VERIFIED",
+    "SECOND_ORDER_VERIFIED",
+    "TERRAIN_SOURCE_FIDELITY_DOMINANT",
+    "PROJECTION_FIDELITY_CEILING",
+    "REPLAY_VOF_BEHAVIOUR_UNRESOLVED"
+  ],
+  "status": "COMPLETE",
+  "validation_framework": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_validation_framework.json"
+}

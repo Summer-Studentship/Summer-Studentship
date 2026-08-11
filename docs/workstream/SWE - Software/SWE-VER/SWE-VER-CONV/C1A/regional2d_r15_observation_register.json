@@ -1,0 +1,697 @@
+{
+  "observations": [
+    {
+      "authority": "NOAA/NCEI and NDBC",
+      "comparison_role": "open-ocean target outside Kamaishi corridor",
+      "data_status": "RAW_OBSERVED_WAVEFORM_AVAILABLE",
+      "distance_to_corridor_m": 544641.4251283993,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 38.71,
+      "longitude": 148.67,
+      "name": "D21418 BPR, NE Tokyo, Japan",
+      "observation_id": "NOAA_NCEI_DART_21418",
+      "projected_m": {
+        "x": 1167295.9873163088,
+        "y": 4312621.507490945
+      },
+      "quantity": "Deep ocean gauge bottom-pressure residual waveform",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ncei_dart21418_20110301to20110320_meter.txt",
+      "source_url": "https://www.ngdc.noaa.gov/hazard/data/DART/20110311_honshu/dart21418_20110301to20110320_meter.txt"
+    },
+    {
+      "arrival_utc": "2011-03-11T05:48:00Z",
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_water_height_m": 8.5,
+      "comparison_role": "nearshore gauge target; raw waveform unavailable in R15 raw official sources",
+      "data_status": "CATALOGUE_POINT_AVAILABLE_NO_RAW_WAVEFORM",
+      "distance_to_corridor_m": 47792.55076694596,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.65,
+      "longitude": 141.983,
+      "name": "MIYAKO",
+      "observation_id": "NOAA_NCEI_TIDE_19235",
+      "projected_m": {
+        "x": 584336.1890435565,
+        "y": 4389373.480344182
+      },
+      "quantity": "Tide-gauge measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tide_deep_gauge_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/2"
+    },
+    {
+      "arrival_utc": "2011-03-11T05:50:00Z",
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_water_height_m": 4.2,
+      "comparison_role": "nearshore gauge target; raw waveform unavailable in R15 raw official sources",
+      "data_status": "CATALOGUE_POINT_AVAILABLE_NO_RAW_WAVEFORM",
+      "distance_to_corridor_m": 7439.482772522189,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.267,
+      "longitude": 141.883,
+      "name": "KAMAISHI",
+      "observation_id": "NOAA_NCEI_TIDE_19236",
+      "projected_m": {
+        "x": 576172.9293399191,
+        "y": 4346778.064741721
+      },
+      "quantity": "Tide-gauge measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tide_deep_gauge_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/2"
+    },
+    {
+      "arrival_utc": "2011-03-11T05:46:00Z",
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_water_height_m": 8,
+      "comparison_role": "nearshore gauge target; raw waveform unavailable in R15 raw official sources",
+      "data_status": "CATALOGUE_POINT_AVAILABLE_NO_RAW_WAVEFORM",
+      "distance_to_corridor_m": 17432.63683971859,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.017,
+      "longitude": 141.75,
+      "name": "OFUNATO",
+      "observation_id": "NOAA_NCEI_TIDE_19070",
+      "projected_m": {
+        "x": 564928.660447782,
+        "y": 4318930.634999028
+      },
+      "quantity": "Tide-gauge measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tide_deep_gauge_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/2"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 32.85,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 10469.448041033367,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.309472,
+      "longitude": 141.926778,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22388",
+      "projected_m": {
+        "x": 579901.2666985268,
+        "y": 4351529.340326533
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 30.59,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 5991.887237717187,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.266110999999995,
+      "longitude": 141.926028,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22387",
+      "projected_m": {
+        "x": 579885.8581300292,
+        "y": 4346716.496892761
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 29.92,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 8645.967289507342,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.28875,
+      "longitude": 141.91602799999998,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_20827",
+      "projected_m": {
+        "x": 578997.7392346269,
+        "y": 4349220.177529908
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 740,
+      "catalogue_water_height_m": 29.34,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12045.230655476385,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.311796,
+      "longitude": 141.8837,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24123",
+      "projected_m": {
+        "x": 576184.7581118699,
+        "y": 4351750.080368308
+      },
+      "quantity": "Water height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 28.57,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 3517.209803147244,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.247139,
+      "longitude": 141.942361,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22385",
+      "projected_m": {
+        "x": 581316.8013978446,
+        "y": 4344625.545310137
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 830,
+      "catalogue_water_height_m": 28.400000000000002,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12066.139439551878,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.312042,
+      "longitude": 141.883843,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22184",
+      "projected_m": {
+        "x": 576196.819661901,
+        "y": 4351777.501851296
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 25.11,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 7659.942418241004,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.280028,
+      "longitude": 141.918722,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24388",
+      "projected_m": {
+        "x": 579239.9005455646,
+        "y": 4348254.571267087
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 745,
+      "catalogue_water_height_m": 24.240000000000002,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12066.323345479905,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.312045,
+      "longitude": 141.883847,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24378",
+      "projected_m": {
+        "x": 576197.1612564985,
+        "y": 4351777.838160795
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 320,
+      "catalogue_water_height_m": 22.830000000000002,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 10181.088984892007,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.296943999999996,
+      "longitude": 141.89416699999998,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_21849",
+      "projected_m": {
+        "x": 577103.4397384286,
+        "y": 4350110.6820266545
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 22.23,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 3445.101093847314,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.247389,
+      "longitude": 141.945472,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22373",
+      "projected_m": {
+        "x": 581584.9663690485,
+        "y": 4344656.088335229
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 350.90000000000003,
+      "catalogue_water_height_m": 21.56,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 1560.85764413298,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.211749999999995,
+      "longitude": 141.888417,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24240",
+      "projected_m": {
+        "x": 576700.385524489,
+        "y": 4340651.084035273
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 770,
+      "catalogue_water_height_m": 21.44,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12054.565866265846,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.311944,
+      "longitude": 141.883889,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24755",
+      "projected_m": {
+        "x": 576200.8917272765,
+        "y": 4351766.664605307
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 680,
+      "catalogue_water_height_m": 21.39,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12057.245688571315,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.312349,
+      "longitude": 141.885132,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_21841",
+      "projected_m": {
+        "x": 576307.6136695887,
+        "y": 4351812.659543625
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 116,
+      "catalogue_water_height_m": 21.330000000000002,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 10876.96317814113,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.316472,
+      "longitude": 141.944333,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24239",
+      "projected_m": {
+        "x": 581406.6683247808,
+        "y": 4352321.858339613
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 454,
+      "catalogue_water_height_m": 21.28,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 1970.9857479276018,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.225528,
+      "longitude": 141.920556,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_20649",
+      "projected_m": {
+        "x": 579459.5794940288,
+        "y": 4342207.834848516
+      },
+      "quantity": "Water height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 21.240000000000002,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 10879.659755876484,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.316500000000005,
+      "longitude": 141.94436100000001,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24234",
+      "projected_m": {
+        "x": 581409.0496669125,
+        "y": 4352324.990992771
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 620,
+      "catalogue_water_height_m": 21.17,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 12022.328570433654,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.312269,
+      "longitude": 141.885978,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24233",
+      "projected_m": {
+        "x": 576380.6358418972,
+        "y": 4351804.49540856
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 285,
+      "catalogue_water_height_m": 20.89,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 11158.125551498253,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.311082999999996,
+      "longitude": 141.909528,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_21837",
+      "projected_m": {
+        "x": 578412.2513264449,
+        "y": 4351693.029467735
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 24,
+      "catalogue_water_height_m": 20.73,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 10851.048365740473,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.316361,
+      "longitude": 141.945389,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22394",
+      "projected_m": {
+        "x": 581497.8317449312,
+        "y": 4352310.490826448
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 350,
+      "catalogue_water_height_m": 20.66,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 11387.502705725346,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.309722,
+      "longitude": 141.897778,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24224",
+      "projected_m": {
+        "x": 577400.7428610822,
+        "y": 4351531.863379236
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 248.87,
+      "catalogue_water_height_m": 20.55,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 1536.3666710203297,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.21125,
+      "longitude": 141.887556,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24220",
+      "projected_m": {
+        "x": 576626.594392454,
+        "y": 4340594.866750475
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 40,
+      "catalogue_water_height_m": 20.25,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 11372.75752388437,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.307933,
+      "longitude": 141.892378,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24217",
+      "projected_m": {
+        "x": 576937.1405879805,
+        "y": 4351328.712837271
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 0,
+      "catalogue_water_height_m": 20.12,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 1552.746314006731,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.211400000000005,
+      "longitude": 141.887528,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_22368",
+      "projected_m": {
+        "x": 576624.0139618509,
+        "y": 4340611.489747288
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "NOAA/NCEI hazards event catalogue",
+      "catalogue_inundation_distance_m": 70,
+      "catalogue_water_height_m": 20.02,
+      "comparison_role": "coastal/run-up target; incompatible with offshore Regional2D h400 output",
+      "data_status": "CATALOGUE_POINT_AVAILABLE",
+      "distance_to_corridor_m": 0.0,
+      "eligibility": "PROXY",
+      "eligibility_reason": "Point is geographically in the delivery corridor but the observed run-up/inundation quantity is not represented by the offshore h400 output.",
+      "inside_h400_corridor": true,
+      "latitude": 39.161833,
+      "longitude": 141.894472,
+      "name": "IWATE PREFECTURE, TOHOKU REGION",
+      "observation_id": "NOAA_NCEI_SURVEY_24106",
+      "projected_m": {
+        "x": 577277.7934265956,
+        "y": 4335116.567537621
+      },
+      "quantity": "Runup height, post-tsunami survey measurement",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+      "source_url": "https://gis.ngdc.noaa.gov/arcgis/rest/services/web_mercator/hazards/MapServer/4"
+    },
+    {
+      "authority": "PARI/MLIT NOWPHAS",
+      "comparison_role": "priority Kamaishi offshore validation target; outside frozen h400 corridor",
+      "data_status": "OFFICIAL_LOCATION_AND_REPORT_PRESERVED_RAW_TIME_SERIES_NOT_OBTAINED",
+      "distance_to_corridor_m": 12273.092741550476,
+      "eligibility": "TARGET_ONLY",
+      "eligibility_reason": "Station lies outside the h400 delivery corridor or requires physics/output not available from the frozen result.",
+      "inside_h400_corridor": false,
+      "latitude": 39.25861111111111,
+      "longitude": 142.09694444444446,
+      "name": "NOWPHAS 802G South Iwate/Kamaishi offshore GPS buoy",
+      "observation_id": "PARI_NOWPHAS_802G_KAMAISHI_OFFSHORE",
+      "projected_m": {
+        "x": 594640.7645346045,
+        "y": 4346048.926152652
+      },
+      "quantity": "GPS-buoy offshore tsunami waveform and reported crests",
+      "raw_file": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/pari_nowphas_tohoku_report.pdf",
+      "source_detail": "PARI PDF table 3.1 lists station 802G, Iwate South/Kamaishi offshore, 39 deg 15 min 31 sec N, 142 deg 05 min 49 sec E.",
+      "source_url": "https://www.pari.go.jp/en/2011/12/20111213142341.html",
+      "water_depth_m": 204
+    }
+  ],
+  "summary": {
+    "comparison_labels": [
+      "UNCALIBRATED HISTORICAL COMPARISON",
+      "REGIONAL NUMERICAL UNCERTAINTY NOT FULLY QUALIFIED"
+    ],
+    "direct_count": 0,
+    "earthquake_origin": {
+      "jst": "2011-03-11T14:46:23+09:00",
+      "source": "NOAA/NCEI event summary and project USGS corridor authority",
+      "utc": "2011-03-11T05:46:23Z"
+    },
+    "proxy_count": 1,
+    "raw_sources": [
+      {
+        "bytes": 376875,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ncei_dart21418_20110301to20110320_meter.txt",
+        "sha256": "137061048c0d92b459f9e4ce865193bddf063309841e1876070a63bf3a269333"
+      },
+      {
+        "bytes": 45829,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ncei_japan_2011_dart_summary.html",
+        "sha256": "2ef3a5e8279243ea7d196a2bbe1c11620e2c8b3437efdfa6def677dc60d7ed38"
+      },
+      {
+        "bytes": 18751,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/ndbc_station_21418_history.html",
+        "sha256": "627785ea4fe735c2809a06682044007cd9c4d54e01b75e03e634e526bdd1716b"
+      },
+      {
+        "bytes": 589135,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tide_deep_gauge_observations_event_5413.geojson",
+        "sha256": "913a90218c18332876aa923c35e63de988ce91a446141d4625ea8b0e1f59f724"
+      },
+      {
+        "bytes": 13660385,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.geojson",
+        "sha256": "3a04c57f16bdcb6c26f5b81ee87e059450d463788b737bdfdc1e66349566ca9f"
+      },
+      {
+        "bytes": 1416,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/noaa_ncei_tsunami_observations_event_5413.pagination.json",
+        "sha256": "1e83fb13571bf8b583a33d754bc29698765298b5796a749b5f49c8091c13407e"
+      },
+      {
+        "bytes": 10051240,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/pari_nowphas_tohoku_report.pdf",
+        "sha256": "32d21051ba02555081f425f7ed69b40ea75cbfe82bc788dc9223ff6ed8d59a0b"
+      },
+      {
+        "bytes": 33054,
+        "path": "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/raw/pari_nowphas_tohoku_report_page.html",
+        "sha256": "44b05b5114785de60222565d0aa03f0a469becb19a970bbe9060b329def9897b"
+      }
+    ],
+    "register_count": 29,
+    "target_only_count": 28
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "alpha_acceptance_interval": [
+    -5e-05,
+    1.00005
+  ],
+  "classification_preserved": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+  "finding": "current inlet alpha is bounded and case controls match G6, but internal VOF alpha excursions exceed the existing 5e-05 tolerance and are materially larger than same-horizon G6",
+  "full_replay_gate": "CLOSED",
+  "inspection_scope": "Existing R14/R14B evidence only; no OpenFOAM retuning, rerun or solver modification.",
+  "schema": {
+    "name": "tsunami.r15.local3d_closure_inspection",
+    "version": "1.0.0"
+  },
+  "source": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r14_local3d_boundedness_audit.json",
+  "source_sha256": "25338be4d803756e49b052324006c8afda542a3d796d22169b389045f567fcf4",
+  "status": "COMPLETE"
+}

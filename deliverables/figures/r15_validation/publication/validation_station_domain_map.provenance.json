@@ -1,0 +1,18 @@
+{
+  "data_class": "OBSERVATION_GEOMETRY_GATE",
+  "generated_at_utc": "2026-08-11T08:06:54Z",
+  "git_sha": "d7139c361b0fcee0aca3e1fce5d2cb8c044351c8",
+  "outputs": [
+    "deliverables/figures/r15_validation/publication/validation_station_domain_map.svg",
+    "deliverables/figures/r15_validation/publication/validation_station_domain_map.pdf",
+    "deliverables/figures/r15_validation/publication/validation_station_domain_map.png"
+  ],
+  "schema": {
+    "name": "tsunami.r15.figure_provenance",
+    "version": "1.0.0"
+  },
+  "source_files": [
+    "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+    "/home/helios/SimulationData/Summer-Studentship/validation/tohoku2011/r15/metadata/observation_register.json"
+  ]
+}

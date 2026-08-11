@@ -1,0 +1,46 @@
+{
+  "rows": [
+    {
+      "capability": "Hybrid architecture",
+      "poster_use": "accepted G6 Local3D preview retained",
+      "source": "G6/R14B",
+      "status": "DEMONSTRATED_THROUGH_G6"
+    },
+    {
+      "capability": "Global first-order verification",
+      "poster_use": "status frozen",
+      "source": "R7/R8",
+      "status": "GLOBAL_FIRST_ORDER_VERIFIED"
+    },
+    {
+      "capability": "Limited-linear second-order verification",
+      "poster_use": "status frozen",
+      "source": "R9/R10",
+      "status": "SECOND_ORDER_VERIFIED"
+    },
+    {
+      "capability": "Real-event h400 Regional result",
+      "poster_use": "not spatially qualified, not calibrated, not historically validated",
+      "source": "R10",
+      "status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN"
+    },
+    {
+      "capability": "Regional fidelity limit",
+      "poster_use": "terrain/source fidelity dominant, confidence MODERATE",
+      "source": "R12/R13",
+      "status": "PROJECTION_FIDELITY_CEILING"
+    },
+    {
+      "capability": "Current Local3D replay",
+      "poster_use": "full 300 s current-generation replay gate closed",
+      "source": "R14/R14B",
+      "status": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED"
+    },
+    {
+      "capability": "Historical observation evidence",
+      "poster_use": "official observations registered; no direct claim",
+      "source": "R15",
+      "status": "VALIDATION_FRAMEWORK_COMPLETE_DIRECT_COMPARISON_NOT_AVAILABLE"
+    }
+  ]
+}
