@@ -16,7 +16,7 @@ if str(REPO_ROOT / "tools/figures") not in sys.path:
     sys.path.insert(0, str(REPO_ROOT / "tools/figures"))
 
 import r16_publication as r16
-from build_tohoku_kamaishi_project import LAYOUT_NAMES
+from build_tohoku_kamaishi_project import GROUP_NAMES, LAYOUT_NAMES
 
 
 def validate_project(*, allow_blocked: bool) -> dict[str, Any]:
@@ -55,10 +55,13 @@ def validate_project(*, allow_blocked: bool) -> dict[str, Any]:
             raise RuntimeError(f"Could not read {r16.QGIS_PROJECT}")
         broken_layers = [layer.name() for layer in project.mapLayers().values() if not layer.isValid()]
         missing_layouts = [layout for layout in LAYOUT_NAMES if project.layoutManager().layoutByName(layout) is None]
+        root = project.layerTreeRoot()
+        group_names = [child.name() for child in root.children() if hasattr(child, "name")]
+        missing_groups = [group for group in GROUP_NAMES.values() if root.findGroup(group) is None]
     finally:
         app.exitQgis()
 
-    status = "COMPLETE" if not broken_layers and not missing_layouts else "FAILED"
+    status = "COMPLETE" if not broken_layers and not missing_layouts and not missing_groups else "FAILED"
     payload = {
         "schema": {"name": "tsunami.r16.qgis_project_validation", "version": "1.0.0"},
         "status": status,
@@ -66,6 +69,8 @@ def validate_project(*, allow_blocked: bool) -> dict[str, Any]:
         "project": r16.file_record(r16.QGIS_PROJECT),
         "layers": layer_status,
         "broken_layers": broken_layers,
+        "groups": group_names,
+        "missing_groups": missing_groups,
         "missing_layouts": missing_layouts,
     }
     r16.write_json(r16.PROVENANCE_ROOT / "qgis_project_validation_status.json", payload)

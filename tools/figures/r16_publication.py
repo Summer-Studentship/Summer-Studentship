@@ -49,7 +49,7 @@ G6_LOCAL_SUMMARY = Path("/home/helios/SimulationData/Summer-Studentship/g6-kamai
 R15_REGISTER = DOCS_ROOT / "regional2d_r15_observation_register.json"
 
 EVENT_UTC = "2011-03-11T05:46:23Z"
-STARTING_HEAD = "d6bf4933a513f4d6fe991e0f5754ceb2f812f8dc"
+STARTING_HEAD = "26cd0200fbb35a5df970b84c2148de051604bd5e"
 SCIENTIFIC_AUTHORITY = {
     "regional_numerical_authority": [
         "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
@@ -266,6 +266,9 @@ def qgis_environment() -> dict[str, Any]:
     os.environ["QT_QPA_PLATFORM"] = "offscreen"
     qgis_path = shutil.which("qgis")
     qgis_process_path = shutil.which("qgis_process")
+    qgis_version = None
+    if qgis_path:
+        _, qgis_version = command_output(["qgis", "--version"])
     qgis_process_version = None
     if qgis_process_path:
         _, qgis_process_version = command_output(["qgis_process", "--version"])
@@ -288,7 +291,7 @@ def qgis_environment() -> dict[str, Any]:
         "schema": {"name": "tsunami.r16.qgis_runtime", "version": "1.0.0"},
         "status": status,
         "qgis_executable": qgis_path,
-        "qgis_version": None,
+        "qgis_version": qgis_version,
         "qgis_process_executable": qgis_process_path,
         "qgis_process_version": qgis_process_version,
         "qt_status": pyqt_status,
