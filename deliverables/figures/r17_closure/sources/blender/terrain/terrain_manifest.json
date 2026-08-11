@@ -1,0 +1,83 @@
+{
+  "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+  "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+  "generated_at_utc": "2026-08-11T21:57:54Z",
+  "output": {
+    "band_1": {
+      "maximum_m": 952.7872924804688,
+      "mean_m": -543.7029081372942,
+      "minimum_m": -1454.9039306640625,
+      "nodata": -99999.0,
+      "stddev_m": 460.92783678431357,
+      "unit": "m"
+    },
+    "extent": {
+      "xmax_m": 642000.0,
+      "xmin_m": 556000.0,
+      "ymax_m": 4357000.0,
+      "ymin_m": 4210000.0
+    },
+    "height": 735,
+    "origin": {
+      "x_m": 556000.0,
+      "y_m": 4357000.0
+    },
+    "path": {
+      "bytes": 1124304,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r17-closure/deliverables/figures/r17_closure/sources/blender/terrain/etopo_corridor_blender_utm54_200m.tif",
+      "sha256": "37a2a0d6f7735dfa6fc1bf95152f943ae2017d1abc6f3b4b71e13e886237d64e"
+    },
+    "pixel_size": {
+      "x_m": 200.0,
+      "y_m": -200.0
+    },
+    "projection_wkt_head": [
+      "PROJCS[\"WGS 84 / UTM zone 54N\",GEOGCS[\"WGS 84\",DATUM[\"WGS_1984\",SPHEROID[\"WGS 84\",6378137,298.257223563,AUTHORITY[\"EPSG\",\"7030\"]],AUTHORITY[\"EPSG\",\"6326\"]],PRIMEM[\"Greenwich\",0,AUTHORITY[\"EPSG\",\"8901\"]],UNIT[\"degree\",0.0174532925199433,AUTHORITY[\"EPSG\",\"9122\"]],AUTHORITY[\"EPSG\",\"4326\"]],PROJECTION[\"Transverse_Mercator\"],PARAMETER[\"latitude_of_origin\",0],PARAMETER[\"central_meridian\",141],PARAMETER[\"scale_factor\",0.9996],PARAMETER[\"false_easting\",500000],PARAMETER[\"false_northing\",0],UNIT[\"metre\",1,AUTHORITY[\"EPSG\",\"9001\"]],AXIS[\"Easting\",EAST],AXIS[\"Northing\",NORTH],AUTHORITY[\"EPSG\",\"32654\"]]"
+    ],
+    "width": 430
+  },
+  "schema": {
+    "name": "tsunami.r17.blender_terrain",
+    "version": "1.0.0"
+  },
+  "source_authority": {
+    "bathymetry_topography_source": {
+      "bytes": 17959004,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+    },
+    "corridor_geometry": {
+      "bytes": 1131,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r17-closure/deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+      "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+    },
+    "r16_corridor_crop": {
+      "description": "Kamaishi corridor bathymetry/topography crop from ETOPO 2022.",
+      "extent": [
+        556000,
+        4210000,
+        642000,
+        4357000
+      ],
+      "path": {
+        "bytes": 283697,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+        "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+      },
+      "resolution_m": 400
+    },
+    "r16_publication_manifest": {
+      "bytes": 96978,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r17-closure/deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+      "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+    }
+  },
+  "status": "COMPLETE",
+  "vertical_reference": "ETOPO 2022 EGM2008 height, positive up; z = 0 is EGM2008 sea-level reference used for rendering.",
+  "visual_interpolation_note": "The render raster is a 200 m EPSG:32654 bilinear resampling of the authoritative ETOPO 2022 source used by R16. This increases render mesh density only; it does not create new bathymetric authority."
+}
