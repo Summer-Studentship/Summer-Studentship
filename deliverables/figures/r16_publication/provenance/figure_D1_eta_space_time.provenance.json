@@ -61,6 +61,9 @@
     "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.png"
   ],
   "preview": "deliverables/figures/r16_publication/previews/figure_D1_eta_space_time.png",
+  "priority": "PRIMARY",
+  "qgis_runtime_note": "QGIS was not required to generate this matplotlib/HDF5 figure; current package runtime is recorded as available for R16B cartography.",
+  "recommended_use": "Use for poster/report wave-evolution evidence.",
   "required_caveat": "Best available numerically uncertain real-event result; not spatially qualified, calibrated or historically validated.",
   "schema": {
     "name": "tsunami.r16.figure_provenance",
@@ -78,21 +81,21 @@
         "QT_QPA_PLATFORM": "offscreen"
       },
       "proj_version": "Rel. 9.8.1, April 10th, 2026",
-      "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-      "qgis_executable": null,
-      "qgis_process_executable": null,
-      "qgis_process_version": null,
-      "qgis_version": null,
+      "pyqgis_status": "AVAILABLE",
+      "qgis_executable": "/usr/bin/qgis",
+      "qgis_process_executable": "/usr/bin/qgis_process",
+      "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
       "qt_status": {
         "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-        "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+        "PyQt6": "AVAILABLE"
       },
-      "recorded_at_utc": "2026-08-11T20:48:05Z",
+      "recorded_at_utc": "2026-08-11T21:24:01Z",
       "schema": {
         "name": "tsunami.r16.qgis_runtime",
         "version": "1.0.0"
       },
-      "status": "QGIS_RUNTIME_BLOCKED"
+      "status": "AVAILABLE"
     }
   },
   "source_datasets": {
@@ -150,5 +153,6 @@
   "time_window_s": [
     0.0,
     600.0
-  ]
+  ],
+  "visual_qc_classification": "POSTER_READY_PRIMARY"
 }

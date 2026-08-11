@@ -1,6 +1,7 @@
 {
   "branch": "feat/r16-publication-gis",
   "confirmations": {
+    "corridor_geometry_unchanged": true,
     "no_calibration": true,
     "no_fabricated_bathymetry": true,
     "no_h250": true,
@@ -12,14 +13,192 @@
     "no_temporal_convergence": true,
     "no_video_qr_work": true
   },
+  "derived_terrain": {
+    "coastlines": {
+      "corridor": {
+        "bytes": 106496,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_coastline_0m.gpkg",
+        "sha256": "ca57ed8674b99a9ae185ae09b2f49754a349cd7700e33400b55498ca48b48ee2"
+      },
+      "japan_context": {
+        "bytes": 131072,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/japan_context_coastline_0m.gpkg",
+        "sha256": "f2ad9080909fac1bec7bda1afb20b7c0115db5c25a37c638c1e49e27405755c3"
+      },
+      "nearshore": {
+        "bytes": 110592,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_coastline_0m.gpkg",
+        "sha256": "0c594c197458df51549ac2e4fe52b10fdd904aefb4e65ea2d2b02f40480210ed"
+      },
+      "regional": {
+        "bytes": 114688,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+        "sha256": "6747086e238f79b23e7e31c577d87b87dd008bffbd7063104d9f1e69299fdf3c"
+      },
+      "validation_overview": {
+        "bytes": 98304,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/validation_overview_coastline_0m.gpkg",
+        "sha256": "986b8ee1e174c5ab382d3829e2cc19705898cba0068c8dba23d7343688a00499"
+      }
+    },
+    "crops": {
+      "corridor": {
+        "description": "Kamaishi corridor bathymetry/topography crop from ETOPO 2022.",
+        "extent": [
+          556000,
+          4210000,
+          642000,
+          4357000
+        ],
+        "path": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "resolution_m": 400
+      },
+      "japan_context": {
+        "description": "Japan and northwest Pacific context crop from ETOPO 2022.",
+        "extent": [
+          120000,
+          3275000,
+          1280000,
+          5050000
+        ],
+        "path": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "resolution_m": 5000
+      },
+      "nearshore": {
+        "description": "Nearshore crop for the Regional2D to Local3D framework and validation geometry.",
+        "extent": [
+          562000,
+          4316000,
+          604000,
+          4356500
+        ],
+        "path": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "resolution_m": 220
+      },
+      "regional": {
+        "description": "Tohoku event/Kamaishi corridor crop from ETOPO 2022.",
+        "extent": [
+          395000,
+          4175000,
+          720000,
+          4420000
+        ],
+        "path": {
+          "bytes": 298937,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_regional_tohoku_utm54.tif",
+          "sha256": "7080ed1756218c558bfb837555536b903e82c7fe47ac85fe202094fde2d21a2c"
+        },
+        "resolution_m": 1000
+      },
+      "validation_overview": {
+        "description": "Overview crop spanning the Kamaishi corridor and the DART 21418 target.",
+        "extent": [
+          535000,
+          4200000,
+          1195000,
+          4410000
+        ],
+        "path": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "resolution_m": 2000
+      }
+    },
+    "crs": "EPSG:32654 WGS 84 / UTM zone 54N; vertical EGM2008 height, positive up",
+    "generated_at_utc": "2026-08-11T21:23:50Z",
+    "hillshades": {
+      "corridor": {
+        "bytes": 26616,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_hillshade.tif",
+        "sha256": "40a7bba9dce60d397656fc92eee90e6228d660d2428930bc0edabe2267603208"
+      },
+      "nearshore": {
+        "bytes": 17919,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_hillshade.tif",
+        "sha256": "830282ffde155cc6c0c1b1b71952d74cc4b27700715728c207a3a8d7aa3795b5"
+      },
+      "regional": {
+        "bytes": 37798,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_hillshade.tif",
+        "sha256": "653b8f33736156ddf21b5ba0f6d7cfdf060aec43c5970a07fa7f8f16d67d8cc7"
+      }
+    },
+    "oblique_render": {
+      "coordinate_note": "Horizontal coordinates are EPSG:32654 metres, centred for rendering; elevation is EGM2008 metres with positive-up convention.",
+      "pyvista_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'pyvista'",
+      "qgis_3d_attempts": [
+        {
+          "reason": "QGIS 4 headless processing exposed 3d:tessellate only; no stable print-layout 3D export path was available.",
+          "status": "NOT_USED"
+        }
+      ],
+      "render": {
+        "bytes": 2368364,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/figure_C_vtk_oblique_terrain.png",
+        "sha256": "da20bfb170051aa70bb34d62d7715cfde464ceaa6fe5f823fc4ad1a53926b0a4"
+      },
+      "renderer": "direct VTK offscreen structured-grid render",
+      "source_raster": {
+        "bytes": 283697,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+        "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+      },
+      "status": "COMPLETE",
+      "vertical_exaggeration": 18.0
+    },
+    "schema": {
+      "name": "tsunami.r16b.derived_terrain",
+      "version": "1.0.0"
+    },
+    "source": {
+      "bytes": 17959004,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+      "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+    },
+    "status": "COMPLETE"
+  },
   "figures": {
     "A": {
-      "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+      "allowed_claim": "Shows the actual 2011 Tohoku event reference, Kamaishi proxy point and accepted R10/G6 delivery corridor in their regional geographic context.",
       "basename": "figure_A_tohoku_kamaishi_corridor",
-      "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+      "crs": {
+        "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+        "vertical_positive": "up"
+      },
       "figure_id": "A",
-      "generated_at_utc": "2026-08-11T20:48:07Z",
-      "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+      "generated_at_utc": "2026-08-11T21:24:09Z",
+      "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
       "model_authority": {
         "event_limitations": [
           "real Tohoku event simulation",
@@ -42,18 +221,29 @@
           "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
         }
       },
-      "outputs": [],
-      "preview": null,
-      "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+      "output_hashes": {
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.pdf": "571a004e4faa361cb1e9e1b1bcc0ed6e202bcb4c6c0d8f9ec6d7dca00872f141",
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.png": "e55390f9fd606cf2a4df88996a521767b868ccce2e0f948295e4070eff47732a",
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.svg": "43d866341ed8663da60a92f2a522168c8cfeaeaa6048072bf4a3987a4bf9778d"
+      },
+      "outputs": [
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.pdf",
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.svg",
+        "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.png"
+      ],
+      "preview": "deliverables/figures/r16_publication/previews/figure_A_tohoku_kamaishi_corridor.png",
+      "priority": "HERO",
+      "qgis_layout": "01_TOHOKU_EVENT_CORRIDOR",
+      "required_caveat": "R10 h400 limited_linear remains BEST_AVAILABLE_NUMERICALLY_UNCERTAIN; not spatially qualified, calibrated or historically validated.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
-        "version": "1.0.0"
+        "version": "2.0.0"
       },
-      "scientific_question": "Where did the event occur, and what physical region is the computational framework intended to simulate?",
+      "scientific_question": "Where did the 2011 event occur, and what physical region does the current computational framework cover?",
       "software": {
-        "h5py": "3.16.0",
-        "matplotlib": "3.11.1",
-        "numpy": "2.5.2",
+        "h5py": null,
+        "matplotlib": null,
+        "numpy": "2.5.1",
         "python": "3.14.6",
         "qgis": {
           "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -61,21 +251,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -128,15 +318,20 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "BLOCKED_BY_QGIS_RUNTIME"
+      "status": "COMPLETE",
+      "visual_qc_classification": "POSTER_READY_HERO"
     },
     "B": {
-      "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+      "allowed_claim": "Shows ETOPO 2022 bathymetry/topography over the accepted Kamaishi corridor without altering corridor geometry.",
       "basename": "figure_B_corridor_bathymetry_plan",
-      "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+      "crs": {
+        "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+        "vertical_positive": "up"
+      },
       "figure_id": "B",
-      "generated_at_utc": "2026-08-11T20:48:07Z",
-      "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+      "generated_at_utc": "2026-08-11T21:24:09Z",
+      "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
       "model_authority": {
         "event_limitations": [
           "real Tohoku event simulation",
@@ -159,18 +354,29 @@
           "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
         }
       },
-      "outputs": [],
-      "preview": null,
-      "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+      "output_hashes": {
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.pdf": "3eb53e3514d6785e97eaf4ba160884f9ff9b0568fb1123d6aebcbf2f5baa87ec",
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.png": "36b68e16f4e3ada43e1c7150920acac55a74d1b14720fe6e7f1b436fc970a92c",
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.svg": "1a54e4cf125026f603e4140fc03591b8368f1aea4d7e0f2f23f44c72253bc87f"
+      },
+      "outputs": [
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.pdf",
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.svg",
+        "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.png"
+      ],
+      "preview": "deliverables/figures/r16_publication/previews/figure_B_corridor_bathymetry_plan.png",
+      "priority": "HERO",
+      "qgis_layout": "02_CORRIDOR_BATHYMETRY",
+      "required_caveat": "This is geographic/bathymetric context only; it does not establish spatial qualification or historical validation.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
-        "version": "1.0.0"
+        "version": "2.0.0"
       },
-      "scientific_question": "What real bathymetric and topographic environment does the simulated tsunami propagate through?",
+      "scientific_question": "What real bathymetric and topographic environment does the accepted corridor cross?",
       "software": {
-        "h5py": "3.16.0",
-        "matplotlib": "3.11.1",
-        "numpy": "2.5.2",
+        "h5py": null,
+        "matplotlib": null,
+        "numpy": "2.5.1",
         "python": "3.14.6",
         "qgis": {
           "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -178,21 +384,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -245,15 +451,20 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "BLOCKED_BY_QGIS_RUNTIME"
+      "status": "COMPLETE",
+      "visual_qc_classification": "POSTER_READY_HERO"
     },
     "C": {
-      "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+      "allowed_claim": "Shows an oblique terrain rendering from the same ETOPO corridor crop used in Figure B, with corridor outline overlaid.",
       "basename": "figure_C_corridor_bathymetry_oblique",
-      "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+      "crs": {
+        "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+        "vertical_positive": "up"
+      },
       "figure_id": "C",
-      "generated_at_utc": "2026-08-11T20:48:07Z",
-      "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+      "generated_at_utc": "2026-08-11T21:24:09Z",
+      "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
       "model_authority": {
         "event_limitations": [
           "real Tohoku event simulation",
@@ -276,18 +487,31 @@
           "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
         }
       },
-      "outputs": [],
-      "preview": null,
-      "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+      "output_hashes": {
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.pdf": "c84d13469fa1c26d88dc167b740514800ebe3335a1a462a99a714b23f8a73940",
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.png": "fb4f977e64fed2c090a750e6f7000e56c1abd34f5f1a3aa9cf65ef65c6b5eaa3",
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.svg": "b1e8ad1ed9a701da6731522f75029603b81f37cb5e88f5455c98832944cb3c04"
+      },
+      "outputs": [
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.pdf",
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.svg",
+        "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.png"
+      ],
+      "preview": "deliverables/figures/r16_publication/previews/figure_C_corridor_bathymetry_oblique.png",
+      "priority": "SECONDARY",
+      "pyvista_fallback": "PyVista unavailable in system Python; direct VTK fallback used and recorded in r16b_derived_terrain_status.json.",
+      "qgis_layout": "05_CORRIDOR_BATHYMETRY_OBLIQUE",
+      "rendering_method": "direct VTK offscreen render embedded in editable QGIS layout",
+      "required_caveat": "The oblique view is a visualisation with vertical exaggeration; it is not a Local3D, OpenFOAM or calibrated inundation result.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
-        "version": "1.0.0"
+        "version": "2.0.0"
       },
-      "scientific_question": "What does the three-dimensional seabed/coastal relief within the propagation corridor actually look like?",
+      "scientific_question": "What does the three-dimensional seabed/coastal relief within the propagation corridor look like?",
       "software": {
-        "h5py": "3.16.0",
-        "matplotlib": "3.11.1",
-        "numpy": "2.5.2",
+        "h5py": null,
+        "matplotlib": null,
+        "numpy": "2.5.1",
         "python": "3.14.6",
         "qgis": {
           "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -295,21 +519,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -362,7 +586,9 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "BLOCKED_BY_QGIS_RUNTIME"
+      "status": "COMPLETE",
+      "vertical_exaggeration": 18.0,
+      "visual_qc_classification": "REPORT_READY_SECONDARY"
     },
     "D1": {
       "allowed_claim": "Shows frozen R10 h400 limited_linear free-surface evolution along the accepted corridor sampling path.",
@@ -427,6 +653,9 @@
         "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.png"
       ],
       "preview": "deliverables/figures/r16_publication/previews/figure_D1_eta_space_time.png",
+      "priority": "PRIMARY",
+      "qgis_runtime_note": "QGIS was not required to generate this matplotlib/HDF5 figure; current package runtime is recorded as available for R16B cartography.",
+      "recommended_use": "Use for poster/report wave-evolution evidence.",
       "required_caveat": "Best available numerically uncertain real-event result; not spatially qualified, calibrated or historically validated.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
@@ -444,21 +673,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -516,7 +745,8 @@
       "time_window_s": [
         0.0,
         600.0
-      ]
+      ],
+      "visual_qc_classification": "POSTER_READY_PRIMARY"
     },
     "D2": {
       "allowed_claim": "Shows frozen R10 h400 limited_linear eta profiles along the accepted corridor sampling path.",
@@ -576,6 +806,9 @@
         "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.png"
       ],
       "preview": "deliverables/figures/r16_publication/previews/figure_D2_wave_profiles_to_shore.png",
+      "priority": "SECONDARY",
+      "qgis_runtime_note": "QGIS was not required to generate this matplotlib/HDF5 figure; current package runtime is recorded as available for R16B cartography.",
+      "recommended_use": "Use as the report companion profile panel to D1.",
       "required_caveat": "Best available numerically uncertain real-event result; not spatially qualified, calibrated or historically validated.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
@@ -602,21 +835,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -669,15 +902,20 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "COMPLETE"
+      "status": "COMPLETE",
+      "visual_qc_classification": "REPORT_READY_COMPANION"
     },
     "E": {
-      "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+      "allowed_claim": "Shows the geographic one-way framework from frozen Regional2D corridor to selected wet nearshore interface to a conceptual Local3D footprint.",
       "basename": "figure_E_hybrid_domain_framework",
-      "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+      "crs": {
+        "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+        "vertical_positive": "up"
+      },
       "figure_id": "E",
-      "generated_at_utc": "2026-08-11T20:48:07Z",
-      "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+      "generated_at_utc": "2026-08-11T21:24:09Z",
+      "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
       "model_authority": {
         "event_limitations": [
           "real Tohoku event simulation",
@@ -700,18 +938,29 @@
           "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
         }
       },
-      "outputs": [],
-      "preview": null,
-      "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+      "output_hashes": {
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.pdf": "3da539d86a8ce4ee30ac93cd6fdd1c2de65617ff365f7aa8c01ea6756a695e95",
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.png": "629bdf314ae4d9ecf2ae811de17c2403bae501915dabdcf63f64ec440c34e589",
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.svg": "c65f2404350d7e70f8fa69f5a3e3dbd7924df35e23e26f089162d297c97393f2"
+      },
+      "outputs": [
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.pdf",
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.svg",
+        "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.png"
+      ],
+      "preview": "deliverables/figures/r16_publication/previews/figure_E_hybrid_domain_framework.png",
+      "priority": "PRIMARY",
+      "qgis_layout": "03_HYBRID_DOMAIN",
+      "required_caveat": "Local3D current-generation remains REPLAY_VOF_BEHAVIOUR_UNRESOLVED; the footprint is conceptual, not production closure.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
-        "version": "1.0.0"
+        "version": "2.0.0"
       },
-      "scientific_question": "How does the Regional2D model connect conceptually to a local high-fidelity impact domain?",
+      "scientific_question": "How does the Regional2D corridor connect conceptually to a local high-fidelity impact domain?",
       "software": {
-        "h5py": "3.16.0",
-        "matplotlib": "3.11.1",
-        "numpy": "2.5.2",
+        "h5py": null,
+        "matplotlib": null,
+        "numpy": "2.5.1",
         "python": "3.14.6",
         "qgis": {
           "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -719,21 +968,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -786,15 +1035,20 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "BLOCKED_BY_QGIS_RUNTIME"
+      "status": "COMPLETE",
+      "visual_qc_classification": "POSTER_READY_PRIMARY"
     },
     "F": {
-      "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+      "allowed_claim": "Shows R15 observation geometry relative to the accepted corridor while preserving 0 DIRECT, 1 PROXY and 28 TARGET_ONLY classifications.",
       "basename": "figure_F_validation_geometry",
-      "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+      "crs": {
+        "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+        "vertical_positive": "up"
+      },
       "figure_id": "F",
-      "generated_at_utc": "2026-08-11T20:48:07Z",
-      "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+      "generated_at_utc": "2026-08-11T21:24:09Z",
+      "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
       "model_authority": {
         "event_limitations": [
           "real Tohoku event simulation",
@@ -817,18 +1071,29 @@
           "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
         }
       },
-      "outputs": [],
-      "preview": null,
-      "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+      "output_hashes": {
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.pdf": "d099e08e34a19ac021236cfc518d78c442c24f5ec0fa86eb03db419837cd230a",
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.png": "b758a4a36569623aa5090a7bfa748c0c8c9fd719a8310b4cfa0daa9e6b7acba0",
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.svg": "28a60c4e4413ea53dff3e8728508ea77b12a88938338ef4eb43c3f89bd778e23"
+      },
+      "outputs": [
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.pdf",
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.svg",
+        "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.png"
+      ],
+      "preview": "deliverables/figures/r16_publication/previews/figure_F_validation_geometry.png",
+      "priority": "PRIMARY",
+      "qgis_layout": "04_VALIDATION_GEOMETRY",
+      "required_caveat": "NOWPHAS 802G is about 12.3 km outside the corridor and DART 21418 about 545 km outside; no corridor modification was made.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
-        "version": "1.0.0"
+        "version": "2.0.0"
       },
-      "scientific_question": "What observational datasets are relevant to Kamaishi, and how do they relate geometrically to the current computational corridor?",
+      "scientific_question": "Why do available observations not constitute direct historical validation for the current corridor?",
       "software": {
-        "h5py": "3.16.0",
-        "matplotlib": "3.11.1",
-        "numpy": "2.5.2",
+        "h5py": null,
+        "matplotlib": null,
+        "numpy": "2.5.1",
         "python": "3.14.6",
         "qgis": {
           "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -836,21 +1101,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -903,7 +1168,8 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "BLOCKED_BY_QGIS_RUNTIME"
+      "status": "COMPLETE",
+      "visual_qc_classification": "POSTER_READY_PRIMARY"
     },
     "S1": {
       "allowed_claim": "Shows the bed elevation encountered by the centreline samples used for D1/D2.",
@@ -962,6 +1228,9 @@
         "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png"
       ],
       "preview": "deliverables/figures/r16_publication/previews/figure_S1_longitudinal_bathymetry.png",
+      "priority": "REPORT_ONLY",
+      "qgis_runtime_note": "QGIS was not required to generate this matplotlib/HDF5 figure; current package runtime is recorded as available for R16B cartography.",
+      "recommended_use": "Use as supporting longitudinal bathymetry context.",
       "required_caveat": "This profile is sampled from the wet-conditioned h400 mesh, not an independent shoreline/topography validation.",
       "schema": {
         "name": "tsunami.r16.figure_provenance",
@@ -979,21 +1248,21 @@
             "QT_QPA_PLATFORM": "offscreen"
           },
           "proj_version": "Rel. 9.8.1, April 10th, 2026",
-          "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-          "qgis_executable": null,
-          "qgis_process_executable": null,
-          "qgis_process_version": null,
-          "qgis_version": null,
+          "pyqgis_status": "AVAILABLE",
+          "qgis_executable": "/usr/bin/qgis",
+          "qgis_process_executable": "/usr/bin/qgis_process",
+          "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+          "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
           "qt_status": {
             "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-            "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+            "PyQt6": "AVAILABLE"
           },
-          "recorded_at_utc": "2026-08-11T20:48:05Z",
+          "recorded_at_utc": "2026-08-11T21:24:01Z",
           "schema": {
             "name": "tsunami.r16.qgis_runtime",
             "version": "1.0.0"
           },
-          "status": "QGIS_RUNTIME_BLOCKED"
+          "status": "AVAILABLE"
         }
       },
       "source_datasets": {
@@ -1046,10 +1315,11 @@
           "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
         }
       },
-      "status": "COMPLETE"
+      "status": "COMPLETE",
+      "visual_qc_classification": "REPORT_ONLY_SUPPORTING"
     }
   },
-  "generated_at_utc": "2026-08-11T20:48:09Z",
+  "generated_at_utc": "2026-08-11T21:24:09Z",
   "gis_layers": {
     "crs": {
       "conditioned_terrain": "EPSG:32654 with EGM2008 vertical metadata, positive up",
@@ -1057,12 +1327,12 @@
       "source_raster": "WGS 84 + EGM2008 height (EPSG:9518 compound CRS)",
       "station_coordinates": "EPSG:4326 source, transformed to EPSG:32654 when projected_m absent"
     },
-    "generated_at_utc": "2026-08-11T20:48:06Z",
+    "generated_at_utc": "2026-08-11T21:23:49Z",
     "geopackage": {
       "bytes": 221184,
       "exists": true,
       "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg",
-      "sha256": "9e8c115ffb94f2424b87d7813e3a8369862863cfe8269522317421c40743db83"
+      "sha256": "e1f5e5dcd6b63ed62926db5bc3786d21b0870ee9edbfe4270ea6b02ef8eab43f"
     },
     "layers": {
       "corridor_centreline": {
@@ -1160,42 +1430,438 @@
       "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/topography.qml"
     ]
   },
-  "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+  "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
   "qgis": {
     "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
     "headless_environment": {
       "QT_QPA_PLATFORM": "offscreen"
     },
     "proj_version": "Rel. 9.8.1, April 10th, 2026",
-    "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-    "qgis_executable": null,
-    "qgis_process_executable": null,
-    "qgis_process_version": null,
-    "qgis_version": null,
+    "pyqgis_status": "AVAILABLE",
+    "qgis_executable": "/usr/bin/qgis",
+    "qgis_process_executable": "/usr/bin/qgis_process",
+    "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+    "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
     "qt_status": {
       "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-      "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+      "PyQt6": "AVAILABLE"
     },
-    "recorded_at_utc": "2026-08-11T20:48:05Z",
+    "recorded_at_utc": "2026-08-11T21:24:01Z",
     "schema": {
       "name": "tsunami.r16.qgis_runtime",
       "version": "1.0.0"
     },
-    "status": "QGIS_RUNTIME_BLOCKED"
+    "status": "AVAILABLE"
   },
   "qgis_project": {
-    "layouts_requested": [
-      "01_tohoku_event_corridor",
-      "02_corridor_bathymetry",
-      "03_validation_targets",
-      "04_hybrid_domain"
+    "groups": [
+      "01 \u2014 Geographic Context",
+      "02 \u2014 2011 Tohoku Event",
+      "03 \u2014 Regional2D Domain",
+      "04 \u2014 Bathymetry / Topography",
+      "05 \u2014 Hybrid Framework",
+      "06 \u2014 Historical Validation",
+      "07 \u2014 Publication Helpers"
+    ],
+    "layouts": [
+      "01_TOHOKU_EVENT_CORRIDOR",
+      "02_CORRIDOR_BATHYMETRY",
+      "03_HYBRID_DOMAIN",
+      "04_VALIDATION_GEOMETRY",
+      "05_CORRIDOR_BATHYMETRY_OBLIQUE"
     ],
     "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
-    "status": "BLOCKED_BY_QGIS_RUNTIME"
+    "record": {
+      "bytes": 51536,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+      "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+    },
+    "status": "COMPLETE",
+    "target_runtime": "QGIS 4.2"
+  },
+  "qgis_project_build": {
+    "derived_terrain": {
+      "coastlines": {
+        "corridor": {
+          "bytes": 106496,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_coastline_0m.gpkg",
+          "sha256": "ca57ed8674b99a9ae185ae09b2f49754a349cd7700e33400b55498ca48b48ee2"
+        },
+        "japan_context": {
+          "bytes": 131072,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/japan_context_coastline_0m.gpkg",
+          "sha256": "f2ad9080909fac1bec7bda1afb20b7c0115db5c25a37c638c1e49e27405755c3"
+        },
+        "nearshore": {
+          "bytes": 110592,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_coastline_0m.gpkg",
+          "sha256": "0c594c197458df51549ac2e4fe52b10fdd904aefb4e65ea2d2b02f40480210ed"
+        },
+        "regional": {
+          "bytes": 114688,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+          "sha256": "6747086e238f79b23e7e31c577d87b87dd008bffbd7063104d9f1e69299fdf3c"
+        },
+        "validation_overview": {
+          "bytes": 98304,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/validation_overview_coastline_0m.gpkg",
+          "sha256": "986b8ee1e174c5ab382d3829e2cc19705898cba0068c8dba23d7343688a00499"
+        }
+      },
+      "crops": {
+        "corridor": {
+          "description": "Kamaishi corridor bathymetry/topography crop from ETOPO 2022.",
+          "extent": [
+            556000,
+            4210000,
+            642000,
+            4357000
+          ],
+          "path": {
+            "bytes": 283697,
+            "exists": true,
+            "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+            "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+          },
+          "resolution_m": 400
+        },
+        "japan_context": {
+          "description": "Japan and northwest Pacific context crop from ETOPO 2022.",
+          "extent": [
+            120000,
+            3275000,
+            1280000,
+            5050000
+          ],
+          "path": {
+            "bytes": 276242,
+            "exists": true,
+            "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+            "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+          },
+          "resolution_m": 5000
+        },
+        "nearshore": {
+          "description": "Nearshore crop for the Regional2D to Local3D framework and validation geometry.",
+          "extent": [
+            562000,
+            4316000,
+            604000,
+            4356500
+          ],
+          "path": {
+            "bytes": 129520,
+            "exists": true,
+            "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+            "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+          },
+          "resolution_m": 220
+        },
+        "regional": {
+          "description": "Tohoku event/Kamaishi corridor crop from ETOPO 2022.",
+          "extent": [
+            395000,
+            4175000,
+            720000,
+            4420000
+          ],
+          "path": {
+            "bytes": 298937,
+            "exists": true,
+            "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_regional_tohoku_utm54.tif",
+            "sha256": "7080ed1756218c558bfb837555536b903e82c7fe47ac85fe202094fde2d21a2c"
+          },
+          "resolution_m": 1000
+        },
+        "validation_overview": {
+          "description": "Overview crop spanning the Kamaishi corridor and the DART 21418 target.",
+          "extent": [
+            535000,
+            4200000,
+            1195000,
+            4410000
+          ],
+          "path": {
+            "bytes": 121778,
+            "exists": true,
+            "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+            "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+          },
+          "resolution_m": 2000
+        }
+      },
+      "crs": "EPSG:32654 WGS 84 / UTM zone 54N; vertical EGM2008 height, positive up",
+      "generated_at_utc": "2026-08-11T21:23:50Z",
+      "hillshades": {
+        "corridor": {
+          "bytes": 26616,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_hillshade.tif",
+          "sha256": "40a7bba9dce60d397656fc92eee90e6228d660d2428930bc0edabe2267603208"
+        },
+        "nearshore": {
+          "bytes": 17919,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_hillshade.tif",
+          "sha256": "830282ffde155cc6c0c1b1b71952d74cc4b27700715728c207a3a8d7aa3795b5"
+        },
+        "regional": {
+          "bytes": 37798,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_hillshade.tif",
+          "sha256": "653b8f33736156ddf21b5ba0f6d7cfdf060aec43c5970a07fa7f8f16d67d8cc7"
+        }
+      },
+      "oblique_render": {
+        "coordinate_note": "Horizontal coordinates are EPSG:32654 metres, centred for rendering; elevation is EGM2008 metres with positive-up convention.",
+        "pyvista_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'pyvista'",
+        "qgis_3d_attempts": [
+          {
+            "reason": "QGIS 4 headless processing exposed 3d:tessellate only; no stable print-layout 3D export path was available.",
+            "status": "NOT_USED"
+          }
+        ],
+        "render": {
+          "bytes": 2368364,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/figure_C_vtk_oblique_terrain.png",
+          "sha256": "da20bfb170051aa70bb34d62d7715cfde464ceaa6fe5f823fc4ad1a53926b0a4"
+        },
+        "renderer": "direct VTK offscreen structured-grid render",
+        "source_raster": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "status": "COMPLETE",
+        "vertical_exaggeration": 18.0
+      },
+      "schema": {
+        "name": "tsunami.r16b.derived_terrain",
+        "version": "1.0.0"
+      },
+      "source": {
+        "bytes": 17959004,
+        "exists": true,
+        "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+        "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+      },
+      "status": "COMPLETE"
+    },
+    "generated_at_utc": "2026-08-11T21:23:50Z",
+    "groups": [
+      "01 \u2014 Geographic Context",
+      "02 \u2014 2011 Tohoku Event",
+      "03 \u2014 Regional2D Domain",
+      "04 \u2014 Bathymetry / Topography",
+      "05 \u2014 Hybrid Framework",
+      "06 \u2014 Historical Validation",
+      "07 \u2014 Publication Helpers"
+    ],
+    "layers": {
+      "crs": {
+        "conditioned_terrain": "EPSG:32654 with EGM2008 vertical metadata, positive up",
+        "derived_layers": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "source_raster": "WGS 84 + EGM2008 height (EPSG:9518 compound CRS)",
+        "station_coordinates": "EPSG:4326 source, transformed to EPSG:32654 when projected_m absent"
+      },
+      "generated_at_utc": "2026-08-11T21:23:49Z",
+      "geopackage": {
+        "bytes": 221184,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg",
+        "sha256": "e1f5e5dcd6b63ed62926db5bc3786d21b0870ee9edbfe4270ea6b02ef8eab43f"
+      },
+      "layers": {
+        "corridor_centreline": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson"
+        },
+        "corridor_polygon": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson"
+        },
+        "coupling_section": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson"
+        },
+        "event_and_kamaishi_points": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson"
+        },
+        "local3d_candidate_footprint": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/local3d_candidate_footprint.geojson"
+        },
+        "validation_stations": {
+          "ogr2ogr_code": 0,
+          "ogr2ogr_output": "",
+          "source": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson"
+        }
+      },
+      "schema": {
+        "name": "tsunami.r16.gis_layers",
+        "version": "1.0.0"
+      },
+      "source_authority": {
+        "bathymetry_authority": {
+          "bytes": 17959004,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+          "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+        },
+        "centreline_manifest": {
+          "bytes": 11568,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+          "sha256": "dca0427f011e4b6c0edce3c0bf64f9ab0404417d9ad27d695ff35f01e8e75c6b"
+        },
+        "corridor_geometry": {
+          "bytes": 2653,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+          "sha256": "feb415679e471c9dfb7fcc510f48420a258f173da75bf008f7d1a848be6ea22f"
+        },
+        "local3d_geometry": {
+          "bytes": 9410,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+          "sha256": "455dddcb82d5dbe629da1e61c81987078715545afe27fe236edc99ec286735f4"
+        },
+        "r13_replay_package": {
+          "bytes": 38509,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/regional2d-fidelity-hybrid-r13/replay/r13_h400_openfoam_replay_package.json",
+          "sha256": "32e4ab768726e89661b304eea4e424e00d317c05bf5cc1b84c05251ac2ba52b6"
+        },
+        "regional_result": {
+          "bytes": 45784856,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+          "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+        },
+        "simulation_conditioned_terrain": {
+          "bytes": 9888,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/outputs/terrain/conditioned-terrain.tif",
+          "sha256": "45e5ab63a69e77ec11b293c39cbb93dd0df30a4f24d1a4f4d9515267a01f1363"
+        },
+        "validation_station_register": {
+          "bytes": 35929,
+          "exists": true,
+          "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+          "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+        }
+      },
+      "status": "COMPLETE",
+      "styles": [
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/corridor.qml",
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/event_source.qml",
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/validation_stations.qml",
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/coupling.qml",
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/bathymetry.qml",
+        "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/styles/topography.qml"
+      ]
+    },
+    "layouts": [
+      "01_TOHOKU_EVENT_CORRIDOR",
+      "02_CORRIDOR_BATHYMETRY",
+      "03_HYBRID_DOMAIN",
+      "04_VALIDATION_GEOMETRY",
+      "05_CORRIDOR_BATHYMETRY_OBLIQUE"
+    ],
+    "project": {
+      "bytes": 51536,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+      "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+    },
+    "qgis": {
+      "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+      "headless_environment": {
+        "QT_QPA_PLATFORM": "offscreen"
+      },
+      "proj_version": "Rel. 9.8.1, April 10th, 2026",
+      "pyqgis_status": "AVAILABLE",
+      "qgis_executable": "/usr/bin/qgis",
+      "qgis_process_executable": "/usr/bin/qgis_process",
+      "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+      "qt_status": {
+        "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
+        "PyQt6": "AVAILABLE"
+      },
+      "recorded_at_utc": "2026-08-11T21:23:48Z",
+      "schema": {
+        "name": "tsunami.r16.qgis_runtime",
+        "version": "1.0.0"
+      },
+      "status": "AVAILABLE"
+    },
+    "schema": {
+      "name": "tsunami.r16.qgis_project_build",
+      "version": "2.0.0"
+    },
+    "status": "COMPLETE"
+  },
+  "qgis_runtime_history": [
+    {
+      "note": "The original R16 package recorded QGIS runtime unavailability and staged layers/scripts instead of substituting non-QGIS final cartography.",
+      "phase": "R16 initial package",
+      "status": "HISTORICAL_RUNTIME_UNAVAILABLE_RETIRED"
+    },
+    {
+      "note": "QGIS 4.2.0 runtime available; editable project and headless exports completed.",
+      "phase": "R16B completion",
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+      "status": "AVAILABLE"
+    }
+  ],
+  "r15_observation_register_summary": {
+    "DART_21418_distance_to_corridor_km": 545.0,
+    "DIRECT": 0,
+    "NOWPHAS_802G_distance_to_corridor_km": 12.3,
+    "PROXY": 1,
+    "TARGET_ONLY": 28,
+    "observations": 29
   },
   "schema": {
     "name": "tsunami.r16.publication_figure_manifest",
-    "version": "1.0.0"
+    "version": "2.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real Tohoku event simulation",
+      "verified numerical method",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "local3d_status": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
   },
   "source_authority": {
     "bathymetry_authority": {
@@ -1247,19 +1913,30 @@
       "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
     }
   },
-  "starting_head": "d6bf4933a513f4d6fe991e0f5754ceb2f812f8dc",
+  "starting_head": "26cd0200fbb35a5df970b84c2148de051604bd5e",
   "task_states": {
-    "Figure A": "BLOCKED_BY_QGIS_RUNTIME",
-    "Figure B": "BLOCKED_BY_QGIS_RUNTIME",
-    "Figure C": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure A": "COMPLETE",
+    "Figure B": "COMPLETE",
+    "Figure C": "COMPLETE",
     "Figure D1": "COMPLETE",
     "Figure D2": "COMPLETE",
-    "Figure E": "BLOCKED_BY_QGIS_RUNTIME",
-    "Figure F": "BLOCKED_BY_QGIS_RUNTIME",
-    "QGIS project": "BLOCKED_BY_QGIS_RUNTIME",
+    "Figure E": "COMPLETE",
+    "Figure F": "COMPLETE",
+    "QGIS project": "COMPLETE",
     "Supporting bathymetry": "COMPLETE",
     "handoff": "COMPLETE",
+    "print layouts": "COMPLETE",
     "provenance": "COMPLETE"
+  },
+  "visual_qc_classification": {
+    "A": "POSTER_READY_HERO",
+    "B": "POSTER_READY_HERO",
+    "C": "REPORT_READY_SECONDARY",
+    "D1": "POSTER_READY_PRIMARY",
+    "D2": "REPORT_READY_COMPANION",
+    "E": "POSTER_READY_PRIMARY",
+    "F": "POSTER_READY_PRIMARY",
+    "S1": "REPORT_ONLY_SUPPORTING"
   },
   "worktree": "/home/helios/Projects/Summer-Studentship-r16-publication-gis"
 }

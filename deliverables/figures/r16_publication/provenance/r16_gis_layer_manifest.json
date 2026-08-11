@@ -5,12 +5,12 @@
     "source_raster": "WGS 84 + EGM2008 height (EPSG:9518 compound CRS)",
     "station_coordinates": "EPSG:4326 source, transformed to EPSG:32654 when projected_m absent"
   },
-  "generated_at_utc": "2026-08-11T20:48:06Z",
+  "generated_at_utc": "2026-08-11T21:23:49Z",
   "geopackage": {
     "bytes": 221184,
     "exists": true,
     "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/layers/r16_publication_layers.gpkg",
-    "sha256": "9e8c115ffb94f2424b87d7813e3a8369862863cfe8269522317421c40743db83"
+    "sha256": "e1f5e5dcd6b63ed62926db5bc3786d21b0870ee9edbfe4270ea6b02ef8eab43f"
   },
   "layers": {
     "corridor_centreline": {

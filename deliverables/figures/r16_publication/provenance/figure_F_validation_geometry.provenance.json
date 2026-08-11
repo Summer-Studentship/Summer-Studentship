@@ -1,10 +1,14 @@
 {
-  "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+  "allowed_claim": "Shows R15 observation geometry relative to the accepted corridor while preserving 0 DIRECT, 1 PROXY and 28 TARGET_ONLY classifications.",
   "basename": "figure_F_validation_geometry",
-  "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+  "crs": {
+    "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+    "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+    "vertical_positive": "up"
+  },
   "figure_id": "F",
-  "generated_at_utc": "2026-08-11T20:48:07Z",
-  "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+  "generated_at_utc": "2026-08-11T21:24:09Z",
+  "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
   "model_authority": {
     "event_limitations": [
       "real Tohoku event simulation",
@@ -27,18 +31,29 @@
       "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
     }
   },
-  "outputs": [],
-  "preview": null,
-  "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+  "output_hashes": {
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.pdf": "d099e08e34a19ac021236cfc518d78c442c24f5ec0fa86eb03db419837cd230a",
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.png": "b758a4a36569623aa5090a7bfa748c0c8c9fd719a8310b4cfa0daa9e6b7acba0",
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.svg": "28a60c4e4413ea53dff3e8728508ea77b12a88938338ef4eb43c3f89bd778e23"
+  },
+  "outputs": [
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.pdf",
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.svg",
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.png"
+  ],
+  "preview": "deliverables/figures/r16_publication/previews/figure_F_validation_geometry.png",
+  "priority": "PRIMARY",
+  "qgis_layout": "04_VALIDATION_GEOMETRY",
+  "required_caveat": "NOWPHAS 802G is about 12.3 km outside the corridor and DART 21418 about 545 km outside; no corridor modification was made.",
   "schema": {
     "name": "tsunami.r16.figure_provenance",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
-  "scientific_question": "What observational datasets are relevant to Kamaishi, and how do they relate geometrically to the current computational corridor?",
+  "scientific_question": "Why do available observations not constitute direct historical validation for the current corridor?",
   "software": {
-    "h5py": "3.16.0",
-    "matplotlib": "3.11.1",
-    "numpy": "2.5.2",
+    "h5py": null,
+    "matplotlib": null,
+    "numpy": "2.5.1",
     "python": "3.14.6",
     "qgis": {
       "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -46,21 +61,21 @@
         "QT_QPA_PLATFORM": "offscreen"
       },
       "proj_version": "Rel. 9.8.1, April 10th, 2026",
-      "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-      "qgis_executable": null,
-      "qgis_process_executable": null,
-      "qgis_process_version": null,
-      "qgis_version": null,
+      "pyqgis_status": "AVAILABLE",
+      "qgis_executable": "/usr/bin/qgis",
+      "qgis_process_executable": "/usr/bin/qgis_process",
+      "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
       "qt_status": {
         "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-        "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+        "PyQt6": "AVAILABLE"
       },
-      "recorded_at_utc": "2026-08-11T20:48:05Z",
+      "recorded_at_utc": "2026-08-11T21:24:01Z",
       "schema": {
         "name": "tsunami.r16.qgis_runtime",
         "version": "1.0.0"
       },
-      "status": "QGIS_RUNTIME_BLOCKED"
+      "status": "AVAILABLE"
     }
   },
   "source_datasets": {
@@ -113,5 +128,6 @@
       "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
     }
   },
-  "status": "BLOCKED_BY_QGIS_RUNTIME"
+  "status": "COMPLETE",
+  "visual_qc_classification": "POSTER_READY_PRIMARY"
 }

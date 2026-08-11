@@ -1,0 +1,174 @@
+{
+  "coastlines": {
+    "corridor": {
+      "bytes": 106496,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_coastline_0m.gpkg",
+      "sha256": "ca57ed8674b99a9ae185ae09b2f49754a349cd7700e33400b55498ca48b48ee2"
+    },
+    "japan_context": {
+      "bytes": 131072,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/japan_context_coastline_0m.gpkg",
+      "sha256": "f2ad9080909fac1bec7bda1afb20b7c0115db5c25a37c638c1e49e27405755c3"
+    },
+    "nearshore": {
+      "bytes": 110592,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_coastline_0m.gpkg",
+      "sha256": "0c594c197458df51549ac2e4fe52b10fdd904aefb4e65ea2d2b02f40480210ed"
+    },
+    "regional": {
+      "bytes": 114688,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+      "sha256": "6747086e238f79b23e7e31c577d87b87dd008bffbd7063104d9f1e69299fdf3c"
+    },
+    "validation_overview": {
+      "bytes": 98304,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/validation_overview_coastline_0m.gpkg",
+      "sha256": "986b8ee1e174c5ab382d3829e2cc19705898cba0068c8dba23d7343688a00499"
+    }
+  },
+  "crops": {
+    "corridor": {
+      "description": "Kamaishi corridor bathymetry/topography crop from ETOPO 2022.",
+      "extent": [
+        556000,
+        4210000,
+        642000,
+        4357000
+      ],
+      "path": {
+        "bytes": 283697,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+        "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+      },
+      "resolution_m": 400
+    },
+    "japan_context": {
+      "description": "Japan and northwest Pacific context crop from ETOPO 2022.",
+      "extent": [
+        120000,
+        3275000,
+        1280000,
+        5050000
+      ],
+      "path": {
+        "bytes": 276242,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+        "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+      },
+      "resolution_m": 5000
+    },
+    "nearshore": {
+      "description": "Nearshore crop for the Regional2D to Local3D framework and validation geometry.",
+      "extent": [
+        562000,
+        4316000,
+        604000,
+        4356500
+      ],
+      "path": {
+        "bytes": 129520,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+        "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+      },
+      "resolution_m": 220
+    },
+    "regional": {
+      "description": "Tohoku event/Kamaishi corridor crop from ETOPO 2022.",
+      "extent": [
+        395000,
+        4175000,
+        720000,
+        4420000
+      ],
+      "path": {
+        "bytes": 298937,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_regional_tohoku_utm54.tif",
+        "sha256": "7080ed1756218c558bfb837555536b903e82c7fe47ac85fe202094fde2d21a2c"
+      },
+      "resolution_m": 1000
+    },
+    "validation_overview": {
+      "description": "Overview crop spanning the Kamaishi corridor and the DART 21418 target.",
+      "extent": [
+        535000,
+        4200000,
+        1195000,
+        4410000
+      ],
+      "path": {
+        "bytes": 121778,
+        "exists": true,
+        "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+        "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+      },
+      "resolution_m": 2000
+    }
+  },
+  "crs": "EPSG:32654 WGS 84 / UTM zone 54N; vertical EGM2008 height, positive up",
+  "generated_at_utc": "2026-08-11T21:23:50Z",
+  "hillshades": {
+    "corridor": {
+      "bytes": 26616,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/corridor_hillshade.tif",
+      "sha256": "40a7bba9dce60d397656fc92eee90e6228d660d2428930bc0edabe2267603208"
+    },
+    "nearshore": {
+      "bytes": 17919,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/nearshore_hillshade.tif",
+      "sha256": "830282ffde155cc6c0c1b1b71952d74cc4b27700715728c207a3a8d7aa3795b5"
+    },
+    "regional": {
+      "bytes": 37798,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/regional_hillshade.tif",
+      "sha256": "653b8f33736156ddf21b5ba0f6d7cfdf060aec43c5970a07fa7f8f16d67d8cc7"
+    }
+  },
+  "oblique_render": {
+    "coordinate_note": "Horizontal coordinates are EPSG:32654 metres, centred for rendering; elevation is EGM2008 metres with positive-up convention.",
+    "pyvista_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'pyvista'",
+    "qgis_3d_attempts": [
+      {
+        "reason": "QGIS 4 headless processing exposed 3d:tessellate only; no stable print-layout 3D export path was available.",
+        "status": "NOT_USED"
+      }
+    ],
+    "render": {
+      "bytes": 2368364,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/figure_C_vtk_oblique_terrain.png",
+      "sha256": "da20bfb170051aa70bb34d62d7715cfde464ceaa6fe5f823fc4ad1a53926b0a4"
+    },
+    "renderer": "direct VTK offscreen structured-grid render",
+    "source_raster": {
+      "bytes": 283697,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+      "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+    },
+    "status": "COMPLETE",
+    "vertical_exaggeration": 18.0
+  },
+  "schema": {
+    "name": "tsunami.r16b.derived_terrain",
+    "version": "1.0.0"
+  },
+  "source": {
+    "bytes": 17959004,
+    "exists": true,
+    "path": "/home/helios/SimulationData/Summer-Studentship/convergence/c1a/preprocessing/smoke/case/inputs/data/source/terrain/ETOPO_2022_v1_15s_N45E135_surface.tif",
+    "sha256": "3bc9f9dd2d6403b20e8d2b9e0142ef41c6d0c8ed2c79bdbac4531bb09862308e"
+  },
+  "status": "COMPLETE"
+}

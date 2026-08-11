@@ -30,14 +30,32 @@
     "deliverables/figures/r16_publication/provenance/qgis_runtime_status.json": "PASS",
     "deliverables/figures/r16_publication/provenance/r16_completion_state.json": "PASS",
     "deliverables/figures/r16_publication/provenance/r16_gis_layer_manifest.json": "PASS",
-    "deliverables/figures/r16_publication/provenance/r16_validation.json": "PASS"
+    "deliverables/figures/r16_publication/provenance/r16_validation.json": "PASS",
+    "deliverables/figures/r16_publication/provenance/r16b_derived_terrain_status.json": "PASS"
   },
   "manifest_links": {
+    "deliverables/figures/r16_publication/previews/figure_A_tohoku_kamaishi_corridor.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_B_corridor_bathymetry_plan.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_C_corridor_bathymetry_oblique.png": "PASS",
     "deliverables/figures/r16_publication/previews/figure_D1_eta_space_time.png": "PASS",
     "deliverables/figures/r16_publication/previews/figure_D2_wave_profiles_to_shore.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_E_hybrid_domain_framework.png": "PASS",
+    "deliverables/figures/r16_publication/previews/figure_F_validation_geometry.png": "PASS",
     "deliverables/figures/r16_publication/previews/figure_S1_longitudinal_bathymetry.png": "PASS"
   },
   "pdf": {
+    "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.pdf": {
+      "bytes": 1432756,
+      "status": "PASS"
+    },
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.pdf": {
+      "bytes": 1526083,
+      "status": "PASS"
+    },
+    "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.pdf": {
+      "bytes": 976111,
+      "status": "PASS"
+    },
     "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.pdf": {
       "bytes": 271339,
       "status": "PASS"
@@ -46,12 +64,35 @@
       "bytes": 23565,
       "status": "PASS"
     },
+    "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.pdf": {
+      "bytes": 1191853,
+      "status": "PASS"
+    },
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.pdf": {
+      "bytes": 931617,
+      "status": "PASS"
+    },
     "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.pdf": {
       "bytes": 18607,
       "status": "PASS"
     }
   },
   "png": {
+    "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.png": {
+      "height": 3472,
+      "status": "PASS",
+      "width": 4911
+    },
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.png": {
+      "height": 3472,
+      "status": "PASS",
+      "width": 4911
+    },
+    "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.png": {
+      "height": 3472,
+      "status": "PASS",
+      "width": 4911
+    },
     "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.png": {
       "height": 2484,
       "status": "PASS",
@@ -61,6 +102,16 @@
       "height": 2484,
       "status": "PASS",
       "width": 3576
+    },
+    "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.png": {
+      "height": 3472,
+      "status": "PASS",
+      "width": 4911
+    },
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.png": {
+      "height": 3472,
+      "status": "PASS",
+      "width": 4911
     },
     "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png": {
       "height": 1644,
@@ -73,9 +124,14 @@
     "version": "1.0.0"
   },
   "svg": {
+    "deliverables/figures/r16_publication/publication/figure_A_tohoku_kamaishi_corridor.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_C_corridor_bathymetry_oblique.svg": "PASS",
     "deliverables/figures/r16_publication/publication/figure_D1_eta_space_time.svg": "PASS",
     "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.svg": "PASS",
+    "deliverables/figures/r16_publication/publication/figure_F_validation_geometry.svg": "PASS",
     "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.svg": "PASS"
   },
-  "validated_at_utc": "2026-08-11T20:49:21Z"
+  "validated_at_utc": "2026-08-11T21:24:20Z"
 }

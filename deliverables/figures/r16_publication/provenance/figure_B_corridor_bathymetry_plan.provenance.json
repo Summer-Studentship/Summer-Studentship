@@ -1,10 +1,14 @@
 {
-  "allowed_claim": "No final cartographic claim; QGIS final cartography was not generated in this runtime.",
+  "allowed_claim": "Shows ETOPO 2022 bathymetry/topography over the accepted Kamaishi corridor without altering corridor geometry.",
   "basename": "figure_B_corridor_bathymetry_plan",
-  "blocker": "QGIS is mandatory for final cartography/3D foundation, but qgis, qgis_process and PyQGIS are unavailable.",
+  "crs": {
+    "publication_map": "EPSG:32654 WGS 84 / UTM zone 54N",
+    "source_terrain": "ETOPO 2022 WGS 84 + EGM2008 height, reprojected/cropped to EPSG:32654 for layout use",
+    "vertical_positive": "up"
+  },
   "figure_id": "B",
-  "generated_at_utc": "2026-08-11T20:48:07Z",
-  "git_sha": "2c3c91479e1b6302f87cdb963537c6937b44d549",
+  "generated_at_utc": "2026-08-11T21:24:09Z",
+  "git_sha": "6be53a5f357261c077ec52fd598e47cbdad1b163",
   "model_authority": {
     "event_limitations": [
       "real Tohoku event simulation",
@@ -27,18 +31,29 @@
       "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
     }
   },
-  "outputs": [],
-  "preview": null,
-  "required_caveat": "QGIS_RUNTIME_BLOCKED; editable layers and PyQGIS project scripts are staged for a QGIS-capable environment.",
+  "output_hashes": {
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.pdf": "3eb53e3514d6785e97eaf4ba160884f9ff9b0568fb1123d6aebcbf2f5baa87ec",
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.png": "36b68e16f4e3ada43e1c7150920acac55a74d1b14720fe6e7f1b436fc970a92c",
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.svg": "1a54e4cf125026f603e4140fc03591b8368f1aea4d7e0f2f23f44c72253bc87f"
+  },
+  "outputs": [
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.pdf",
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.svg",
+    "deliverables/figures/r16_publication/publication/figure_B_corridor_bathymetry_plan.png"
+  ],
+  "preview": "deliverables/figures/r16_publication/previews/figure_B_corridor_bathymetry_plan.png",
+  "priority": "HERO",
+  "qgis_layout": "02_CORRIDOR_BATHYMETRY",
+  "required_caveat": "This is geographic/bathymetric context only; it does not establish spatial qualification or historical validation.",
   "schema": {
     "name": "tsunami.r16.figure_provenance",
-    "version": "1.0.0"
+    "version": "2.0.0"
   },
-  "scientific_question": "What real bathymetric and topographic environment does the simulated tsunami propagate through?",
+  "scientific_question": "What real bathymetric and topographic environment does the accepted corridor cross?",
   "software": {
-    "h5py": "3.16.0",
-    "matplotlib": "3.11.1",
-    "numpy": "2.5.2",
+    "h5py": null,
+    "matplotlib": null,
+    "numpy": "2.5.1",
     "python": "3.14.6",
     "qgis": {
       "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
@@ -46,21 +61,21 @@
         "QT_QPA_PLATFORM": "offscreen"
       },
       "proj_version": "Rel. 9.8.1, April 10th, 2026",
-      "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-      "qgis_executable": null,
-      "qgis_process_executable": null,
-      "qgis_process_version": null,
-      "qgis_version": null,
+      "pyqgis_status": "AVAILABLE",
+      "qgis_executable": "/usr/bin/qgis",
+      "qgis_process_executable": "/usr/bin/qgis_process",
+      "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
       "qt_status": {
         "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-        "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+        "PyQt6": "AVAILABLE"
       },
-      "recorded_at_utc": "2026-08-11T20:48:05Z",
+      "recorded_at_utc": "2026-08-11T21:24:01Z",
       "schema": {
         "name": "tsunami.r16.qgis_runtime",
         "version": "1.0.0"
       },
-      "status": "QGIS_RUNTIME_BLOCKED"
+      "status": "AVAILABLE"
     }
   },
   "source_datasets": {
@@ -113,5 +128,6 @@
       "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
     }
   },
-  "status": "BLOCKED_BY_QGIS_RUNTIME"
+  "status": "COMPLETE",
+  "visual_qc_classification": "POSTER_READY_HERO"
 }

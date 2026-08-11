@@ -1,4 +1,14 @@
 {
+  "broken_layers": [],
+  "groups": [
+    "01 \u2014 Geographic Context",
+    "02 \u2014 2011 Tohoku Event",
+    "03 \u2014 Regional2D Domain",
+    "04 \u2014 Bathymetry / Topography",
+    "05 \u2014 Hybrid Framework",
+    "06 \u2014 Historical Validation",
+    "07 \u2014 Publication Helpers"
+  ],
   "layers": {
     "geopackage": {
       "ogrinfo": [
@@ -14,39 +24,39 @@
       "status": "PASS"
     }
   },
-  "project": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+  "missing_groups": [],
+  "missing_layouts": [],
+  "project": {
+    "bytes": 51536,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r16-publication-gis/deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+    "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+  },
   "qgis": {
     "gdal_version": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
     "headless_environment": {
       "QT_QPA_PLATFORM": "offscreen"
     },
     "proj_version": "Rel. 9.8.1, April 10th, 2026",
-    "pyqgis_status": "UNAVAILABLE: ModuleNotFoundError: No module named 'qgis.core'",
-    "qgis_executable": null,
-    "qgis_process_executable": null,
-    "qgis_process_version": null,
-    "qgis_version": null,
+    "pyqgis_status": "AVAILABLE",
+    "qgis_executable": "/usr/bin/qgis",
+    "qgis_process_executable": "/usr/bin/qgis_process",
+    "qgis_process_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)\nQGIS code branchRelease 4.2\nQt version 6.11.1\nPython version 3.14.6\nGDAL/OGR version 3.13.1\nPROJ version 9.8.1\nEPSG Registry database version v12.029 (2025-10-02)\nGEOS version 3.14.1-CAPI-1.20.5\nNo support for SFCGAL\nNo support for GeographicLib\nSQLite version 3.53.3\nOS Arch Linux",
+    "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
     "qt_status": {
       "PyQt5": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt5'",
-      "PyQt6": "UNAVAILABLE: ModuleNotFoundError: No module named 'PyQt6'"
+      "PyQt6": "AVAILABLE"
     },
-    "recorded_at_utc": "2026-08-11T20:48:24Z",
+    "recorded_at_utc": "2026-08-11T21:24:18Z",
     "schema": {
       "name": "tsunami.r16.qgis_runtime",
       "version": "1.0.0"
     },
-    "status": "QGIS_RUNTIME_BLOCKED"
+    "status": "AVAILABLE"
   },
-  "reason": "QGIS runtime/project unavailable; GeoPackage layer validation was performed where possible.",
-  "requested_layouts": [
-    "01_tohoku_event_corridor",
-    "02_corridor_bathymetry",
-    "03_validation_targets",
-    "04_hybrid_domain"
-  ],
   "schema": {
     "name": "tsunami.r16.qgis_project_validation",
     "version": "1.0.0"
   },
-  "status": "BLOCKED_BY_QGIS_RUNTIME"
+  "status": "COMPLETE"
 }
