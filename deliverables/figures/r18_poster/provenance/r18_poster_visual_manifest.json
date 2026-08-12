@@ -1,0 +1,1311 @@
+{
+  "branch": "feat/r18-poster-visual-freeze",
+  "confirmations": {
+    "corridor_geometry_unchanged": true,
+    "no_calibration": true,
+    "no_fsi_ml": true,
+    "no_h250": true,
+    "no_hdf5_architecture_work": true,
+    "no_local3d_replay": true,
+    "no_openfoam_retuning": true,
+    "no_poster_editing": true,
+    "no_regional_simulation_launched": true,
+    "no_report_editing": true,
+    "no_research_inputs_deleted_moved_renamed": true,
+    "no_temporal_convergence": true,
+    "no_video_qr": true,
+    "no_wbs_lucid": true
+  },
+  "contact_sheet": {
+    "dimensions": {
+      "height": 3000,
+      "width": 3800
+    },
+    "path": {
+      "bytes": 2503939,
+      "exists": true,
+      "path": "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png",
+      "sha256": "922930b63a4dcdbfbce2f0ee9903cd3e8924aaa9c4e324dcd69f27af4dbdf25d"
+    }
+  },
+  "figures": {
+    "A1": {
+      "allowed_claim": "Shows the unchanged accepted R10/G6 corridor, event/Kamaishi context and along-corridor bathymetry from existing publication sources.",
+      "basename": "figure_A1_tohoku_kamaishi_corridor_bathymetry",
+      "branch": "feat/r18-poster-visual-freeze",
+      "caption": "Combined context, corridor and longitudinal bathymetry figure using the existing R16 ETOPO 2022 EGM2008 GIS sources and frozen R10 h400 centreline sampling.",
+      "colourbar": {
+        "label": "Elevation relative to EGM2008, m",
+        "normalisation": "TwoSlopeNorm centered at EGM2008 zero",
+        "range_m": [
+          -1500.0,
+          1300.0
+        ]
+      },
+      "composition": {
+        "bathymetry_inset_source": "R16 S1/R10 h400 centreline sampling",
+        "geographic_inset_source": "R16 Figure A context raster and event/Kamaishi layers",
+        "main_source_map": "R16 Figure B source raster and corridor layers"
+      },
+      "context_map": {
+        "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "extent_m": {
+          "xmax": 1280000.0,
+          "xmin": 120000.0,
+          "ymax": 5050000.0,
+          "ymin": 3275000.0
+        },
+        "height": 355,
+        "maximum_m": 2397.5087890625,
+        "minimum_m": -9592.1923828125,
+        "path": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "pixel_size_m": {
+          "x": 5000.0,
+          "y": -5000.0
+        },
+        "vertical_datum": "EGM2008 height, positive up",
+        "width": 232
+      },
+      "corridor_styling": {
+        "fill_alpha": 0.2,
+        "geometry": "unchanged corridor_polygon.geojson",
+        "stroke": "#d66e4b"
+      },
+      "display_interpolation": "bilinear display interpolation for raster rendering only",
+      "figure_id": "A1",
+      "generated_at_utc": "2026-08-12T07:55:31Z",
+      "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+      "main_map": {
+        "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "extent_m": {
+          "xmax": 642000.0,
+          "xmin": 556000.0,
+          "ymax": 4357000.0,
+          "ymin": 4209800.0
+        },
+        "height": 368,
+        "hillshade": {
+          "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+          "extent_m": {
+            "xmax": 642000.0,
+            "xmin": 556000.0,
+            "ymax": 4357000.0,
+            "ymin": 4209800.0
+          },
+          "height": 368,
+          "maximum_m": 233.0,
+          "minimum_m": 97.0,
+          "path": {
+            "bytes": 26616,
+            "exists": true,
+            "path": "deliverables/figures/r16_publication/sources/qgis/derived/corridor_hillshade.tif",
+            "sha256": "40a7bba9dce60d397656fc92eee90e6228d660d2428930bc0edabe2267603208"
+          },
+          "pixel_size_m": {
+            "x": 400.0,
+            "y": -400.0
+          },
+          "vertical_datum": "EGM2008 height, positive up",
+          "width": 215
+        },
+        "maximum_m": 1279.9105224609375,
+        "minimum_m": -1457.549560546875,
+        "path": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "pixel_size_m": {
+          "x": 400.0,
+          "y": -400.0
+        },
+        "vertical_datum": "EGM2008 height, positive up",
+        "width": 215
+      },
+      "map_crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+      "output_hashes": {
+        "pdf": "15109d42fa5adec5f5691b79d9238b6df97accc139084d2b89264e1d1ca3557e",
+        "png": "5de35ffa9111a1feecb658b80241609a4a945e3d4f84b209db217cf26b212fbf",
+        "svg": "c7ce8bd564ceb27e9200ef9cd0726f13d9f9c4921b438d99a6dd42e8d37c03ce"
+      },
+      "outputs": {
+        "pdf": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf",
+        "png": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png",
+        "svg": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg"
+      },
+      "poster_classification": "HERO",
+      "profile": {
+        "bed_m": [
+          -1077.4007756119922,
+          -22.407207012966843
+        ],
+        "distance_km": [
+          0.09953442129290488,
+          123.21947283937752
+        ],
+        "sample_count": 155,
+        "sampling_method": "nearest unstructured cell centre to centreline samples in EPSG:32654; no smoothing or temporal interpolation"
+      },
+      "required_caveat": "Geographic and bathymetric context only; does not establish calibration, historical validation or real-event spatial qualification.",
+      "schema": {
+        "name": "tsunami.r18.figure_provenance",
+        "version": "1.0.0"
+      },
+      "scientific_authority": {
+        "event_limitations": [
+          "real Tohoku event simulation",
+          "verified numerical method",
+          "not spatially qualified",
+          "not physically calibrated",
+          "not historically validated"
+        ],
+        "event_result": "R10 h400 limited_linear",
+        "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+        "historical_observations": {
+          "DART_21418_distance_km": 544.6414251283993,
+          "DIRECT": 0,
+          "NOWPHAS_802G_distance_km": 12.273092741550476,
+          "PROXY": 1,
+          "TARGET_ONLY": 28,
+          "observations": 29
+        },
+        "hybrid_status": {
+          "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+          "one_way_2d_to_3d": "implemented/demonstrated through G6"
+        },
+        "regional_numerical_authority": [
+          "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+          "GLOBAL_FIRST_ORDER_VERIFIED",
+          "SECOND_ORDER_VERIFIED"
+        ],
+        "spatial_diagnosis": {
+          "confidence": "MODERATE",
+          "projection": "PROJECTION_FIDELITY_CEILING",
+          "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+        }
+      },
+      "scientific_question": "Where is the accepted Kamaishi corridor, and what bathymetry does the simulated wave traverse?",
+      "software": {
+        "PIL": "12.3.0",
+        "blender": "Blender 5.2.0 LTS",
+        "gdal": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+        "h5py": "3.16.0",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.1",
+        "python": "3.14.6",
+        "qgis": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "qgis_process": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)"
+      },
+      "source_datasets": {
+        "r10_h400_limited_linear_hdf5": {
+          "bytes": 45784856,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+          "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+        },
+        "r15_observation_register": {
+          "bytes": 35929,
+          "exists": true,
+          "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+          "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+        },
+        "r16_context_raster": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "r16_corridor_centreline": {
+          "bytes": 879,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+          "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+        },
+        "r16_corridor_polygon": {
+          "bytes": 1131,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+          "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+        },
+        "r16_corridor_raster": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "r16_coupling_section": {
+          "bytes": 760,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+          "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+        },
+        "r16_event_points": {
+          "bytes": 1120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+          "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+        },
+        "r16_nearshore_raster": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "r16_publication_manifest": {
+          "bytes": 96978,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+          "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+        },
+        "r16_qgis_project": {
+          "bytes": 51536,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+          "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+        },
+        "r16_validation_overview_raster": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "r16_validation_stations": {
+          "bytes": 17120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+          "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+        },
+        "r17_blender_scene": {
+          "bytes": 9305523,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+          "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+        },
+        "r17_blender_terrain_manifest": {
+          "bytes": 3755,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+          "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+        }
+      },
+      "status": "COMPLETE"
+    },
+    "C": {
+      "allowed_claim": "Shows the accepted corridor over the existing ETOPO 2022 bathymetry/topography lineage as a visual terrain context figure.",
+      "annotation": {
+        "annotated_png": {
+          "bytes": 9905788,
+          "exists": true,
+          "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png",
+          "sha256": "c343226392dc71d03bb7ab2ef130c7935d2b83937639c520c92a832e4d53cf80"
+        },
+        "annotation_method": "PIL overlay on frozen clean Blender raster; labels only, no geometry changes",
+        "annotations": [
+          "Kamaishi",
+          "Offshore -> coast arrow"
+        ],
+        "clean_png": {
+          "bytes": 16090856,
+          "exists": true,
+          "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png",
+          "sha256": "22677c8b3dc53af12c3f4f87c46bd563c751886f2377c08bfbebe923932da563"
+        },
+        "pdf": {
+          "bytes": 499106,
+          "exists": true,
+          "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf",
+          "sha256": "bdb8f00a6c7c0feb1ef11c2cbbf42e8ecdfb64003e145aebd9cf07ca99020537"
+        }
+      },
+      "basename": "figure_C_bathymetry_3d",
+      "branch": "feat/r18-poster-visual-freeze",
+      "camera_candidates": {
+        "orthographic": {
+          "bytes": 2618741,
+          "exists": true,
+          "path": "deliverables/figures/r18_poster/previews/figure_C_camera_orthographic.png",
+          "sha256": "fcf80b587023271c557cb0f7ff3c8e7f6028f2fc9e7b4a6e0da9d828b3ad44fa"
+        },
+        "perspective_82mm": {
+          "bytes": 2953508,
+          "exists": true,
+          "path": "deliverables/figures/r18_poster/previews/figure_C_camera_perspective.png",
+          "sha256": "e4dd62377b02abfe3eb573ea7a9518d61d1188a098dfbb44d77b095c7d2985be"
+        }
+      },
+      "camera_selection_rationale": "The 82 mm perspective adds depth but weakens geographic footprint readability; orthographic preserves the corridor extent and coastline relationship.",
+      "caption": "Oblique Blender terrain visualisation of the accepted Kamaishi Regional2D corridor from the R16/R17 ETOPO 2022 EGM2008 terrain lineage. Vertical relief is exaggerated 4x for interpretation; the blue plane marks z=0 and the muted coral outline is the unchanged computational corridor.",
+      "corridor_line_change": "outline bevel scaled to 1.25 relative to R17 with muted coral stroke and unchanged footprint",
+      "decision_sheets": {
+        "camera_comparison": {
+          "dimensions": {
+            "height": 1160,
+            "width": 4000
+          },
+          "path": {
+            "bytes": 2432782,
+            "exists": true,
+            "path": "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png",
+            "sha256": "d3af491919820fa673a87e2fd255c9957eb709dcb95447daa1f6bd2c50f97d20"
+          }
+        },
+        "sea_plane_comparison": {
+          "dimensions": {
+            "height": 1040,
+            "width": 4800
+          },
+          "path": {
+            "bytes": 2168683,
+            "exists": true,
+            "path": "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png",
+            "sha256": "9409d0cb478629296d7b7b187a2127057540232daf47f74e96cf6ff7f7910ab3"
+          }
+        }
+      },
+      "figure_id": "C",
+      "generated_at_utc": "2026-08-12T07:55:40Z",
+      "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+      "output_hashes": {
+        "annotated_png": "c343226392dc71d03bb7ab2ef130c7935d2b83937639c520c92a832e4d53cf80",
+        "camera_comparison_png": "d3af491919820fa673a87e2fd255c9957eb709dcb95447daa1f6bd2c50f97d20",
+        "clean_png": "22677c8b3dc53af12c3f4f87c46bd563c751886f2377c08bfbebe923932da563",
+        "pdf": "bdb8f00a6c7c0feb1ef11c2cbbf42e8ecdfb64003e145aebd9cf07ca99020537",
+        "sea_plane_comparison_png": "9409d0cb478629296d7b7b187a2127057540232daf47f74e96cf6ff7f7910ab3"
+      },
+      "outputs": {
+        "annotated_png": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png",
+        "camera_comparison_png": "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png",
+        "clean_png": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png",
+        "pdf": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf",
+        "sea_plane_comparison_png": "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png"
+      },
+      "poster_classification": "PRIMARY",
+      "render_record": {
+        "bytes": 7030,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/provenance/figure_C_bathymetry_3d_clean_render.json",
+        "sha256": "080b4f4702c19032b420cd448226f5eeacc4f8803f2663cd3ce080bc1a703ce1"
+      },
+      "required_caveat": "Terrain visualisation only; not a Local3D, OpenFOAM, calibrated inundation or historically validated result.",
+      "schema": {
+        "name": "tsunami.r18.figure_provenance",
+        "version": "1.0.0"
+      },
+      "scientific_authority": {
+        "event_limitations": [
+          "real Tohoku event simulation",
+          "verified numerical method",
+          "not spatially qualified",
+          "not physically calibrated",
+          "not historically validated"
+        ],
+        "event_result": "R10 h400 limited_linear",
+        "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+        "historical_observations": {
+          "DART_21418_distance_km": 544.6414251283993,
+          "DIRECT": 0,
+          "NOWPHAS_802G_distance_km": 12.273092741550476,
+          "PROXY": 1,
+          "TARGET_ONLY": 28,
+          "observations": 29
+        },
+        "hybrid_status": {
+          "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+          "one_way_2d_to_3d": "implemented/demonstrated through G6"
+        },
+        "regional_numerical_authority": [
+          "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+          "GLOBAL_FIRST_ORDER_VERIFIED",
+          "SECOND_ORDER_VERIFIED"
+        ],
+        "spatial_diagnosis": {
+          "confidence": "MODERATE",
+          "projection": "PROJECTION_FIDELITY_CEILING",
+          "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+        }
+      },
+      "scientific_question": "What does the real Kamaishi corridor bathymetry and coastal relief look like in an interpretable oblique view?",
+      "sea_plane_opacity_candidates": [
+        0.03,
+        0.05,
+        0.07
+      ],
+      "selected_camera": "orthographic",
+      "selected_sea_plane_opacity": 0.05,
+      "selected_sea_plane_rationale": "0.05 keeps the z=0 water plane visible without masking seabed relief.",
+      "software": {
+        "PIL": "12.3.0",
+        "blender": "Blender 5.2.0 LTS",
+        "gdal": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+        "h5py": "3.16.0",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.1",
+        "python": "3.14.6",
+        "qgis": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "qgis_process": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)"
+      },
+      "source_datasets": {
+        "r10_h400_limited_linear_hdf5": {
+          "bytes": 45784856,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+          "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+        },
+        "r15_observation_register": {
+          "bytes": 35929,
+          "exists": true,
+          "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+          "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+        },
+        "r16_context_raster": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "r16_corridor_centreline": {
+          "bytes": 879,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+          "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+        },
+        "r16_corridor_polygon": {
+          "bytes": 1131,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+          "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+        },
+        "r16_corridor_raster": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "r16_coupling_section": {
+          "bytes": 760,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+          "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+        },
+        "r16_event_points": {
+          "bytes": 1120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+          "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+        },
+        "r16_nearshore_raster": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "r16_publication_manifest": {
+          "bytes": 96978,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+          "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+        },
+        "r16_qgis_project": {
+          "bytes": 51536,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+          "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+        },
+        "r16_validation_overview_raster": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "r16_validation_stations": {
+          "bytes": 17120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+          "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+        },
+        "r17_blender_scene": {
+          "bytes": 9305523,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+          "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+        },
+        "r17_blender_terrain_manifest": {
+          "bytes": 3755,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+          "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+        }
+      },
+      "status": "COMPLETE",
+      "vertical_exaggeration": 4.0
+    },
+    "D1": {
+      "allowed_claim": "Shows the existing R10 h400 limited_linear eta evolution along the accepted corridor sampling path.",
+      "basename": "figure_D1_eta_space_time_publication",
+      "branch": "feat/r18-poster-visual-freeze",
+      "caption": "Frozen R10 h400 limited_linear free-surface elevation sampled along the accepted centreline toward the nearshore interface.",
+      "colour_normalisation": {
+        "center_m": 0.0,
+        "cmap": "RdBu_r",
+        "symmetric_limit_m": 1.25,
+        "type": "diverging"
+      },
+      "contours": {
+        "negative_dashed_m": [
+          -1.0,
+          -0.5,
+          -0.25
+        ],
+        "positive_solid_m": [
+          0.25
+        ]
+      },
+      "data_range_m": {
+        "maximum": 0.37576086661283625,
+        "minimum": -1.23941548214043
+      },
+      "display_interpolation": "none; pcolormesh cell rendering of stored h400 samples",
+      "distance_axis_convention": "Distance offshore from nearshore interface, km; zero is the selected wet nearshore interface.",
+      "field": "eta = h + bed_elevation",
+      "figure_id": "D1",
+      "generated_at_utc": "2026-08-12T07:55:32Z",
+      "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+      "output_hashes": {
+        "pdf": "eebc46481ec8e10d0168583df30a6b94649d04e941d0892255f7372fcbb1f6fb",
+        "png": "3eca691dbc62eeb47b9011c79115e13a469288cf176bbecdf6f3291e03d4e919",
+        "svg": "3dcc50c043c7f0a0ac08aefd399007c372d23239e1952e8c393291004f4248aa"
+      },
+      "outputs": {
+        "pdf": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf",
+        "png": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png",
+        "svg": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg"
+      },
+      "poster_classification": "PRIMARY",
+      "required_caveat": "Best available numerically uncertain real-event result; not spatially qualified, calibrated or historically validated.",
+      "schema": {
+        "name": "tsunami.r18.figure_provenance",
+        "version": "1.0.0"
+      },
+      "scientific_authority": {
+        "event_limitations": [
+          "real Tohoku event simulation",
+          "verified numerical method",
+          "not spatially qualified",
+          "not physically calibrated",
+          "not historically validated"
+        ],
+        "event_result": "R10 h400 limited_linear",
+        "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+        "historical_observations": {
+          "DART_21418_distance_km": 544.6414251283993,
+          "DIRECT": 0,
+          "NOWPHAS_802G_distance_km": 12.273092741550476,
+          "PROXY": 1,
+          "TARGET_ONLY": 28,
+          "observations": 29
+        },
+        "hybrid_status": {
+          "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+          "one_way_2d_to_3d": "implemented/demonstrated through G6"
+        },
+        "regional_numerical_authority": [
+          "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+          "GLOBAL_FIRST_ORDER_VERIFIED",
+          "SECOND_ORDER_VERIFIED"
+        ],
+        "spatial_diagnosis": {
+          "confidence": "MODERATE",
+          "projection": "PROJECTION_FIDELITY_CEILING",
+          "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+        }
+      },
+      "scientific_question": "How does the frozen h400 simulated free surface evolve toward Kamaishi along the accepted corridor?",
+      "section_metadata": {
+        "coordinate_convention": "0 km at selected wet nearshore interface; positive offshore/sourceward; plotted with offshore left and nearshore right",
+        "interpolation": "nearest unstructured cell centre to centreline samples in EPSG:32654; no smoothing or temporal interpolation",
+        "nearest_distance_m": {
+          "max": 223.20212258165333,
+          "median": 90.08004472984948,
+          "min": 4.637185814173174
+        },
+        "sample_count": 155,
+        "sampling_interval_m": 800.0
+      },
+      "software": {
+        "PIL": "12.3.0",
+        "blender": "Blender 5.2.0 LTS",
+        "gdal": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+        "h5py": "3.16.0",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.1",
+        "python": "3.14.6",
+        "qgis": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "qgis_process": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)"
+      },
+      "source_datasets": {
+        "r10_h400_limited_linear_hdf5": {
+          "bytes": 45784856,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+          "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+        },
+        "r15_observation_register": {
+          "bytes": 35929,
+          "exists": true,
+          "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+          "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+        },
+        "r16_context_raster": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "r16_corridor_centreline": {
+          "bytes": 879,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+          "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+        },
+        "r16_corridor_polygon": {
+          "bytes": 1131,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+          "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+        },
+        "r16_corridor_raster": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "r16_coupling_section": {
+          "bytes": 760,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+          "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+        },
+        "r16_event_points": {
+          "bytes": 1120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+          "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+        },
+        "r16_nearshore_raster": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "r16_publication_manifest": {
+          "bytes": 96978,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+          "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+        },
+        "r16_qgis_project": {
+          "bytes": 51536,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+          "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+        },
+        "r16_validation_overview_raster": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "r16_validation_stations": {
+          "bytes": 17120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+          "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+        },
+        "r17_blender_scene": {
+          "bytes": 9305523,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+          "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+        },
+        "r17_blender_terrain_manifest": {
+          "bytes": 3755,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+          "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+        }
+      },
+      "status": "COMPLETE",
+      "time_axis": "Time after earthquake, min",
+      "title": "Simulated free-surface evolution toward Kamaishi"
+    },
+    "F": {
+      "allowed_claim": "Shows observation geometry and R15 eligibility relative to the accepted corridor while preserving the R15 classifications.",
+      "basename": "figure_F_validation_geometry_publication",
+      "branch": "feat/r18-poster-visual-freeze",
+      "caption": "R15 observation geometry relative to the unchanged Kamaishi corridor. NOWPHAS 802G is the priority offshore target but lies about 12.3 km outside the corridor; DART 21418 lies about 545 km outside in the open-ocean context inset.",
+      "computed_nowphas_distance_km": 12.273092741550476,
+      "dart_inset": "validation overview raster with DART 21418 and corridor context",
+      "distance_method": "Euclidean nearest point from NOWPHAS 802G to unchanged corridor polygon boundary in EPSG:32654",
+      "figure_id": "F",
+      "generated_at_utc": "2026-08-12T07:55:36Z",
+      "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+      "inset_map": {
+        "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "extent_m": {
+          "xmax": 1195000.0,
+          "xmin": 535000.0,
+          "ymax": 4410000.0,
+          "ymin": 4200000.0
+        },
+        "height": 105,
+        "maximum_m": 1530.6640625,
+        "minimum_m": -7636.49609375,
+        "path": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "pixel_size_m": {
+          "x": 2000.0,
+          "y": -2000.0
+        },
+        "vertical_datum": "EGM2008 height, positive up",
+        "width": 330
+      },
+      "main_map": {
+        "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+        "extent_m": {
+          "xmax": 604020.0,
+          "xmin": 562000.0,
+          "ymax": 4356500.0,
+          "ymin": 4316020.0
+        },
+        "height": 184,
+        "hillshade": {
+          "crs": "EPSG:32654 WGS 84 / UTM zone 54N",
+          "extent_m": {
+            "xmax": 604020.0,
+            "xmin": 562000.0,
+            "ymax": 4356500.0,
+            "ymin": 4316020.0
+          },
+          "height": 184,
+          "maximum_m": 238.0,
+          "minimum_m": 77.0,
+          "path": {
+            "bytes": 17919,
+            "exists": true,
+            "path": "deliverables/figures/r16_publication/sources/qgis/derived/nearshore_hillshade.tif",
+            "sha256": "830282ffde155cc6c0c1b1b71952d74cc4b27700715728c207a3a8d7aa3795b5"
+          },
+          "pixel_size_m": {
+            "x": 220.0,
+            "y": -220.0
+          },
+          "vertical_datum": "EGM2008 height, positive up",
+          "width": 191
+        },
+        "maximum_m": 1303.1383056640625,
+        "minimum_m": -555.3803100585938,
+        "path": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "pixel_size_m": {
+          "x": 220.0,
+          "y": -220.0
+        },
+        "vertical_datum": "EGM2008 height, positive up",
+        "width": 191
+      },
+      "nowphas_representation": "priority offshore target plotted with true nearest-distance segment to corridor",
+      "observation_subset_shown": [
+        "Kamaishi proxy/place",
+        "NOAA_NCEI_TIDE_19236 KAMAISHI TARGET_ONLY",
+        "NOAA_NCEI_SURVEY_24106 PROXY",
+        "PARI_NOWPHAS_802G_KAMAISHI_OFFSHORE TARGET_ONLY",
+        "NOAA_NCEI_DART_21418 TARGET_ONLY inset"
+      ],
+      "output_hashes": {
+        "pdf": "847629c068cdc400b5dd8ee6b519abe8bd4574de720dae2ee6192dfd4ed35e20",
+        "png": "a1a8bb11538c5c50c1c38f62cca98f27ff5a7fda59e2664fe1e75133249be9bd",
+        "svg": "78ac7b4b7c4e6781a2bb397f3ea6b21d9e6fb608008ec7b483fe5ad8215e602c"
+      },
+      "outputs": {
+        "pdf": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf",
+        "png": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png",
+        "svg": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg"
+      },
+      "poster_classification": "SECONDARY",
+      "r15_classification_preserved": {
+        "DIRECT": 0,
+        "PROXY": 1,
+        "TARGET_ONLY": 28
+      },
+      "r15_nowphas_distance_km": 12.273092741550476,
+      "required_caveat": "Historical validation is not complete: R15 has 29 observations with 0 DIRECT, 1 PROXY and 28 TARGET_ONLY.",
+      "schema": {
+        "name": "tsunami.r18.figure_provenance",
+        "version": "1.0.0"
+      },
+      "scientific_authority": {
+        "event_limitations": [
+          "real Tohoku event simulation",
+          "verified numerical method",
+          "not spatially qualified",
+          "not physically calibrated",
+          "not historically validated"
+        ],
+        "event_result": "R10 h400 limited_linear",
+        "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+        "historical_observations": {
+          "DART_21418_distance_km": 544.6414251283993,
+          "DIRECT": 0,
+          "NOWPHAS_802G_distance_km": 12.273092741550476,
+          "PROXY": 1,
+          "TARGET_ONLY": 28,
+          "observations": 29
+        },
+        "hybrid_status": {
+          "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+          "one_way_2d_to_3d": "implemented/demonstrated through G6"
+        },
+        "regional_numerical_authority": [
+          "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+          "GLOBAL_FIRST_ORDER_VERIFIED",
+          "SECOND_ORDER_VERIFIED"
+        ],
+        "spatial_diagnosis": {
+          "confidence": "MODERATE",
+          "projection": "PROJECTION_FIDELITY_CEILING",
+          "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+        }
+      },
+      "scientific_question": "Why do the available historical observations not directly validate the current Kamaishi corridor result?",
+      "software": {
+        "PIL": "12.3.0",
+        "blender": "Blender 5.2.0 LTS",
+        "gdal": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+        "h5py": "3.16.0",
+        "matplotlib": "3.11.1",
+        "numpy": "2.5.1",
+        "python": "3.14.6",
+        "qgis": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "qgis_process": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)"
+      },
+      "source_datasets": {
+        "r10_h400_limited_linear_hdf5": {
+          "bytes": 45784856,
+          "exists": true,
+          "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+          "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+        },
+        "r15_observation_register": {
+          "bytes": 35929,
+          "exists": true,
+          "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+          "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+        },
+        "r16_context_raster": {
+          "bytes": 276242,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+        },
+        "r16_corridor_centreline": {
+          "bytes": 879,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+          "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+        },
+        "r16_corridor_polygon": {
+          "bytes": 1131,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+          "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+        },
+        "r16_corridor_raster": {
+          "bytes": 283697,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+        },
+        "r16_coupling_section": {
+          "bytes": 760,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+          "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+        },
+        "r16_event_points": {
+          "bytes": 1120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+          "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+        },
+        "r16_nearshore_raster": {
+          "bytes": 129520,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+          "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+        },
+        "r16_publication_manifest": {
+          "bytes": 96978,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+          "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+        },
+        "r16_qgis_project": {
+          "bytes": 51536,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+          "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+        },
+        "r16_validation_overview_raster": {
+          "bytes": 121778,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+          "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+        },
+        "r16_validation_stations": {
+          "bytes": 17120,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+          "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+        },
+        "r17_blender_scene": {
+          "bytes": 9305523,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+          "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+        },
+        "r17_blender_terrain_manifest": {
+          "bytes": 3755,
+          "exists": true,
+          "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+          "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+        }
+      },
+      "status": "COMPLETE",
+      "title": "Historical observations relative to the Kamaishi corridor"
+    }
+  },
+  "generated_at_utc": "2026-08-12T07:56:13Z",
+  "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+  "report_recommendation": {
+    "companion": "D1",
+    "page_2_figure": "A1",
+    "reason": "A1 combines geographic context, corridor map and bathymetry profile; D1 is the strongest frozen scientific-result panel."
+  },
+  "schema": {
+    "name": "tsunami.r18.poster_visual_manifest",
+    "version": "1.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real Tohoku event simulation",
+      "verified numerical method",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "historical_observations": {
+      "DART_21418_distance_km": 544.6414251283993,
+      "DIRECT": 0,
+      "NOWPHAS_802G_distance_km": 12.273092741550476,
+      "PROXY": 1,
+      "TARGET_ONLY": 28,
+      "observations": 29
+    },
+    "hybrid_status": {
+      "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+      "one_way_2d_to_3d": "implemented/demonstrated through G6"
+    },
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
+  },
+  "source_authority": {
+    "r10_h400_limited_linear_hdf5": {
+      "bytes": 45784856,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+      "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+    },
+    "r15_observation_register": {
+      "bytes": 35929,
+      "exists": true,
+      "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+      "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+    },
+    "r16_context_raster": {
+      "bytes": 276242,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+      "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+    },
+    "r16_corridor_centreline": {
+      "bytes": 879,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+      "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+    },
+    "r16_corridor_polygon": {
+      "bytes": 1131,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+      "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+    },
+    "r16_corridor_raster": {
+      "bytes": 283697,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+      "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+    },
+    "r16_coupling_section": {
+      "bytes": 760,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+      "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+    },
+    "r16_event_points": {
+      "bytes": 1120,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+      "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+    },
+    "r16_nearshore_raster": {
+      "bytes": 129520,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+      "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+    },
+    "r16_publication_manifest": {
+      "bytes": 96978,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+      "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+    },
+    "r16_qgis_project": {
+      "bytes": 51536,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+      "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+    },
+    "r16_validation_overview_raster": {
+      "bytes": 121778,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+      "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+    },
+    "r16_validation_stations": {
+      "bytes": 17120,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+      "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+    },
+    "r17_blender_scene": {
+      "bytes": 9305523,
+      "exists": true,
+      "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+      "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+    },
+    "r17_blender_terrain_manifest": {
+      "bytes": 3755,
+      "exists": true,
+      "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+      "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+    }
+  },
+  "starting_head": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+  "status": "COMPLETE",
+  "supporting_figures": {
+    "D2": {
+      "final_classification": "REPORT_ONLY",
+      "poster_classification": "REPORT_ONLY",
+      "reason": "Useful explanatory companion for a report page but redundant beside D1 on a crowded poster.",
+      "source": {
+        "bytes": 372748,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/publication/figure_D2_wave_profiles_to_shore.png",
+        "sha256": "36723982763df83c2516aea172ba2e7de6948434980820b7cf0068a8742252bd"
+      }
+    },
+    "E": {
+      "final_classification": "DROP_FROM_POSTER",
+      "poster_classification": "DROP_FROM_POSTER",
+      "reason": "R18 explicitly drops the hybrid schematic from the poster visual package.",
+      "source": {
+        "bytes": 726243,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/publication/figure_E_hybrid_domain_framework.png",
+        "sha256": "629bdf314ae4d9ecf2ae811de17c2403bae501915dabdcf63f64ec440c34e589"
+      }
+    },
+    "S1": {
+      "final_classification": "REPORT_ONLY",
+      "poster_classification": "REPORT_ONLY",
+      "reason": "Folded into A1 as an inset; standalone profile remains report/supporting material only.",
+      "source": {
+        "bytes": 164368,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/publication/figure_S1_longitudinal_bathymetry.png",
+        "sha256": "fed68e1ef6a50eb0194babda2107402cd8900ef56f160c10ea4a00bc2d2c1a5e"
+      }
+    }
+  },
+  "validation": {
+    "json": {
+      "deliverables/figures/r18_poster/provenance/figure_A1_tohoku_kamaishi_corridor_bathymetry.provenance.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_bathymetry_3d.provenance.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_bathymetry_3d_clean_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_camera_orthographic_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_camera_perspective_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_003_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_005_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_007_render.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_D1_eta_space_time_publication.provenance.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/figure_F_validation_geometry_publication.provenance.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/qgis_project_validation_status.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/r18_completion_state.json": "PASS",
+      "deliverables/figures/r18_poster/provenance/r18_poster_visual_manifest.json": "PASS"
+    },
+    "manifest_links": {
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg": "PASS",
+      "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png": "PASS"
+    },
+    "pdf": {
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf": {
+        "bytes": 1781882,
+        "status": "PASS"
+      },
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf": {
+        "bytes": 499106,
+        "status": "PASS"
+      },
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf": {
+        "bytes": 75975,
+        "status": "PASS"
+      },
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf": {
+        "bytes": 1316398,
+        "status": "PASS"
+      }
+    },
+    "png": {
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png": {
+        "height": 4743,
+        "status": "PASS",
+        "width": 4242
+      },
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png": {
+        "height": 3600,
+        "status": "PASS",
+        "width": 6200
+      },
+      "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png": {
+        "height": 3600,
+        "status": "PASS",
+        "width": 6200
+      },
+      "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png": {
+        "height": 1160,
+        "status": "PASS",
+        "width": 4000
+      },
+      "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png": {
+        "height": 1040,
+        "status": "PASS",
+        "width": 4800
+      },
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png": {
+        "height": 2405,
+        "status": "PASS",
+        "width": 3894
+      },
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png": {
+        "height": 2718,
+        "status": "PASS",
+        "width": 4203
+      },
+      "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png": {
+        "height": 3000,
+        "status": "PASS",
+        "width": 3800
+      }
+    },
+    "qgis": {
+      "broken_layers": [],
+      "checked_at_utc": "2026-08-12T07:56:12Z",
+      "layouts": [
+        "01_TOHOKU_EVENT_CORRIDOR",
+        "02_CORRIDOR_BATHYMETRY",
+        "03_HYBRID_DOMAIN",
+        "04_VALIDATION_GEOMETRY",
+        "05_CORRIDOR_BATHYMETRY_OBLIQUE"
+      ],
+      "project": {
+        "bytes": 51536,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+        "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+      },
+      "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+      "schema": {
+        "name": "tsunami.r18.qgis_project_check",
+        "version": "1.0.0"
+      },
+      "status": "PASS"
+    },
+    "schema": {
+      "name": "tsunami.r18.validation",
+      "version": "1.0.0"
+    },
+    "svg": {
+      "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg": "PASS",
+      "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg": "PASS"
+    },
+    "validated_at_utc": "2026-08-12T07:56:13Z"
+  },
+  "visual_qc_classification": {
+    "A1": "HERO",
+    "C": "PRIMARY",
+    "D1": "PRIMARY",
+    "D2": "REPORT_ONLY",
+    "E": "DROP_FROM_POSTER",
+    "F": "SECONDARY",
+    "S1": "REPORT_ONLY"
+  },
+  "worktree": "/home/helios/Projects/Summer-Studentship-r18-poster"
+}

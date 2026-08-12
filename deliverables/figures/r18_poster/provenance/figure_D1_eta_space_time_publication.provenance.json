@@ -1,0 +1,199 @@
+{
+  "allowed_claim": "Shows the existing R10 h400 limited_linear eta evolution along the accepted corridor sampling path.",
+  "basename": "figure_D1_eta_space_time_publication",
+  "branch": "feat/r18-poster-visual-freeze",
+  "caption": "Frozen R10 h400 limited_linear free-surface elevation sampled along the accepted centreline toward the nearshore interface.",
+  "colour_normalisation": {
+    "center_m": 0.0,
+    "cmap": "RdBu_r",
+    "symmetric_limit_m": 1.25,
+    "type": "diverging"
+  },
+  "contours": {
+    "negative_dashed_m": [
+      -1.0,
+      -0.5,
+      -0.25
+    ],
+    "positive_solid_m": [
+      0.25
+    ]
+  },
+  "data_range_m": {
+    "maximum": 0.37576086661283625,
+    "minimum": -1.23941548214043
+  },
+  "display_interpolation": "none; pcolormesh cell rendering of stored h400 samples",
+  "distance_axis_convention": "Distance offshore from nearshore interface, km; zero is the selected wet nearshore interface.",
+  "field": "eta = h + bed_elevation",
+  "figure_id": "D1",
+  "generated_at_utc": "2026-08-12T07:55:32Z",
+  "git_sha": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+  "output_hashes": {
+    "pdf": "eebc46481ec8e10d0168583df30a6b94649d04e941d0892255f7372fcbb1f6fb",
+    "png": "3eca691dbc62eeb47b9011c79115e13a469288cf176bbecdf6f3291e03d4e919",
+    "svg": "3dcc50c043c7f0a0ac08aefd399007c372d23239e1952e8c393291004f4248aa"
+  },
+  "outputs": {
+    "pdf": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf",
+    "png": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png",
+    "svg": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg"
+  },
+  "poster_classification": "PRIMARY",
+  "required_caveat": "Best available numerically uncertain real-event result; not spatially qualified, calibrated or historically validated.",
+  "schema": {
+    "name": "tsunami.r18.figure_provenance",
+    "version": "1.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real Tohoku event simulation",
+      "verified numerical method",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "historical_observations": {
+      "DART_21418_distance_km": 544.6414251283993,
+      "DIRECT": 0,
+      "NOWPHAS_802G_distance_km": 12.273092741550476,
+      "PROXY": 1,
+      "TARGET_ONLY": 28,
+      "observations": 29
+    },
+    "hybrid_status": {
+      "current_h400_local3d": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED",
+      "one_way_2d_to_3d": "implemented/demonstrated through G6"
+    },
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ],
+    "spatial_diagnosis": {
+      "confidence": "MODERATE",
+      "projection": "PROJECTION_FIDELITY_CEILING",
+      "terrain_source_fidelity": "TERRAIN_SOURCE_FIDELITY_DOMINANT"
+    }
+  },
+  "scientific_question": "How does the frozen h400 simulated free surface evolve toward Kamaishi along the accepted corridor?",
+  "section_metadata": {
+    "coordinate_convention": "0 km at selected wet nearshore interface; positive offshore/sourceward; plotted with offshore left and nearshore right",
+    "interpolation": "nearest unstructured cell centre to centreline samples in EPSG:32654; no smoothing or temporal interpolation",
+    "nearest_distance_m": {
+      "max": 223.20212258165333,
+      "median": 90.08004472984948,
+      "min": 4.637185814173174
+    },
+    "sample_count": 155,
+    "sampling_interval_m": 800.0
+  },
+  "software": {
+    "PIL": "12.3.0",
+    "blender": "Blender 5.2.0 LTS",
+    "gdal": "GDAL 3.13.1 \"Iowa City\", released 2026/06/01",
+    "h5py": "3.16.0",
+    "matplotlib": "3.11.1",
+    "numpy": "2.5.1",
+    "python": "3.14.6",
+    "qgis": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+    "qgis_process": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)"
+  },
+  "source_datasets": {
+    "r10_h400_limited_linear_hdf5": {
+      "bytes": 45784856,
+      "exists": true,
+      "path": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5",
+      "sha256": "32cda4baac8da4e60d36ed79adccbdeea47eed002a6e22c1c4a6f492cc40a17b"
+    },
+    "r15_observation_register": {
+      "bytes": 35929,
+      "exists": true,
+      "path": "docs/workstream/SWE - Software/SWE-VER/SWE-VER-CONV/C1A/regional2d_r15_observation_register.json",
+      "sha256": "dbc21ef907a914c228ae24821c4af7c378e112e97e7b13a2a36a97abd98b7f21"
+    },
+    "r16_context_raster": {
+      "bytes": 276242,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+      "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+    },
+    "r16_corridor_centreline": {
+      "bytes": 879,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+      "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+    },
+    "r16_corridor_polygon": {
+      "bytes": 1131,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+      "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+    },
+    "r16_corridor_raster": {
+      "bytes": 283697,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+      "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+    },
+    "r16_coupling_section": {
+      "bytes": 760,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/coupling_section.geojson",
+      "sha256": "d4c85e737eb78e59bfe4afbcd94c33949dcb3d603ffe6dc3707d9dfdfa907e79"
+    },
+    "r16_event_points": {
+      "bytes": 1120,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/event_and_kamaishi_points.geojson",
+      "sha256": "f24ebbc99621970225aef0e38187bdc3e233e4b5974f60e6cd9f091ce3b5c2bc"
+    },
+    "r16_nearshore_raster": {
+      "bytes": 129520,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_nearshore_hybrid_utm54.tif",
+      "sha256": "933dac6fc371fe601c6ce0c563f4deb5af09f6a07dbceeabedd4716474a9ea09"
+    },
+    "r16_publication_manifest": {
+      "bytes": 96978,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/provenance/publication_figure_manifest.json",
+      "sha256": "204e42564829589e9f7e0a1b0b5b7b1914b7a93e47d6f4091c232551769f1d94"
+    },
+    "r16_qgis_project": {
+      "bytes": 51536,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+      "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+    },
+    "r16_validation_overview_raster": {
+      "bytes": 121778,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_validation_overview_utm54.tif",
+      "sha256": "6f29255a201d4f36f9a02cea8ac7279b7269d8ca2e0cbc8d9007ef7d7a4f3247"
+    },
+    "r16_validation_stations": {
+      "bytes": 17120,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/validation_stations.geojson",
+      "sha256": "c748d0ee27a0613306cc42e5ddcce3687309b9b5a84aae13261cac5b145701a2"
+    },
+    "r17_blender_scene": {
+      "bytes": 9305523,
+      "exists": true,
+      "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+      "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+    },
+    "r17_blender_terrain_manifest": {
+      "bytes": 3755,
+      "exists": true,
+      "path": "deliverables/figures/r17_closure/sources/blender/terrain/terrain_manifest.json",
+      "sha256": "e199cd40168bc9675d5b335541db9235e5f8eaafd6fccb30fa4d136bee9edb08"
+    }
+  },
+  "status": "COMPLETE",
+  "time_axis": "Time after earthquake, min",
+  "title": "Simulated free-surface evolution toward Kamaishi"
+}

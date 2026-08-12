@@ -1,0 +1,23 @@
+{
+  "broken_layers": [],
+  "checked_at_utc": "2026-08-12T07:56:12Z",
+  "layouts": [
+    "01_TOHOKU_EVENT_CORRIDOR",
+    "02_CORRIDOR_BATHYMETRY",
+    "03_HYBRID_DOMAIN",
+    "04_VALIDATION_GEOMETRY",
+    "05_CORRIDOR_BATHYMETRY_OBLIQUE"
+  ],
+  "project": {
+    "bytes": 51536,
+    "exists": true,
+    "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+    "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+  },
+  "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+  "schema": {
+    "name": "tsunami.r18.qgis_project_check",
+    "version": "1.0.0"
+  },
+  "status": "PASS"
+}

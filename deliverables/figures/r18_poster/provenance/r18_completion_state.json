@@ -1,0 +1,786 @@
+{
+  "items": [
+    {
+      "answer": "feat/r18-poster-visual-freeze",
+      "item": "R18 branch",
+      "number": 1
+    },
+    {
+      "answer": "/home/helios/Projects/Summer-Studentship-r18-poster",
+      "item": "Worktree",
+      "number": 2
+    },
+    {
+      "answer": "73f9a581740dba8d09ee2cb14c8a26ac22bc3eea",
+      "item": "Starting HEAD",
+      "number": 3
+    },
+    {
+      "answer": "see final response after commit",
+      "item": "Final HEAD",
+      "number": 4
+    },
+    {
+      "answer": "see final response after commit",
+      "item": "Commits",
+      "number": 5
+    },
+    {
+      "answer": "checked after final commit",
+      "item": "Worktree clean?",
+      "number": 6
+    },
+    {
+      "answer": {
+        "bytes": 9305523,
+        "exists": true,
+        "path": "deliverables/figures/r17_closure/sources/blender/figure_C_corridor_bathymetry_3d.blend",
+        "sha256": "4652b2e2d6b117ecc331af8a24bbb97fbe92e883575810643fcfc4dacb0c037a"
+      },
+      "item": "Baseline R17 scene confirmed?",
+      "number": 7
+    },
+    {
+      "answer": [
+        0.03,
+        0.05,
+        0.07
+      ],
+      "item": "Sea-plane opacity candidates",
+      "number": 8
+    },
+    {
+      "answer": 0.05,
+      "item": "Selected sea-plane opacity",
+      "number": 9
+    },
+    {
+      "answer": "light neutral background, stronger soft AO/key/fill, same terrain data",
+      "item": "Lighting/material changes",
+      "number": 10
+    },
+    {
+      "answer": "muted coral outline, 1.25x R17 bevel, unchanged footprint",
+      "item": "Corridor line changes",
+      "number": 11
+    },
+    {
+      "answer": {
+        "bytes": 2618741,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/previews/figure_C_camera_orthographic.png",
+        "sha256": "fcf80b587023271c557cb0f7ff3c8e7f6028f2fc9e7b4a6e0da9d828b3ad44fa"
+      },
+      "item": "Orthographic render path",
+      "number": 12
+    },
+    {
+      "answer": {
+        "bytes": 2953508,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/previews/figure_C_camera_perspective.png",
+        "sha256": "e4dd62377b02abfe3eb573ea7a9518d61d1188a098dfbb44d77b095c7d2985be"
+      },
+      "item": "Perspective render path",
+      "number": 13
+    },
+    {
+      "answer": "82 mm",
+      "item": "Perspective focal length",
+      "number": 14
+    },
+    {
+      "answer": {
+        "bytes": 2432782,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png",
+        "sha256": "d3af491919820fa673a87e2fd255c9957eb709dcb95447daa1f6bd2c50f97d20"
+      },
+      "item": "Camera comparison path",
+      "number": 15
+    },
+    {
+      "answer": "orthographic",
+      "item": "Selected camera",
+      "number": 16
+    },
+    {
+      "answer": "The 82 mm perspective adds depth but weakens geographic footprint readability; orthographic preserves the corridor extent and coastline relationship.",
+      "item": "Camera-selection rationale",
+      "number": 17
+    },
+    {
+      "answer": {
+        "bytes": 16090856,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png",
+        "sha256": "22677c8b3dc53af12c3f4f87c46bd563c751886f2377c08bfbebe923932da563"
+      },
+      "item": "Final clean C path",
+      "number": 18
+    },
+    {
+      "answer": {
+        "bytes": 9905788,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png",
+        "sha256": "c343226392dc71d03bb7ab2ef130c7935d2b83937639c520c92a832e4d53cf80"
+      },
+      "item": "Final annotated C path",
+      "number": 19
+    },
+    {
+      "answer": [
+        6200,
+        3600
+      ],
+      "item": "Final native resolution",
+      "number": 20
+    },
+    {
+      "answer": {
+        "bytes": 499106,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf",
+        "sha256": "bdb8f00a6c7c0feb1ef11c2cbbf42e8ecdfb64003e145aebd9cf07ca99020537"
+      },
+      "item": "Final PDF",
+      "number": 21
+    },
+    {
+      "answer": "Oblique Blender terrain visualisation of the accepted Kamaishi Regional2D corridor from the R16/R17 ETOPO 2022 EGM2008 terrain lineage. Vertical relief is exaggerated 4x for interpretation; the blue plane marks z=0 and the muted coral outline is the unchanged computational corridor.",
+      "item": "Final caption",
+      "number": 22
+    },
+    {
+      "answer": "PRIMARY",
+      "item": "Poster classification",
+      "number": 23
+    },
+    {
+      "answer": "R16 Figure B source raster and corridor layers",
+      "item": "Main source map",
+      "number": 24
+    },
+    {
+      "answer": "R16 Figure A context raster and event/Kamaishi layers",
+      "item": "Geographic inset source",
+      "number": 25
+    },
+    {
+      "answer": "R16 S1/R10 h400 centreline sampling",
+      "item": "Bathymetry inset source",
+      "number": 26
+    },
+    {
+      "answer": {
+        "fill_alpha": 0.2,
+        "geometry": "unchanged corridor_polygon.geojson",
+        "stroke": "#d66e4b"
+      },
+      "item": "Corridor styling",
+      "number": 27
+    },
+    {
+      "answer": [
+        -1500.0,
+        1300.0
+      ],
+      "item": "Colourbar range",
+      "number": 28
+    },
+    {
+      "answer": "EGM2008 height, positive up",
+      "item": "Elevation datum",
+      "number": 29
+    },
+    {
+      "answer": {
+        "bytes": 1781882,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf",
+        "sha256": "15109d42fa5adec5f5691b79d9238b6df97accc139084d2b89264e1d1ca3557e"
+      },
+      "item": "Final PDF",
+      "number": 30
+    },
+    {
+      "answer": {
+        "bytes": 3084604,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg",
+        "sha256": "c7ce8bd564ceb27e9200ef9cd0726f13d9f9c4921b438d99a6dd42e8d37c03ce"
+      },
+      "item": "Final SVG",
+      "number": 31
+    },
+    {
+      "answer": {
+        "bytes": 2804152,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png",
+        "sha256": "5de35ffa9111a1feecb658b80241609a4a945e3d4f84b209db217cf26b212fbf"
+      },
+      "item": "Final PNG",
+      "number": 32
+    },
+    {
+      "answer": "HERO",
+      "item": "Poster classification",
+      "number": 33
+    },
+    {
+      "answer": "Simulated free-surface evolution toward Kamaishi",
+      "item": "Final title",
+      "number": 34
+    },
+    {
+      "answer": "Distance offshore from nearshore interface, km; zero is the selected wet nearshore interface.",
+      "item": "Distance-axis convention",
+      "number": 35
+    },
+    {
+      "answer": {
+        "center_m": 0.0,
+        "cmap": "RdBu_r",
+        "symmetric_limit_m": 1.25,
+        "type": "diverging"
+      },
+      "item": "Colour limits",
+      "number": 36
+    },
+    {
+      "answer": {
+        "negative_dashed_m": [
+          -1.0,
+          -0.5,
+          -0.25
+        ],
+        "positive_solid_m": [
+          0.25
+        ]
+      },
+      "item": "Contour levels",
+      "number": 37
+    },
+    {
+      "answer": "none; pcolormesh cell rendering of stored h400 samples",
+      "item": "Display interpolation",
+      "number": 38
+    },
+    {
+      "answer": {
+        "bytes": 75975,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf",
+        "sha256": "eebc46481ec8e10d0168583df30a6b94649d04e941d0892255f7372fcbb1f6fb"
+      },
+      "item": "Final PDF",
+      "number": 39
+    },
+    {
+      "answer": {
+        "bytes": 83181,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg",
+        "sha256": "3dcc50c043c7f0a0ac08aefd399007c372d23239e1952e8c393291004f4248aa"
+      },
+      "item": "Final SVG",
+      "number": 40
+    },
+    {
+      "answer": {
+        "bytes": 259862,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png",
+        "sha256": "3eca691dbc62eeb47b9011c79115e13a469288cf176bbecdf6f3291e03d4e919"
+      },
+      "item": "Final PNG",
+      "number": 41
+    },
+    {
+      "answer": "PRIMARY",
+      "item": "Poster classification",
+      "number": 42
+    },
+    {
+      "answer": "Historical observations relative to the Kamaishi corridor",
+      "item": "Final title",
+      "number": 43
+    },
+    {
+      "answer": "priority offshore target plotted with true nearest-distance segment to corridor",
+      "item": "NOWPHAS representation",
+      "number": 44
+    },
+    {
+      "answer": "Euclidean nearest point from NOWPHAS 802G to unchanged corridor polygon boundary in EPSG:32654",
+      "item": "12.3 km distance method",
+      "number": 45
+    },
+    {
+      "answer": "validation overview raster with DART 21418 and corridor context",
+      "item": "DART inset",
+      "number": 46
+    },
+    {
+      "answer": [
+        "Kamaishi proxy/place",
+        "NOAA_NCEI_TIDE_19236 KAMAISHI TARGET_ONLY",
+        "NOAA_NCEI_SURVEY_24106 PROXY",
+        "PARI_NOWPHAS_802G_KAMAISHI_OFFSHORE TARGET_ONLY",
+        "NOAA_NCEI_DART_21418 TARGET_ONLY inset"
+      ],
+      "item": "Observation subset shown",
+      "number": 47
+    },
+    {
+      "answer": {
+        "DIRECT": 0,
+        "PROXY": 1,
+        "TARGET_ONLY": 28
+      },
+      "item": "R15 classification preserved?",
+      "number": 48
+    },
+    {
+      "answer": {
+        "bytes": 1316398,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf",
+        "sha256": "847629c068cdc400b5dd8ee6b519abe8bd4574de720dae2ee6192dfd4ed35e20"
+      },
+      "item": "Final PDF",
+      "number": 49
+    },
+    {
+      "answer": {
+        "bytes": 2371786,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg",
+        "sha256": "78ac7b4b7c4e6781a2bb397f3ea6b21d9e6fb608008ec7b483fe5ad8215e602c"
+      },
+      "item": "Final SVG",
+      "number": 50
+    },
+    {
+      "answer": {
+        "bytes": 2207777,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png",
+        "sha256": "a1a8bb11538c5c50c1c38f62cca98f27ff5a7fda59e2664fe1e75133249be9bd"
+      },
+      "item": "Final PNG",
+      "number": 51
+    },
+    {
+      "answer": "SECONDARY",
+      "item": "Poster classification",
+      "number": 52
+    },
+    {
+      "answer": "REPORT_ONLY",
+      "item": "D2 final classification",
+      "number": 53
+    },
+    {
+      "answer": "DROP_FROM_POSTER",
+      "item": "E final classification",
+      "number": 54
+    },
+    {
+      "answer": "REPORT_ONLY",
+      "item": "S1 final classification",
+      "number": 55
+    },
+    {
+      "answer": {
+        "bytes": 2503939,
+        "exists": true,
+        "path": "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png",
+        "sha256": "922930b63a4dcdbfbce2f0ee9903cd3e8924aaa9c4e324dcd69f27af4dbdf25d"
+      },
+      "item": "Final contact-sheet path",
+      "number": 56
+    },
+    {
+      "answer": "A1",
+      "item": "HERO figure",
+      "number": 57
+    },
+    {
+      "answer": [
+        "C",
+        "D1"
+      ],
+      "item": "Primary figures",
+      "number": 58
+    },
+    {
+      "answer": [
+        "F"
+      ],
+      "item": "Secondary figures",
+      "number": 59
+    },
+    {
+      "answer": [
+        "D2",
+        "S1"
+      ],
+      "item": "Report-only figures",
+      "number": 60
+    },
+    {
+      "answer": [
+        "E"
+      ],
+      "item": "Drop-from-poster figures",
+      "number": 61
+    },
+    {
+      "answer": "A1",
+      "item": "Strongest overall visual",
+      "number": 62
+    },
+    {
+      "answer": "A1",
+      "item": "Strongest geographic visual",
+      "number": 63
+    },
+    {
+      "answer": "D1",
+      "item": "Strongest scientific-result visual",
+      "number": 64
+    },
+    {
+      "answer": "F",
+      "item": "Strongest validation visual",
+      "number": 65
+    },
+    {
+      "answer": {
+        "bytes": 3961,
+        "exists": true,
+        "path": "docs/project/r18_poster_visual_handoff.md",
+        "sha256": "9395eaab201fcd5e56a7e0431147323929c256c8495ee6a46053668bbf380c49"
+      },
+      "item": "Handoff path",
+      "number": 66
+    },
+    {
+      "answer": true,
+      "item": "Captions complete?",
+      "number": 67
+    },
+    {
+      "answer": true,
+      "item": "Allowed claims complete?",
+      "number": 68
+    },
+    {
+      "answer": true,
+      "item": "Caveats complete?",
+      "number": 69
+    },
+    {
+      "answer": true,
+      "item": "Suggested physical sizes included?",
+      "number": 70
+    },
+    {
+      "answer": "A1",
+      "item": "Recommended Page-2 figure",
+      "number": 71
+    },
+    {
+      "answer": "D1",
+      "item": "Recommended companion figure",
+      "number": 72
+    },
+    {
+      "answer": "A1 combines context/corridor/profile; D1 carries the strongest frozen numerical-result evidence.",
+      "item": "Reasoning",
+      "number": 73
+    },
+    {
+      "answer": "rendered previews/final; final PNG dimensions checked",
+      "item": "Blender checks",
+      "number": 74
+    },
+    {
+      "answer": {
+        "broken_layers": [],
+        "checked_at_utc": "2026-08-12T07:56:12Z",
+        "layouts": [
+          "01_TOHOKU_EVENT_CORRIDOR",
+          "02_CORRIDOR_BATHYMETRY",
+          "03_HYBRID_DOMAIN",
+          "04_VALIDATION_GEOMETRY",
+          "05_CORRIDOR_BATHYMETRY_OBLIQUE"
+        ],
+        "project": {
+          "bytes": 51536,
+          "exists": true,
+          "path": "deliverables/figures/r16_publication/sources/qgis/tohoku_kamaishi_publication.qgz",
+          "sha256": "4cdb7da0b9764267e99398537773cc0c7fbf10224047b477184bd69136f93bf1"
+        },
+        "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "schema": {
+          "name": "tsunami.r18.qgis_project_check",
+          "version": "1.0.0"
+        },
+        "status": "PASS"
+      },
+      "item": "QGIS checks",
+      "number": 75
+    },
+    {
+      "answer": "A1/D1/F generated with Agg and saved in PDF/SVG/PNG",
+      "item": "Matplotlib checks",
+      "number": 76
+    },
+    {
+      "answer": {
+        "deliverables/figures/r18_poster/provenance/figure_A1_tohoku_kamaishi_corridor_bathymetry.provenance.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_bathymetry_3d.provenance.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_bathymetry_3d_clean_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_camera_orthographic_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_camera_perspective_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_003_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_005_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_C_seaplane_alpha_007_render.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_D1_eta_space_time_publication.provenance.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/figure_F_validation_geometry_publication.provenance.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/qgis_project_validation_status.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/r18_completion_state.json": "PASS",
+        "deliverables/figures/r18_poster/provenance/r18_poster_visual_manifest.json": "PASS"
+      },
+      "item": "JSON validation",
+      "number": 77
+    },
+    {
+      "answer": {
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg": "PASS"
+      },
+      "item": "SVG validation",
+      "number": 78
+    },
+    {
+      "answer": {
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf": {
+          "bytes": 1781882,
+          "status": "PASS"
+        },
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf": {
+          "bytes": 499106,
+          "status": "PASS"
+        },
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf": {
+          "bytes": 75975,
+          "status": "PASS"
+        },
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf": {
+          "bytes": 1316398,
+          "status": "PASS"
+        }
+      },
+      "item": "PDF validation",
+      "number": 79
+    },
+    {
+      "answer": {
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png": {
+          "height": 4743,
+          "status": "PASS",
+          "width": 4242
+        },
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png": {
+          "height": 3600,
+          "status": "PASS",
+          "width": 6200
+        },
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png": {
+          "height": 3600,
+          "status": "PASS",
+          "width": 6200
+        },
+        "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png": {
+          "height": 1160,
+          "status": "PASS",
+          "width": 4000
+        },
+        "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png": {
+          "height": 1040,
+          "status": "PASS",
+          "width": 4800
+        },
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png": {
+          "height": 2405,
+          "status": "PASS",
+          "width": 3894
+        },
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png": {
+          "height": 2718,
+          "status": "PASS",
+          "width": 4203
+        },
+        "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png": {
+          "height": 3000,
+          "status": "PASS",
+          "width": 3800
+        }
+      },
+      "item": "PNG dimensions",
+      "number": 80
+    },
+    {
+      "answer": {
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.pdf": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_A1_tohoku_kamaishi_corridor_bathymetry.svg": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d.pdf": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_annotated.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_C_bathymetry_3d_clean.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_C_camera_comparison.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_C_seaplane_comparison.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.pdf": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_D1_eta_space_time_publication.svg": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.pdf": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.png": "PASS",
+        "deliverables/figures/r18_poster/publication/figure_F_validation_geometry_publication.svg": "PASS",
+        "deliverables/figures/r18_poster/publication/r18_poster_contact_sheet.png": "PASS"
+      },
+      "item": "Manifest link checks",
+      "number": 81
+    },
+    {
+      "answer": "PASS",
+      "item": "git diff --check",
+      "number": 82
+    },
+    {
+      "answer": "see final response after commit",
+      "item": "Worktree clean?",
+      "number": 83
+    },
+    {
+      "answer": true,
+      "item": "No new Regional simulation",
+      "number": 84
+    },
+    {
+      "answer": true,
+      "item": "No h250",
+      "number": 85
+    },
+    {
+      "answer": true,
+      "item": "No temporal convergence",
+      "number": 86
+    },
+    {
+      "answer": true,
+      "item": "No calibration",
+      "number": 87
+    },
+    {
+      "answer": true,
+      "item": "No Local3D replay",
+      "number": 88
+    },
+    {
+      "answer": true,
+      "item": "No OpenFOAM retuning",
+      "number": 89
+    },
+    {
+      "answer": true,
+      "item": "No HDF5 work",
+      "number": 90
+    },
+    {
+      "answer": true,
+      "item": "No FSI/ML implementation",
+      "number": 91
+    },
+    {
+      "answer": true,
+      "item": "No poster editing",
+      "number": 92
+    },
+    {
+      "answer": true,
+      "item": "No report editing",
+      "number": 93
+    },
+    {
+      "answer": true,
+      "item": "No WBS/Lucid work",
+      "number": 94
+    },
+    {
+      "answer": true,
+      "item": "No custom hybrid schematic work",
+      "number": 95
+    },
+    {
+      "answer": true,
+      "item": "No research files deleted/moved/renamed",
+      "number": 96
+    },
+    {
+      "answer": true,
+      "item": "No push/merge/rebase/amend",
+      "number": 97
+    },
+    {
+      "answer": true,
+      "item": "Protected/unrelated files untouched",
+      "number": 98
+    },
+    {
+      "answer": true,
+      "item": "Is Figure C now frozen for the poster?",
+      "number": 99
+    },
+    {
+      "answer": true,
+      "item": "Is the combined A1 map frozen?",
+      "number": 100
+    },
+    {
+      "answer": true,
+      "item": "Is D1 frozen?",
+      "number": 101
+    },
+    {
+      "answer": true,
+      "item": "Is F frozen?",
+      "number": 102
+    },
+    {
+      "answer": true,
+      "item": "Are additional quantitative/GIS figures unnecessary?",
+      "number": 103
+    },
+    {
+      "answer": true,
+      "item": "Is the scientific poster figure package ready for layout?",
+      "number": 104
+    },
+    {
+      "answer": "Place the frozen figures into the poster layout and adjust surrounding typography/spacing only.",
+      "item": "What manual design work remains outside Codex?",
+      "number": 105
+    }
+  ],
+  "schema": {
+    "name": "tsunami.r18.completion_state",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE"
+}

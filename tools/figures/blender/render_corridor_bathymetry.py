@@ -48,6 +48,10 @@ def parse_blender_args(argv: Sequence[str]) -> argparse.Namespace:
     parser.add_argument("--width", type=int, default=2400)
     parser.add_argument("--height", type=int, default=1400)
     parser.add_argument("--save-blend", type=Path)
+    parser.add_argument("--sea-alpha", type=float, default=0.09)
+    parser.add_argument("--camera", choices=["orthographic", "perspective"], default="orthographic")
+    parser.add_argument("--corridor-outline-scale", type=float, default=1.0)
+    parser.add_argument("--corridor-fill-alpha", type=float, default=0.12)
     return parser.parse_args(args)
 
 
@@ -175,7 +179,7 @@ def build_terrain(arr: np.ndarray, gt: tuple[float, float, float, float, float, 
     return obj, metadata
 
 
-def build_sea_plane(metadata: dict[str, Any]) -> bpy.types.Object:
+def build_sea_plane(metadata: dict[str, Any], sea_alpha: float) -> bpy.types.Object:
     x_half = abs(metadata["source_pixel_size_m"]["x"]) * metadata["cols"] / 2000.0
     y_half = abs(metadata["source_pixel_size_m"]["y"]) * metadata["rows"] / 2000.0
     verts = [(-x_half, -y_half, 0.0), (x_half, -y_half, 0.0), (x_half, y_half, 0.0), (-x_half, y_half, 0.0)]
@@ -184,7 +188,7 @@ def build_sea_plane(metadata: dict[str, Any]) -> bpy.types.Object:
     mesh.update()
     obj = bpy.data.objects.new("EGM2008 z=0 sea-level reference plane", mesh)
     bpy.context.collection.objects.link(obj)
-    obj.data.materials.append(make_material("subtle sea-level plane", (0.720, 0.860, 0.920, 0.09)))
+    obj.data.materials.append(make_material("subtle sea-level plane", (0.720, 0.860, 0.920, sea_alpha)))
     return obj
 
 
@@ -194,7 +198,7 @@ def geojson_polygon(path: Path) -> list[tuple[float, float]]:
     return [(float(x), float(y)) for x, y in coords]
 
 
-def build_corridor_overlay(metadata: dict[str, Any]) -> None:
+def build_corridor_overlay(metadata: dict[str, Any], *, outline_scale: float, fill_alpha: float) -> None:
     origin = metadata["centering_origin_m"]
     coords = [((x - origin["x"]) / 1000.0, (y - origin["y"]) / 1000.0, 0.035) for x, y in geojson_polygon(CORRIDOR_GEOJSON)]
     fill = bpy.data.meshes.new("regional2d_corridor_surface_overlay")
@@ -202,12 +206,12 @@ def build_corridor_overlay(metadata: dict[str, Any]) -> None:
     fill.update()
     fill_obj = bpy.data.objects.new("Regional2D corridor subtle fill", fill)
     bpy.context.collection.objects.link(fill_obj)
-    fill_obj.data.materials.append(make_material("corridor subtle fill", (0.920, 0.340, 0.180, 0.12)))
+    fill_obj.data.materials.append(make_material("corridor subtle fill", (0.920, 0.340, 0.180, fill_alpha)))
 
     curve = bpy.data.curves.new("regional2d_corridor_outline", "CURVE")
     curve.dimensions = "3D"
     curve.resolution_u = 1
-    curve.bevel_depth = 0.075
+    curve.bevel_depth = 0.075 * outline_scale
     curve.bevel_resolution = 3
     spline = curve.splines.new("POLY")
     spline.points.add(len(coords) - 1)
@@ -233,7 +237,7 @@ def configure_scene(output: Path, width: int, height: int) -> dict[str, Any]:
         background.inputs["Color"].default_value = (1.0, 1.0, 1.0, 1.0)
         background.inputs["Strength"].default_value = 0.85
     if hasattr(scene, "eevee"):
-        for attr, value in [("taa_render_samples", 96), ("use_gtao", True), ("gtao_distance", 4), ("gtao_factor", 0.45)]:
+        for attr, value in [("taa_render_samples", 128), ("use_gtao", True), ("gtao_distance", 5), ("gtao_factor", 0.62)]:
             if hasattr(scene.eevee, attr):
                 setattr(scene.eevee, attr, value)
     try:
@@ -243,7 +247,13 @@ def configure_scene(output: Path, width: int, height: int) -> dict[str, Any]:
         scene.view_settings.gamma = 1.0
     except Exception:
         pass
-    return {"engine": scene.render.engine, "resolution": {"width": width, "height": height}}
+    return {
+        "engine": scene.render.engine,
+        "resolution": {"width": width, "height": height},
+        "world_background": {"color_rgb": [1.0, 1.0, 1.0], "strength": 0.85},
+        "ambient_occlusion": {"use_gtao": True, "distance": 5.0, "factor": 0.62},
+        "view_settings": {"view_transform": "Standard", "look": "None", "exposure": 0.15, "gamma": 1.0},
+    }
 
 
 def look_at(obj: bpy.types.Object, target: Vector) -> None:
@@ -251,37 +261,47 @@ def look_at(obj: bpy.types.Object, target: Vector) -> None:
     obj.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
 
 
-def configure_camera_and_light() -> dict[str, Any]:
+def configure_camera_and_light(camera_kind: str) -> dict[str, Any]:
     camera_data = bpy.data.cameras.new("R17 scientific oblique camera")
     camera = bpy.data.objects.new("R17 scientific oblique camera", camera_data)
     bpy.context.collection.objects.link(camera)
     camera.location = Vector((92.0, -118.0, 56.0))
     target = Vector((-3.0, 15.0, -1.2))
     look_at(camera, target)
-    camera.data.type = "ORTHO"
-    camera.data.ortho_scale = 118.0
-    camera.data.lens = 55
+    if camera_kind == "perspective":
+        camera.data.type = "PERSP"
+        camera.data.lens = 82.0
+        camera.data.sensor_width = 36.0
+    else:
+        camera.data.type = "ORTHO"
+        camera.data.ortho_scale = 118.0
+        camera.data.lens = 55
     bpy.context.scene.camera = camera
 
     light_data = bpy.data.lights.new("soft key light", "AREA")
     light = bpy.data.objects.new("soft key light", light_data)
     bpy.context.collection.objects.link(light)
-    light.location = Vector((-40.0, -40.0, 75.0))
-    light.data.energy = 1700.0
-    light.data.size = 70.0
+    light.location = Vector((-58.0, -36.0, 82.0))
+    light.data.energy = 1900.0
+    light.data.size = 62.0
 
     fill_data = bpy.data.lights.new("very soft fill", "AREA")
     fill = bpy.data.objects.new("very soft fill", fill_data)
     bpy.context.collection.objects.link(fill)
     fill.location = Vector((45.0, 65.0, 42.0))
-    fill.data.energy = 320.0
+    fill.data.energy = 260.0
     fill.data.size = 95.0
+    pitch_deg = math.degrees(camera.rotation_euler.x)
+    heading_deg = math.degrees(camera.rotation_euler.z)
     return {
         "camera": {
-            "type": "orthographic",
+            "type": camera_kind,
             "location_km": list(camera.location),
             "target_km": list(target),
-            "ortho_scale_km": camera.data.ortho_scale,
+            "ortho_scale_km": camera.data.ortho_scale if camera.data.type == "ORTHO" else None,
+            "focal_length_mm": camera.data.lens,
+            "pitch_deg": pitch_deg,
+            "heading_deg": heading_deg,
         },
         "lighting": {
             "key": {"type": "AREA", "location_km": list(light.location), "energy": light.data.energy, "size_km": light.data.size},
@@ -301,10 +321,10 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
     terrain_manifest = read_json(TERRAIN_MANIFEST)
     arr, gt = load_raster(args.terrain)
     _, terrain_metadata = build_terrain(arr, gt, args.vertical_exaggeration)
-    build_sea_plane(terrain_metadata)
-    build_corridor_overlay(terrain_metadata)
+    build_sea_plane(terrain_metadata, args.sea_alpha)
+    build_corridor_overlay(terrain_metadata, outline_scale=args.corridor_outline_scale, fill_alpha=args.corridor_fill_alpha)
     scene_record = configure_scene(args.output, args.width, args.height)
-    camera_record = configure_camera_and_light()
+    camera_record = configure_camera_and_light(args.camera)
 
     bpy.ops.render.render(write_still=True)
     blend_record: dict[str, Any] | None = None
@@ -323,11 +343,14 @@ def render(args: argparse.Namespace) -> dict[str, Any]:
         "sea_level_plane": {
             "z_km": 0.0,
             "vertical_reference": terrain_manifest["vertical_reference"],
-            "material": "subtle transparent pale blue, alpha 0.09",
+            "material": f"subtle transparent pale blue, alpha {args.sea_alpha:.3f}",
+            "alpha": args.sea_alpha,
         },
         "corridor_overlay": {
             "source": CORRIDOR_GEOJSON.as_posix(),
             "method": "actual corridor polygon in EPSG:32654, centred with the terrain and drawn as a thin muted warm accent slightly above the sea-level plane for legibility",
+            "outline_scale_relative_to_r17": args.corridor_outline_scale,
+            "fill_alpha": args.corridor_fill_alpha,
         },
         "output": {"path": args.output.as_posix(), "bytes": args.output.stat().st_size if args.output.is_file() else 0},
         "blend_scene": blend_record,
