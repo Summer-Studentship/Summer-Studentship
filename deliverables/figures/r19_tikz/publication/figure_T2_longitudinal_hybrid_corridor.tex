@@ -1,0 +1,39 @@
+\documentclass[tikz,border=2mm]{standalone}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{arrows.meta,decorations.pathreplacing,positioning}
+\definecolor{deep}{HTML}{183552}
+\definecolor{shelf}{HTML}{8EC6D8}
+\definecolor{transition}{HTML}{E3B448}
+\definecolor{local}{HTML}{B84537}
+\definecolor{ink}{HTML}{263238}
+\begin{document}
+\begin{tikzpicture}[font=\sffamily]
+\begin{axis}[width=24.0cm,height=5.7cm,xmin=-1.350,xmax=124.019,x dir=reverse,ymin=-1200.0,ymax=460.0,axis on top,clip=false,grid=both,grid style={draw=gray!18,line width=0.25pt},xlabel={Distance offshore from selected wet nearshore interface (km)},ylabel={Bed elevation (m, EGM2008)},tick label style={font=\scriptsize},label style={font=\small},legend style={draw=none,fill=white,fill opacity=0.85,text opacity=1,font=\scriptsize}]
+\path[fill=deep!7] (axis cs:124.019,-1200.0) rectangle (axis cs:85,460.0);
+\path[fill=shelf!20] (axis cs:85,0) rectangle (axis cs:25,460.0);
+\path[fill=transition!24] (axis cs:12.000,-1200.0) rectangle (axis cs:0,460.0);
+\path[fill=local!14] (axis cs:0,-1200.0) rectangle (axis cs:-0.772617,460.0);
+\path[fill=blue!10] (axis cs:124.019,0) rectangle (axis cs:-1.35,-1200.0);
+\addplot[black!60,line width=0.7pt] coordinates {(124,0) (-1.35,0)};
+\addplot[deep,line width=1.25pt] table[x=distance_offshore_km,y=bed_elevation_m,col sep=comma]{../data/bathymetry_profile.csv};
+\draw[densely dashed,local,line width=0.9pt] (axis cs:0,-1200.0) -- (axis cs:0,452.0);
+\draw[{Latex[length=2.0mm]}-{Latex[length=2.0mm]},deep,line width=0.7pt] (axis cs:123.319007,-1135.0) -- (axis cs:0,-1135.0) node[midway,above=2pt,fill=white,inner sep=1.5pt]{$L_c=123.319\,\mathrm{km}$};
+\draw[{Latex[length=1.7mm]}-{Latex[length=1.7mm]},local,line width=0.7pt] (axis cs:0,-1112.0) -- (axis cs:-0.772617,-1112.0);
+\node[anchor=west,align=left,text=ink,fill=white,fill opacity=0.88,text opacity=1,inner sep=1.8pt] at (axis cs:-1.23,-1102.0) {$L_{3D}=0.773\,\mathrm{km}$\\candidate/framework};
+\node[align=center,text=deep,fill=white,fill opacity=0.90,text opacity=1,inner sep=2pt] at (axis cs:63,405) {REGIONAL2D -- NLSWE\\\scriptsize depth-averaged; long-wave; approximately hydrostatic};
+\node[align=center,text=ink,fill=white,fill opacity=0.90,text opacity=1,inner sep=2pt,font=\scriptsize] at (axis cs:6,330) {Transition /\\coupling region};
+\node[align=center,text=local,fill=white,fill opacity=0.94,text opacity=1,inner sep=2pt,font=\scriptsize] at (axis cs:-0.82,360) {LOCAL3D -- URANS--VOF\\vertical flow; overtopping\\structure/impact response};
+\draw[-{Latex[length=2.5mm]},line width=1.0pt,local] (axis cs:0,288) -- (axis cs:-0.82,288) node[midway,above=2pt,fill=white,inner sep=1pt]{$\eta,\ q_n/q_t$};
+\node[circle,draw=ink,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:108.319007,75) {M0};
+\node[circle,draw=ink,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:98,75) {M1};
+\node[circle,draw=ink,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:48,75) {M2};
+\node[circle,draw=ink,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:6,105) {M3};
+\node[circle,draw=local,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:0,105) {M4};
+\node[circle,draw=local,fill=white,inner sep=1.3pt,font=\scriptsize] at (axis cs:-0.65,175) {M5};
+\node[anchor=north,align=center,fill=white,fill opacity=0.9,text opacity=1,inner sep=1.5pt,font=\scriptsize] at (axis cs:98,57) {deep-water\\propagation};
+\node[anchor=north,align=center,fill=white,fill opacity=0.9,text opacity=1,inner sep=1.5pt,font=\scriptsize] at (axis cs:48,57) {shelf /\\shoaling};
+% M4 is the selected wet interface; full wording is carried in the caption and handoff.
+\end{axis}
+\end{tikzpicture}
+\end{document}

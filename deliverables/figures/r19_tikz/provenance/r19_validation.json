@@ -1,0 +1,79 @@
+{
+  "figures": {
+    "T0": {
+      "latex_overfull_count": 0,
+      "latex_warning_count": 0,
+      "pdf_nonempty": true,
+      "png_dimensions": {
+        "height_px": 1861,
+        "width_px": 3049
+      },
+      "png_mean_rgb": 234.64674816671302,
+      "png_nonblank": true,
+      "svg_error": null,
+      "svg_parses": true
+    },
+    "T1": {
+      "latex_overfull_count": 0,
+      "latex_warning_count": 0,
+      "pdf_nonempty": true,
+      "png_dimensions": {
+        "height_px": 1573,
+        "width_px": 2054
+      },
+      "png_mean_rgb": 183.10008732231447,
+      "png_nonblank": true,
+      "svg_error": null,
+      "svg_parses": true
+    },
+    "T2": {
+      "latex_overfull_count": 0,
+      "latex_warning_count": 0,
+      "pdf_nonempty": true,
+      "png_dimensions": {
+        "height_px": 727,
+        "width_px": 3490
+      },
+      "png_mean_rgb": 240.083996063949,
+      "png_nonblank": true,
+      "svg_error": null,
+      "svg_parses": true
+    },
+    "T3": {
+      "latex_overfull_count": 0,
+      "latex_warning_count": 0,
+      "pdf_nonempty": true,
+      "png_dimensions": {
+        "height_px": 863,
+        "width_px": 2254
+      },
+      "png_mean_rgb": 243.74033099561552,
+      "png_nonblank": true,
+      "svg_error": null,
+      "svg_parses": true
+    }
+  },
+  "generated_at_utc": "2026-08-12T21:52:53Z",
+  "geometry_checks": {
+    "corridor_length_identity_residual_m": 0.0,
+    "local3d_dimensions_positive": true,
+    "orientation_residual_degrees": 0.0,
+    "selected_interface_section_id": "kamaishi-nearshore-interface",
+    "source_marker_only_no_rupture_polygon": true,
+    "width_constant_m": 8000.0
+  },
+  "git_diff_check": {
+    "output": "",
+    "return_code": 0
+  },
+  "git_status_short_at_validation": {
+    "output": "AM deliverables/figures/r19_tikz/data/bathymetry_profile.csv\nA  deliverables/figures/r19_tikz/data/bathymetry_profile_metadata.json\nAM deliverables/figures/r19_tikz/data/domain_geometry.json\nA  deliverables/figures/r19_tikz/data/milestone_positions.json\nAM deliverables/figures/r19_tikz/data/r19_domain_geometry_register.json\nA  deliverables/figures/r19_tikz/previews/figure_T0_domain_package_composite.png\nA  deliverables/figures/r19_tikz/previews/figure_T1_tohoku_kamaishi_domain.png\nA  deliverables/figures/r19_tikz/previews/figure_T2_longitudinal_hybrid_corridor.png\nA  deliverables/figures/r19_tikz/previews/figure_T3_computational_domains.png\nAM deliverables/figures/r19_tikz/provenance/T1_qgis_base.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T0_domain_package_composite.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T1_tohoku_kamaishi_domain.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T2_longitudinal_hybrid_corridor.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T3_computational_domains.provenance.json\nA  deliverables/figures/r19_tikz/provenance/r19_completion_state.json\nA  deliverables/figures/r19_tikz/provenance/r19_figure_manifest.json\nA  deliverables/figures/r19_tikz/provenance/r19_validation.json\nAM deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.png\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.svg\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.tex\nAM deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.png\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.svg\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.tex\nAM deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.png\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.svg\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.tex\nAM deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.png\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.svg\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.tex\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.pdf\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.png\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.qgz\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.svg\nA  deliverables/figures/r19_tikz/sources/python/r19_tikz_domain_figures.py\nA  docs/project/r19_completion_report.md\nAM docs/project/r19_domain_geometry_register.json\nAM docs/project/r19_domain_geometry_register.md\nA  docs/project/r19_figure_handoff.md\nAM tools/figures/r19_tikz_domain_figures.py",
+    "return_code": 0
+  },
+  "overall_pass": true,
+  "schema": {
+    "name": "tsunami.r19.validation",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE"
+}

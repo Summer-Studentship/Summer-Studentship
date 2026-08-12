@@ -1,0 +1,45 @@
+{
+  "allowed_claim": "Shows the accepted current R10/G6 delivery corridor geometry over real ETOPO/QGIS context.",
+  "basename": "figure_T1_tohoku_kamaishi_domain",
+  "caveat": "The corridor is delivery integration geometry, not exact Kamaishi harbour reconstruction, spatial qualification, calibration or historical validation.",
+  "classification": "POSTER_CANDIDATE",
+  "outputs": {
+    "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T1_tohoku_kamaishi_domain figure_T1_tohoku_kamaishi_domain.tex",
+    "latex_return_code": 0,
+    "overfull_log_lines": [],
+    "pdf": {
+      "bytes": 961431,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.pdf",
+      "sha256": "9cbd87991166fdc93620f7421ed2b146e05dbf53ec0c0a8c484976b5960b2a10"
+    },
+    "png": {
+      "bytes": 1355383,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.png",
+      "sha256": "900c9f0fd469c321e1928f2e128049641069eb739354dd48048ca4e5684ff03e"
+    },
+    "preview": {
+      "bytes": 1355383,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/previews/figure_T1_tohoku_kamaishi_domain.png",
+      "sha256": "900c9f0fd469c321e1928f2e128049641069eb739354dd48048ca4e5684ff03e"
+    },
+    "svg": {
+      "bytes": 1317164,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.svg",
+      "sha256": "7f3d3877a6982e3b7cacba27c90ef76bc1028b0bd6a8935dc94b9d5087d523be"
+    },
+    "svg_conversion_method": "pdftocairo -svg",
+    "svg_conversion_output": "",
+    "tex": {
+      "bytes": 2938,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.tex",
+      "sha256": "8745ce02ce38078e5e14146f2a416ebdae0fb8d2a988603a35e490ff273f8281"
+    },
+    "warning_log_lines": []
+  },
+  "purpose": "Locate the 2011 event reference, Kamaishi, and the current Regional2D corridor geometry in real GIS geography."
+}

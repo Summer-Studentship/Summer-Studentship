@@ -1,0 +1,10 @@
+{
+  "generated_at_utc": "2026-08-12T21:52:53Z",
+  "manifest": {
+    "bytes": 20016,
+    "exists": true,
+    "path": "deliverables/figures/r19_tikz/provenance/r19_figure_manifest.json",
+    "sha256": "d91289efc6b5262a45370036de9ba5187e1746e24731e4200d52e6f2aa598250"
+  },
+  "status": "COMPLETE"
+}

@@ -1,0 +1,45 @@
+{
+  "allowed_claim": "Shows real R10 h400 mesh bathymetry along the accepted centreline with conceptual hybrid regions.",
+  "basename": "figure_T2_longitudinal_hybrid_corridor",
+  "caveat": "Transition band is conceptual/framework; selected interface is current implementation choice, not a universal optimum.",
+  "classification": "POSTER_CANDIDATE",
+  "outputs": {
+    "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T2_longitudinal_hybrid_corridor figure_T2_longitudinal_hybrid_corridor.tex",
+    "latex_return_code": 0,
+    "overfull_log_lines": [],
+    "pdf": {
+      "bytes": 97491,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.pdf",
+      "sha256": "14f9c5bd18807e4205a78b71f059bdb69c4eaeccb887d889adb39c5db8a071a9"
+    },
+    "png": {
+      "bytes": 196594,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.png",
+      "sha256": "b7d588a22a7eb6fab8cc6cd19900b2fa3ed6f7b6390eb2cf136b22ee6ef3f0df"
+    },
+    "preview": {
+      "bytes": 196594,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/previews/figure_T2_longitudinal_hybrid_corridor.png",
+      "sha256": "b7d588a22a7eb6fab8cc6cd19900b2fa3ed6f7b6390eb2cf136b22ee6ef3f0df"
+    },
+    "svg": {
+      "bytes": 170230,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.svg",
+      "sha256": "a14c04c9e4b1d671652e328d73a2920cd2c9dcbc69a5008bac00d97c7792325d"
+    },
+    "svg_conversion_method": "pdftocairo -svg",
+    "svg_conversion_output": "",
+    "tex": {
+      "bytes": 3709,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.tex",
+      "sha256": "8303077a7b4fad42f448d2c8410e9c8173c9596150d8e99670b01e16bdff393a"
+    },
+    "warning_log_lines": []
+  },
+  "purpose": "Explain the full-width source-to-interface bathymetry and one-way 2D-to-3D framework."
+}

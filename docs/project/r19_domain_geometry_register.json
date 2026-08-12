@@ -1,0 +1,302 @@
+{
+  "generated_at_utc": "2026-08-12T21:52:46Z",
+  "quantities": [
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "USGS official origin coordinates used as event reference",
+      "figure_usage": "T1, T2, register",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "lat_E, lon_E",
+      "unit": "deg",
+      "value": {
+        "latitude": 38.297,
+        "longitude": 142.373
+      }
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Event reference transformed to EPSG:32654",
+      "figure_usage": "T1, T2",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "E_E, N_E",
+      "unit": "m",
+      "value": {
+        "x": 620060.6382673722,
+        "y": 4239660.228986675
+      }
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Kamaishi proxy coordinate used by the delivery corridor evidence",
+      "figure_usage": "T1",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "lat_K, lon_K",
+      "unit": "deg",
+      "value": {
+        "latitude": 39.2757,
+        "longitude": 141.8858
+      }
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Source-side boundary to selected interface/inland end: pre-extent + event-to-interface + inland extent",
+      "figure_usage": "T1, T2, T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "symbol": "L_c",
+      "unit": "m",
+      "value": 123319.00726067027
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Event reference to selected wet nearshore interface along centreline",
+      "figure_usage": "T1, T2",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "symbol": "L_prop",
+      "unit": "m",
+      "value": 108319.00726067027
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Constant corridor width; narrowing disabled",
+      "figure_usage": "T1, T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "W_c",
+      "unit": "m",
+      "value": 8000.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Source-to-interface bearing clockwise from north in the accepted projected corridor basis",
+      "figure_usage": "T1",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "theta_c",
+      "unit": "deg",
+      "value": 338.006313127818
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Same bearing as degrees west of grid north for compact figure annotation",
+      "figure_usage": "T1",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "theta_c_W",
+      "unit": "deg",
+      "value": 21.993686872182025
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Centreline length before the event reference",
+      "figure_usage": "T1, T2",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "symbol": "L_pre",
+      "unit": "m",
+      "value": 15000.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Configured inland extent after selected target/interface",
+      "figure_usage": "T1, T2",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/tohoku-kamaishi-centreline.json",
+      "symbol": "L_inland",
+      "unit": "m",
+      "value": 0.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Regional2D offshore relaxation/sponge width",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/case.json",
+      "symbol": "S_off",
+      "unit": "m",
+      "value": 10000.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Regional2D side relaxation/sponge width",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/case.json",
+      "symbol": "S_side",
+      "unit": "m",
+      "value": 1000.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Selected wet nearshore interface centre",
+      "figure_usage": "T1, T2, T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "I",
+      "unit": "m / deg",
+      "value": {
+        "projected_m": {
+          "x": 579494.6902478148,
+          "y": 4340096.334024712
+        },
+        "wgs84": {
+          "latitude": 39.206500468041476,
+          "longitude": 141.920714192236
+        }
+      }
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Water depth at selected wet nearshore interface centre",
+      "figure_usage": "T2, T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/manifests/corridors/kamaishi-delivery-corridor-evidence.json",
+      "symbol": "h_I",
+      "unit": "m",
+      "value": 8.0
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case",
+      "definition": "Bathymetry profile sampled from frozen R10 h400 Regional2D mesh/S1 lineage",
+      "figure_usage": "T2",
+      "source": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+      "symbol": "profile",
+      "unit": "mixed",
+      "value": {
+        "bed_elevation_max_m": -22.407207012966843,
+        "bed_elevation_min_m": -1077.4007756119922,
+        "distance_offshore_max_km": 123.21947283937752,
+        "distance_offshore_min_km": 0.09953442129290488,
+        "sample_count": 155
+      }
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "G6 Local3D simple_rigid_barrier streamwise length",
+      "figure_usage": "T2, T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "L_3D",
+      "unit": "m",
+      "value": 772.6171671085285
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "G6 Local3D simple_rigid_barrier span",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "W_3D",
+      "unit": "m",
+      "value": 6996.499999999534
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "G6 Local3D simple_rigid_barrier vertical domain height",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "H_3D",
+      "unit": "m",
+      "value": 100.35649860871837
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "Simple rigid barrier streamwise position",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "x_b",
+      "unit": "m",
+      "value": 463.5703002651171
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "Simple rigid barrier streamwise thickness",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "t_b",
+      "unit": "m",
+      "value": 38.630858355426426
+    },
+    {
+      "confidence": "HIGH",
+      "current_case_or_framework": "current-case/framework",
+      "definition": "Simple rigid barrier height",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "H_b",
+      "unit": "m",
+      "value": 19.315429177713213
+    },
+    {
+      "confidence": "BLOCKED_BY_SOURCE_DATA",
+      "current_case_or_framework": "unresolved",
+      "definition": "No rigorously authorised shoreline intersection is promoted; selected wet interface is not relabelled as shoreline",
+      "figure_usage": "T2 caveat",
+      "source": "/home/helios/Projects/Summer-Studentship-r19-tikz/deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+      "symbol": "shoreline",
+      "unit": "n/a",
+      "value": "UNRESOLVED"
+    },
+    {
+      "confidence": "BLOCKED_BY_SOURCE_DATA",
+      "current_case_or_framework": "unresolved",
+      "definition": "Finite-fault displacement model exists, but no authoritative 2D rupture polygon is used for R19 T1",
+      "figure_usage": "T1 exclusion",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/case/inputs/data/earthquake/tohoku_vertical_displacement.json",
+      "symbol": "rupture polygon",
+      "unit": "n/a",
+      "value": "UNRESOLVED"
+    },
+    {
+      "confidence": "MEDIUM",
+      "current_case_or_framework": "framework",
+      "definition": "G6 simple rigid barrier is a representative replay geometry, not a final defence-placement prescription",
+      "figure_usage": "T3",
+      "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+      "symbol": "candidate defence region",
+      "unit": "n/a",
+      "value": "framework only"
+    }
+  ],
+  "schema": {
+    "name": "tsunami.r19.domain_geometry_register",
+    "version": "1.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real 2011 Tohoku event",
+      "verified formulation",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "historical_observations": {
+      "DART_21418_distance_km": 544.6414251283993,
+      "DIRECT": 0,
+      "NOWPHAS_802G_distance_km": 12.273092741550476,
+      "PROXY": 1,
+      "TARGET_ONLY": 28,
+      "total": 29
+    },
+    "hybrid_status": {
+      "implemented": "accepted G6 one-way Regional2D-to-Local3D replay",
+      "r10_h400_local3d_replay": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED"
+    },
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ]
+  },
+  "status": "COMPLETE"
+}

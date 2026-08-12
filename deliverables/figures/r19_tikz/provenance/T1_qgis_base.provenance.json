@@ -1,0 +1,68 @@
+{
+  "content_policy": "clean QGIS geography/base only; no legend or workflow text; TikZ adds engineering annotations",
+  "export_return_codes": {
+    "pdf": 0,
+    "png": 0,
+    "svg": 0
+  },
+  "exports": {
+    "pdf": {
+      "bytes": 908712,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.pdf",
+      "sha256": "c51c2014c4c7f29119acb630c66c07b49e9c0a0767c30b598f412ed1c35aac59"
+    },
+    "png": {
+      "bytes": 262962,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.png",
+      "sha256": "c8392c0855dfc709599f1b80beea6526643927fd9a0ca09875a55cc352ae6a59"
+    },
+    "project": {
+      "bytes": 10027,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.qgz",
+      "sha256": "ed7d93eb028904841e5da8ebf3407be84ddb54b356729e38025f21cd720f9f2f"
+    },
+    "svg": {
+      "bytes": 394368,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.svg",
+      "sha256": "b80af103a99f0828cc50aabfcb8bcadac4b4d8ca255c3ca21de3cf7d753a868d"
+    }
+  },
+  "extent_epsg32654": {
+    "height_px": 245,
+    "width_px": 325,
+    "xmax": 720000.0,
+    "xmin": 395000.0,
+    "ymax": 4420000.0,
+    "ymin": 4175000.0
+  },
+  "generated_at_utc": "2026-08-12T21:52:47Z",
+  "layers": {
+    "coastline": {
+      "bytes": 114688,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+      "sha256": "6747086e238f79b23e7e31c577d87b87dd008bffbd7063104d9f1e69299fdf3c"
+    },
+    "hillshade": {
+      "bytes": 37798,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/regional_hillshade.tif",
+      "sha256": "653b8f33736156ddf21b5ba0f6d7cfdf060aec43c5970a07fa7f8f16d67d8cc7"
+    },
+    "topobathymetry": {
+      "bytes": 298937,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_regional_tohoku_utm54.tif",
+      "sha256": "7080ed1756218c558bfb837555536b903e82c7fe47ac85fe202094fde2d21a2c"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r19.t1_qgis_base",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE"
+}

@@ -1,0 +1,45 @@
+{
+  "allowed_claim": "Shows accepted current-case computational geometry and one-way replay coupling terms.",
+  "basename": "figure_T3_computational_domains",
+  "caveat": "The Local3D box is a TikZ pseudo-3D engineering schematic derived from G6 dimensions, not a new OpenFOAM render or validation result.",
+  "classification": "REPORT_CANDIDATE",
+  "outputs": {
+    "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T3_computational_domains figure_T3_computational_domains.tex",
+    "latex_return_code": 0,
+    "overfull_log_lines": [],
+    "pdf": {
+      "bytes": 113876,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.pdf",
+      "sha256": "d42e95c339f883cfbc0fa4dd71b09afd2df855a5efe5e627d8d0176473725ec8"
+    },
+    "png": {
+      "bytes": 242134,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.png",
+      "sha256": "6eadd4fe18e4b3bcea560729d9f4e9a36b9458987a870944b5354403a8ebb35d"
+    },
+    "preview": {
+      "bytes": 242134,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/previews/figure_T3_computational_domains.png",
+      "sha256": "6eadd4fe18e4b3bcea560729d9f4e9a36b9458987a870944b5354403a8ebb35d"
+    },
+    "svg": {
+      "bytes": 179908,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.svg",
+      "sha256": "3921c5121f430903f43b5cb9722cdfd71b796217175fc4d2d208af863a0a7d6f"
+    },
+    "svg_conversion_method": "pdftocairo -svg",
+    "svg_conversion_output": "",
+    "tex": {
+      "bytes": 4373,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.tex",
+      "sha256": "aa15a97df668c29f98560a40ec4b82a25f819083e0a656cfbd1df0f259506175"
+    },
+    "warning_log_lines": []
+  },
+  "purpose": "Show the Regional2D and Local3D computational domains, boundary labels, and transfer quantities."
+}

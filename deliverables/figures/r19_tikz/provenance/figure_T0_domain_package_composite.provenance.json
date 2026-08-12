@@ -1,0 +1,45 @@
+{
+  "allowed_claim": "Useful combined preview of the R19 domain figure package.",
+  "basename": "figure_T0_domain_package_composite",
+  "caveat": "Composite is a layout preview, not an additional scientific result.",
+  "classification": "POSTER_CANDIDATE",
+  "outputs": {
+    "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T0_domain_package_composite figure_T0_domain_package_composite.tex",
+    "latex_return_code": 0,
+    "overfull_log_lines": [],
+    "pdf": {
+      "bytes": 1078246,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.pdf",
+      "sha256": "bb700129756f0b76c6971ce0799180643430650952beaf9cf8fec579b3899b86"
+    },
+    "png": {
+      "bytes": 1031932,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.png",
+      "sha256": "7d629ac6aeb762ac58af0729085a7b9fe81207568d7bb2aab233a875045f9574"
+    },
+    "preview": {
+      "bytes": 1031932,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/previews/figure_T0_domain_package_composite.png",
+      "sha256": "7d629ac6aeb762ac58af0729085a7b9fe81207568d7bb2aab233a875045f9574"
+    },
+    "svg": {
+      "bytes": 2393314,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.svg",
+      "sha256": "81f7dc6bccd489f772c8df21cfdbc767adfb33d215c648eefeb00d1b409ae6d8"
+    },
+    "svg_conversion_method": "self-contained SVG wrapper with embedded PNG panels",
+    "svg_conversion_output": "pdftocairo returned -6; dvisvgm returned 252; wrote embedded SVG wrapper",
+    "tex": {
+      "bytes": 1233,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.tex",
+      "sha256": "729e29272d990c3f6d6d39ef89b3eefd2ea8e9bae0d71730ee49bb8044858f0b"
+    },
+    "warning_log_lines": []
+  },
+  "purpose": "Preview T1, T3, and T2 in a poster-panel composition."
+}

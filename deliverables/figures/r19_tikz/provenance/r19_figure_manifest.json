@@ -1,0 +1,422 @@
+{
+  "branch": "feat/r19-tikz-domain-figures",
+  "completion_report": {
+    "bytes": 12739,
+    "exists": true,
+    "path": "docs/project/r19_completion_report.md",
+    "sha256": "65d3fa173beb9c2b049ec30bc6512139709cd4d777421d6f5f64ab68e0b9b570"
+  },
+  "current_head": "2e2f843ab55404e332a9780410f852705fa0ba95",
+  "figures": {
+    "T0": {
+      "allowed_claim": "Useful combined preview of the R19 domain figure package.",
+      "basename": "figure_T0_domain_package_composite",
+      "caveat": "Composite is a layout preview, not an additional scientific result.",
+      "classification": "POSTER_CANDIDATE",
+      "outputs": {
+        "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T0_domain_package_composite figure_T0_domain_package_composite.tex",
+        "latex_return_code": 0,
+        "overfull_log_lines": [],
+        "pdf": {
+          "bytes": 1078246,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.pdf",
+          "sha256": "bb700129756f0b76c6971ce0799180643430650952beaf9cf8fec579b3899b86"
+        },
+        "png": {
+          "bytes": 1031932,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.png",
+          "sha256": "7d629ac6aeb762ac58af0729085a7b9fe81207568d7bb2aab233a875045f9574"
+        },
+        "preview": {
+          "bytes": 1031932,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/previews/figure_T0_domain_package_composite.png",
+          "sha256": "7d629ac6aeb762ac58af0729085a7b9fe81207568d7bb2aab233a875045f9574"
+        },
+        "svg": {
+          "bytes": 2393314,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.svg",
+          "sha256": "81f7dc6bccd489f772c8df21cfdbc767adfb33d215c648eefeb00d1b409ae6d8"
+        },
+        "svg_conversion_method": "self-contained SVG wrapper with embedded PNG panels",
+        "svg_conversion_output": "pdftocairo returned -6; dvisvgm returned 252; wrote embedded SVG wrapper",
+        "tex": {
+          "bytes": 1233,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.tex",
+          "sha256": "729e29272d990c3f6d6d39ef89b3eefd2ea8e9bae0d71730ee49bb8044858f0b"
+        },
+        "warning_log_lines": []
+      },
+      "purpose": "Preview T1, T3, and T2 in a poster-panel composition."
+    },
+    "T1": {
+      "allowed_claim": "Shows the accepted current R10/G6 delivery corridor geometry over real ETOPO/QGIS context.",
+      "basename": "figure_T1_tohoku_kamaishi_domain",
+      "caveat": "The corridor is delivery integration geometry, not exact Kamaishi harbour reconstruction, spatial qualification, calibration or historical validation.",
+      "classification": "POSTER_CANDIDATE",
+      "outputs": {
+        "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T1_tohoku_kamaishi_domain figure_T1_tohoku_kamaishi_domain.tex",
+        "latex_return_code": 0,
+        "overfull_log_lines": [],
+        "pdf": {
+          "bytes": 961431,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.pdf",
+          "sha256": "9cbd87991166fdc93620f7421ed2b146e05dbf53ec0c0a8c484976b5960b2a10"
+        },
+        "png": {
+          "bytes": 1355383,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.png",
+          "sha256": "900c9f0fd469c321e1928f2e128049641069eb739354dd48048ca4e5684ff03e"
+        },
+        "preview": {
+          "bytes": 1355383,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/previews/figure_T1_tohoku_kamaishi_domain.png",
+          "sha256": "900c9f0fd469c321e1928f2e128049641069eb739354dd48048ca4e5684ff03e"
+        },
+        "svg": {
+          "bytes": 1317164,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.svg",
+          "sha256": "7f3d3877a6982e3b7cacba27c90ef76bc1028b0bd6a8935dc94b9d5087d523be"
+        },
+        "svg_conversion_method": "pdftocairo -svg",
+        "svg_conversion_output": "",
+        "tex": {
+          "bytes": 2938,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.tex",
+          "sha256": "8745ce02ce38078e5e14146f2a416ebdae0fb8d2a988603a35e490ff273f8281"
+        },
+        "warning_log_lines": []
+      },
+      "purpose": "Locate the 2011 event reference, Kamaishi, and the current Regional2D corridor geometry in real GIS geography."
+    },
+    "T2": {
+      "allowed_claim": "Shows real R10 h400 mesh bathymetry along the accepted centreline with conceptual hybrid regions.",
+      "basename": "figure_T2_longitudinal_hybrid_corridor",
+      "caveat": "Transition band is conceptual/framework; selected interface is current implementation choice, not a universal optimum.",
+      "classification": "POSTER_CANDIDATE",
+      "outputs": {
+        "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T2_longitudinal_hybrid_corridor figure_T2_longitudinal_hybrid_corridor.tex",
+        "latex_return_code": 0,
+        "overfull_log_lines": [],
+        "pdf": {
+          "bytes": 97491,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.pdf",
+          "sha256": "14f9c5bd18807e4205a78b71f059bdb69c4eaeccb887d889adb39c5db8a071a9"
+        },
+        "png": {
+          "bytes": 196594,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.png",
+          "sha256": "b7d588a22a7eb6fab8cc6cd19900b2fa3ed6f7b6390eb2cf136b22ee6ef3f0df"
+        },
+        "preview": {
+          "bytes": 196594,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/previews/figure_T2_longitudinal_hybrid_corridor.png",
+          "sha256": "b7d588a22a7eb6fab8cc6cd19900b2fa3ed6f7b6390eb2cf136b22ee6ef3f0df"
+        },
+        "svg": {
+          "bytes": 170230,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.svg",
+          "sha256": "a14c04c9e4b1d671652e328d73a2920cd2c9dcbc69a5008bac00d97c7792325d"
+        },
+        "svg_conversion_method": "pdftocairo -svg",
+        "svg_conversion_output": "",
+        "tex": {
+          "bytes": 3709,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.tex",
+          "sha256": "8303077a7b4fad42f448d2c8410e9c8173c9596150d8e99670b01e16bdff393a"
+        },
+        "warning_log_lines": []
+      },
+      "purpose": "Explain the full-width source-to-interface bathymetry and one-way 2D-to-3D framework."
+    },
+    "T3": {
+      "allowed_claim": "Shows accepted current-case computational geometry and one-way replay coupling terms.",
+      "basename": "figure_T3_computational_domains",
+      "caveat": "The Local3D box is a TikZ pseudo-3D engineering schematic derived from G6 dimensions, not a new OpenFOAM render or validation result.",
+      "classification": "REPORT_CANDIDATE",
+      "outputs": {
+        "latex_command": "latexmk -pdf -halt-on-error -interaction=nonstopmode -outdir=/tmp/r19-latex-build/figure_T3_computational_domains figure_T3_computational_domains.tex",
+        "latex_return_code": 0,
+        "overfull_log_lines": [],
+        "pdf": {
+          "bytes": 113876,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.pdf",
+          "sha256": "d42e95c339f883cfbc0fa4dd71b09afd2df855a5efe5e627d8d0176473725ec8"
+        },
+        "png": {
+          "bytes": 242134,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.png",
+          "sha256": "6eadd4fe18e4b3bcea560729d9f4e9a36b9458987a870944b5354403a8ebb35d"
+        },
+        "preview": {
+          "bytes": 242134,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/previews/figure_T3_computational_domains.png",
+          "sha256": "6eadd4fe18e4b3bcea560729d9f4e9a36b9458987a870944b5354403a8ebb35d"
+        },
+        "svg": {
+          "bytes": 179908,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.svg",
+          "sha256": "3921c5121f430903f43b5cb9722cdfd71b796217175fc4d2d208af863a0a7d6f"
+        },
+        "svg_conversion_method": "pdftocairo -svg",
+        "svg_conversion_output": "",
+        "tex": {
+          "bytes": 4373,
+          "exists": true,
+          "path": "deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.tex",
+          "sha256": "aa15a97df668c29f98560a40ec4b82a25f819083e0a656cfbd1df0f259506175"
+        },
+        "warning_log_lines": []
+      },
+      "purpose": "Show the Regional2D and Local3D computational domains, boundary labels, and transfer quantities."
+    }
+  },
+  "generated_at_utc": "2026-08-12T21:52:53Z",
+  "geometry": {
+    "bytes": 16607,
+    "exists": true,
+    "path": "deliverables/figures/r19_tikz/data/domain_geometry.json",
+    "sha256": "00e17d876b2f1cc0a5a864405309ae7306aaa7751951bfda02bd25f6c5569db7"
+  },
+  "handoff": {
+    "bytes": 4754,
+    "exists": true,
+    "path": "docs/project/r19_figure_handoff.md",
+    "sha256": "22d67fb2d1a95ab27387e6eefa18a1d380a35b1dc337ede7b8fe18595fcc26ae"
+  },
+  "hard_exclusions_honoured": [
+    "no Regional2D run",
+    "no R10 rerun",
+    "no h250/temporal/calibration work",
+    "no corridor/source geometry changes",
+    "no OpenFOAM retuning or Local3D run",
+    "no poster/report editing",
+    "no AI-generated illustration"
+  ],
+  "qgis_base": {
+    "content_policy": "clean QGIS geography/base only; no legend or workflow text; TikZ adds engineering annotations",
+    "export_return_codes": {
+      "pdf": 0,
+      "png": 0,
+      "svg": 0
+    },
+    "exports": {
+      "pdf": {
+        "bytes": 908712,
+        "exists": true,
+        "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.pdf",
+        "sha256": "c51c2014c4c7f29119acb630c66c07b49e9c0a0767c30b598f412ed1c35aac59"
+      },
+      "png": {
+        "bytes": 262962,
+        "exists": true,
+        "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.png",
+        "sha256": "c8392c0855dfc709599f1b80beea6526643927fd9a0ca09875a55cc352ae6a59"
+      },
+      "project": {
+        "bytes": 10027,
+        "exists": true,
+        "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.qgz",
+        "sha256": "ed7d93eb028904841e5da8ebf3407be84ddb54b356729e38025f21cd720f9f2f"
+      },
+      "svg": {
+        "bytes": 394368,
+        "exists": true,
+        "path": "deliverables/figures/r19_tikz/qgis/T1_qgis_base.svg",
+        "sha256": "b80af103a99f0828cc50aabfcb8bcadac4b4d8ca255c3ca21de3cf7d753a868d"
+      }
+    },
+    "extent_epsg32654": {
+      "height_px": 245,
+      "width_px": 325,
+      "xmax": 720000.0,
+      "xmin": 395000.0,
+      "ymax": 4420000.0,
+      "ymin": 4175000.0
+    },
+    "generated_at_utc": "2026-08-12T21:52:47Z",
+    "layers": {
+      "coastline": {
+        "bytes": 114688,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/sources/qgis/derived/regional_coastline_0m.gpkg",
+        "sha256": "6747086e238f79b23e7e31c577d87b87dd008bffbd7063104d9f1e69299fdf3c"
+      },
+      "hillshade": {
+        "bytes": 37798,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/sources/qgis/derived/regional_hillshade.tif",
+        "sha256": "653b8f33736156ddf21b5ba0f6d7cfdf060aec43c5970a07fa7f8f16d67d8cc7"
+      },
+      "topobathymetry": {
+        "bytes": 298937,
+        "exists": true,
+        "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_regional_tohoku_utm54.tif",
+        "sha256": "7080ed1756218c558bfb837555536b903e82c7fe47ac85fe202094fde2d21a2c"
+      }
+    },
+    "schema": {
+      "name": "tsunami.r19.t1_qgis_base",
+      "version": "1.0.0"
+    },
+    "status": "COMPLETE"
+  },
+  "register": {
+    "json": {
+      "bytes": 11771,
+      "exists": true,
+      "path": "docs/project/r19_domain_geometry_register.json",
+      "sha256": "b4cdcead2229d459637a516b7660e1856a551b774f758a060434e1dcec273c32"
+    },
+    "md": {
+      "bytes": 7567,
+      "exists": true,
+      "path": "docs/project/r19_domain_geometry_register.md",
+      "sha256": "b234900ec731edcd13f4186c4a1d3cd96bc738aa7cae09c9df5d44504b54f2fe"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r19.figure_package_manifest",
+    "version": "1.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real 2011 Tohoku event",
+      "verified formulation",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "historical_observations": {
+      "DART_21418_distance_km": 544.6414251283993,
+      "DIRECT": 0,
+      "NOWPHAS_802G_distance_km": 12.273092741550476,
+      "PROXY": 1,
+      "TARGET_ONLY": 28,
+      "total": 29
+    },
+    "hybrid_status": {
+      "implemented": "accepted G6 one-way Regional2D-to-Local3D replay",
+      "r10_h400_local3d_replay": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED"
+    },
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ]
+  },
+  "starting_head": "2e2f843ab55404e332a9780410f852705fa0ba95",
+  "status": "COMPLETE",
+  "toolchain": {
+    "latexmk_version": "Latexmk, John Collins, 9 March 2026. Version 4.88",
+    "pdflatex_version": "pdfTeX 3.141592653-2.6-1.40.29 (TeX Live 2026)",
+    "pdftocairo_version": "pdftocairo version 26.07.0",
+    "pgfplots_sty": "/home/helios/.local/texlive/2026/texmf-dist/tex/latex/pgfplots/pgfplots.sty",
+    "pgfplots_version": "\\gdef\\pgfplotsversion{1.18.2}",
+    "png_conversion_method": "pdftocairo -png -singlefile -r 320",
+    "python": "3.14.6",
+    "qgis_version": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+    "standalone_cls": "/home/helios/.local/texlive/2026/texmf-dist/tex/latex/standalone/standalone.cls",
+    "svg_conversion_method": "pdftocairo -svg; T0 embedded-PNG SVG wrapper fallback for embedded-PDF composites",
+    "tikz_available": true
+  },
+  "validation": {
+    "figures": {
+      "T0": {
+        "latex_overfull_count": 0,
+        "latex_warning_count": 0,
+        "pdf_nonempty": true,
+        "png_dimensions": {
+          "height_px": 1861,
+          "width_px": 3049
+        },
+        "png_mean_rgb": 234.64674816671302,
+        "png_nonblank": true,
+        "svg_error": null,
+        "svg_parses": true
+      },
+      "T1": {
+        "latex_overfull_count": 0,
+        "latex_warning_count": 0,
+        "pdf_nonempty": true,
+        "png_dimensions": {
+          "height_px": 1573,
+          "width_px": 2054
+        },
+        "png_mean_rgb": 183.10008732231447,
+        "png_nonblank": true,
+        "svg_error": null,
+        "svg_parses": true
+      },
+      "T2": {
+        "latex_overfull_count": 0,
+        "latex_warning_count": 0,
+        "pdf_nonempty": true,
+        "png_dimensions": {
+          "height_px": 727,
+          "width_px": 3490
+        },
+        "png_mean_rgb": 240.083996063949,
+        "png_nonblank": true,
+        "svg_error": null,
+        "svg_parses": true
+      },
+      "T3": {
+        "latex_overfull_count": 0,
+        "latex_warning_count": 0,
+        "pdf_nonempty": true,
+        "png_dimensions": {
+          "height_px": 863,
+          "width_px": 2254
+        },
+        "png_mean_rgb": 243.74033099561552,
+        "png_nonblank": true,
+        "svg_error": null,
+        "svg_parses": true
+      }
+    },
+    "generated_at_utc": "2026-08-12T21:52:53Z",
+    "geometry_checks": {
+      "corridor_length_identity_residual_m": 0.0,
+      "local3d_dimensions_positive": true,
+      "orientation_residual_degrees": 0.0,
+      "selected_interface_section_id": "kamaishi-nearshore-interface",
+      "source_marker_only_no_rupture_polygon": true,
+      "width_constant_m": 8000.0
+    },
+    "git_diff_check": {
+      "output": "",
+      "return_code": 0
+    },
+    "git_status_short_at_validation": {
+      "output": "AM deliverables/figures/r19_tikz/data/bathymetry_profile.csv\nA  deliverables/figures/r19_tikz/data/bathymetry_profile_metadata.json\nAM deliverables/figures/r19_tikz/data/domain_geometry.json\nA  deliverables/figures/r19_tikz/data/milestone_positions.json\nAM deliverables/figures/r19_tikz/data/r19_domain_geometry_register.json\nA  deliverables/figures/r19_tikz/previews/figure_T0_domain_package_composite.png\nA  deliverables/figures/r19_tikz/previews/figure_T1_tohoku_kamaishi_domain.png\nA  deliverables/figures/r19_tikz/previews/figure_T2_longitudinal_hybrid_corridor.png\nA  deliverables/figures/r19_tikz/previews/figure_T3_computational_domains.png\nAM deliverables/figures/r19_tikz/provenance/T1_qgis_base.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T0_domain_package_composite.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T1_tohoku_kamaishi_domain.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T2_longitudinal_hybrid_corridor.provenance.json\nAM deliverables/figures/r19_tikz/provenance/figure_T3_computational_domains.provenance.json\nA  deliverables/figures/r19_tikz/provenance/r19_completion_state.json\nA  deliverables/figures/r19_tikz/provenance/r19_figure_manifest.json\nA  deliverables/figures/r19_tikz/provenance/r19_validation.json\nAM deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.png\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.svg\nA  deliverables/figures/r19_tikz/publication/figure_T0_domain_package_composite.tex\nAM deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.png\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.svg\nA  deliverables/figures/r19_tikz/publication/figure_T1_tohoku_kamaishi_domain.tex\nAM deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.png\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.svg\nA  deliverables/figures/r19_tikz/publication/figure_T2_longitudinal_hybrid_corridor.tex\nAM deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.pdf\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.png\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.svg\nA  deliverables/figures/r19_tikz/publication/figure_T3_computational_domains.tex\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.pdf\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.png\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.qgz\nAM deliverables/figures/r19_tikz/qgis/T1_qgis_base.svg\nA  deliverables/figures/r19_tikz/sources/python/r19_tikz_domain_figures.py\nA  docs/project/r19_completion_report.md\nAM docs/project/r19_domain_geometry_register.json\nAM docs/project/r19_domain_geometry_register.md\nA  docs/project/r19_figure_handoff.md\nAM tools/figures/r19_tikz_domain_figures.py",
+      "return_code": 0
+    },
+    "overall_pass": true,
+    "schema": {
+      "name": "tsunami.r19.validation",
+      "version": "1.0.0"
+    },
+    "status": "COMPLETE"
+  }
+}

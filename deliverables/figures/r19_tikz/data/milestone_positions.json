@@ -1,0 +1,50 @@
+{
+  "distance_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+  "milestones": [
+    {
+      "authority": "event epicentre projected onto current centreline",
+      "distance_offshore_km": 108.31900726067028,
+      "exactness": "exact current-case event reference",
+      "id": "M0"
+    },
+    {
+      "authority": "schematic region over real profile",
+      "distance_band_offshore_km": [
+        85.0,
+        123.21947283937752
+      ],
+      "exactness": "conceptual deep-water Regional2D propagation band",
+      "id": "M1"
+    },
+    {
+      "authority": "schematic region over real profile",
+      "distance_band_offshore_km": [
+        25.0,
+        85.0
+      ],
+      "exactness": "conceptual shelf/shoaling band",
+      "id": "M2"
+    },
+    {
+      "authority": "schematic transition band",
+      "distance_band_offshore_km": [
+        0.0,
+        12.0
+      ],
+      "exactness": "conceptual coupling/transition region",
+      "id": "M3"
+    },
+    {
+      "authority": "selected_nearshore_interface in corridor evidence",
+      "distance_offshore_km": 0.0,
+      "exactness": "exact selected wet interface for current implementation",
+      "id": "M4"
+    },
+    {
+      "authority": "G6 Local3D simple_rigid_barrier summary",
+      "distance_offshore_km": -0.7726171671085286,
+      "exactness": "candidate/framework Local3D region; not a universal coastal footprint",
+      "id": "M5"
+    }
+  ]
+}

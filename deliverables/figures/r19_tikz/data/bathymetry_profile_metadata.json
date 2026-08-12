@@ -1,0 +1,17 @@
+{
+  "bed_elevation_max_m": -22.407207012966843,
+  "bed_elevation_min_m": -1077.4007756119922,
+  "csv": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+  "distance_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+  "distance_offshore_max_km": 123.21947283937752,
+  "distance_offshore_min_km": 0.09953442129290488,
+  "method": "nearest unstructured h400 cell centre to R10/G6 centreline samples in EPSG:32654; no smoothing or rerun",
+  "nearest_distance_m": {
+    "max": 223.20212258165333,
+    "median": 90.08004472984948,
+    "min": 4.637185814173174
+  },
+  "sample_count": 155,
+  "sampling_interval_m": 800.0,
+  "source": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+}

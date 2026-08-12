@@ -1,0 +1,552 @@
+{
+  "bathymetry_profile": {
+    "bed_elevation_max_m": -22.407207012966843,
+    "bed_elevation_min_m": -1077.4007756119922,
+    "csv": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+    "distance_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+    "distance_offshore_max_km": 123.21947283937752,
+    "distance_offshore_min_km": 0.09953442129290488,
+    "method": "nearest unstructured h400 cell centre to R10/G6 centreline samples in EPSG:32654; no smoothing or rerun",
+    "nearest_distance_m": {
+      "max": 223.20212258165333,
+      "median": 90.08004472984948,
+      "min": 4.637185814173174
+    },
+    "sample_count": 155,
+    "sampling_interval_m": 800.0,
+    "source": "/home/helios/SimulationData/Summer-Studentship/results/r11-regional2d-storage-poc/r10-h400-limited-linear/regional2d.h5"
+  },
+  "branch": "feat/r19-tikz-domain-figures",
+  "case_regional_boundaries": {
+    "inland": {
+      "kind": "transmissive"
+    },
+    "left_side": {
+      "kind": "radiation"
+    },
+    "offshore": {
+      "kind": "radiation"
+    },
+    "relaxation": {
+      "enabled": true,
+      "maximum_rate_per_s": 0.02,
+      "profile_exponent": 2.0
+    },
+    "right_side": {
+      "kind": "radiation"
+    }
+  },
+  "corridor": {
+    "disclaimer": "Delivery integration geometry; not an exact Kamaishi harbour reconstruction.",
+    "formula_version": "flat-ended-epicentre-target-v1",
+    "inland_extent_m": 0.0,
+    "interface_or_inland_end_projected_m": {
+      "x": 579494.6902478148,
+      "y": 4340096.334024712
+    },
+    "left_normal_unit": {
+      "x": -0.9272251249158654,
+      "y": -0.37450442951286683
+    },
+    "offshore_sponge_width_m": 10000.0,
+    "orientation_degrees_clockwise_from_north_source_to_interface": 338.006313127818,
+    "orientation_degrees_west_of_north_source_to_interface": 21.993686872182025,
+    "polygon_projected_m": [
+      {
+        "x": 621969.3042104017,
+        "y": 4224253.834394885
+      },
+      {
+        "x": 629387.1052097286,
+        "y": 4227249.869830988
+      },
+      {
+        "x": 583203.5907474782,
+        "y": 4341594.351742764
+      },
+      {
+        "x": 575785.7897481513,
+        "y": 4338598.316306661
+      },
+      {
+        "x": 621969.3042104017,
+        "y": 4224253.834394885
+      }
+    ],
+    "propagation_length_event_to_interface_m": 108319.00726067027,
+    "side_sponge_width_m": 1000.0,
+    "source_side_pre_extent_m": 15000.0,
+    "source_side_start_projected_m": {
+      "x": 625678.2047100652,
+      "y": 4225751.852112937
+    },
+    "tangent_unit": {
+      "x": -0.37450442951286683,
+      "y": 0.9272251249158654
+    },
+    "total_length_m": 123319.00726067027,
+    "width_m": 8000.0
+  },
+  "coupling_export": {
+    "boundary_patch_name": "boundary.inland",
+    "contract_version": 1,
+    "fields": [
+      "depth",
+      "momentum_x",
+      "momentum_y",
+      "bed_elevation",
+      "free_surface_elevation"
+    ],
+    "mesh_id": "gmsh:kamaishi-regional.msh",
+    "sample_count": 8,
+    "samples": [
+      {
+        "cell": 350,
+        "face": 775,
+        "local_index": 0,
+        "x_m": 579032.0585004971,
+        "y_m": 4339907.320985813
+      },
+      {
+        "cell": 373,
+        "face": 819,
+        "local_index": 1,
+        "x_m": 581812.3430375573,
+        "y_m": 4341030.272517707
+      },
+      {
+        "cell": 381,
+        "face": 834,
+        "local_index": 2,
+        "x_m": 578105.2969881436,
+        "y_m": 4339533.003808515
+      },
+      {
+        "cell": 385,
+        "face": 843,
+        "local_index": 3,
+        "x_m": 579958.8200128505,
+        "y_m": 4340281.638163111
+      },
+      {
+        "cell": 397,
+        "face": 864,
+        "local_index": 4,
+        "x_m": 580885.5815252039,
+        "y_m": 4340655.95534041
+      },
+      {
+        "cell": 1676,
+        "face": 3022,
+        "local_index": 5,
+        "x_m": 577178.5354757903,
+        "y_m": 4339158.686631218
+      },
+      {
+        "cell": 1958,
+        "face": 3417,
+        "local_index": 6,
+        "x_m": 582739.1045499106,
+        "y_m": 4341404.589695006
+      },
+      {
+        "cell": 1996,
+        "face": 3460,
+        "local_index": 7,
+        "x_m": 576251.773963437,
+        "y_m": 4338784.369453919
+      }
+    ],
+    "section_id": "kamaishi-nearshore-interface"
+  },
+  "coupling_transfer_terms": {
+    "derived_terms": [
+      "eta = free_surface_elevation",
+      "q_n and q_t from momentum_x/momentum_y projection",
+      "depth-uniform velocity lift",
+      "alpha.water from eta and vertical face bounds"
+    ],
+    "one_way": true,
+    "openfoam_generated_fields": [
+      "U",
+      "alpha.water"
+    ],
+    "regional_fields": [
+      "depth",
+      "momentum_x",
+      "momentum_y",
+      "bed_elevation",
+      "free_surface_elevation"
+    ]
+  },
+  "crs": "EPSG:32654 WGS 84 / UTM zone 54N; vertical EGM2008 positive up where applicable",
+  "event": {
+    "epicentre_projected_m": {
+      "x": 620060.6382673722,
+      "y": 4239660.228986675
+    },
+    "epicentre_wgs84": {
+      "latitude": 38.297,
+      "longitude": 142.373
+    },
+    "kamaishi_proxy_projected_m": {
+      "x": 576405.0287043336,
+      "y": 4347745.941305269
+    },
+    "kamaishi_proxy_wgs84": {
+      "latitude": 39.2757,
+      "longitude": 141.8858
+    }
+  },
+  "generated_at_utc": "2026-08-12T21:52:46Z",
+  "git_sha": "2e2f843ab55404e332a9780410f852705fa0ba95",
+  "local3d": {
+    "barrier": {
+      "height_m": 19.315429177713213,
+      "span_fraction": 1.0,
+      "streamwise_position_m": 463.5703002651171,
+      "thickness_m": 38.630858355426426
+    },
+    "boundary_policy": {
+      "ambient_turbulence_values": {
+        "k": 4.773996477284592e-06,
+        "omega": 0.0020652662947163915
+      },
+      "damping_configuration": {
+        "damping_does_not_overlap_barrier": true,
+        "damping_does_not_overlap_inlet": true,
+        "damping_does_not_overlap_primary_comparison_probes": true,
+        "enabled": true,
+        "limitations": [
+          "The side damping policy is a baseline open-ocean numerical treatment, not calibration to observed harbour reflection."
+        ],
+        "model": "isotropicDamping",
+        "profile": "halfCosineRamp",
+        "value": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "zones": [
+          {
+            "cell_count": 6.0,
+            "characteristic_speed_m_per_s": 28.66633319868325,
+            "direction": [
+              1.0,
+              0.0,
+              0.0
+            ],
+            "lambda_per_s": 0.9894105185699393,
+            "model": "isotropicDamping",
+            "name": "outlet",
+            "origin": [
+              656.7245920422492,
+              0.0,
+              0.0
+            ],
+            "profile": "halfCosineRamp",
+            "residence_time_s": 4.042811274921016,
+            "target_e_folds": 4.0,
+            "undamped_core_width_m": 656.7245920422492,
+            "width_m": 115.89257506627928
+          },
+          {
+            "cell_count": 6.0,
+            "characteristic_speed_m_per_s": 28.66633319868325,
+            "direction": [
+              0.0,
+              -1.0,
+              0.0
+            ],
+            "lambda_per_s": 0.16388956305973076,
+            "model": "isotropicDamping",
+            "name": "sideLeft",
+            "origin": [
+              0.0,
+              699.6499999999535,
+              0.0
+            ],
+            "profile": "halfCosineRamp",
+            "residence_time_s": 24.40667926207217,
+            "target_e_folds": 4.0,
+            "undamped_core_width_m": 5597.199999999628,
+            "width_m": 699.6499999999535
+          },
+          {
+            "cell_count": 6.0,
+            "characteristic_speed_m_per_s": 28.66633319868325,
+            "direction": [
+              0.0,
+              1.0,
+              0.0
+            ],
+            "lambda_per_s": 0.16388956305973076,
+            "model": "isotropicDamping",
+            "name": "sideRight",
+            "origin": [
+              0.0,
+              6296.849999999581,
+              0.0
+            ],
+            "profile": "halfCosineRamp",
+            "residence_time_s": 24.40667926207217,
+            "target_e_folds": 4.0,
+            "undamped_core_width_m": 5597.199999999628,
+            "width_m": 699.6499999999535
+          }
+        ]
+      },
+      "field_boundary_types": {
+        "U": {
+          "atmosphere": "pressureInletOutletVelocity",
+          "barrier": "noSlip",
+          "inlet": "timeVaryingMappedFixedValue",
+          "outlet": "pressureInletOutletVelocity",
+          "sideLeft": "pressureInletOutletVelocity",
+          "sideRight": "pressureInletOutletVelocity",
+          "terrain": "noSlip"
+        },
+        "alpha.water": {
+          "atmosphere": "inletOutlet",
+          "barrier": "zeroGradient",
+          "inlet": "timeVaryingMappedFixedValue",
+          "outlet": "variableHeightFlowRate",
+          "sideLeft": "variableHeightFlowRate",
+          "sideRight": "variableHeightFlowRate",
+          "terrain": "zeroGradient"
+        },
+        "k": {
+          "atmosphere": "inletOutlet",
+          "barrier": "kqRWallFunction",
+          "inlet": "fixedValue",
+          "outlet": "inletOutlet",
+          "sideLeft": "inletOutlet",
+          "sideRight": "inletOutlet",
+          "terrain": "kqRWallFunction"
+        },
+        "nut": {
+          "atmosphere": "calculated",
+          "barrier": "nutUSpaldingWallFunction",
+          "inlet": "calculated",
+          "outlet": "calculated",
+          "sideLeft": "calculated",
+          "sideRight": "calculated",
+          "terrain": "nutUSpaldingWallFunction"
+        },
+        "omega": {
+          "atmosphere": "inletOutlet",
+          "barrier": "omegaWallFunction",
+          "inlet": "fixedValue",
+          "outlet": "inletOutlet",
+          "sideLeft": "inletOutlet",
+          "sideRight": "inletOutlet",
+          "terrain": "omegaWallFunction"
+        },
+        "p_rgh": {
+          "atmosphere": "prghTotalPressure",
+          "barrier": "fixedFluxPressure",
+          "inlet": "fixedFluxPressure",
+          "outlet": "prghTotalPressure",
+          "sideLeft": "prghTotalPressure",
+          "sideRight": "prghTotalPressure",
+          "terrain": "fixedFluxPressure"
+        }
+      },
+      "implementation_authority": {
+        "image": "docker.io/openfoam/openfoam11-paraview510:11",
+        "openfoam": "OpenFOAM Foundation 11",
+        "selected_patterns": [
+          "pressureInletOutletVelocity",
+          "prghTotalPressure",
+          "variableHeightFlowRate",
+          "inletOutlet",
+          "isotropicDamping"
+        ]
+      },
+      "limitations": [
+        "Open-ocean damping is a numerical baseline policy, not observational calibration.",
+        "The coupling inlet remains one-way timeVaryingMappedFixedValue reconstruction."
+      ],
+      "mesh_patch_types": {
+        "atmosphere": "patch",
+        "barrier": "wall",
+        "inlet": "patch",
+        "outlet": "patch",
+        "sideLeft": "patch",
+        "sideRight": "patch",
+        "terrain": "wall"
+      },
+      "mode": "open_ocean_damped",
+      "patch_names": [
+        "inlet",
+        "outlet",
+        "sideLeft",
+        "sideRight",
+        "atmosphere",
+        "terrain",
+        "barrier"
+      ],
+      "policy_version": "1.0.0",
+      "reference_pressure": {
+        "p_rgh_p0": 0.0,
+        "unit": "Pa relative gauge"
+      },
+      "replay_schema": {
+        "name": "tsunami.openfoam_replay_configuration",
+        "version": "1.1.0"
+      },
+      "schema": {
+        "name": "tsunami.openfoam_boundary_policy",
+        "version": "1.0.0"
+      }
+    },
+    "cell_counts": {
+      "span": 60,
+      "streamwise": 40,
+      "vertical": 16
+    },
+    "cell_dimensions_m": {
+      "minimum_m": 6.272281163044898,
+      "span_m": 116.60833333332558,
+      "streamwise_m": 19.315429177713213,
+      "vertical_m": 6.272281163044898
+    },
+    "dimensions_m": {
+      "height": 100.35649860871837,
+      "length": 772.6171671085285,
+      "span": 6996.499999999534
+    },
+    "initial_water_level_m": 38.630858355426426,
+    "source": "/home/helios/SimulationData/Summer-Studentship/g6-kamaishi/local/simple_rigid_barrier/openfoam_case_summary.json",
+    "status": "accepted G6 simple_rigid_barrier replay geometry; representative Kamaishi-forced local replay, not exact harbour reconstruction",
+    "variant": "simple_rigid_barrier"
+  },
+  "map_extent": {
+    "height_px": 245,
+    "width_px": 325,
+    "xmax": 720000.0,
+    "xmin": 395000.0,
+    "ymax": 4420000.0,
+    "ymin": 4175000.0
+  },
+  "milestones": {
+    "distance_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+    "milestones": [
+      {
+        "authority": "event epicentre projected onto current centreline",
+        "distance_offshore_km": 108.31900726067028,
+        "exactness": "exact current-case event reference",
+        "id": "M0"
+      },
+      {
+        "authority": "schematic region over real profile",
+        "distance_band_offshore_km": [
+          85.0,
+          123.21947283937752
+        ],
+        "exactness": "conceptual deep-water Regional2D propagation band",
+        "id": "M1"
+      },
+      {
+        "authority": "schematic region over real profile",
+        "distance_band_offshore_km": [
+          25.0,
+          85.0
+        ],
+        "exactness": "conceptual shelf/shoaling band",
+        "id": "M2"
+      },
+      {
+        "authority": "schematic transition band",
+        "distance_band_offshore_km": [
+          0.0,
+          12.0
+        ],
+        "exactness": "conceptual coupling/transition region",
+        "id": "M3"
+      },
+      {
+        "authority": "selected_nearshore_interface in corridor evidence",
+        "distance_offshore_km": 0.0,
+        "exactness": "exact selected wet interface for current implementation",
+        "id": "M4"
+      },
+      {
+        "authority": "G6 Local3D simple_rigid_barrier summary",
+        "distance_offshore_km": -0.7726171671085286,
+        "exactness": "candidate/framework Local3D region; not a universal coastal footprint",
+        "id": "M5"
+      }
+    ]
+  },
+  "schema": {
+    "name": "tsunami.r19.domain_geometry",
+    "version": "1.0.0"
+  },
+  "scientific_authority": {
+    "event_limitations": [
+      "real 2011 Tohoku event",
+      "verified formulation",
+      "not spatially qualified",
+      "not physically calibrated",
+      "not historically validated"
+    ],
+    "event_result": "R10 h400 limited_linear",
+    "event_result_status": "BEST_AVAILABLE_NUMERICALLY_UNCERTAIN",
+    "historical_observations": {
+      "DART_21418_distance_km": 544.6414251283993,
+      "DIRECT": 0,
+      "NOWPHAS_802G_distance_km": 12.273092741550476,
+      "PROXY": 1,
+      "TARGET_ONLY": 28,
+      "total": 29
+    },
+    "hybrid_status": {
+      "implemented": "accepted G6 one-way Regional2D-to-Local3D replay",
+      "r10_h400_local3d_replay": "REPLAY_VOF_BEHAVIOUR_UNRESOLVED"
+    },
+    "regional_numerical_authority": [
+      "MODEL_CONSISTENT_WITH_DOCUMENTATION_FIXES",
+      "GLOBAL_FIRST_ORDER_VERIFIED",
+      "SECOND_ORDER_VERIFIED"
+    ]
+  },
+  "selected_nearshore_interface": {
+    "bed_elevation_m": -8.0,
+    "boundary_patch_name": "boundary.inland",
+    "cross_section_maximum_bed_elevation_m": -1.0,
+    "cross_section_maximum_depth_m": 79.0,
+    "cross_section_minimum_bed_elevation_m": -79.0,
+    "cross_section_minimum_depth_m": 1.0,
+    "cross_section_sample_count": 8,
+    "distance_from_proxy_m": 8250.0,
+    "projected_m": {
+      "x": 579494.6902478148,
+      "y": 4340096.334024712
+    },
+    "section_id": "kamaishi-nearshore-interface",
+    "selection_fallback": true,
+    "selection_reason": "selected closest fully wet ETOPO cross-section in fallback 5-50 m centreline band",
+    "water_depth_m": 8.0,
+    "wgs84": {
+      "latitude": 39.206500468041476,
+      "longitude": 141.920714192236
+    }
+  },
+  "source_model": {
+    "epicentre": {
+      "latitude": 38.297,
+      "longitude": 142.373,
+      "role": "epicentre"
+    },
+    "vertical_displacement": {
+      "event_id": "usgs-usp000hvnu",
+      "model_id": "usgs-usp000hvnu-basic-inversion",
+      "rupture_polygon_for_T1": "UNRESOLVED: no authoritative poster-layer rupture polygon is used; R19 T1 shows the event/source marker only",
+      "source_format": "USGS finite-fault basic_inversion.param",
+      "source_uri": "https://earthquake.usgs.gov/product/finite-fault/usp000hvnu/us/1539808472261/basic_inversion.param",
+      "subfault_count": 325
+    }
+  },
+  "status": "COMPLETE"
+}
