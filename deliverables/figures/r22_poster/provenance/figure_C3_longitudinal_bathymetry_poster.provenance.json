@@ -1,0 +1,87 @@
+{
+  "conversion": {
+    "pdf": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "pdf",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.pdf",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    },
+    "png": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "png",
+        "-w",
+        "3600",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.png",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    }
+  },
+  "curve_preservation": {
+    "axis_limits_unchanged": {
+      "x": [
+        0.0,
+        124.0
+      ],
+      "y": [
+        -1150.0,
+        120.0
+      ]
+    },
+    "data_unchanged": true,
+    "event_reference_km": 108.31900726067028,
+    "sea_level_reference_unchanged": true,
+    "selected_interface_km": 0.0,
+    "x_coordinate_unchanged": true,
+    "y_coordinate_unchanged": true
+  },
+  "generated_at_utc": "2026-08-13T20:09:36Z",
+  "interpretive_boundary_note": "Region boundaries are interpretive rather than fixed physical thresholds; the selected wet nearshore interface is the current case-specific 2D->3D extraction location.",
+  "lineage": "R10 h400 Regional mesh -> accepted corridor centreline -> sampled bed field -> longitudinal profile",
+  "outputs": {
+    "pdf": "deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.pdf",
+    "png": "deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.png",
+    "preview": "deliverables/figures/r22_poster/previews/figure_C3_longitudinal_bathymetry_poster.png",
+    "svg": "deliverables/figures/r22_poster/publication/figure_C3_longitudinal_bathymetry_poster.svg"
+  },
+  "source_copy": "deliverables/figures/r22_poster/sources/data/bathymetry_profile_r19_source_copy.csv",
+  "source_csv": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+  "source_line": "Profile: R10 h400 corridor-centreline sampling; bed elevation referenced to EGM2008.",
+  "source_sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3",
+  "status": "COMPLETE",
+  "validation": {
+    "pdf_nonempty": true,
+    "png": {
+      "height_px": 2240,
+      "mean": 61477.5,
+      "nonblank": true,
+      "width_px": 3600
+    },
+    "svg": {
+      "editable_text_present": true,
+      "missing_groups": [],
+      "parses": true,
+      "text_element_count": 38
+    }
+  },
+  "zone_explanations": {
+    "Nearshore transition": "Increasingly local free-surface deformation, vertical motion and structure interaction motivate transfer toward high-fidelity Local3D impact modelling.",
+    "Offshore long-wave propagation": "Depth-averaged, approximately hydrostatic tsunami propagation is efficiently represented by the Regional2D NLSWE model.",
+    "Shelf / shoaling influence": "Decreasing water depth and changing bathymetry increasingly modify wave celerity, amplitude and waveform toward the coast."
+  },
+  "zone_labels": [
+    "Offshore long-wave propagation",
+    "Shelf / shoaling influence",
+    "Nearshore transition"
+  ]
+}

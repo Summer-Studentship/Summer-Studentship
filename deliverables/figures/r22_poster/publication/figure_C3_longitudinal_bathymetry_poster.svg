@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1120" viewBox="0 0 1800 1120">
+<rect x="0" y="0" width="1800" height="1120" fill="#FFFFFF"/>
+<g id="title">
+<text x="130.00" y="52.00" font-family="Arial, Helvetica, sans-serif" font-size="34.00" font-weight="700" fill="#1B2430" text-anchor="start">Figure C. Longitudinal bathymetry along the Kamaishi Regional2D corridor</text>
+<text x="130.00" y="92.00" font-family="Arial, Helvetica, sans-serif" font-size="22.00" font-weight="400" fill="#56616F" text-anchor="start">Bed elevation sampled along the corridor centreline from the offshore event region toward the selected wet nearshore interface.</text>
+</g>
+<g id="region_bands">
+<rect x="130.0" y="170.0" width="484.35483870967744" height="560.0" fill="#DFE8EF" opacity="0.72"/>
+<rect x="614.3548387096774" y="170.0" width="906.6129032258065" height="560.0" fill="#E7EAD7" opacity="0.72"/>
+<rect x="1520.967741935484" y="170.0" width="149.0322580645161" height="560.0" fill="#F3E6BF" opacity="0.72"/>
+</g>
+<g id="axes">
+<rect x="130.0" y="170.0" width="1540.0" height="560.0" fill="none" stroke="#26323B" stroke-width="2.0"/>
+<line x1="130.0" y1="663.8582677165355" x2="1670.0" y2="663.8582677165355" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="669.86" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-1000</text>
+<line x1="130.0" y1="553.6220472440946" x2="1670.0" y2="553.6220472440946" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="559.62" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-750</text>
+<line x1="130.0" y1="443.38582677165357" x2="1670.0" y2="443.38582677165357" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="449.39" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-500</text>
+<line x1="130.0" y1="333.14960629921256" x2="1670.0" y2="333.14960629921256" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="339.15" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-250</text>
+<line x1="130.0" y1="222.91338582677164" x2="1670.0" y2="222.91338582677164" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="228.91" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">0</text>
+<line x1="179.67741935483872" y1="730.0" x2="179.67741935483872" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="179.68" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">120</text>
+<line x1="428.06451612903226" y1="730.0" x2="428.06451612903226" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="428.06" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">100</text>
+<line x1="676.4516129032259" y1="730.0" x2="676.4516129032259" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="676.45" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">80</text>
+<line x1="924.8387096774194" y1="730.0" x2="924.8387096774194" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="924.84" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">60</text>
+<line x1="1173.225806451613" y1="730.0" x2="1173.225806451613" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="1173.23" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">40</text>
+<line x1="1421.6129032258066" y1="730.0" x2="1421.6129032258066" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="1421.61" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">20</text>
+<line x1="1670.0" y1="730.0" x2="1670.0" y2="744.0" stroke="#26323B" stroke-width="2"/>
+<text x="1670.00" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">0</text>
+<text x="900.00" y="814.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323B" text-anchor="middle">Distance offshore from selected wet nearshore interface, km</text>
+<text x="42.00" y="450.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323B" text-anchor="middle" transform="rotate(-90 42 450.00)">Bed elevation, m (EGM2008)</text>
+</g>
+<g id="sea_level">
+<line x1="130.0" y1="222.91338582677164" x2="1670.0" y2="222.91338582677164" stroke="#8B9299" stroke-width="2.0" stroke-dasharray="8 8"/>
+<text x="1660.00" y="210.91" font-family="Arial, Helvetica, sans-serif" font-size="17.00" font-weight="400" fill="#68737C" text-anchor="end">z = 0 m</text>
+</g>
+<g id="region_labels">
+<text x="378.39" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#31475B" text-anchor="middle">Offshore long-wave propagation</text>
+<text x="1067.66" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#526137" text-anchor="middle">Shelf / shoaling influence</text>
+<text x="1595.48" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#765C26" text-anchor="middle">Nearshore transition</text>
+</g>
+<g id="event_reference">
+<line x1="324.7478130529659" y1="170.0" x2="324.7478130529659" y2="730.0" stroke="#C8352C" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="314.75" y="704.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#C8352C" text-anchor="end" transform="rotate(-90 314.75 704.00)">2011 event ref.</text>
+</g>
+<g id="interface">
+<line x1="1670.0" y1="170.0" x2="1670.0" y2="730.0" stroke="#14865C" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="1660.00" y="706.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#14865C" text-anchor="end">selected wet interface</text>
+</g>
+<g id="profile">
+<path d="M 139.69 697.99 L 149.63 695.56 L 159.56 695.71 L 169.50 693.75 L 179.44 691.40 L 189.37 689.16 L 199.31 688.89 L 209.24 686.51 L 219.18 680.85 L 229.11 680.76 L 239.05 677.98 L 248.98 677.57 L 258.92 674.26 L 268.85 670.97 L 278.79 664.86 L 288.73 664.06 L 298.66 662.92 L 308.60 660.58 L 318.53 656.77 L 328.47 652.92 L 338.40 651.96 L 348.34 645.61 L 358.27 644.97 L 368.21 641.13 L 378.15 637.02 L 388.08 633.62 L 398.02 633.04 L 407.95 625.78 L 417.89 623.94 L 427.82 619.42 L 437.76 616.67 L 447.69 613.50 L 457.63 609.35 L 467.56 605.02 L 477.50 600.65 L 487.44 596.52 L 497.37 596.30 L 507.31 592.03 L 517.24 587.31 L 527.18 582.83 L 537.11 574.49 L 547.05 575.51 L 556.98 573.26 L 566.92 568.51 L 576.85 563.68 L 586.79 561.76 L 596.73 554.98 L 606.66 554.17 L 616.60 549.38 L 626.53 544.76 L 636.47 540.39 L 646.40 540.27 L 656.34 535.97 L 666.27 531.94 L 676.21 528.04 L 686.15 525.41 L 696.08 523.42 L 706.02 521.49 L 715.95 518.23 L 725.89 511.49 L 735.82 512.82 L 745.76 512.71 L 755.69 509.75 L 765.63 506.83 L 775.56 503.61 L 785.50 497.66 L 795.44 498.71 L 805.37 497.73 L 815.31 495.13 L 825.24 492.51 L 835.18 491.35 L 845.11 490.50 L 855.05 488.43 L 864.98 486.68 L 874.92 484.72 L 884.85 483.01 L 894.79 482.82 L 904.73 480.84 L 914.66 474.73 L 924.60 475.85 L 934.53 473.41 L 944.47 472.97 L 954.40 470.10 L 964.34 466.72 L 974.27 463.39 L 984.21 459.59 L 994.15 458.33 L 1004.08 454.89 L 1014.02 450.74 L 1023.95 446.05 L 1033.89 445.19 L 1043.82 437.53 L 1053.76 436.49 L 1063.69 430.79 L 1073.63 425.39 L 1083.56 420.67 L 1093.50 419.46 L 1103.44 408.43 L 1113.37 406.95 L 1123.31 401.08 L 1133.24 398.37 L 1143.18 394.93 L 1153.11 390.26 L 1163.05 386.11 L 1172.98 382.29 L 1182.92 379.02 L 1192.85 378.78 L 1202.79 375.41 L 1212.73 371.99 L 1222.66 368.34 L 1232.60 364.77 L 1242.53 362.92 L 1252.47 360.90 L 1262.40 356.98 L 1272.34 353.00 L 1282.27 351.60 L 1292.21 344.29 L 1302.15 345.09 L 1312.08 340.29 L 1322.02 335.93 L 1331.95 331.57 L 1341.89 331.48 L 1351.82 326.73 L 1361.76 322.76 L 1371.69 319.12 L 1381.63 316.55 L 1391.56 314.39 L 1401.50 312.07 L 1411.44 308.67 L 1421.37 305.36 L 1431.31 302.37 L 1441.24 302.32 L 1451.18 299.42 L 1461.11 296.77 L 1471.05 294.31 L 1480.98 291.80 L 1490.92 290.63 L 1500.85 289.89 L 1510.79 287.81 L 1520.73 285.79 L 1530.66 284.68 L 1540.60 283.71 L 1550.53 280.74 L 1560.47 277.36 L 1570.40 273.21 L 1580.34 268.34 L 1590.27 267.95 L 1600.21 262.83 L 1610.15 256.43 L 1620.08 250.95 L 1630.02 246.24 L 1639.95 241.80 L 1649.89 238.04 L 1659.82 232.98 L 1668.76 232.79" fill="none" stroke="#123858" stroke-width="5.2" stroke-linejoin="round" stroke-linecap="round"/>
+</g>
+<g id="zone_explanations">
+<text x="130.00" y="890.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="700" fill="#31475B" text-anchor="start">Offshore long-wave propagation</text>
+<text x="130.00" y="926.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">Depth-averaged, approximately hydrostatic</text>
+<text x="130.00" y="954.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">tsunami propagation is efficiently represented</text>
+<text x="130.00" y="982.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">by the Regional2D NLSWE model.</text>
+<text x="615.00" y="890.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="700" fill="#526137" text-anchor="start">Shelf / shoaling influence</text>
+<text x="615.00" y="926.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">Decreasing water depth and changing bathymetry</text>
+<text x="615.00" y="954.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">increasingly modify wave celerity, amplitude and</text>
+<text x="615.00" y="982.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">waveform toward the coast.</text>
+<text x="1100.00" y="890.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="700" fill="#765C26" text-anchor="start">Nearshore transition</text>
+<text x="1100.00" y="926.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">Increasingly local free-surface deformation,</text>
+<text x="1100.00" y="954.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">vertical motion and structure interaction</text>
+<text x="1100.00" y="982.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">motivate transfer toward high-fidelity Local3D</text>
+<text x="1100.00" y="1010.00" font-family="Arial, Helvetica, sans-serif" font-size="21.00" font-weight="400" fill="#1B2430" text-anchor="start">impact modelling.</text>
+</g>
+<g id="interpretive_boundary_note">
+<text x="130.00" y="1030.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#56616F" text-anchor="start">Region boundaries are interpretive rather than fixed physical thresholds; the selected wet nearshore interface is the current</text>
+<text x="130.00" y="1054.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#56616F" text-anchor="start">case-specific 2D-&gt;3D extraction location.</text>
+<text x="130.00" y="1092.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#56616F" text-anchor="start">Profile: R10 h400 corridor-centreline sampling; bed elevation referenced to EGM2008.  b_c(s)=b(x_c(s),y_c(s)).</text>
+</g>
+</svg>
