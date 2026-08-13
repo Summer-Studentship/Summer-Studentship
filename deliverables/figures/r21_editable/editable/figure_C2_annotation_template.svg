@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+<g id="title_placeholder">
+<text x="900.00" y="42.00" font-family="Arial, Helvetica, sans-serif" font-size="26.00" font-weight="700" fill="#26323b" text-anchor="middle">Title placeholder</text>
+</g>
+<g id="event_reference">
+<line x1="324.7478130529659" y1="96.0" x2="324.7478130529659" y2="736.0" stroke="#c8352c" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="336.75" y="136.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="400" fill="#c8352c" text-anchor="start">2011 event reference</text>
+</g>
+<g id="interface">
+<line x1="1670.0" y1="96.0" x2="1670.0" y2="736.0" stroke="#14865c" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="1660.00" y="136.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="400" fill="#14865c" text-anchor="end">selected wet nearshore interface</text>
+</g>
+<g id="region_labels">
+<text x="378.39" y="78.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#31475b" text-anchor="middle">deep-water propagation</text>
+<text x="1067.66" y="78.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#526137" text-anchor="middle">shelf / shoaling influence</text>
+<text x="1595.48" y="78.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#765c26" text-anchor="middle">nearshore transition</text>
+</g>
+<g id="caption_placeholder">
+<text x="130.00" y="914.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="400" fill="#59636b" text-anchor="start">Caption placeholder</text>
+</g>
+</svg>

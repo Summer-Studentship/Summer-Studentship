@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="980" viewBox="0 0 1800 980">
+<rect x="0" y="0" width="1800" height="980" fill="#ffffff"/>
+<g id="region_bands">
+<rect x="130.0" y="96.0" width="484.35483870967744" height="640.0" fill="#dfe8ef" opacity="0.58"/>
+<rect x="614.3548387096774" y="96.0" width="906.6129032258065" height="640.0" fill="#e7ead7" opacity="0.62"/>
+<rect x="1520.967741935484" y="96.0" width="149.0322580645161" height="640.0" fill="#f3e6bf" opacity="0.66"/>
+</g>
+<g id="axes">
+<rect x="130.0" y="96.0" width="1540.0" height="640.0" fill="none" stroke="#26323b" stroke-width="2.0"/>
+<line x1="130.0" y1="660.4094488188977" x2="1670.0" y2="660.4094488188977" stroke="#dde2de" stroke-width="1.2"/>
+<text x="114.00" y="666.41" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="end">-1000</text>
+<line x1="130.0" y1="534.4251968503937" x2="1670.0" y2="534.4251968503937" stroke="#dde2de" stroke-width="1.2"/>
+<text x="114.00" y="540.43" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="end">-750</text>
+<line x1="130.0" y1="408.4409448818898" x2="1670.0" y2="408.4409448818898" stroke="#dde2de" stroke-width="1.2"/>
+<text x="114.00" y="414.44" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="end">-500</text>
+<line x1="130.0" y1="282.45669291338584" x2="1670.0" y2="282.45669291338584" stroke="#dde2de" stroke-width="1.2"/>
+<text x="114.00" y="288.46" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="end">-250</text>
+<line x1="130.0" y1="156.4724409448819" x2="1670.0" y2="156.4724409448819" stroke="#dde2de" stroke-width="1.2"/>
+<text x="114.00" y="162.47" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="end">0</text>
+<line x1="179.67741935483872" y1="736.0" x2="179.67741935483872" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="179.68" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">120</text>
+<line x1="428.06451612903226" y1="736.0" x2="428.06451612903226" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="428.06" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">100</text>
+<line x1="676.4516129032259" y1="736.0" x2="676.4516129032259" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="676.45" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">80</text>
+<line x1="924.8387096774194" y1="736.0" x2="924.8387096774194" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="924.84" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">60</text>
+<line x1="1173.225806451613" y1="736.0" x2="1173.225806451613" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="1173.23" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">40</text>
+<line x1="1421.6129032258066" y1="736.0" x2="1421.6129032258066" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="1421.61" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">20</text>
+<line x1="1670.0" y1="736.0" x2="1670.0" y2="750.0" stroke="#26323b" stroke-width="2"/>
+<text x="1670.00" y="778.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4d5963" text-anchor="middle">0</text>
+<text x="900.00" y="822.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323b" text-anchor="middle">Distance offshore from selected wet nearshore interface, km</text>
+<text x="42.00" y="416.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323b" text-anchor="middle" transform="rotate(-90 42 416.00)">Bed elevation, m (EGM2008)</text>
+</g>
+<g id="sea_level">
+<line x1="130.0" y1="156.4724409448819" x2="1670.0" y2="156.4724409448819" stroke="#8b9299" stroke-width="2.0" stroke-dasharray="8 8"/>
+<text x="1660.00" y="144.47" font-family="Arial, Helvetica, sans-serif" font-size="17.00" font-weight="400" fill="#68737c" text-anchor="end">z = 0 m</text>
+</g>
+<g id="region_labels">
+<text x="378.39" y="74.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#31475b" text-anchor="middle">deep-water propagation</text>
+<text x="1067.66" y="74.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#526137" text-anchor="middle">shelf / shoaling influence</text>
+<text x="1595.48" y="74.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#765c26" text-anchor="middle">nearshore transition</text>
+</g>
+<g id="event_reference">
+<line x1="324.7478130529659" y1="96.0" x2="324.7478130529659" y2="736.0" stroke="#c8352c" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="324.75" y="42.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#c8352c" text-anchor="middle">2011 event ref.</text>
+</g>
+<g id="interface">
+<line x1="1670.0" y1="96.0" x2="1670.0" y2="736.0" stroke="#14865c" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="1670.00" y="796.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#14865c" text-anchor="end">selected wet interface</text>
+</g>
+<g id="profile">
+<path d="M 139.69 699.41 L 149.63 696.64 L 159.56 696.81 L 169.50 694.57 L 179.44 691.89 L 189.37 689.33 L 199.31 689.02 L 209.24 686.30 L 219.18 679.83 L 229.11 679.73 L 239.05 676.55 L 248.98 676.08 L 258.92 672.30 L 268.85 668.54 L 278.79 661.55 L 288.73 660.64 L 298.66 659.34 L 308.60 656.66 L 318.53 652.31 L 328.47 647.91 L 338.40 646.81 L 348.34 639.55 L 358.27 638.82 L 368.21 634.43 L 378.15 629.74 L 388.08 625.85 L 398.02 625.18 L 407.95 616.89 L 417.89 614.79 L 427.82 609.62 L 437.76 606.47 L 447.69 602.86 L 457.63 598.11 L 467.56 593.17 L 477.50 588.18 L 487.44 583.45 L 497.37 583.20 L 507.31 578.32 L 517.24 572.93 L 527.18 567.81 L 537.11 558.28 L 547.05 559.44 L 556.98 556.87 L 566.92 551.44 L 576.85 545.91 L 586.79 543.73 L 596.73 535.98 L 606.66 535.05 L 616.60 529.58 L 626.53 524.30 L 636.47 519.31 L 646.40 519.16 L 656.34 514.25 L 666.27 509.64 L 676.21 505.18 L 686.15 502.18 L 696.08 499.90 L 706.02 497.70 L 715.95 493.97 L 725.89 486.28 L 735.82 487.80 L 745.76 487.67 L 755.69 484.28 L 765.63 480.95 L 775.56 477.27 L 785.50 470.47 L 795.44 471.66 L 805.37 470.55 L 815.31 467.57 L 825.24 464.58 L 835.18 463.25 L 845.11 462.29 L 855.05 459.92 L 864.98 457.93 L 874.92 455.69 L 884.85 453.72 L 894.79 453.51 L 904.73 451.24 L 914.66 444.27 L 924.60 445.54 L 934.53 442.76 L 944.47 442.25 L 954.40 438.97 L 964.34 435.11 L 974.27 431.30 L 984.21 426.97 L 994.15 425.52 L 1004.08 421.59 L 1014.02 416.84 L 1023.95 411.49 L 1033.89 410.50 L 1043.82 401.75 L 1053.76 400.56 L 1063.69 394.05 L 1073.63 387.87 L 1083.56 382.48 L 1093.50 381.10 L 1103.44 368.49 L 1113.37 366.80 L 1123.31 360.10 L 1133.24 356.99 L 1143.18 353.06 L 1153.11 347.73 L 1163.05 342.98 L 1172.98 338.62 L 1182.92 334.88 L 1192.85 334.61 L 1202.79 330.75 L 1212.73 326.85 L 1222.66 322.67 L 1232.60 318.59 L 1242.53 316.48 L 1252.47 314.17 L 1262.40 309.69 L 1272.34 305.14 L 1282.27 303.54 L 1292.21 295.19 L 1302.15 296.11 L 1312.08 290.62 L 1322.02 285.64 L 1331.95 280.65 L 1341.89 280.55 L 1351.82 275.13 L 1361.76 270.58 L 1371.69 266.42 L 1381.63 263.48 L 1391.56 261.01 L 1401.50 258.37 L 1411.44 254.48 L 1421.37 250.69 L 1431.31 247.28 L 1441.24 247.23 L 1451.18 243.91 L 1461.11 240.88 L 1471.05 238.07 L 1480.98 235.20 L 1490.92 233.86 L 1500.85 233.02 L 1510.79 230.64 L 1520.73 228.33 L 1530.66 227.07 L 1540.60 225.96 L 1550.53 222.56 L 1560.47 218.70 L 1570.40 213.96 L 1580.34 208.38 L 1590.27 207.94 L 1600.21 202.09 L 1610.15 194.77 L 1620.08 188.52 L 1630.02 183.13 L 1639.95 178.06 L 1649.89 173.76 L 1659.82 167.98 L 1668.76 167.76" fill="none" stroke="#123858" stroke-width="5.2" stroke-linejoin="round" stroke-linecap="round"/>
+</g>
+</svg>

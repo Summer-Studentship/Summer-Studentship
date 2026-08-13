@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="4800" height="2800" viewBox="0 0 4800 2800">
+<defs>
+<marker id="propagation_arrow" markerWidth="18" markerHeight="18" refX="15" refY="9" orient="auto"><path d="M 0 0 L 18 9 L 0 18 z" fill="#7b4a32"/></marker>
+</defs>
+<g id="corridor">
+<path d="M 1504.17 2366.44 L 1820.54 2391.62 L 2995.33 780.68 L 2678.96 755.51 L 1504.17 2366.44 Z" fill="#e7803c" fill-opacity="0.16" stroke="#b95025" stroke-width="3.5"/>
+</g>
+<g id="centreline">
+<path d="M 1662.35 2379.03 L 2837.14 768.09" fill="none" stroke="#124f80" stroke-width="3.2" stroke-dasharray="18 12"/>
+</g>
+<g id="event">
+<circle cx="1805.25" cy="2182.12" r="14" fill="#c8352c" stroke="white" stroke-width="5"/>
+</g>
+<g id="interface">
+<circle cx="2837.14" cy="767.13" r="13" fill="#14865c" stroke="white" stroke-width="5"/>
+</g>
+<g id="kamaishi">
+<circle cx="2915.74" cy="656.67" r="13" fill="#226da8" stroke="white" stroke-width="5"/>
+</g>
+<g id="propagation">
+<path d="M 1929.09 2013.26 L 2405.42 1360.10" fill="none" stroke="#7b4a32" stroke-width="6" marker-end="url(#propagation_arrow)"/>
+</g>
+<g id="distance_reference">
+<path d="M 1905.20 2232.50 L 2143.36 1905.92" fill="none" stroke="#26323b" stroke-width="4"/>
+<path d="M 1924.97 2234.07 L 1885.42 2230.93" fill="none" stroke="#26323b" stroke-width="4"/>
+<path d="M 2163.13 1907.49 L 2123.58 1904.35" fill="none" stroke="#26323b" stroke-width="4"/>
+</g>
+<g id="distance_reference_label">
+<text x="2024.28" y="2102.63" font-family="Arial, Helvetica, sans-serif" font-size="34" text-anchor="middle" fill="#26323b">25 km</text>
+</g>
+</svg>
