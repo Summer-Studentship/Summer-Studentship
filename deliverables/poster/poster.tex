@@ -14,7 +14,7 @@
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
-\graphicspath{{./}{../figures/r22_poster/publication/}}
+\graphicspath{{./}{../figures/r23_poster_refinement/publication/}{../figures/r22_poster/publication/}}
 
 \IfFontExistsTF{TeX Gyre Heros}{
   \setmainfont{TeX Gyre Heros}
@@ -44,7 +44,7 @@
 \newcommand{\PosterSubtitle}[1]{{\fontsize{31}{39}\selectfont #1\par}}
 \newcommand{\PosterMeta}[1]{{\fontsize{23}{30}\selectfont #1\par}}
 \newcommand{\SmallNote}[1]{{\fontsize{18}{23}\selectfont\color{PosterMuted} #1}}
-\newcommand{\PosterCaption}[1]{{\fontsize{12.5}{15.2}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
+\newcommand{\PosterCaption}[1]{\par{\fontsize{12.5}{15.2}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
 \newcommand{\PosterReferenceText}[1]{{\fontsize{14.5}{18}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
 \newcommand{\Metric}[3]{%
   \begin{minipage}[t]{0.30\linewidth}
@@ -201,20 +201,25 @@
   \end{PosterBox}
 
   \begin{PosterBox}{Real-event reconstruction}
-    The Kamaishi delivery case is shown as a physical sequence from regional event context, through the 3D corridor terrain, to the longitudinal bathymetric interpretation at the current 2D--3D extraction interface.
+    The Kamaishi delivery case is shown as a physical sequence: regional event context first, then terrain and longitudinal bathymetric interpretation at the current 2D--3D extraction interface.
 
-    \vspace{3mm}
+    \vspace{2mm}
     \centering
-    \includegraphics[height=55mm,keepaspectratio]{\detokenize{Studentship - Figures.png}}
+    \includegraphics[width=0.96\linewidth,height=112mm,keepaspectratio]{\detokenize{Studentship - Figures.png}}
     \PosterCaption{\textbf{Figure A.} Regional 2011 Tohoku event context and Kamaishi Regional2D corridor. Base map adapted from Encyclopaedia Britannica; corridor and Kamaishi annotations added for this study.}
 
-    \vspace{3mm}
-    \includegraphics[width=0.92\linewidth,height=82mm,keepaspectratio]{\detokenize{Studentship - Figures (1).png}}
-    \PosterCaption{\textbf{Figure B.} Oblique Kamaishi corridor bathymetry/topography. Terrain uses NOAA/NCEI ETOPO 2022, EGM2008, QGIS/GDAL and Blender 5.2 EEVEE with 4\(\times\) vertical exaggeration.}
-
-    \vspace{3mm}
-    \includegraphics[width=\linewidth,height=145mm,keepaspectratio]{figure_C3_longitudinal_bathymetry_poster.pdf}
-    \PosterCaption{\textbf{Figure C.} Frozen R10 h400 centreline bathymetry with interpretive long-wave, shoaling and nearshore-transition zones; supported by Saito et al. (2014), Fujima et al. (2002) and Takase et al. (2016).}
+    \vspace{3.5mm}
+    \begin{minipage}[t]{0.485\linewidth}
+      \centering
+      \includegraphics[width=\linewidth,height=60mm,keepaspectratio]{\detokenize{Studentship - Figures (1).png}}
+      \PosterCaption{\textbf{B.} Oblique Kamaishi corridor bathymetry/topography. ETOPO 2022, EGM2008, QGIS/GDAL, Blender 5.2 EEVEE; 4\(\times\) vertical exaggeration.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.485\linewidth}
+      \centering
+      \includegraphics[width=\linewidth,height=60mm,keepaspectratio]{figure_C4_longitudinal_bathymetry_poster_clean.pdf}
+      \PosterCaption{\textbf{C.} Clean longitudinal bathymetry along the frozen R10 h400 centreline profile; zones supported by Saito et al. (2014), Fujima et al. (2002) and Takase et al. (2016).}
+    \end{minipage}
   \end{PosterBox}
 
   \begin{PosterBox}{Current status}
