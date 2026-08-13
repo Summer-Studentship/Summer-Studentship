@@ -10,9 +10,11 @@
 \usepackage{enumitem}
 \usepackage{microtype}
 \usepackage{ragged2e}
+\usepackage{graphicx}
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
+\graphicspath{{./}{../figures/r22_poster/publication/}}
 
 \IfFontExistsTF{TeX Gyre Heros}{
   \setmainfont{TeX Gyre Heros}
@@ -42,6 +44,8 @@
 \newcommand{\PosterSubtitle}[1]{{\fontsize{31}{39}\selectfont #1\par}}
 \newcommand{\PosterMeta}[1]{{\fontsize{23}{30}\selectfont #1\par}}
 \newcommand{\SmallNote}[1]{{\fontsize{18}{23}\selectfont\color{PosterMuted} #1}}
+\newcommand{\PosterCaption}[1]{{\fontsize{12.5}{15.2}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
+\newcommand{\PosterReferenceText}[1]{{\fontsize{14.5}{18}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
 \newcommand{\Metric}[3]{%
   \begin{minipage}[t]{0.30\linewidth}
     {\fontsize{28}{32}\selectfont\bfseries\color{PosterPrimary} #1\par}
@@ -196,11 +200,21 @@
     \end{itemize}
   \end{PosterBox}
 
-  \begin{PosterBox}{Case study: Tohoku to Kamaishi}
-    The current delivery case targets the Kamaishi coast using a projected corridor, conditioned terrain, finite-fault coseismic forcing and a nearshore coupling section. The corridor is an integration geometry for method development, not yet a final calibrated harbour reconstruction.
+  \begin{PosterBox}{Real-event reconstruction}
+    The Kamaishi delivery case is shown as a physical sequence from regional event context, through the 3D corridor terrain, to the longitudinal bathymetric interpretation at the current 2D--3D extraction interface.
 
-    \vspace{4mm}
-    \FigurePlaceholder{92mm}{Figure placeholder: Tohoku corridor and Kamaishi interface}{Insert final single-panel map showing source, corridor, site and coupling section.}
+    \vspace{3mm}
+    \centering
+    \includegraphics[height=55mm,keepaspectratio]{\detokenize{Studentship - Figures.png}}
+    \PosterCaption{\textbf{Figure A.} Regional 2011 Tohoku event context and Kamaishi Regional2D corridor. Base map adapted from Encyclopaedia Britannica; corridor and Kamaishi annotations added for this study.}
+
+    \vspace{3mm}
+    \includegraphics[width=0.92\linewidth,height=82mm,keepaspectratio]{\detokenize{Studentship - Figures (1).png}}
+    \PosterCaption{\textbf{Figure B.} Oblique Kamaishi corridor bathymetry/topography. Terrain uses NOAA/NCEI ETOPO 2022, EGM2008, QGIS/GDAL and Blender 5.2 EEVEE with 4\(\times\) vertical exaggeration.}
+
+    \vspace{3mm}
+    \includegraphics[width=\linewidth,height=145mm,keepaspectratio]{figure_C3_longitudinal_bathymetry_poster.pdf}
+    \PosterCaption{\textbf{Figure C.} Frozen R10 h400 centreline bathymetry with interpretive long-wave, shoaling and nearshore-transition zones; supported by Saito et al. (2014), Fujima et al. (2002) and Takase et al. (2016).}
   \end{PosterBox}
 
   \begin{PosterBox}{Current status}
@@ -364,6 +378,9 @@
   bottom=5mm
 ]
   \SmallNote{\textbf{Status note.} This poster does not claim completed observational validation, calibration, full convergence closure, FSI or final defence-performance conclusions. It is a publication-quality baseline poster source for the implemented hybrid framework and current verification status.}
+
+  \vspace{2mm}
+  \PosterReferenceText{\textbf{Selected figure references.} Encyclopaedia Britannica; Japan earthquake and tsunami of 2011; Encyclopaedia Britannica; n.d. \quad NOAA National Centers for Environmental Information; ETOPO 2022 15 Arc-Second Global Relief Model; NOAA/NCEI; 2022. \quad Saito et al.; Dispersion and Nonlinear Effects in the 2011 Tohoku-Oki Earthquake Tsunami; Journal of Geophysical Research: Oceans; 2014. \quad Fujima, Masamura and Goto; Development of the 2D/3D Hybrid Model for Tsunami Numerical Simulation; Coastal Engineering Journal; 2002. \quad Takase et al.; 2D--3D Hybrid Stabilized Finite Element Method for Tsunami Runup Simulations; Computational Mechanics; 2016.}
 \end{tcolorbox}
 
 \end{document}
