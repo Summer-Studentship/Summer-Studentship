@@ -1,0 +1,154 @@
+{
+  "caption": "Top-down geographic context map showing northeast Honshu, Kamaishi, the 2011 Tohoku epicentral reference and the accepted G6/R19 Kamaishi corridor footprint and centreline.",
+  "conversion": {
+    "pdf": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "pdf",
+        "-o",
+        "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.pdf",
+        "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    },
+    "png": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "png",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r20-publication/deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.png",
+        "-w",
+        "3600",
+        "/home/helios/Projects/Summer-Studentship-r20-publication/deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    }
+  },
+  "derived_sources": {
+    "detail_relief": {
+      "bytes": 51561,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/sources/gdal/r20_A_kamaishi_corridor_relief.png",
+      "sha256": "b29de3f7afb2cdb1b0f589b2161e0effaef2c5259ba062d723fcb4537468b244"
+    },
+    "japan_relief": {
+      "bytes": 90102,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/sources/gdal/r20_A_japan_context_relief.png",
+      "sha256": "eb6bc26e1cae1cef4284a778bd199339a07bca62a5705dc3a240ac36105a6656"
+    },
+    "relief_records": [
+      {
+        "command": [
+          "gdaldem",
+          "color-relief",
+          "-alpha",
+          "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+          "deliverables/figures/r20_publication/sources/gdal/etopo_publication_relief_ramp.txt",
+          "deliverables/figures/r20_publication/sources/gdal/r20_A_japan_context_relief.png"
+        ],
+        "output": "0...10...20...30...40...50...60...70...80...90...100 - done.",
+        "return_code": 0
+      },
+      {
+        "command": [
+          "gdaldem",
+          "color-relief",
+          "-alpha",
+          "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+          "deliverables/figures/r20_publication/sources/gdal/etopo_publication_relief_ramp.txt",
+          "deliverables/figures/r20_publication/sources/gdal/r20_A_kamaishi_corridor_relief.png"
+        ],
+        "output": "0...10...20...30...40...50...60...70...80...90...100 - done.",
+        "return_code": 0
+      }
+    ]
+  },
+  "figure_id": "R20-A",
+  "generated_at_utc": "2026-08-13T08:38:42Z",
+  "inputs": {
+    "corridor_centreline": {
+      "bytes": 879,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson",
+      "sha256": "970e34a19383553442cfa1f7c03fcbda04ca015cb2f1cf8d56fee2f00b1b2c30"
+    },
+    "corridor_polygon": {
+      "bytes": 1131,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson",
+      "sha256": "f58bd2f0b7c4b5a3604fb538622dcb23041ec7e55a461899df6ffc3613462c5f"
+    },
+    "detail_coastline": {
+      "bytes": 106496,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/corridor_coastline_0m.gpkg",
+      "sha256": "ca57ed8674b99a9ae185ae09b2f49754a349cd7700e33400b55498ca48b48ee2"
+    },
+    "detail_raster": {
+      "bytes": 283697,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_corridor_kamaishi_utm54.tif",
+      "sha256": "1ba7d26bff0aa629e1cea1964c3e8d5d367b2ec4f2665360c64539c3360021d9"
+    },
+    "domain_geometry": {
+      "bytes": 16607,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/data/domain_geometry.json",
+      "sha256": "00e17d876b2f1cc0a5a864405309ae7306aaa7751951bfda02bd25f6c5569db7"
+    },
+    "japan_coastline": {
+      "bytes": 131072,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/japan_context_coastline_0m.gpkg",
+      "sha256": "f2ad9080909fac1bec7bda1afb20b7c0115db5c25a37c638c1e49e27405755c3"
+    },
+    "japan_raster": {
+      "bytes": 276242,
+      "exists": true,
+      "path": "deliverables/figures/r16_publication/sources/qgis/derived/etopo_japan_context_utm54.tif",
+      "sha256": "480df2a35ebc45df60b38b791f40cb8d5da6d7e46480487f6a4956448e8cb032"
+    }
+  },
+  "outputs": {
+    "pdf": {
+      "bytes": 212025,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.pdf",
+      "sha256": "387c14bd76c542bec0127e903a5d12955ea7287bbfad164662fbaa5af8fde667"
+    },
+    "png": {
+      "bytes": 1218680,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.png",
+      "sha256": "bb4270e9e9f5c302bfe2e5f87eb3557ac354dd57cf01cabbb1c498f2b0fe4657"
+    },
+    "preview": {
+      "bytes": 1218680,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/previews/figure_R20_A_geographic_corridor_context.png",
+      "sha256": "bb4270e9e9f5c302bfe2e5f87eb3557ac354dd57cf01cabbb1c498f2b0fe4657"
+    },
+    "svg": {
+      "bytes": 232440,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.svg",
+      "sha256": "6aae74bdc7a69cd38c37eb744d63c37d462225105fb7b2ebd02b1d8c593d3c81"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r20.figure_provenance",
+    "version": "1.0.0"
+  },
+  "scientific_limits": [
+    "context figure only",
+    "no new simulation",
+    "not a validation claim"
+  ],
+  "status": "COMPLETE",
+  "workflow": "GDAL colour relief from R16 QGIS-derived ETOPO rasters, OGR vector read of R16 corridor/coastline layers, direct SVG cartographic composition, rsvg-convert export."
+}

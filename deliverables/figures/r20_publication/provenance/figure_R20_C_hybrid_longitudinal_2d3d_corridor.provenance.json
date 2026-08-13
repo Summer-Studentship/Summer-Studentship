@@ -1,0 +1,116 @@
+{
+  "caption": "Hybrid longitudinal corridor figure combining the real R10 h400 bed-elevation profile with physically motivated propagation/coupling regions and a small oblique ETOPO terrain cue.",
+  "conversion": {
+    "pdf": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "pdf",
+        "-o",
+        "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.pdf",
+        "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    },
+    "png": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "png",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r20-publication/deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+        "-w",
+        "3600",
+        "/home/helios/Projects/Summer-Studentship-r20-publication/deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    }
+  },
+  "figure_id": "R20-C",
+  "generated_at_utc": "2026-08-13T08:39:03Z",
+  "inputs": {
+    "domain_geometry": {
+      "bytes": 16607,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/data/domain_geometry.json",
+      "sha256": "00e17d876b2f1cc0a5a864405309ae7306aaa7751951bfda02bd25f6c5569db7"
+    },
+    "milestone_positions": {
+      "bytes": 1486,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/data/milestone_positions.json",
+      "sha256": "2012efc12e6f6db4f8bdba3d6446c519c69e4443616c716bf6189bdc9355a91e"
+    },
+    "profile_copy": {
+      "bytes": 7310,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/sources/data/r20_longitudinal_bathymetry_profile.csv",
+      "sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+    },
+    "profile_csv": {
+      "bytes": 7310,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+      "sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+    },
+    "terrain_cue_raw": {
+      "bytes": 10149646,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_raw_blender.png",
+      "sha256": "24263503de2bbdceb06de69eac9852f6c72d2a0ff738f14d64bf45eeaf9cbdaf"
+    },
+    "terrain_cue_thumbnail": {
+      "bytes": 100933,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_C_terrain_cue_thumbnail.png",
+      "sha256": "72233d5547ed2671c7846e75f3af7eb0c485fa87067a739b4ecdee20498a03ea"
+    }
+  },
+  "outputs": {
+    "pdf": {
+      "bytes": 120941,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.pdf",
+      "sha256": "4f9c8d904e5a61c2aafedde487085248e4aec6ffddb39eb79d9fe3832a9550bc"
+    },
+    "png": {
+      "bytes": 423592,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+      "sha256": "45e05bb435517d4f16326b740706de34e57356d34dcc249ccfe526d2a85de324"
+    },
+    "preview": {
+      "bytes": 423592,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/previews/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+      "sha256": "45e05bb435517d4f16326b740706de34e57356d34dcc249ccfe526d2a85de324"
+    },
+    "svg": {
+      "bytes": 146391,
+      "exists": true,
+      "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.svg",
+      "sha256": "3f53a93d6cde909373d4a119c23e1d5a3d82591c1af1595c47ca8006c0ecbe93"
+    }
+  },
+  "profile_summary": {
+    "bed_max_m": -22.407207013,
+    "bed_min_m": -1077.400775612,
+    "distance_max_km": 123.219472839,
+    "distance_min_km": 0.099534421,
+    "local3d_length_km": 0.7726171671085286,
+    "sample_count": 155
+  },
+  "schema": {
+    "name": "tsunami.r20.figure_provenance",
+    "version": "1.0.0"
+  },
+  "scientific_limits": [
+    "framework interpretation over real profile",
+    "not a new Local3D result",
+    "no new thresholds claimed"
+  ],
+  "status": "COMPLETE",
+  "workflow": "Direct SVG plotting from R19 profile CSV and geometry JSON, embedded selected R20-B Blender terrain cue, rsvg-convert export."
+}

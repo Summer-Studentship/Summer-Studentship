@@ -1,0 +1,301 @@
+{
+  "branch": "feat/r20-publication-figure-refinement",
+  "figures": {
+    "R20-A": {
+      "caption": "Top-down geographic context map showing northeast Honshu, Kamaishi, the 2011 Tohoku epicentral reference and the accepted G6/R19 Kamaishi corridor footprint and centreline.",
+      "outputs": {
+        "pdf": {
+          "bytes": 212025,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.pdf",
+          "sha256": "387c14bd76c542bec0127e903a5d12955ea7287bbfad164662fbaa5af8fde667"
+        },
+        "png": {
+          "bytes": 1218680,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.png",
+          "sha256": "bb4270e9e9f5c302bfe2e5f87eb3557ac354dd57cf01cabbb1c498f2b0fe4657"
+        },
+        "preview": {
+          "bytes": 1218680,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/previews/figure_R20_A_geographic_corridor_context.png",
+          "sha256": "bb4270e9e9f5c302bfe2e5f87eb3557ac354dd57cf01cabbb1c498f2b0fe4657"
+        },
+        "svg": {
+          "bytes": 232440,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.svg",
+          "sha256": "6aae74bdc7a69cd38c37eb744d63c37d462225105fb7b2ebd02b1d8c593d3c81"
+        }
+      },
+      "scientific_limits": [
+        "context figure only",
+        "no new simulation",
+        "not a validation claim"
+      ],
+      "status": "COMPLETE"
+    },
+    "R20-B": {
+      "caption": "Oblique Blender terrain visualisation of the accepted Kamaishi corridor using the R17/R16 ETOPO 2022 bathymetry/topography lineage. The selected final uses 4x vertical exaggeration, a restrained sea-level plane and a subtle accepted-corridor overlay; annotations are interpretive labels only.",
+      "outputs": {
+        "blend": {
+          "bytes": 9305566,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_scene.blend",
+          "sha256": "5667c057ef5f4921420df7628147dc028dab23df0e5148a968e9085c30597a18"
+        },
+        "contact_sheet": {
+          "bytes": 647394,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/previews/figure_R20_B_candidate_contact_sheet.png",
+          "sha256": "50960162d2997610e31336b4dff64e29a27f8aff639be98321a9029056bbba2b"
+        },
+        "imagemagick_annotation_source": {
+          "bytes": 5835,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/sources/imagemagick/figure_R20_B_annotation_command.json",
+          "sha256": "3df0c12ceb25f383cc3dce2d442d9516bc4b4d592b7348c40948221b771f6cd5"
+        },
+        "pdf": {
+          "bytes": 5331962,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_B_oblique_bathymetry_topography.pdf",
+          "sha256": "d2f998fa1e0ca3f1404442ede0c2de644fcf9f457595ec48cb410e46d49cca7a"
+        },
+        "png": {
+          "bytes": 6768584,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_B_oblique_bathymetry_topography.png",
+          "sha256": "78985c970505a45561d5e831fe04e6ee7dd8fffec2d1a58c3bd5765fc9916593"
+        },
+        "preview": {
+          "bytes": 6768584,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/previews/figure_R20_B_oblique_bathymetry_topography.png",
+          "sha256": "78985c970505a45561d5e831fe04e6ee7dd8fffec2d1a58c3bd5765fc9916593"
+        },
+        "raw_blender_png": {
+          "bytes": 10149646,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_raw_blender.png",
+          "sha256": "24263503de2bbdceb06de69eac9852f6c72d2a0ff738f14d64bf45eeaf9cbdaf"
+        }
+      },
+      "scientific_limits": [
+        "terrain render only",
+        "not a Local3D replay result",
+        "not a validation claim"
+      ],
+      "status": "COMPLETE"
+    },
+    "R20-C": {
+      "caption": "Hybrid longitudinal corridor figure combining the real R10 h400 bed-elevation profile with physically motivated propagation/coupling regions and a small oblique ETOPO terrain cue.",
+      "outputs": {
+        "pdf": {
+          "bytes": 120941,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.pdf",
+          "sha256": "4f9c8d904e5a61c2aafedde487085248e4aec6ffddb39eb79d9fe3832a9550bc"
+        },
+        "png": {
+          "bytes": 423592,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+          "sha256": "45e05bb435517d4f16326b740706de34e57356d34dcc249ccfe526d2a85de324"
+        },
+        "preview": {
+          "bytes": 423592,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/previews/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+          "sha256": "45e05bb435517d4f16326b740706de34e57356d34dcc249ccfe526d2a85de324"
+        },
+        "svg": {
+          "bytes": 146391,
+          "exists": true,
+          "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.svg",
+          "sha256": "3f53a93d6cde909373d4a119c23e1d5a3d82591c1af1595c47ca8006c0ecbe93"
+        }
+      },
+      "scientific_limits": [
+        "framework interpretation over real profile",
+        "not a new Local3D result",
+        "no new thresholds claimed"
+      ],
+      "status": "COMPLETE"
+    }
+  },
+  "generated_at_utc": "2026-08-13T08:39:05Z",
+  "generation_head": "eb8b165d175659b214905cb0d35c4358b54a2635",
+  "guardrails": {
+    "ai_image_generation": false,
+    "calibration": false,
+    "new_local3d_runs": false,
+    "new_regional2d_runs": false,
+    "push_pr_merge_rebase_amend": false,
+    "replay_or_retuning": false,
+    "synthetic_geography": false
+  },
+  "reused_sources": {
+    "r16_publication": {
+      "exists": true,
+      "path": "deliverables/figures/r16_publication"
+    },
+    "r17_closure": {
+      "exists": true,
+      "path": "deliverables/figures/r17_closure"
+    },
+    "r18_poster": {
+      "exists": true,
+      "path": "deliverables/figures/r18_poster"
+    },
+    "r19_tikz": {
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r20.figure_manifest",
+    "version": "1.0.0"
+  },
+  "starting_head": "eb8b165d175659b214905cb0d35c4358b54a2635",
+  "status": "COMPLETE",
+  "validation": {
+    "commands": {
+      "blender_version": {
+        "output": "Blender 5.2.0 LTS\n\tbuild date: 2026-07-15\n\tbuild time: 11:48:12\n\tbuild commit date: 2026-07-13\n\tbuild commit time: 15:20\n\tbuild hash: fbe6228777e7\n\tbuild branch: makepkg (modified)\n\tbuild platform: Linux\n\tbuild type: Release\n\tbuild c flags:  -Wall -Werror=implicit-function-declaration -Wstrict-prototypes -Werror=return-type -Werror=vla -Wmissing-prototypes -Wno-char-subscripts -Wno-unknown-pragmas -Wpointer-arith -Wunused-parameter -Wwrite-strings -Wlogical-op -Wundef -Winit-self -Wmissing-include-dirs -Wno-div-by-zero -Wtype-limits -Wformat-signedness -Wrestrict -Wno-stringop-overread -Wno-stringop-overflow -Wnonnull -Wabsolute-value -Wuninitialized -Wredundant-decls -Wshadow -Wimplicit-fallthrough=5 -Wno-error=unused-but-set-variable -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -g -ffile-prefix-map=/build/blender/src=/usr/src/debug/blender -march=x86-64-v2 -std=gnu11 -pipe -fPIC -funsigned-char -fno-strict-aliasing -ffp-contract=off  \n\tbuild c++ flags:  -Wuninitialized -Wredundant-decls -Wall -Wno-invalid-offsetof -Wno-sign-compare -Wlogical-op -Winit-self -Wmissing-include-dirs -Wno-div-by-zero -Wtype-limits -Werror=return-type -Wno-char-subscripts -Wno-unknown-pragmas -Wpointer-arith -Wunused-parameter -Wwrite-strings -Wundef -Wcomma-subscript -Wformat-signedness -Wrestrict -Wno-suggest-override -Wuninitialized -Wno-stringop-overread -Wno-stringop-overflow -Wimplicit-fallthrough=5 -Wundef -Wmissing-declarations -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -g -ffile-prefix-map=/build/blender/src=/usr/src/debug/blender --param=max-vartrack-size=640000000 -Wno-error=format-security -march=x86-64-v2 -pipe -fPIC -funsigned-char -fno-strict-aliasing -ffp-contract=off  \n\tbuild link flags:  -latomic\n\tbuild system: CMake",
+        "return_code": 0
+      },
+      "git_diff_check": {
+        "output": "",
+        "return_code": 0
+      },
+      "py_compile": {
+        "output": "",
+        "return_code": 0
+      },
+      "qgis_version": {
+        "output": "QGIS 4.2.0-Bel\u00e9m do Par\u00e1 'Bel\u00e9m do Par\u00e1' (exported)",
+        "return_code": 0
+      }
+    },
+    "figures": {
+      "R20-A": {
+        "pdf": {
+          "nonempty": true,
+          "path": {
+            "bytes": 212025,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.pdf",
+            "sha256": "387c14bd76c542bec0127e903a5d12955ea7287bbfad164662fbaa5af8fde667"
+          }
+        },
+        "png": {
+          "height_px": 2070,
+          "mean": 50609.6,
+          "nonblank": true,
+          "path": {
+            "bytes": 1218680,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.png",
+            "sha256": "bb4270e9e9f5c302bfe2e5f87eb3557ac354dd57cf01cabbb1c498f2b0fe4657"
+          },
+          "return_code": 0,
+          "width_px": 3600
+        },
+        "svg": {
+          "error": null,
+          "parses": true,
+          "path": {
+            "bytes": 232440,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_A_geographic_corridor_context.svg",
+            "sha256": "6aae74bdc7a69cd38c37eb744d63c37d462225105fb7b2ebd02b1d8c593d3c81"
+          }
+        }
+      },
+      "R20-B": {
+        "blend": {
+          "nonempty": true,
+          "path": {
+            "bytes": 9305566,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_scene.blend",
+            "sha256": "5667c057ef5f4921420df7628147dc028dab23df0e5148a968e9085c30597a18"
+          }
+        },
+        "pdf": {
+          "nonempty": true,
+          "path": {
+            "bytes": 5331962,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_B_oblique_bathymetry_topography.pdf",
+            "sha256": "d2f998fa1e0ca3f1404442ede0c2de644fcf9f457595ec48cb410e46d49cca7a"
+          }
+        },
+        "png": {
+          "height_px": 2800,
+          "mean": 57956.9,
+          "nonblank": true,
+          "path": {
+            "bytes": 6768584,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_B_oblique_bathymetry_topography.png",
+            "sha256": "78985c970505a45561d5e831fe04e6ee7dd8fffec2d1a58c3bd5765fc9916593"
+          },
+          "return_code": 0,
+          "width_px": 4800
+        }
+      },
+      "R20-C": {
+        "pdf": {
+          "nonempty": true,
+          "path": {
+            "bytes": 120941,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.pdf",
+            "sha256": "4f9c8d904e5a61c2aafedde487085248e4aec6ffddb39eb79d9fe3832a9550bc"
+          }
+        },
+        "png": {
+          "height_px": 1800,
+          "mean": 61344.6,
+          "nonblank": true,
+          "path": {
+            "bytes": 423592,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.png",
+            "sha256": "45e05bb435517d4f16326b740706de34e57356d34dcc249ccfe526d2a85de324"
+          },
+          "return_code": 0,
+          "width_px": 3600
+        },
+        "svg": {
+          "error": null,
+          "parses": true,
+          "path": {
+            "bytes": 146391,
+            "exists": true,
+            "path": "deliverables/figures/r20_publication/publication/figure_R20_C_hybrid_longitudinal_2d3d_corridor.svg",
+            "sha256": "3f53a93d6cde909373d4a119c23e1d5a3d82591c1af1595c47ca8006c0ecbe93"
+          }
+        }
+      }
+    },
+    "generated_at_utc": "2026-08-13T08:39:05Z",
+    "json": {
+      "deliverables/figures/r20_publication/provenance/figure_R20_A_geographic_corridor_context.provenance.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_B_candidate_balanced_render.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_B_candidate_relief_render.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_B_candidate_soft_render.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_B_oblique_bathymetry_topography.provenance.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_B_selected_blender_render.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/figure_R20_C_hybrid_longitudinal_2d3d_corridor.provenance.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/r20_publication_figure_manifest.json": "PASS",
+      "deliverables/figures/r20_publication/provenance/r20_validation.json": "PASS"
+    },
+    "overall_pass": true,
+    "status": "COMPLETE"
+  },
+  "worktree": "/home/helios/Projects/Summer-Studentship-r20-publication"
+}
