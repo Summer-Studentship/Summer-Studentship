@@ -1,0 +1,209 @@
+{
+  "blender": {
+    "b0_only_annotation_state_changed": true,
+    "b1_no_text_annotations": true,
+    "corridor_objects": [
+      "Regional2D corridor outline",
+      "Regional2D corridor subtle fill"
+    ],
+    "distance_reference": {
+      "basis": "EPSG:32654 projected-ground segment parallel to the accepted corridor centreline tangent.",
+      "end_projected_m": {
+        "x": 614835.0224740657,
+        "y": 4261276.32113074
+      },
+      "length_m": 25000.0,
+      "start_projected_m": {
+        "x": 624197.6332118873,
+        "y": 4238095.693007844
+      }
+    },
+    "source_scene_matches_r20": true,
+    "vertical_exaggeration": 4.0
+  },
+  "commands": {
+    "blender_version": {
+      "output": "Blender 5.2.0 LTS\n\tbuild date: 2026-07-15\n\tbuild time: 11:48:12\n\tbuild commit date: 2026-07-13\n\tbuild commit time: 15:20\n\tbuild hash: fbe6228777e7\n\tbuild branch: makepkg (modified)\n\tbuild platform: Linux\n\tbuild type: Release\n\tbuild c flags:  -Wall -Werror=implicit-function-declaration -Wstrict-prototypes -Werror=return-type -Werror=vla -Wmissing-prototypes -Wno-char-subscripts -Wno-unknown-pragmas -Wpointer-arith -Wunused-parameter -Wwrite-strings -Wlogical-op -Wundef -Winit-self -Wmissing-include-dirs -Wno-div-by-zero -Wtype-limits -Wformat-signedness -Wrestrict -Wno-stringop-overread -Wno-stringop-overflow -Wnonnull -Wabsolute-value -Wuninitialized -Wredundant-decls -Wshadow -Wimplicit-fallthrough=5 -Wno-error=unused-but-set-variable -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -g -ffile-prefix-map=/build/blender/src=/usr/src/debug/blender -march=x86-64-v2 -std=gnu11 -pipe -fPIC -funsigned-char -fno-strict-aliasing -ffp-contract=off  \n\tbuild c++ flags:  -Wuninitialized -Wredundant-decls -Wall -Wno-invalid-offsetof -Wno-sign-compare -Wlogical-op -Winit-self -Wmissing-include-dirs -Wno-div-by-zero -Wtype-limits -Werror=return-type -Wno-char-subscripts -Wno-unknown-pragmas -Wpointer-arith -Wunused-parameter -Wwrite-strings -Wundef -Wcomma-subscript -Wformat-signedness -Wrestrict -Wno-suggest-override -Wuninitialized -Wno-stringop-overread -Wno-stringop-overflow -Wimplicit-fallthrough=5 -Wundef -Wmissing-declarations -march=x86-64 -mtune=generic -O2 -pipe -fno-plt -fexceptions         -Wp,-D_FORTIFY_SOURCE=3 -Wformat -Werror=format-security         -fstack-clash-protection -fcf-protection         -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer  -g -ffile-prefix-map=/build/blender/src=/usr/src/debug/blender --param=max-vartrack-size=640000000 -Wno-error=format-security -march=x86-64-v2 -pipe -fPIC -funsigned-char -fno-strict-aliasing -ffp-contract=off  \n\tbuild link flags:  -latomic\n\tbuild system: CMake",
+      "return_code": 0
+    },
+    "git_diff_check": {
+      "output": "",
+      "return_code": 0
+    },
+    "py_compile": {
+      "output": "",
+      "return_code": 0
+    }
+  },
+  "generated_at_utc": "2026-08-13T16:11:20Z",
+  "json": {
+    "deliverables/figures/r21_editable/provenance/figure_B_blender_render.provenance.json": "PASS",
+    "deliverables/figures/r21_editable/provenance/figure_B_clean_editable.provenance.json": "PASS",
+    "deliverables/figures/r21_editable/provenance/figure_C_clean_editable.provenance.json": "PASS",
+    "deliverables/figures/r21_editable/provenance/r21_editable_figure_manifest.json": "PASS",
+    "deliverables/figures/r21_editable/provenance/r21_validation.json": "PASS"
+  },
+  "overall_pass": true,
+  "pdf": {
+    "deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.pdf": {
+      "nonempty": true,
+      "path": {
+        "bytes": 5289250,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.pdf",
+        "sha256": "82d01b07eaaeb442e9b159ab570d6ceafc19803027a6d3f5dcd19622a808b026"
+      }
+    },
+    "deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.pdf": {
+      "nonempty": true,
+      "path": {
+        "bytes": 5401056,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.pdf",
+        "sha256": "76d949b6baebd2d71e9e979603b28459368d15361b320f0b7ec010ee9b146203"
+      }
+    },
+    "deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.pdf": {
+      "nonempty": true,
+      "path": {
+        "bytes": 12403,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.pdf",
+        "sha256": "47e1787873e915bccdc6c159d8ed2e428d402da03c0df648273130115f76747d"
+      }
+    },
+    "deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.pdf": {
+      "nonempty": true,
+      "path": {
+        "bytes": 21937,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.pdf",
+        "sha256": "faa990c965d54fb8c2f509185391a6796d5d9805aae216e0db6b258762e207cc"
+      }
+    }
+  },
+  "png": {
+    "deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.png": {
+      "height_px": 2800,
+      "mean": 57729.0,
+      "nonblank": true,
+      "return_code": 0,
+      "width_px": 4800
+    },
+    "deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.png": {
+      "height_px": 2800,
+      "mean": 57723.6,
+      "nonblank": true,
+      "return_code": 0,
+      "width_px": 4800
+    },
+    "deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.png": {
+      "height_px": 1634,
+      "mean": 64962.7,
+      "nonblank": true,
+      "return_code": 0,
+      "width_px": 3000
+    },
+    "deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.png": {
+      "height_px": 1634,
+      "mean": 63085.8,
+      "nonblank": true,
+      "return_code": 0,
+      "width_px": 3000
+    }
+  },
+  "profile": {
+    "axis_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+    "lineage": "R10 h400 mesh -> accepted corridor centreline sampling -> longitudinal bed profile",
+    "not_image_extraction": true,
+    "sampling_method": "nearest unstructured h400 cell centre to R10/G6 centreline samples in EPSG:32654; no smoothing or rerun",
+    "source": {
+      "bytes": 7310,
+      "exists": true,
+      "path": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+      "sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+    },
+    "source_hash": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+  },
+  "status": "COMPLETE",
+  "svg": {
+    "deliverables/figures/r21_editable/editable/figure_B2_editable_overlay.svg": {
+      "editable_text_present": true,
+      "missing_groups": [],
+      "parses": true,
+      "path": {
+        "bytes": 1595,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_B2_editable_overlay.svg",
+        "sha256": "7b0e6a12f8e6d2542315e98f593bb4a1e8041ae49861b181927e1edf70214fa5"
+      },
+      "required_groups_present": [
+        "centreline",
+        "corridor",
+        "distance_reference",
+        "event",
+        "interface",
+        "kamaishi",
+        "propagation"
+      ],
+      "text_element_count": 1
+    },
+    "deliverables/figures/r21_editable/editable/figure_C0_longitudinal_bathymetry_clean.svg": {
+      "editable_text_present": true,
+      "missing_groups": [],
+      "parses": true,
+      "path": {
+        "bytes": 6849,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C0_longitudinal_bathymetry_clean.svg",
+        "sha256": "1df328cc07414927075d23efb654a953e3c2e9f909e4fadd88e5d92f819137e1"
+      },
+      "required_groups_present": [
+        "axes",
+        "profile",
+        "sea_level"
+      ],
+      "text_element_count": 15
+    },
+    "deliverables/figures/r21_editable/editable/figure_C1_longitudinal_bathymetry_interpreted.svg": {
+      "editable_text_present": true,
+      "missing_groups": [],
+      "parses": true,
+      "path": {
+        "bytes": 8379,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C1_longitudinal_bathymetry_interpreted.svg",
+        "sha256": "ffd63ee90eb572e6aac65f4233b1ef358495a537552a521ee0f0a1bee51ed76e"
+      },
+      "required_groups_present": [
+        "axes",
+        "event_reference",
+        "interface",
+        "profile",
+        "region_bands",
+        "region_labels",
+        "sea_level"
+      ],
+      "text_element_count": 20
+    },
+    "deliverables/figures/r21_editable/editable/figure_C2_annotation_template.svg": {
+      "editable_text_present": true,
+      "missing_groups": [],
+      "parses": true,
+      "path": {
+        "bytes": 1698,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C2_annotation_template.svg",
+        "sha256": "2c18706d682dabe766d33873c3bbb1e30f86ee0ac019c927e9a93631296f19ee"
+      },
+      "required_groups_present": [
+        "caption_placeholder",
+        "event_reference",
+        "interface",
+        "region_labels",
+        "title_placeholder"
+      ],
+      "text_element_count": 7
+    }
+  }
+}

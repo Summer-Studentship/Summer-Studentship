@@ -1,0 +1,94 @@
+{
+  "authoritative_scene": {
+    "bytes": 9305566,
+    "exists": true,
+    "path": "deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_scene.blend",
+    "sha256": "5667c057ef5f4921420df7628147dc028dab23df0e5148a968e9085c30597a18"
+  },
+  "confirmation": {
+    "b0_has_no_corridor_text_arrows_legend_markers": true,
+    "b1_has_only_terrain_plus_corridor_geometry": true,
+    "source_scene_opened_not_rebuilt_from_pixels": true,
+    "terrain_scientific_content_unchanged": true
+  },
+  "distance_reference_method": {
+    "basis": "EPSG:32654 projected-ground segment parallel to the accepted corridor centreline tangent.",
+    "end_projected_m": {
+      "x": 614835.0224740657,
+      "y": 4261276.32113074
+    },
+    "length_m": 25000.0,
+    "start_projected_m": {
+      "x": 624197.6332118873,
+      "y": 4238095.693007844
+    }
+  },
+  "generated_at_utc": "2026-08-13T16:11:23Z",
+  "outputs": {
+    "b0_blend": {
+      "bytes": 9301805,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/sources/blender/figure_B0_oblique_bathymetry_clean_scene.blend",
+      "sha256": "24f090e200c63a1c2aff455b5a1a39b88160e9cab2d6e1ae75a4cf4a83a624b7"
+    },
+    "b0_pdf": {
+      "bytes": 5289250,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.pdf",
+      "sha256": "82d01b07eaaeb442e9b159ab570d6ceafc19803027a6d3f5dcd19622a808b026"
+    },
+    "b0_png": {
+      "bytes": 10018492,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.png",
+      "sha256": "744d2396bfd56c2ba1a9e413525d32d30bd0cc2284818a410302d2bc1ff68596"
+    },
+    "b0_preview": {
+      "bytes": 10018492,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/previews/figure_B0_oblique_bathymetry_clean.png",
+      "sha256": "744d2396bfd56c2ba1a9e413525d32d30bd0cc2284818a410302d2bc1ff68596"
+    },
+    "b1_blend": {
+      "bytes": 9301788,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/sources/blender/figure_B1_oblique_bathymetry_corridor_scene.blend",
+      "sha256": "d9c42ef1674db25282927f5682230c84bc46567010fa79eab00a2feaf533a554"
+    },
+    "b1_pdf": {
+      "bytes": 5401056,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.pdf",
+      "sha256": "76d949b6baebd2d71e9e979603b28459368d15361b320f0b7ec010ee9b146203"
+    },
+    "b1_png": {
+      "bytes": 10149785,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.png",
+      "sha256": "ae87e85d0e52ed30c292ad8a530f99bf3f4e7c4305ef2f53e145b183a4cdef78"
+    },
+    "b1_preview": {
+      "bytes": 10149785,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/previews/figure_B1_oblique_bathymetry_corridor.png",
+      "sha256": "ae87e85d0e52ed30c292ad8a530f99bf3f4e7c4305ef2f53e145b183a4cdef78"
+    },
+    "b2_svg": {
+      "bytes": 1595,
+      "exists": true,
+      "path": "deliverables/figures/r21_editable/editable/figure_B2_editable_overlay.svg",
+      "sha256": "7b0e6a12f8e6d2542315e98f593bb4a1e8041ae49861b181927e1edf70214fa5"
+    }
+  },
+  "schema": {
+    "name": "tsunami.r21.figure_b",
+    "version": "1.0.0"
+  },
+  "source_render_record": {
+    "bytes": 7069,
+    "exists": true,
+    "path": "deliverables/figures/r20_publication/provenance/figure_R20_B_selected_blender_render.json",
+    "sha256": "ce20c01980eb2f3f31819a1344adab54adff8ee89ddc936b50b96bb8ec54cf29"
+  },
+  "status": "COMPLETE"
+}

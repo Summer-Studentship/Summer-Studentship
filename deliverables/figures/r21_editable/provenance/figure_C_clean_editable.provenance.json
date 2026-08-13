@@ -1,0 +1,179 @@
+{
+  "confirmation": {
+    "large_prose_boxes_removed": true,
+    "no_3d_inset": true,
+    "not_reconstructed_from_png_pixels": true,
+    "regenerated_from_numerical_profile_csv": true,
+    "svg_text_editable": true
+  },
+  "generated_at_utc": "2026-08-13T16:11:23Z",
+  "mathematical_relationship": {
+    "blender_render": "(x,y,b(x,y)) with 4x vertical exaggeration for visualisation",
+    "longitudinal_profile": "b_c(s) = b(x_c(s), y_c(s)) along the accepted corridor centreline",
+    "terrain_field": "b = b(x,y)"
+  },
+  "outputs": {
+    "c0": {
+      "conversion": {
+        "pdf": {
+          "command": [
+            "rsvg-convert",
+            "-f",
+            "pdf",
+            "-o",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.pdf",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/editable/figure_C0_longitudinal_bathymetry_clean.svg"
+          ],
+          "output": "",
+          "return_code": 0
+        },
+        "png": {
+          "command": [
+            "rsvg-convert",
+            "-f",
+            "png",
+            "-w",
+            "3000",
+            "-o",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.png",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/editable/figure_C0_longitudinal_bathymetry_clean.svg"
+          ],
+          "output": "",
+          "return_code": 0
+        }
+      },
+      "pdf": {
+        "bytes": 12403,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.pdf",
+        "sha256": "47e1787873e915bccdc6c159d8ed2e428d402da03c0df648273130115f76747d"
+      },
+      "png": {
+        "bytes": 123259,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C0_longitudinal_bathymetry_clean.png",
+        "sha256": "60738e5e9c371de23377ac9717a2dcb7c1d644fa6f5f854539a707148bf38a4c"
+      },
+      "preview": {
+        "bytes": 123259,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/previews/figure_C0_longitudinal_bathymetry_clean.png",
+        "sha256": "60738e5e9c371de23377ac9717a2dcb7c1d644fa6f5f854539a707148bf38a4c"
+      },
+      "svg": {
+        "bytes": 6849,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C0_longitudinal_bathymetry_clean.svg",
+        "sha256": "1df328cc07414927075d23efb654a953e3c2e9f909e4fadd88e5d92f819137e1"
+      }
+    },
+    "c1": {
+      "conceptual_region_bands_km": {
+        "deep_water_propagation": [
+          85.0,
+          124.0
+        ],
+        "nearshore_transition": [
+          0.0,
+          12.0
+        ],
+        "shelf_shoaling_influence": [
+          12.0,
+          85.0
+        ]
+      },
+      "conversion": {
+        "pdf": {
+          "command": [
+            "rsvg-convert",
+            "-f",
+            "pdf",
+            "-o",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.pdf",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/editable/figure_C1_longitudinal_bathymetry_interpreted.svg"
+          ],
+          "output": "",
+          "return_code": 0
+        },
+        "png": {
+          "command": [
+            "rsvg-convert",
+            "-f",
+            "png",
+            "-w",
+            "3000",
+            "-o",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.png",
+            "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/editable/figure_C1_longitudinal_bathymetry_interpreted.svg"
+          ],
+          "output": "",
+          "return_code": 0
+        }
+      },
+      "event_reference_distance_offshore_km": 108.31900726067028,
+      "geometry_source_status": "accepted G6 simple_rigid_barrier replay geometry; representative Kamaishi-forced local replay, not exact harbour reconstruction",
+      "interface_distance_offshore_km": 0.0,
+      "pdf": {
+        "bytes": 21937,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.pdf",
+        "sha256": "faa990c965d54fb8c2f509185391a6796d5d9805aae216e0db6b258762e207cc"
+      },
+      "png": {
+        "bytes": 166788,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/publication/figure_C1_longitudinal_bathymetry_interpreted.png",
+        "sha256": "c27cbb21b5762bd92019e6d9aafc0d431e0bfddfaa628c49f8f9563714a20d80"
+      },
+      "preview": {
+        "bytes": 166788,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/previews/figure_C1_longitudinal_bathymetry_interpreted.png",
+        "sha256": "c27cbb21b5762bd92019e6d9aafc0d431e0bfddfaa628c49f8f9563714a20d80"
+      },
+      "region_band_status": "conceptual broad interpretation from R19 milestone convention; not calibrated physical thresholds",
+      "svg": {
+        "bytes": 8379,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C1_longitudinal_bathymetry_interpreted.svg",
+        "sha256": "ffd63ee90eb572e6aac65f4233b1ef358495a537552a521ee0f0a1bee51ed76e"
+      }
+    },
+    "c2": {
+      "svg": {
+        "bytes": 1698,
+        "exists": true,
+        "path": "deliverables/figures/r21_editable/editable/figure_C2_annotation_template.svg",
+        "sha256": "2c18706d682dabe766d33873c3bbb1e30f86ee0ac019c927e9a93631296f19ee"
+      }
+    }
+  },
+  "profile_lineage": "R10 h400 mesh -> accepted corridor centreline sampling -> longitudinal bed profile",
+  "profile_source": {
+    "bytes": 7310,
+    "exists": true,
+    "path": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+    "sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+  },
+  "profile_source_copy": {
+    "bytes": 7310,
+    "exists": true,
+    "path": "deliverables/figures/r21_editable/sources/data/bathymetry_profile_r19_source_copy.csv",
+    "sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3"
+  },
+  "profile_source_hash": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3",
+  "profile_summary": {
+    "bed_max_m": -22.407207013,
+    "bed_min_m": -1077.400775612,
+    "distance_convention": "distance offshore from selected wet nearshore interface; positive sourceward/offshore; interface at 0 km",
+    "distance_max_km": 123.219472839,
+    "distance_min_km": 0.099534421,
+    "sample_count": 155,
+    "sampling_method": "nearest unstructured h400 cell centre to R10/G6 centreline samples in EPSG:32654; no smoothing or rerun"
+  },
+  "schema": {
+    "name": "tsunami.r21.figure_c",
+    "version": "1.0.0"
+  },
+  "status": "COMPLETE"
+}

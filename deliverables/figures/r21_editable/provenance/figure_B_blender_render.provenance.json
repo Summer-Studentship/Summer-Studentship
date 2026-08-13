@@ -1,0 +1,131 @@
+{
+  "b0_change": "corridor overlay objects hidden; no text, arrows, legend, markers or labels added.",
+  "b1_change": "corridor overlay objects restored; no text, arrows, legend, markers or labels added.",
+  "blender": {
+    "python": "3.14.6",
+    "render_engine": "BLENDER_EEVEE",
+    "version": "5.2.0 LTS"
+  },
+  "corridor_objects": [
+    "Regional2D corridor outline",
+    "Regional2D corridor subtle fill"
+  ],
+  "generated_at_utc": "2026-08-13T16:11:11Z",
+  "outputs": {
+    "b0_blend": {
+      "bytes": 9301805,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/sources/blender/figure_B0_oblique_bathymetry_clean_scene.blend"
+    },
+    "b0_png": {
+      "bytes": 10018492,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_B0_oblique_bathymetry_clean.png"
+    },
+    "b1_blend": {
+      "bytes": 9301788,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/sources/blender/figure_B1_oblique_bathymetry_corridor_scene.blend"
+    },
+    "b1_png": {
+      "bytes": 10149785,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/publication/figure_B1_oblique_bathymetry_corridor.png"
+    },
+    "b2_overlay_svg": {
+      "bytes": 1595,
+      "exists": true,
+      "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r21_editable/editable/figure_B2_editable_overlay.svg"
+    }
+  },
+  "overlay": {
+    "distance_reference": {
+      "basis": "EPSG:32654 projected-ground segment parallel to the accepted corridor centreline tangent.",
+      "end_projected_m": {
+        "x": 614835.0224740657,
+        "y": 4261276.32113074
+      },
+      "length_m": 25000.0,
+      "start_projected_m": {
+        "x": 624197.6332118873,
+        "y": 4238095.693007844
+      }
+    },
+    "projected_markers_px": {
+      "event": {
+        "x": 1805.2488327026367,
+        "y": 2182.122790813446
+      },
+      "interface": {
+        "x": 2837.1445655822754,
+        "y": 767.1335458755493
+      },
+      "kamaishi": {
+        "x": 2915.737724304199,
+        "y": 656.6749095916748
+      }
+    },
+    "source_camera": {
+      "focal_length_mm": 55.0,
+      "heading_deg": 35.53768257234603,
+      "location_km": [
+        92.0,
+        -118.0,
+        56.0
+      ],
+      "ortho_scale_km": 118.0,
+      "pitch_deg": 70.71165757138888,
+      "target_km": [
+        -3.0,
+        15.0,
+        -1.2000000476837158
+      ],
+      "type": "orthographic"
+    },
+    "terrain_centering_origin_m": {
+      "x": 599000.0,
+      "y": 4283500.0
+    }
+  },
+  "preserved_scientific_state": {
+    "camera_and_materials": "Opened from R20 selected .blend without scientific retuning.",
+    "crs": "EPSG:32654",
+    "terrain_lineage": "R20 selected scene from R17/R16 ETOPO 2022 terrain source",
+    "vertical_exaggeration": 4.0,
+    "vertical_reference": "EGM2008 z=0 sea-level reference"
+  },
+  "resolution": {
+    "height": 2800,
+    "width": 4800
+  },
+  "schema": {
+    "name": "tsunami.r21.clean_blender_render",
+    "version": "1.0.0"
+  },
+  "source_corridor_centreline": {
+    "bytes": 879,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r16_publication/sources/qgis/layers/corridor_centreline.geojson"
+  },
+  "source_corridor_polygon": {
+    "bytes": 1131,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r16_publication/sources/qgis/layers/corridor_polygon.geojson"
+  },
+  "source_domain_geometry": {
+    "bytes": 16607,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r19_tikz/data/domain_geometry.json"
+  },
+  "source_r20_render_record": {
+    "bytes": 7069,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r20_publication/provenance/figure_R20_B_selected_blender_render.json"
+  },
+  "source_scene": {
+    "bytes": 9305566,
+    "exists": true,
+    "path": "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r20_publication/sources/blender/figure_R20_B_selected_scene.blend"
+  },
+  "status": "COMPLETE"
+}
