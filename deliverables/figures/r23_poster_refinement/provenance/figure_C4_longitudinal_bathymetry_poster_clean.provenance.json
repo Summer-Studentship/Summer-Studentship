@@ -1,0 +1,87 @@
+{
+  "conversion": {
+    "pdf": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "pdf",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.pdf",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    },
+    "png": {
+      "command": [
+        "rsvg-convert",
+        "-f",
+        "png",
+        "-w",
+        "3600",
+        "-o",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.png",
+        "/home/helios/Projects/Summer-Studentship-r21-figures/deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.svg"
+      ],
+      "output": "",
+      "return_code": 0
+    }
+  },
+  "curve_preservation": {
+    "axis_limits_unchanged": {
+      "x": [
+        0.0,
+        124.0
+      ],
+      "y": [
+        -1150.0,
+        120.0
+      ]
+    },
+    "data_unchanged": true,
+    "event_reference_km": 108.31900726067028,
+    "sea_level_reference_unchanged": true,
+    "selected_interface_km": 0.0,
+    "x_coordinate_unchanged": true,
+    "y_coordinate_unchanged": true
+  },
+  "generated_at_utc": "2026-08-13T20:47:28Z",
+  "lineage": "R10 h400 Regional mesh -> accepted corridor centreline -> sampled bed field -> longitudinal profile",
+  "outputs": {
+    "pdf": "deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.pdf",
+    "png": "deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.png",
+    "preview": "deliverables/figures/r23_poster_refinement/previews/figure_C4_longitudinal_bathymetry_poster_clean.png",
+    "svg": "deliverables/figures/r23_poster_refinement/publication/figure_C4_longitudinal_bathymetry_poster_clean.svg"
+  },
+  "poster_clean_changes": {
+    "event_label_inside_plot": true,
+    "removed_bottom_explanation_blocks": true,
+    "removed_interpretive_caveat": true,
+    "removed_provenance_formula_line": true
+  },
+  "source_copy": "deliverables/figures/r23_poster_refinement/sources/data/bathymetry_profile_r19_source_copy.csv",
+  "source_csv": "deliverables/figures/r19_tikz/data/bathymetry_profile.csv",
+  "source_sha256": "8166d8743ef5e030e9775f9e17c8acfdef497411cffc508a9698a1e6f7e21ab3",
+  "status": "COMPLETE",
+  "validation": {
+    "pdf_nonempty": true,
+    "png": {
+      "height_px": 1640,
+      "mean": 61218.1,
+      "nonblank": true,
+      "width_px": 3600
+    },
+    "svg": {
+      "editable_text_present": true,
+      "forbidden_groups_present": [],
+      "missing_groups": [],
+      "parses": true,
+      "text_element_count": 22
+    }
+  },
+  "zone_labels": [
+    "Offshore long-wave propagation",
+    "Shelf / shoaling influence",
+    "Nearshore transition"
+  ]
+}

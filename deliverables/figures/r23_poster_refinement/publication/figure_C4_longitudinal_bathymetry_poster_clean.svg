@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="820" viewBox="0 0 1800 820">
+<rect x="0" y="0" width="1800" height="820" fill="#FFFFFF"/>
+<g id="title">
+<text x="130.00" y="52.00" font-family="Arial, Helvetica, sans-serif" font-size="34.00" font-weight="700" fill="#1B2430" text-anchor="start">Figure C. Longitudinal bathymetry along the Kamaishi Regional2D corridor</text>
+<text x="130.00" y="92.00" font-family="Arial, Helvetica, sans-serif" font-size="22.00" font-weight="400" fill="#56616F" text-anchor="start">Bed elevation sampled along the corridor centreline from the offshore event region toward the selected wet nearshore interface.</text>
+</g>
+<g id="region_bands">
+<rect x="130.0" y="170.0" width="484.35483870967744" height="520.0" fill="#DFE8EF" opacity="0.72"/>
+<rect x="614.3548387096774" y="170.0" width="906.6129032258065" height="520.0" fill="#E7EAD7" opacity="0.72"/>
+<rect x="1520.967741935484" y="170.0" width="149.0322580645161" height="520.0" fill="#F3E6BF" opacity="0.72"/>
+</g>
+<g id="axes">
+<rect x="130.0" y="170.0" width="1540.0" height="520.0" fill="none" stroke="#26323B" stroke-width="2.0"/>
+<line x1="130.0" y1="628.5826771653543" x2="1670.0" y2="628.5826771653543" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="634.58" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-1000</text>
+<line x1="130.0" y1="526.2204724409448" x2="1670.0" y2="526.2204724409448" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="532.22" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-750</text>
+<line x1="130.0" y1="423.85826771653547" x2="1670.0" y2="423.85826771653547" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="429.86" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-500</text>
+<line x1="130.0" y1="321.496062992126" x2="1670.0" y2="321.496062992126" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="327.50" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">-250</text>
+<line x1="130.0" y1="219.13385826771653" x2="1670.0" y2="219.13385826771653" stroke="#DDE2DE" stroke-width="1.2"/>
+<text x="114.00" y="225.13" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="end">0</text>
+<line x1="179.67741935483872" y1="690.0" x2="179.67741935483872" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="179.68" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">120</text>
+<line x1="428.06451612903226" y1="690.0" x2="428.06451612903226" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="428.06" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">100</text>
+<line x1="676.4516129032259" y1="690.0" x2="676.4516129032259" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="676.45" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">80</text>
+<line x1="924.8387096774194" y1="690.0" x2="924.8387096774194" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="924.84" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">60</text>
+<line x1="1173.225806451613" y1="690.0" x2="1173.225806451613" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="1173.23" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">40</text>
+<line x1="1421.6129032258066" y1="690.0" x2="1421.6129032258066" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="1421.61" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">20</text>
+<line x1="1670.0" y1="690.0" x2="1670.0" y2="704.0" stroke="#26323B" stroke-width="2"/>
+<text x="1670.00" y="732.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="400" fill="#4D5963" text-anchor="middle">0</text>
+<text x="900.00" y="772.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323B" text-anchor="middle">Distance offshore from selected wet nearshore interface, km</text>
+<text x="42.00" y="430.00" font-family="Arial, Helvetica, sans-serif" font-size="24.00" font-weight="400" fill="#26323B" text-anchor="middle" transform="rotate(-90 42 430.00)">Bed elevation, m (EGM2008)</text>
+</g>
+<g id="sea_level">
+<line x1="130.0" y1="219.13385826771653" x2="1670.0" y2="219.13385826771653" stroke="#8B9299" stroke-width="2.0" stroke-dasharray="8 8"/>
+<text x="1660.00" y="207.13" font-family="Arial, Helvetica, sans-serif" font-size="17.00" font-weight="400" fill="#68737C" text-anchor="end">z = 0 m</text>
+</g>
+<g id="region_labels">
+<text x="378.39" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#31475B" text-anchor="middle">Offshore long-wave propagation</text>
+<text x="1067.66" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#526137" text-anchor="middle">Shelf / shoaling influence</text>
+<text x="1595.48" y="150.00" font-family="Arial, Helvetica, sans-serif" font-size="20.00" font-weight="700" fill="#765C26" text-anchor="middle">Nearshore transition</text>
+</g>
+<g id="event_reference">
+<line x1="324.7478130529659" y1="170.0" x2="324.7478130529659" y2="690.0" stroke="#C8352C" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="308.75" y="558.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#C8352C" text-anchor="middle" transform="rotate(-90 308.75 558.00)">2011 event ref.</text>
+</g>
+<g id="interface">
+<line x1="1670.0" y1="170.0" x2="1670.0" y2="690.0" stroke="#14865C" stroke-width="2.0" stroke-dasharray="9 8"/>
+<text x="1660.00" y="666.00" font-family="Arial, Helvetica, sans-serif" font-size="18.00" font-weight="700" fill="#14865C" text-anchor="end">selected wet interface</text>
+</g>
+<g id="profile">
+<path d="M 139.69 660.27 L 149.63 658.02 L 159.56 658.16 L 169.50 656.34 L 179.44 654.16 L 189.37 652.08 L 199.31 651.83 L 209.24 649.62 L 219.18 644.36 L 229.11 644.28 L 239.05 641.69 L 248.98 641.31 L 258.92 638.24 L 268.85 635.19 L 278.79 629.51 L 288.73 628.77 L 298.66 627.71 L 308.60 625.54 L 318.53 622.00 L 328.47 618.42 L 338.40 617.53 L 348.34 611.64 L 358.27 611.04 L 368.21 607.48 L 378.15 603.66 L 388.08 600.50 L 398.02 599.96 L 407.95 593.22 L 417.89 591.52 L 427.82 587.31 L 437.76 584.76 L 447.69 581.82 L 457.63 577.96 L 467.56 573.95 L 477.50 569.89 L 487.44 566.05 L 497.37 565.85 L 507.31 561.88 L 517.24 557.50 L 527.18 553.35 L 537.11 545.60 L 547.05 546.55 L 556.98 544.45 L 566.92 540.04 L 576.85 535.56 L 586.79 533.78 L 596.73 527.48 L 606.66 526.73 L 616.60 522.28 L 626.53 518.00 L 636.47 513.94 L 646.40 513.82 L 656.34 509.83 L 666.27 506.08 L 676.21 502.46 L 686.15 500.02 L 696.08 498.17 L 706.02 496.38 L 715.95 493.35 L 725.89 487.10 L 735.82 488.34 L 745.76 488.23 L 755.69 485.48 L 765.63 482.77 L 775.56 479.78 L 785.50 474.26 L 795.44 475.23 L 805.37 474.32 L 815.31 471.90 L 825.24 469.47 L 835.18 468.39 L 845.11 467.61 L 855.05 465.68 L 864.98 464.06 L 874.92 462.24 L 884.85 460.65 L 894.79 460.48 L 904.73 458.63 L 914.66 452.97 L 924.60 454.00 L 934.53 451.74 L 944.47 451.33 L 954.40 448.66 L 964.34 445.53 L 974.27 442.43 L 984.21 438.91 L 994.15 437.74 L 1004.08 434.54 L 1014.02 430.68 L 1023.95 426.33 L 1033.89 425.53 L 1043.82 418.42 L 1053.76 417.46 L 1063.69 412.16 L 1073.63 407.14 L 1083.56 402.77 L 1093.50 401.64 L 1103.44 391.39 L 1113.37 390.03 L 1123.31 384.58 L 1133.24 382.06 L 1143.18 378.86 L 1153.11 374.53 L 1163.05 370.68 L 1172.98 367.13 L 1182.92 364.09 L 1192.85 363.87 L 1202.79 360.74 L 1212.73 357.57 L 1222.66 354.17 L 1232.60 350.86 L 1242.53 349.14 L 1252.47 347.26 L 1262.40 343.63 L 1272.34 339.92 L 1282.27 338.63 L 1292.21 331.84 L 1302.15 332.59 L 1312.08 328.13 L 1322.02 324.08 L 1331.95 320.03 L 1341.89 319.94 L 1351.82 315.54 L 1361.76 311.85 L 1371.69 308.47 L 1381.63 306.08 L 1391.56 304.07 L 1401.50 301.92 L 1411.44 298.76 L 1421.37 295.69 L 1431.31 292.92 L 1441.24 292.87 L 1451.18 290.17 L 1461.11 287.71 L 1471.05 285.43 L 1480.98 283.10 L 1490.92 282.01 L 1500.85 281.33 L 1510.79 279.39 L 1520.73 277.51 L 1530.66 276.49 L 1540.60 275.59 L 1550.53 272.83 L 1560.47 269.69 L 1570.40 265.84 L 1580.34 261.31 L 1590.27 260.95 L 1600.21 256.20 L 1610.15 250.25 L 1620.08 245.17 L 1630.02 240.79 L 1639.95 236.67 L 1649.89 233.18 L 1659.82 228.48 L 1668.76 228.31" fill="none" stroke="#123858" stroke-width="5.2" stroke-linejoin="round" stroke-linecap="round"/>
+</g>
+</svg>
