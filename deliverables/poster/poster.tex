@@ -14,7 +14,7 @@
 \usepackage[most]{tcolorbox}
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,calc,positioning,shapes.geometric}
-\graphicspath{{./}{../figures/r23_poster_refinement/publication/}{../figures/r22_poster/publication/}}
+\graphicspath{{./}}
 
 \IfFontExistsTF{TeX Gyre Heros}{
   \setmainfont{TeX Gyre Heros}
@@ -28,130 +28,171 @@
 \definecolor{PosterMuted}{HTML}{56616F}
 \definecolor{PosterPrimary}{HTML}{123B5D}
 \definecolor{PosterAccent}{HTML}{C56A3A}
+\definecolor{PosterTeal}{HTML}{237A80}
 \definecolor{PosterSoft}{HTML}{F5F7FA}
 \definecolor{PosterPanel}{HTML}{FFFFFF}
 \definecolor{PosterRule}{HTML}{CBD5E1}
 \definecolor{PosterTint}{HTML}{EAF2F7}
+\definecolor{PosterWarmTint}{HTML}{FFF7ED}
+\definecolor{PosterFuture}{HTML}{F1F4F7}
 
 \pagestyle{empty}
 \setlength{\parindent}{0pt}
-\setlength{\parskip}{0.35em}
-\setlist[itemize]{leftmargin=1.05em,itemsep=0.22em,topsep=0.15em}
-\setlist[enumerate]{leftmargin=1.15em,itemsep=0.22em,topsep=0.15em}
-\AtBeginDocument{\fontsize{23}{30}\selectfont\color{PosterInk}\justifying}
+\setlength{\parskip}{0.24em}
+\setlist[itemize]{leftmargin=0.95em,itemsep=0.07em,topsep=0.08em}
+\setlist[enumerate]{leftmargin=1.0em,itemsep=0.07em,topsep=0.08em}
+\AtBeginDocument{\fontsize{17.8}{21.5}\selectfont\color{PosterInk}\justifying}
 
-\newcommand{\PosterTitle}[1]{{\fontsize{61}{67}\selectfont\bfseries #1\par}}
-\newcommand{\PosterSubtitle}[1]{{\fontsize{31}{39}\selectfont #1\par}}
-\newcommand{\PosterMeta}[1]{{\fontsize{23}{30}\selectfont #1\par}}
-\newcommand{\SmallNote}[1]{{\fontsize{18}{23}\selectfont\color{PosterMuted} #1}}
-\newcommand{\PosterCaption}[1]{\par{\fontsize{12.5}{15.2}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
-\newcommand{\PosterReferenceText}[1]{{\fontsize{14.5}{18}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
-\newcommand{\Metric}[3]{%
-  \begin{minipage}[t]{0.30\linewidth}
-    {\fontsize{28}{32}\selectfont\bfseries\color{PosterPrimary} #1\par}
-    {\fontsize{17}{21}\selectfont\color{PosterMuted} #2\par}
-    {\fontsize{15}{19}\selectfont #3\par}
-  \end{minipage}%
+\newcommand{\PosterTitle}[1]{{\fontsize{45}{49}\selectfont\bfseries #1\par}}
+\newcommand{\PosterSubtitle}[1]{{\fontsize{18.5}{23}\selectfont #1\par}}
+\newcommand{\PosterMeta}[1]{{\fontsize{16.5}{20}\selectfont #1\par}}
+\newcommand{\SmallNote}[1]{{\fontsize{12.5}{15}\selectfont\color{PosterMuted} #1}}
+\newcommand{\PosterCaption}[1]{\par{\fontsize{9.8}{12}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
+\newcommand{\PosterReferenceText}[1]{{\fontsize{11.4}{13.5}\selectfont\color{PosterMuted}\RaggedRight #1\par}}
+\newcommand{\Chip}[2][PosterTint]{%
+  \tikz[baseline=(txt.base)]\node[
+    fill=#1,
+    draw=PosterRule,
+    rounded corners=2.2mm,
+    inner xsep=2.4mm,
+    inner ysep=1.1mm
+  ] (txt) {\fontsize{10.5}{12.5}\selectfont\bfseries\color{PosterPrimary} #2};%
 }
+\newcommand{\WarmChip}[1]{\Chip[PosterWarmTint]{#1}}
+\newcommand{\FutureChip}[1]{\Chip[PosterFuture]{#1}}
+\newcommand{\VarLine}[2]{\textbf{#1} & #2\\}
+\newcommand{\StepLine}[1]{\tikz[baseline=-0.5ex]\node[circle,fill=PosterPrimary,inner sep=1.5pt]{};~#1\par}
 
 \newtcolorbox{PosterBox}[1]{
   enhanced,
   colback=PosterPanel,
   colframe=PosterRule,
-  boxrule=1.1pt,
-  arc=3mm,
-  left=7mm,
-  right=7mm,
-  top=10mm,
-  bottom=6mm,
+  boxrule=1.0pt,
+  arc=2.4mm,
+  left=6mm,
+  right=6mm,
+  top=7.5mm,
+  bottom=4.5mm,
   before skip=0mm,
-  after skip=8.5mm,
+  after skip=4.7mm,
   title={#1},
-  fonttitle=\fontsize{27}{32}\selectfont\bfseries,
+  fonttitle=\fontsize{20.5}{24.5}\selectfont\bfseries,
   coltitle=white,
   boxed title style={
     colback=PosterPrimary,
     colframe=PosterPrimary,
-    arc=2mm,
-    left=5mm,
-    right=5mm,
-    top=2mm,
-    bottom=2mm
+    arc=1.8mm,
+    left=4.4mm,
+    right=4.4mm,
+    top=1.6mm,
+    bottom=1.6mm
   },
-  attach boxed title to top left={xshift=6mm,yshift=-4mm}
+  attach boxed title to top left={xshift=5mm,yshift=-3.2mm}
 }
 
-\newtcolorbox{CalloutBox}{
+\newtcolorbox{WidePosterBox}[1]{
   enhanced,
-  colback=PosterTint,
-  colframe=PosterPrimary,
-  boxrule=1.2pt,
-  arc=3mm,
+  colback=PosterPanel,
+  colframe=PosterRule,
+  boxrule=1.0pt,
+  arc=2.4mm,
   left=6mm,
   right=6mm,
-  top=5mm,
-  bottom=5mm
+  top=7.5mm,
+  bottom=4.5mm,
+  before skip=0mm,
+  after skip=4.7mm,
+  title={#1},
+  fonttitle=\fontsize{20.5}{24.5}\selectfont\bfseries,
+  coltitle=white,
+  boxed title style={
+    colback=PosterPrimary,
+    colframe=PosterPrimary,
+    arc=1.8mm,
+    left=4.4mm,
+    right=4.4mm,
+    top=1.6mm,
+    bottom=1.6mm
+  },
+  attach boxed title to top left={xshift=5mm,yshift=-3.2mm}
 }
 
-\newcommand{\FigurePlaceholder}[3]{%
-  \begin{tikzpicture}
-    \node[
-      draw=PosterRule,
-      fill=PosterSoft,
-      rounded corners=2mm,
-      minimum width=0.94\linewidth,
-      minimum height=#1,
-      inner sep=8mm,
-      text width=0.78\linewidth,
-      align=center
-    ] (frame) {%
-      {\fontsize{26}{31}\selectfont\bfseries\color{PosterPrimary} #2}\\[2mm]
-      {\fontsize{18}{23}\selectfont\color{PosterMuted} #3}\\[2mm]
-      {\fontsize{16}{20}\selectfont\color{PosterAccent} single-panel figure slot}
-    };
-    \draw[PosterAccent,line width=1.1pt] ($(frame.south west)+(6mm,6mm)$) -- ($(frame.south east)+(-6mm,6mm)$);
+\newcommand{\StatusStrip}{%
+  \begin{tikzpicture}[
+    x=1mm,y=1mm,
+    status/.style={draw=PosterRule,rounded corners=2mm,minimum height=10mm,inner xsep=2.2mm,align=center,font=\fontsize{10.5}{12}\selectfont\bfseries}
+  ]
+    \node[status,fill=PosterTint,text=PosterPrimary] at (22,0) {IMPLEMENTED};
+    \node[status,fill=PosterTint,text=PosterPrimary] at (70,0) {VERIFIED};
+    \node[status,fill=PosterWarmTint,text=PosterAccent] at (120,0) {CHARACTERISED};
+    \node[status,fill=PosterTint,text=PosterTeal] at (174,0) {DEMONSTRATED};
+    \node[status,fill=PosterFuture,text=PosterMuted] at (224,0) {FUTURE};
   \end{tikzpicture}
 }
 
-\newcommand{\WorkflowGraphic}{%
+\newcommand{\FrameworkGraphic}{%
   \begin{tikzpicture}[
-    node distance=6mm,
-    flowstep/.style={
+    node distance=4.7mm,
+    stage/.style={
       draw=PosterPrimary,
       fill=PosterTint,
       rounded corners=2mm,
-      line width=1pt,
-      minimum width=0.92\linewidth,
-      minimum height=16mm,
-      inner sep=3mm,
+      line width=0.9pt,
+      minimum width=0.95\linewidth,
+      minimum height=13.5mm,
+      inner sep=2.2mm,
       align=center,
-      font=\fontsize{18}{22}\selectfont\bfseries
+      font=\fontsize{14.5}{17}\selectfont\bfseries
     },
-    arrow/.style={-{Latex[length=5mm]},line width=1.2pt,draw=PosterAccent}
+    future/.style={
+      draw=PosterRule,
+      fill=PosterFuture,
+      rounded corners=2mm,
+      dashed,
+      line width=0.9pt,
+      minimum width=0.95\linewidth,
+      minimum height=13.5mm,
+      inner sep=2.2mm,
+      align=center,
+      font=\fontsize{14.5}{17}\selectfont\bfseries\color{PosterMuted}
+    },
+    arrow/.style={-{Latex[length=3.5mm]},line width=1.0pt,draw=PosterTeal}
   ]
-    \node[flowstep] (source) {Finite-fault source\\coseismic seabed displacement};
-    \node[flowstep, below=of source] (terrain) {Terrain and corridor preprocessing\\ETOPO-derived Kamaishi delivery geometry};
-    \node[flowstep, below=of terrain] (regional) {Regional2D nonlinear shallow-water propagation\\finite-volume free-surface and momentum fields};
-    \node[flowstep, below=of regional] (coupling) {Coupling export\\nearshore interface histories: \(\eta(t), h(t), \overline{\mathbf{u}}(t)\)};
-    \node[flowstep, below=of coupling] (local) {OpenFOAM Local3D replay\\URANS--VOF inlet reconstruction};
-    \node[flowstep, below=of local] (outputs) {Impact visualisation, probes, forces, moments\\validation and defence assessment};
-    \foreach \a/\b in {source/terrain,terrain/regional,regional/coupling,coupling/local,local/outputs}
+    \node[stage] (event) {real event/source};
+    \node[stage,below=of event] (regional) {Regional2D NLSWE propagation};
+    \node[stage,below=of regional,draw=PosterAccent,fill=PosterWarmTint] (cred) {verification + validation framework};
+    \node[stage,below=of cred,draw=PosterTeal,fill=PosterTint] (forcing) {nearshore forcing extraction};
+    \node[stage,below=of forcing,draw=PosterTeal,fill=PosterTint] (replay) {one-way \(2\mathrm{D}\rightarrow3\mathrm{D}\) replay};
+    \node[stage,below=of replay,draw=PosterTeal,fill=PosterTint] (local) {Local3D OpenFOAM URANS--VOF};
+    \node[stage,below=of local,draw=PosterTeal,fill=PosterTint] (impact) {local impact response};
+    \node[future,below=of impact] (future) {defence / FSI / ML programme};
+    \foreach \a/\b in {event/regional,regional/cred,cred/forcing,forcing/replay,replay/local,local/impact,impact/future}
       \draw[arrow] (\a) -- (\b);
   \end{tikzpicture}
 }
 
-\newcommand{\QRPlaceholder}{%
-  \begin{tikzpicture}[x=1mm,y=1mm]
-    \fill[PosterPanel] (0,0) rectangle (42,42);
-    \draw[PosterPrimary,line width=1.3pt] (0,0) rectangle (42,42);
-    \foreach \x/\y in {4/4,28/4,4/28} {
-      \fill[PosterPrimary] (\x,\y) rectangle ++(10,10);
-      \fill[PosterPanel] (\x+2,\y+2) rectangle ++(6,6);
-      \fill[PosterPrimary] (\x+4,\y+4) rectangle ++(2,2);
-    }
-    \foreach \x/\y/\w/\h in {20/8/3/3,24/14/4/4,18/22/5/3,31/24/3/8,22/31/7/3,34/34/3/3,15/35/3/3,36/16/3/4}
-      \fill[PosterPrimary] (\x,\y) rectangle ++(\w,\h);
-  \end{tikzpicture}
+\newcommand{\RegionalAlgorithm}{%
+  \StepLine{event + terrain state}
+  \StepLine{wet/dry classification}
+  \StepLine{limited-linear \(\eta,u,v\) reconstruction}
+  \StepLine{hydrostatic reconstruction}
+  \StepLine{Rusanov numerical face flux}
+  \StepLine{bed, Manning and boundary sources}
+  \StepLine{CFL-controlled timestep}
+  \StepLine{SSPRK3 update}
+  \StepLine{positivity, diagnostics and output}
+}
+
+\newcommand{\LocalAlgorithm}{%
+  \StepLine{regional replay boundary data}
+  \StepLine{\(\eta,q_n,q_t\) inlet reconstruction}
+  \StepLine{\(\alpha_{\mathrm{water}} + \mathbf U\) boundary state}
+  \StepLine{OpenFOAM incompressible two-phase URANS--VOF}
+  \StepLine{pressure / velocity coupling}
+  \StepLine{VOF interface transport}
+  \StepLine{\(k\)--\(\omega\) SST turbulence}
+  \StepLine{Courant and interface-Courant control}
+  \StepLine{fields, probes, \(F(t)\), \(M(t)\)}
 }
 
 \begin{document}
@@ -160,232 +201,279 @@
   enhanced,
   colback=PosterPrimary,
   colframe=PosterPrimary,
-  arc=4mm,
+  arc=3mm,
   boxrule=0pt,
-  left=13mm,
-  right=13mm,
-  top=12mm,
-  bottom=12mm
+  left=12mm,
+  right=12mm,
+  top=8mm,
+  bottom=8mm
 ]
   {\color{white}
-  \PosterTitle{A One-Way Coupled 2D--3D Framework for Reconstructing the 2011 Tohoku Tsunami}
+  \PosterTitle{A Coupled 2D NLSWE Regional-Propagation and\\
+  3D URANS--VOF Coastal-Impact Framework for Reconstructing the\\
+  2011 Tōhoku Tsunami}
   \vspace{2mm}
-  \PosterSubtitle{Regional nonlinear shallow-water propagation to Local3D URANS--VOF replay at Kamaishi}
-  \vspace{4mm}
-  \PosterMeta{Rhyen Jivan \quad | \quad Summer Studentship Project \quad | \quad Supervisor: to be added}
+  \PosterSubtitle{Research snapshot from an ongoing framework-development programme. The work presented establishes and verifies the computational foundation for future historical validation, coastal-impact studies and tsunami-defence assessment; it does not claim a fully validated reconstruction of the 2011 event.}
+  \vspace{2.2mm}
+  \PosterMeta{Rhyen Jivan \quad | \quad Summer Studentship Project}
   }
 \end{tcolorbox}
 
-\vspace{7mm}
+\vspace{3.5mm}
 
 \noindent
-\begin{minipage}[t]{0.318\textwidth}
-  \begin{PosterBox}{Why this matters}
-    Tsunami-defence assessment needs local impact predictions that are physically linked to an event-scale source. A full 3D simulation from the earthquake source to the coast is not practical for routine design studies, while a purely depth-averaged model cannot resolve local inundation structure, forces, moments or defence interaction.
+\begin{minipage}[t]{0.652\textwidth}
+  \vspace{0pt}
+  \begin{WidePosterBox}{Real-event reconstruction}
+    \begin{minipage}[t]{0.43\linewidth}
+      \vspace{0pt}
+      \centering
+      \includegraphics[width=0.98\linewidth,height=188mm,keepaspectratio]{\detokenize{Studentship - Figures.png}}
+      \PosterCaption{\textbf{Figure A.} Regional context of the 2011 Tōhoku earthquake and Kamaishi Regional2D corridor. Base map adapted from Encyclopaedia Britannica; corridor and Kamaishi annotations added for this study.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.53\linewidth}
+      \vspace{0pt}
+      {\fontsize{22}{26}\selectfont\bfseries\color{PosterPrimary} Kamaishi target case\par}
+      \vspace{1.5mm}
+      Kamaishi is used as the target coastal case study for reconstructing source-to-coast tsunami propagation from the 2011 Tōhoku event. The Regional2D corridor passes through the event reference and carries the wave toward the selected wet nearshore interface.
 
-    \begin{CalloutBox}
-      \textbf{Poster message.} The project builds an auditable one-way hybrid framework: a Regional2D model carries the Tohoku event toward Kamaishi, then Local3D OpenFOAM replay resolves local free-surface impact under the exported forcing.
-    \end{CalloutBox}
+      \vspace{5mm}
+      \StatusStrip
+
+      \vspace{4mm}
+      \begin{tikzpicture}[
+        x=1mm,y=1mm,
+        node/.style={draw=PosterRule,fill=PosterSoft,rounded corners=2mm,minimum width=56mm,minimum height=12mm,align=center,font=\fontsize{11.8}{14}\selectfont\bfseries},
+        arrow/.style={-{Latex[length=4mm]},line width=1.0pt,draw=PosterAccent}
+      ]
+        \node[node] (source) at (31,52) {earthquake source};
+        \node[node] (terrain) at (31,31) {terrain + corridor};
+        \node[node] (interface) at (31,10) {wet nearshore interface};
+        \draw[arrow] (source) -- (terrain);
+        \draw[arrow] (terrain) -- (interface);
+      \end{tikzpicture}
+
+      \vspace{2mm}
+      \SmallNote{The real-event panel is organised as a visual sequence: regional context first, then oblique corridor geometry and the longitudinal bathymetric profile.}
+    \end{minipage}
+
+    \vspace{3.5mm}
+    \noindent
+    \begin{minipage}[t]{0.49\linewidth}
+      \vspace{0pt}
+      \centering
+      \includegraphics[width=\linewidth,height=86mm,keepaspectratio]{\detokenize{Studentship - Figures (1).png}}
+      \PosterCaption{\textbf{Figure B.} Oblique bathymetry and topography of the Kamaishi Regional2D corridor. NOAA/NCEI ETOPO 2022, EGM2008; prepared in QGIS/GDAL and rendered in Blender 5.2 EEVEE with \(4\times\) vertical exaggeration.}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.49\linewidth}
+      \vspace{0pt}
+      \centering
+      \includegraphics[width=\linewidth,height=86mm,keepaspectratio]{figure_C_longitudinal_bathymetry_poster_clean.pdf}
+      \PosterCaption{\textbf{Figure C.} Longitudinal bathymetry along the Kamaishi Regional2D corridor. Profile sampled along the accepted corridor centreline; bed elevation referenced to EGM2008.}
+    \end{minipage}
+  \end{WidePosterBox}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.328\textwidth}
+  \vspace{0pt}
+  \begin{PosterBox}{Why this matters}
+    Defence assessment needs local loading and impact physics while preserving the link to the real tsunami source. Full source-to-coast 3D simulation is impractical, but purely depth-averaged modelling cannot resolve vertical impact, free-surface deformation or structure loading. Hybrid modelling bridges those scales.
   \end{PosterBox}
 
   \begin{PosterBox}{Aim and objectives}
-    \textbf{Aim:} establish a validated event-reconstruction framework that can later support comparative assessment of coastal-defence configurations.
+    \textbf{Aim:} Establish a computational framework for reconstructing and validating real tsunami events, then reuse validated event forcing for Local3D coastal-impact and tsunami-defence studies.
 
-    \begin{itemize}
-      \item Reconstruct coseismic tsunami generation from the 2011 Tohoku event.
-      \item Propagate the wave through a source-to-coast Regional2D corridor.
-      \item Export physically consistent nearshore forcing at a Kamaishi coupling interface.
-      \item Replay that forcing in a Local3D URANS--VOF model for local impact.
-      \item Quantify uncertainty through verification, convergence, calibration and validation gates.
-    \end{itemize}
+    \begin{enumerate}
+      \item Reconstruct the 2011 Tōhoku source using real event and terrain data.
+      \item Propagate the event through a verified Regional2D NLSWE corridor.
+      \item Establish observation-based historical-validation methodology.
+      \item Demonstrate one-way transfer into a Local3D URANS--VOF impact model.
+      \item Define response quantities for defence, resilience and optimisation.
+    \end{enumerate}
   \end{PosterBox}
 
-  \begin{PosterBox}{Real-event reconstruction}
-    The Kamaishi delivery case is shown as a physical sequence: regional event context first, then terrain and longitudinal bathymetric interpretation at the current 2D--3D extraction interface.
-
-    \vspace{2mm}
+  \begin{PosterBox}{Hybrid framework overview}
     \centering
-    \includegraphics[width=0.96\linewidth,height=112mm,keepaspectratio]{\detokenize{Studentship - Figures.png}}
-    \PosterCaption{\textbf{Figure A.} Regional 2011 Tohoku event context and Kamaishi Regional2D corridor. Base map adapted from Encyclopaedia Britannica; corridor and Kamaishi annotations added for this study.}
-
-    \vspace{3.5mm}
-    \begin{minipage}[t]{0.485\linewidth}
-      \centering
-      \includegraphics[width=\linewidth,height=60mm,keepaspectratio]{\detokenize{Studentship - Figures (1).png}}
-      \PosterCaption{\textbf{B.} Oblique Kamaishi corridor bathymetry/topography. ETOPO 2022, EGM2008, QGIS/GDAL, Blender 5.2 EEVEE; 4\(\times\) vertical exaggeration.}
-    \end{minipage}
-    \hfill
-    \begin{minipage}[t]{0.485\linewidth}
-      \centering
-      \includegraphics[width=\linewidth,height=60mm,keepaspectratio]{figure_C4_longitudinal_bathymetry_poster_clean.pdf}
-      \PosterCaption{\textbf{C.} Clean longitudinal bathymetry along the frozen R10 h400 centreline profile; zones supported by Saito et al. (2014), Fujima et al. (2002) and Takase et al. (2016).}
-    \end{minipage}
-  \end{PosterBox}
-
-  \begin{PosterBox}{Current status}
-    \Metric{G6}{baseline closed}{The theoretical hybrid model and real Kamaishi replay acceptance are complete.}\hfill
-    \Metric{C1A}{in progress}{Regional convergence evidence exists, but forcing-waveform convergence is not yet qualified.}\hfill
-    \Metric{Next}{validation}{Calibration and observational validation remain future stages.}
+    \FrameworkGraphic
+    \PosterCaption{System architecture only: implemented and verified modelling stages are separated from planned defence, FSI and data-driven extensions.}
   \end{PosterBox}
 \end{minipage}
-\hfill
+
+\vspace{4mm}
+
+\noindent
 \begin{minipage}[t]{0.318\textwidth}
-  \begin{PosterBox}{Hybrid framework overview}
-    \WorkflowGraphic
-  \end{PosterBox}
-
-  \begin{PosterBox}{Mathematical model}
-    The Regional2D component solves a depth-averaged nonlinear shallow-water system in conservative form:
-    \[
-      \partial_t h + \nabla\!\cdot(h\mathbf{u}) = 0,
-    \]
-    \[
-      \partial_t(h\mathbf{u}) +
-      \nabla\!\cdot\!\left(h\mathbf{u}\otimes\mathbf{u}
-      + \frac{1}{2}g h^2\mathbf{I}\right)
-      = \mathbf{S}_{b}+\mathbf{S}_{f}+\mathbf{S}_{eq}.
-    \]
-
-    The Local3D replay uses an incompressible two-phase URANS--VOF formulation:
-    \[
-      \nabla\!\cdot\mathbf{U}=0,\qquad
-      \partial_t(\rho\mathbf{U})+\nabla\!\cdot(\rho\mathbf{U}\otimes\mathbf{U})
-      =-\nabla p+\nabla\!\cdot\tau+\rho\mathbf{g},
-    \]
-    \[
-      \partial_t\alpha+\nabla\!\cdot(\alpha\mathbf{U})
-      +\nabla\!\cdot\!\left(\alpha(1-\alpha)\mathbf{U}_c\right)=0.
-    \]
-
-    One-way coupling maps Regional2D free-surface elevation and depth-averaged momentum histories to the 3D inlet boundary. Feedback from Local3D to the Regional2D field is outside the current baseline.
-  \end{PosterBox}
-
-  \begin{PosterBox}{Implementation pipeline}
-    \begin{tabular}{@{}p{0.23\linewidth}p{0.68\linewidth}@{}}
-      \toprule
-      Stage & Current implementation role \\
-      \midrule
-      Source & USGS finite-fault artefact produces coseismic bed displacement. \\
-      Terrain & ETOPO-derived conditioning and projected corridor construction. \\
-      Regional2D & Repository-native finite-volume propagation and diagnostics. \\
-      Coupling & Nearshore interface export of histories and metadata. \\
-      Local3D & OpenFOAM Foundation 11 replay generation and execution. \\
-      Evidence & JSON, CSV, VTK and figure provenance for reproducibility. \\
-      \bottomrule
+  \vspace{0pt}
+  \begin{PosterBox}{Variables \& quantities of interest}
+    \SmallNote{\textbf{Solved / exported fields}}\par
+    \vspace{1.5mm}
+    \begin{tabular}{@{}p{0.18\linewidth}p{0.73\linewidth}@{}}
+      \multicolumn{2}{@{}l}{\textbf{Regional propagation state}}\\
+      \VarLine{\(\eta\)}{free-surface elevation}
+      \VarLine{\(h\)}{water depth}
+      \VarLine{\(q_x,q_y\)}{depth-integrated discharge}
+      \VarLine{\(u,v\)}{depth-averaged velocity}
+      \VarLine{\(b\)}{bed elevation / bathymetry}
+      \VarLine{\(\Delta z_b\)}{coseismic bed displacement}
     \end{tabular}
 
-    \vspace{5mm}
-    \FigurePlaceholder{76mm}{Figure placeholder: OpenFOAM replay visual}{Insert final single-panel rendered free-surface or velocity field from the Local3D replay.}
+    \vspace{3mm}
+    \begin{tabular}{@{}p{0.20\linewidth}p{0.71\linewidth}@{}}
+      \multicolumn{2}{@{}l}{\textbf{Local flow / material state}}\\
+      \VarLine{\(\mathbf U\)}{3D velocity}
+      \VarLine{\(p\)}{pressure}
+      \VarLine{\(\alpha_{\mathrm{water}}\)}{water volume fraction}
+      \VarLine{\(\rho,\mu,\mu_t\)}{mixture density and viscosities}
+      \VarLine{\(k,\omega\)}{SST turbulence variables}
+      \VarLine{\(Re,y^+\)}{diagnostic regime and wall resolution}
+    \end{tabular}
+
+    \vspace{3mm}
+    \SmallNote{\textbf{Derived / future study metrics}}\par
+    \vspace{1.5mm}
+    \begin{tabular}{@{}p{0.23\linewidth}p{0.68\linewidth}@{}}
+      \multicolumn{2}{@{}l}{\textbf{Loading \& interaction}}\\
+      \VarLine{\(\tau_w\)}{wall shear stress}
+      \VarLine{\(F(t),M(t)\)}{resultant force and moment}
+      \VarLine{\(J\)}{force impulse}
+      \VarLine{}{pressure loading; viscous traction}\\[1mm]
+      \multicolumn{2}{@{}l}{\textbf{Coastal / defence response}}\\
+      \VarLine{}{run-up; inundation depth}
+      \VarLine{}{overtopping discharge / volume}
+      \VarLine{}{transmission; momentum transmission}
+      \VarLine{}{mechanical-energy transmission / dissipation}
+    \end{tabular}
+
+    \vspace{2mm}
+    \SmallNote{Response metrics define the later defence-study vocabulary; they are not all validated 2011-event results.}
   \end{PosterBox}
 \end{minipage}
 \hfill
 \begin{minipage}[t]{0.318\textwidth}
-  \begin{PosterBox}{Verification and numerical findings}
-    The poster baseline reports the project honestly: verification evidence has advanced, but full convergence, calibration and validation are not complete.
+  \vspace{0pt}
+  \begin{PosterBox}{Solution algorithms}
+    \begin{minipage}[t]{0.48\linewidth}
+      {\fontsize{19}{23}\selectfont\bfseries\color{PosterPrimary} Regional2D\par}
+      \RegionalAlgorithm
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\linewidth}
+      {\fontsize{19}{23}\selectfont\bfseries\color{PosterPrimary} Local3D: adopted backend\par}
+      \LocalAlgorithm
+    \end{minipage}
 
+    \vspace{4mm}
+    \begin{tcolorbox}[enhanced,colback=PosterSoft,colframe=PosterRule,boxrule=0.8pt,arc=2mm,left=3mm,right=3mm,top=2mm,bottom=2mm]
+      {\fontsize{12.8}{15.5}\selectfont
+      \textbf{Pseudocode strip.} For each regional step: reconstruct face states; apply hydrostatic treatment; compute fluxes and source terms; advance SSPRK3 stages; enforce admissibility; publish diagnostics. For each replay step: update mapped inlet forcing; advance OpenFOAM URANS--VOF state; monitor boundedness and Courant limits; extract free-surface and impact diagnostics.}
+    \end{tcolorbox}
+
+    \SmallNote{The repository configures and audits OpenFOAM Foundation 11; it does not reimplement OpenFOAM pressure-correction, VOF or turbulence internals.}
+  \end{PosterBox}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.318\textwidth}
+  \vspace{0pt}
+  \begin{PosterBox}{Verification method}
+    \textbf{Model / implementation consistency:} research formulation \(\rightarrow\) implementation traceability \(\rightarrow\) zero required mismatches.
+
+    \vspace{2mm}
+    \textbf{Controlled Regional verification:}
     \begin{itemize}
-      \item G6 established the theoretical hybrid model baseline and accepted real Kamaishi Local3D replay evidence.
-      \item C1A Regional2D convergence work corrected a previous fine-mesh construction ambiguity.
-      \item The latest Regional ladder reuses h1000 and adds h900 and h800 full 600 s runs.
-      \item The medium-to-fine forcing waveform comparison still exceeds the 2\% qualification target.
+      \item manufactured solution \(\rightarrow\) \Chip{FIRST ORDER BASELINE VERIFIED}
+      \item limited-linear reconstruction \(\rightarrow\) \Chip{SECOND ORDER LIMITED-LINEAR VERIFIED}
+      \item smooth-wave benchmark: amplitude error reduced \(5.35\times\); phase-proxy error reduced \(17.43\times\).
     \end{itemize}
 
-    \begin{CalloutBox}
-      \textbf{Current conclusion:} Regional forcing-waveform convergence is \textbf{not yet qualified}; no production mesh or timestep policy is selected from C1A.
-    \end{CalloutBox}
-  \end{PosterBox}
+    \vspace{1mm}
+    \textbf{Real-event numerical fidelity:}
+    \begin{itemize}
+      \item real-event refinement and projection-only diagnosis completed;
+      \item terrain/source fidelity is the characterised dominant limitation;
+      \item current real-event forcing is \textbf{BEST AVAILABLE -- NUMERICALLY UNCERTAIN}.
+    \end{itemize}
 
-  \begin{PosterBox}{Key output slots}
-    \FigurePlaceholder{68mm}{Figure placeholder: Regional forcing waveform}{Insert a single-panel free-surface or normal-discharge forcing waveform.}
-
-    \vspace{6mm}
-    \FigurePlaceholder{68mm}{Figure placeholder: convergence summary}{Insert a single-panel error or runtime-versus-error figure once final reporting choices are fixed.}
+    \vspace{1mm}
+    \textbf{Hybrid / Local3D evidence:} forcing/replay consistency, boundary-reflection benchmark, VOF/runtime boundedness evidence, \(y^+\) wall-treatment checks, probes and force/moment extraction.
   \end{PosterBox}
 
   \begin{PosterBox}{Current achievements}
     \begin{itemize}
-      \item End-to-end source, terrain, Regional2D, coupling export and Local3D replay pathway implemented.
-      \item G5/G6 Regional2D prefix equivalence checked for accepted forcing export.
-      \item Production Local3D boundary, wall-function and timestep policies recorded for the G6 baseline.
-      \item Real Kamaishi no-defence and simple-rigid-barrier replay acceptance captured.
-      \item Reproducible convergence evidence and figure-provenance workflow established for C1A.
+      \item Regional2D implementation traced consistently to the research formulation.
+      \item First-order baseline and limited-linear second-order formulation formally verified.
+      \item Real 2011 Tōhoku \(\rightarrow\) Kamaishi Regional2D reconstruction completed.
+      \item Terrain/source fidelity characterised as the present real-event spatial limitation.
+      \item One-way Regional2D\(\rightarrow\)Local3D replay framework implemented and demonstrated.
+      \item Accepted no-defence and simple-rigid-barrier Local3D replay evidence includes free-surface/probe output and force/moment extraction.
+      \item Historical observation catalogue and validation methodology established.
     \end{itemize}
-  \end{PosterBox}
-
-  \begin{PosterBox}{Next steps}
-    \begin{enumerate}
-      \item Complete Regional2D convergence and select a defensible production forcing mesh.
-      \item Run Local3D spatial and temporal convergence once Regional forcing qualifies.
-      \item Calibrate uncertain source, terrain and boundary parameters using approved evidence.
-      \item Validate against arrival time, offshore waveform, run-up and inundation observations.
-      \item Extend to defence-class studies, then future FSI, damage modelling and optimisation.
-    \end{enumerate}
-  \end{PosterBox}
-
-  \begin{PosterBox}{Scan / contact}
-    \begin{minipage}[c]{0.27\linewidth}
-      \centering
-      \QRPlaceholder
-    \end{minipage}
-    \hfill
-    \begin{minipage}[c]{0.67\linewidth}
-      \textbf{Scan for report, repository or project page.}\\
-      Short link: \texttt{add-project-link}\\
-      Contact: \texttt{add-institutional-email}\\[2mm]
-      \SmallNote{QR and contact details are placeholders for the final poster export.}
-    \end{minipage}
   \end{PosterBox}
 \end{minipage}
 
-\vspace{9mm}
-\begin{PosterBox}{Evidence roadmap and final figure queue}
-  \begin{minipage}[t]{0.31\linewidth}
-    \textbf{Verification gate stack}
-    \begin{itemize}
-      \item \textbf{G6:} hybrid theory, replay contract and real Kamaishi Local3D acceptance closed.
-      \item \textbf{C1A:} Regional discretisation evidence active; current forcing waveforms not yet qualified.
-      \item \textbf{Local3D convergence:} starts only after Regional forcing is defensible.
-      \item \textbf{Validation:} arrival time, waveform, run-up and inundation comparison remain future work.
-    \end{itemize}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.31\linewidth}
-    \textbf{Final single-panel figure queue}
-    \begin{itemize}
-      \item Tohoku source-to-Kamaishi corridor map.
-      \item Hybrid 2D--3D workflow graphic.
-      \item Regional forcing waveform.
-      \item Convergence or runtime-versus-error summary.
-      \item Local3D OpenFOAM replay visual.
-    \end{itemize}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[t]{0.31\linewidth}
-    \textbf{Interpretation boundary}
-    \begin{itemize}
-      \item Current figures are placeholders unless explicitly replaced by provenance-backed outputs.
-      \item The poster may report implemented framework capability and accepted G6 evidence.
-      \item It must not claim completed calibration, observational validation, FSI or defence performance conclusions.
-    \end{itemize}
-  \end{minipage}
-\end{PosterBox}
+\vspace{3mm}
+
+\noindent
+\begin{minipage}[t]{0.49\textwidth}
+  \vspace{0pt}
+  \begin{PosterBox}{Validation framework}
+    \begin{minipage}[t]{0.48\linewidth}
+      \textbf{Observation targets}
+      \begin{itemize}
+        \item offshore/deep-ocean waveform;
+        \item domain-compatible Kamaishi/offshore observations;
+        \item run-up;
+        \item inundation.
+      \end{itemize}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\linewidth}
+      \textbf{Metrics}
+      \begin{itemize}
+        \item RMSE; MAE; Bias; correlation;
+        \item peak-amplitude error;
+        \item peak-time error.
+      \end{itemize}
+    \end{minipage}
+
+    \vspace{2mm}
+    \Chip{VALIDATION FRAMEWORK ESTABLISHED}\quad
+    \WarmChip{0 DIRECT}\quad
+    \WarmChip{1 PROXY}\quad
+    \WarmChip{28 TARGET ONLY}
+
+    \vspace{2mm}
+    \SmallNote{Primary validation uses no arbitrary time shift or amplitude scaling. Direct collocated waveform validation is not yet complete.}
+  \end{PosterBox}
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.49\textwidth}
+  \vspace{0pt}
+  \begin{PosterBox}{Next steps}
+    \begin{enumerate}
+      \item Improve event/source and terrain fidelity, and refine or extend the validation domain where observation colocation requires it.
+      \item Perform uncalibrated historical comparison, followed by documented calibration and holdout validation.
+      \item Resolve current-generation Local3D VOF replay boundedness before adopting latest regional forcing for impact studies.
+      \item Execute systematic no-defence / defence impact comparisons using agreed loading, overtopping, inundation and transmission metrics.
+      \item Extend toward FSI, structural resilience, impact-response databases and future ML-based optimisation/design.
+    \end{enumerate}
+  \end{PosterBox}
+\end{minipage}
 
 \vfill
-\begin{tcolorbox}[
-  enhanced,
-  colback=PosterSoft,
-  colframe=PosterRule,
-  arc=3mm,
-  boxrule=1pt,
-  left=8mm,
-  right=8mm,
-  top=5mm,
-  bottom=5mm
-]
-  \SmallNote{\textbf{Status note.} This poster does not claim completed observational validation, calibration, full convergence closure, FSI or final defence-performance conclusions. It is a publication-quality baseline poster source for the implemented hybrid framework and current verification status.}
-
-  \vspace{2mm}
-  \PosterReferenceText{\textbf{Selected figure references.} Encyclopaedia Britannica; Japan earthquake and tsunami of 2011; Encyclopaedia Britannica; n.d. \quad NOAA National Centers for Environmental Information; ETOPO 2022 15 Arc-Second Global Relief Model; NOAA/NCEI; 2022. \quad Saito et al.; Dispersion and Nonlinear Effects in the 2011 Tohoku-Oki Earthquake Tsunami; Journal of Geophysical Research: Oceans; 2014. \quad Fujima, Masamura and Goto; Development of the 2D/3D Hybrid Model for Tsunami Numerical Simulation; Coastal Engineering Journal; 2002. \quad Takase et al.; 2D--3D Hybrid Stabilized Finite Element Method for Tsunami Runup Simulations; Computational Mechanics; 2016.}
-\end{tcolorbox}
+\begin{PosterBox}{References}
+  \PosterReferenceText{%
+  Encyclopaedia Britannica; Japan Earthquake and Tsunami of 2011; Encyclopaedia Britannica; n.d. \quad
+  NOAA National Centers for Environmental Information; ETOPO 2022 15 Arc-Second Global Relief Model; NOAA/NCEI; 2022. \quad
+  Fujii et al.; Tsunami Source of the 2011 off the Pacific Coast of Tohoku Earthquake; Earth, Planets and Space; 2011. \quad
+  Mori, Takahashi and The 2011 Tohoku Earthquake Tsunami Joint Survey Group; Nationwide Post Event Survey and Analysis of the 2011 Tohoku Earthquake Tsunami; Coastal Engineering Journal; 2012. \quad
+  Kurganov and Petrova; A Second-Order Well-Balanced Positivity Preserving Central-Upwind Scheme for the Saint-Venant System; Communications in Mathematical Sciences; 2007. \quad
+  Hirt and Nichols; Volume of Fluid (VOF) Method for the Dynamics of Free Boundaries; Journal of Computational Physics; 1981. \quad
+  Menter; Two-Equation Eddy-Viscosity Turbulence Models for Engineering Applications; AIAA Journal; 1994. \quad
+  Fujima, Masamura and Goto; Development of the 2D/3D Hybrid Model for Tsunami Numerical Simulation; Coastal Engineering Journal; 2002. \quad
+  Takase et al.; 2D--3D Hybrid Stabilized Finite Element Method for Tsunami Runup Simulations; Computational Mechanics; 2016. \quad
+  Watanabe et al.; Validation of Tsunami Numerical Simulation Models for an Idealized Coastal Industrial Site; Coastal Engineering Journal; 2022.}
+\end{PosterBox}
 
 \end{document}
