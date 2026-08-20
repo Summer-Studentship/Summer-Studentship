@@ -1,0 +1,152 @@
+% ============================================================================
+% Studentship Final Report — two-page IEEE scaffold
+% Compile from the repository root with:
+%   latexmk -cd -pdf deliverables/final-report/final-report.tex
+% Fallback from this directory:
+%   pdflatex final-report.tex (run twice)
+%
+% IMPORTANT
+% - Do not load geometry or manually change IEEEtran margins/column widths.
+% - The two-page limit should include references unless the supplied brief says
+%   otherwise.
+% - Replace the three placeholder image paths and captions below.
+% - Claims must remain qualified: implemented/demonstrated/accepted, not fully
+%   validated. Observational calibration and validation remain future work.
+% ============================================================================
+
+\documentclass[10pt,conference]{IEEEtran}
+
+\IEEEoverridecommandlockouts
+
+\usepackage[T1]{fontenc}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{siunitx}
+\usepackage{cite}
+\usepackage{booktabs}
+\usepackage{balance}
+
+% Shared deliverable figures are stored in deliverables/figures/.
+\graphicspath{{../figures/}}
+
+% Compiles even before a final figure is present. The placeholder disappears
+% automatically once the named file exists.
+\newcommand{\reportfigure}[3]{%
+  \IfFileExists{#1}{%
+    \includegraphics[width=#2]{#1}%
+  }{%
+    \fbox{%
+      \parbox[c][#3][c]{0.94#2}{%
+        \centering\footnotesize
+        Figure placeholder\\[2pt]
+        \texttt{\detokenize{#1}}%
+      }%
+    }%
+  }%
+}
+
+\title{A One-Way Coupled 2D--3D Framework for Reconstructing the 2011 Tohoku Tsunami}
+
+\author{
+  \IEEEauthorblockN{Rhyen Jivan}
+  \IEEEauthorblockA{MEng Mechanical Engineering\\
+  University College London\\
+  London, United Kingdom}
+  \thanks{Supervised by Dr Lama Hamadeh.}
+}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+% Target: approximately 100--130 words. Include, in order:
+% 1. the multiscale modelling problem;
+% 2. the 2D NLSWE -> one-way replay -> 3D URANS--VOF method;
+% 3. what was implemented and demonstrated at Kamaishi;
+% 4. the principal limitation and what the work establishes.
+\textit{Abstract to be developed.}
+\end{abstract}
+
+\begin{IEEEkeywords}
+tsunami modelling, nonlinear shallow-water equations, URANS--VOF,
+multiscale coupling, 2011 Tohoku tsunami
+\end{IEEEkeywords}
+
+\section{Introduction}
+% Target: approximately 180--230 words.
+% Motivate the need to combine event-scale propagation with local 3D impact
+% physics. State the aim, Kamaishi focus, and the studentship contribution.
+% Avoid a long literature review in a two-page report.
+\textit{Introduction to be developed.}
+
+\section{Methodology}
+% Target: approximately 280--340 words in total.
+% Keep the mathematical detail selective: only the equations and numerical
+% choices needed to explain the information passed between model scales.
+
+\subsection{Regional2D Event Reconstruction}
+% Describe the Tohoku-to-Kamaishi corridor, source/terrain inputs, 2D NLSWE,
+% boundary treatment, and output quantities used for coupling.
+\textit{Regional2D subsection to be developed.}
+
+\subsection{One-Way Replay Coupling and Local3D Model}
+% Describe the coupling export and replay boundary; Local3D incompressible
+% two-phase URANS--VOF model; k--omega SST baseline; no-defence and rigid-
+% barrier cases. Do not imply two-way feedback or FSI.
+\textit{Coupling and Local3D subsection to be developed.}
+
+\begin{figure}[t]
+  \centering
+  \reportfigure{../figures/figure-1.pdf}{\columnwidth}{30mm}
+  \caption{Replace with the final caption for Figure 1.}
+  \label{fig:figure-1}
+\end{figure}
+
+\section{Results and Discussion}
+% Target: approximately 300--380 words.
+% Distinguish clearly between:
+% - implemented: end-to-end source/terrain/Regional2D/coupling/Local3D path;
+% - demonstrated or accepted: G5/G6 checks and Kamaishi replay cases;
+% - incomplete: regional convergence and forcing-waveform qualification;
+% - future validation: arrival time, waveform, run-up, and inundation.
+\textit{Results and discussion to be developed.}
+
+\begin{figure}[t]
+  \centering
+  \reportfigure{../figures/figure-2.pdf}{\columnwidth}{28mm}
+  \caption{Replace with the final caption for Figure 2.}
+  \label{fig:figure-2}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \reportfigure{../figures/figure-3.pdf}{\columnwidth}{28mm}
+  \caption{Replace with the final caption for Figure 3.}
+  \label{fig:figure-3}
+\end{figure}
+
+\section{Conclusion and Future Work}
+% Target: approximately 100--140 words.
+% State what the framework establishes, the present evidence boundary, and the
+% next validation/calibration steps. FSI, damage, and defence optimisation are
+% future extensions rather than current outcomes.
+\textit{Conclusion and future work to be developed.}
+
+% Uncomment this block only if acknowledgements are required by the brief.
+% \section*{Acknowledgment}
+% The author thanks ...
+
+\balance
+
+% Reuse the repository-wide, quality-controlled citation bank. The document
+% also compiles without it while the scaffold is being populated.
+\IfFileExists{../references/project-citation-bank.bib}{%
+  \bibliographystyle{IEEEtran}
+  \bibliography{../references/project-citation-bank}
+}{%
+  % No bibliography is printed until references.bib is added.
+}
+
+\end{document}
