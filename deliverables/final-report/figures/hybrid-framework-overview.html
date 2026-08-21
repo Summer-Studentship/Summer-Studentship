@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Framework Overview</title>
+  <style>
+    @page { size: 1800px 1080px; margin: 0; }
+
+    :root {
+      --ink: #172433;
+      --navy: #214671;
+      --burgundy: #963b59;
+      --muted: #536579;
+      --line: #d4dce5;
+      --soft: #f4f7fa;
+      --future: #aebccc;
+      --paper: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 1800px;
+      height: 1080px;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Times New Roman", "Nimbus Roman No9 L", "Liberation Serif", Times, serif;
+    }
+
+    main {
+      width: 100%;
+      height: 100%;
+      padding: 42px 54px 46px;
+    }
+
+    .hero {
+      height: 235px;
+      display: grid;
+      grid-template-columns: 1.85fr 1fr;
+      align-items: end;
+      gap: 58px;
+      padding-bottom: 28px;
+      border-bottom: 5px solid var(--navy);
+    }
+
+    .kicker,
+    .section-label {
+      color: var(--navy);
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 7px;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 1110px;
+      margin: 12px 0 0;
+      font-size: 68px;
+      line-height: 0.94;
+      letter-spacing: -1.4px;
+    }
+
+    .hero-summary {
+      margin: 0 0 5px;
+      color: var(--muted);
+      font-size: 27px;
+      line-height: 1.25;
+      text-align: right;
+    }
+
+    .roadmap {
+      position: relative;
+      height: 285px;
+      padding-top: 30px;
+    }
+
+    .track {
+      position: absolute;
+      top: 99px;
+      left: 8.5%;
+      right: 8.5%;
+      height: 6px;
+      background: linear-gradient(
+        to right,
+        var(--navy) 0%,
+        var(--navy) 44%,
+        var(--burgundy) 44%,
+        var(--burgundy) 57%,
+        #c6ced8 57%,
+        #c6ced8 100%
+      );
+    }
+
+    .stages {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      padding-top: 41px;
+    }
+
+    .stage {
+      display: grid;
+      justify-items: center;
+      text-align: center;
+    }
+
+    .node {
+      width: 31px;
+      height: 31px;
+      margin-bottom: 17px;
+      border: 7px solid var(--navy);
+      border-radius: 50%;
+      background: var(--navy);
+      box-shadow: 0 0 0 9px #e3e8ee;
+    }
+
+    .stage.transfer .node {
+      width: 42px;
+      height: 42px;
+      margin-top: -6px;
+      margin-bottom: 12px;
+      border: 8px solid var(--burgundy);
+      background: #fff;
+      box-shadow: 0 0 0 10px #f1e4e8;
+    }
+
+    .stage.evidence .node {
+      border: 6px dashed var(--burgundy);
+      background: #fff;
+      box-shadow: none;
+    }
+
+    .stage-title {
+      font-size: 27px;
+      font-weight: 700;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+    }
+
+    .stage-detail {
+      min-height: 50px;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 22px;
+      line-height: 1.08;
+    }
+
+    .status {
+      min-width: 210px;
+      margin-top: 7px;
+      padding: 4px 17px 3px;
+      border-radius: 999px;
+      background: #e6ebf1;
+      color: var(--navy);
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+
+    .transfer .status {
+      min-width: 245px;
+      background: var(--burgundy);
+      color: #fff;
+      font-size: 16px;
+      letter-spacing: 1.5px;
+    }
+
+    .evidence .status {
+      min-width: 245px;
+      border: 2px solid #c99aa9;
+      background: #fff;
+      color: var(--burgundy);
+    }
+
+    .architecture {
+      height: 475px;
+    }
+
+    .cards {
+      height: 434px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, 1fr);
+      gap: 18px;
+      margin-top: 19px;
+    }
+
+    .card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 82px 1fr;
+      gap: 10px;
+      padding: 21px 24px 19px 18px;
+      border: 2px solid var(--line);
+      border-left: 8px solid var(--navy);
+      background: linear-gradient(135deg, #fff 0%, var(--soft) 100%);
+    }
+
+    .card.transfer,
+    .card.local { border-left-color: var(--burgundy); }
+
+    .card.boundary {
+      border-left-color: var(--future);
+      background: linear-gradient(135deg, #fff 0%, #f5f1f3 100%);
+    }
+
+    .number {
+      color: #d3dbe5;
+      font-size: 65px;
+      font-weight: 700;
+      line-height: 0.9;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1;
+      letter-spacing: 0.7px;
+      text-transform: uppercase;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 6px;
+    }
+
+    li {
+      position: relative;
+      padding-left: 23px;
+      color: var(--muted);
+      font-size: 21px;
+      line-height: 1.08;
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.52em;
+      width: 14px;
+      height: 2px;
+      background: var(--navy);
+    }
+
+    .transfer li::before,
+    .local li::before { background: var(--burgundy); }
+
+    .boundary li::before { background: var(--future); }
+  </style>
+</head>
+<body>
+  <main>
+    <header class="hero">
+      <div>
+        <div class="kicker">Hybrid model architecture</div>
+        <h1>From regional reconstruction to local impact replay</h1>
+      </div>
+      <p class="hero-summary">
+        The studentship framework transfers a resolved nearshore state from
+        Regional2D into a bounded Local3D replay without reverse feedback.
+      </p>
+    </header>
+
+    <section class="roadmap" aria-label="One-way hybrid model progression">
+      <div class="section-label">Model progression</div>
+      <div class="track"></div>
+      <div class="stages">
+        <article class="stage">
+          <div class="node"></div>
+          <div class="stage-title">Source</div>
+          <div class="stage-detail">Finite-fault and<br>terrain inputs</div>
+          <div class="status">Implemented</div>
+        </article>
+        <article class="stage">
+          <div class="node"></div>
+          <div class="stage-title">Propagate</div>
+          <div class="stage-detail">Regional2D<br>NLSWE corridor</div>
+          <div class="status">Implemented</div>
+        </article>
+        <article class="stage transfer">
+          <div class="node"></div>
+          <div class="stage-title">Transfer</div>
+          <div class="stage-detail">One-way<br>2D to 3D export</div>
+          <div class="status">Core interface</div>
+        </article>
+        <article class="stage">
+          <div class="node"></div>
+          <div class="stage-title">Replay</div>
+          <div class="stage-detail">Local3D<br>URANS-VOF</div>
+          <div class="status">Demonstrated</div>
+        </article>
+        <article class="stage evidence">
+          <div class="node"></div>
+          <div class="stage-title">Assess</div>
+          <div class="stage-detail">Fields, loads<br>and diagnostics</div>
+          <div class="status">Evidence outputs</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="architecture" aria-label="Hybrid framework work packages">
+      <div class="section-label">Framework definition</div>
+      <div class="cards">
+        <article class="card">
+          <div class="number">01</div>
+          <div>
+            <h2>Source and terrain</h2>
+            <ul>
+              <li>Finite-fault coseismic displacement, Δb(x,y)</li>
+              <li>ETOPO bathymetry and topography, b(x,y)</li>
+              <li>Source-to-Kamaishi regional corridor</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="number">02</div>
+          <div>
+            <h2>Regional2D propagation</h2>
+            <ul>
+              <li>Finite-volume nonlinear shallow-water model</li>
+              <li>Conserved state [h, qₓ, qᵧ]</li>
+              <li>Event-scale source-to-coast propagation</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card transfer">
+          <div class="number">03</div>
+          <div>
+            <h2>One-way scale transfer</h2>
+            <ul>
+              <li>Selected wet nearshore interface</li>
+              <li>η(t), h(t) and u(t) forcing histories</li>
+              <li>Regional 245-545 s mapped to local 0-300 s</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card local">
+          <div class="number">04</div>
+          <div>
+            <h2>Local3D replay</h2>
+            <ul>
+              <li>Incompressible two-phase URANS-VOF</li>
+              <li>k-ω SST turbulence baseline</li>
+              <li>No-defence and rigid simple-barrier cases</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="number">05</div>
+          <div>
+            <h2>Evidence outputs</h2>
+            <ul>
+              <li>Velocity U, pressure p and phase fraction α</li>
+              <li>Loads F and M, probes and y⁺ diagnostics</li>
+              <li>Reproducible run and field evidence</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card boundary">
+          <div class="number">06</div>
+          <div>
+            <h2>Baseline boundary</h2>
+            <ul>
+              <li>No Local3D feedback to Regional2D</li>
+              <li>Rigid geometry; no FSI or damage evolution</li>
+              <li>Observation calibration remains future work</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
