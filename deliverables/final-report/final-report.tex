@@ -13,7 +13,7 @@
 %   validated. Observational calibration and validation remain future work.
 % ============================================================================
 
-\documentclass[10pt,conference]{IEEEtran}
+\documentclass[10pt,conference,a4paper]{IEEEtran}
 
 \IEEEoverridecommandlockouts
 
@@ -26,6 +26,16 @@
 \usepackage{url}
 \usepackage{booktabs}
 \usepackage{balance}
+% Keep hyperlinks active while preserving IEEE's print appearance.
+\usepackage[hidelinks,unicode]{hyperref}
+
+\hypersetup{
+  pdftitle={A Coupled 2D NLSWE Regional-Propagation and 3D URANS-VOF Coastal-Impact Framework for Reconstructing the 2011 Tohoku Tsunami},
+  pdfauthor={Rhyen Jivan},
+  pdfsubject={One-way coupled regional tsunami propagation and local coastal-impact modelling},
+  pdfkeywords={tsunami modelling, nonlinear shallow-water equations, URANS-VOF, multiscale coupling, 2011 Tohoku tsunami}
+}
+\urlstyle{same}
 
 % Report-specific source HTML and rendered PNG figures are stored together.
 \graphicspath{{figures/}}
@@ -91,11 +101,11 @@ NLSWE propagation to Local3D URANS--VOF replay, following the established
 principle of hybrid tsunami modelling
 \cite{fujima2002hybrid,takase2016hybrid,qin2018comparison}. Its contribution is
 an implemented source--terrain--propagation--transfer--impact workflow with
-explicit evidence gates. Appendix~\ref{app:planning} compares the original
-proposal pathway with the updated studentship plan. Figure~\ref{fig:framework}
-presents the resulting model architecture; current evidence establishes
-implementation and verification closure, while observational calibration and
-predictive validation remain future work.
+explicit evidence gates. Appendix~\ref{app:planning} preserves the original
+poster workflow and project roadmap. Figure~\ref{fig:framework} presents the
+resulting model architecture in the same visual language; current evidence
+establishes implementation and verification closure, while observational
+calibration and predictive validation remain future work.
 
 \begin{figure}[t]
   \centering
@@ -148,22 +158,21 @@ predictive validation remain future work.
 \textit{Conclusion and future work to be developed.}
 
 \appendices
-\section{Original and Updated Project Plan}
+\section{Original Studentship Workflow}
 \label{app:planning}
 
-The proposal anticipated a complete event simulation, iterative
-machine-learning-guided defence optimisation and subsequent structural
-assessment. The updated pathway separated implementation closure from later
-calibration, convergence, FSI and optimisation activities, as summarised in
-Fig.~\ref{fig:planning}.
+The original poster workflow is reproduced unchanged in
+Fig.~\ref{fig:planning}. It records the planned progression from research and
+event reconstruction through Regional2D propagation, one-way hybrid replay,
+verification, validation and later defence-system extensions. The progress
+marker reflects the project state at the time of poster production.
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=\textwidth]{planning-overview.png}
-  \caption{Comparison of the original proposal pathway with the updated
-  studentship plan. The revised sequence prioritised an implemented and
-  evidenced one-way Regional2D--Local3D workflow; observational calibration,
-  formal convergence, FSI and optimisation remain subsequent work.}
+  \includegraphics[width=\textwidth]{planning-workflow-original.png}
+  \caption{Original studentship planning and architecture workflow, retained
+  from the project poster. The roadmap distinguishes implemented regional and
+  hybrid stages from verification, validation and later defence-system work.}
   \label{fig:planning}
 \end{figure*}
 

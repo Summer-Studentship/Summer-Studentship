@@ -36,7 +36,6 @@ render_figure() {
     "file://$source_path"
 }
 
-render_figure "hybrid-framework-overview" 1800 620
-render_figure "planning-overview" 1800 1120
+render_figure "hybrid-framework-overview" 1800 1080
 
-printf '%s\n' "Rendered final-report figure PNGs."
+printf '%s\n' "Rendered editable final-report figure PNGs."
