@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hybrid Framework Overview</title>
+  <style>
+    :root {
+      --ink: #24113f;
+      --accent: #9b2cff;
+      --muted: #6c6476;
+      --line: #d9d1e2;
+      --source: #f2edf7;
+      --regional: #eaf5fb;
+      --transfer: #f2e5ff;
+      --local: #eaf7f3;
+      --evidence: #fff3e8;
+      --paper: #ffffff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      width: 1800px;
+      height: 620px;
+      margin: 0;
+      overflow: hidden;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Times New Roman", "Nimbus Roman No9 L", "Liberation Serif", Times, serif;
+    }
+
+    main {
+      width: 100%;
+      height: 100%;
+      padding: 32px 42px 38px;
+    }
+
+    .header {
+      display: flex;
+      align-items: baseline;
+      gap: 30px;
+      height: 86px;
+      border-top: 8px solid var(--ink);
+      padding-top: 14px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 39px;
+      line-height: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.2px;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--muted);
+      font-size: 22px;
+      font-weight: 600;
+    }
+
+    .flow {
+      height: 460px;
+      display: grid;
+      grid-template-columns: 1fr 72px 1fr 72px 1fr 72px 1fr 72px 1fr;
+      align-items: stretch;
+    }
+
+    .node {
+      position: relative;
+      padding: 25px 22px 22px;
+      border: 2px solid var(--line);
+      border-top: 10px solid var(--ink);
+      background: var(--source);
+    }
+
+    .node.regional { background: var(--regional); }
+    .node.transfer { background: var(--transfer); border-top-color: var(--accent); }
+    .node.local { background: var(--local); }
+    .node.evidence { background: var(--evidence); }
+
+    .tag {
+      margin-bottom: 13px;
+      color: var(--accent);
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: 1.3px;
+      text-transform: uppercase;
+    }
+
+    h2 {
+      min-height: 64px;
+      margin: 0 0 18px;
+      font-size: 31px;
+      line-height: 1.08;
+      text-transform: uppercase;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 13px;
+    }
+
+    li {
+      position: relative;
+      padding-left: 18px;
+      color: #312b36;
+      font-size: 27px;
+      line-height: 1.2;
+    }
+
+    li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.45em;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .arrow {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .arrow::before {
+      content: "";
+      width: 48px;
+      height: 4px;
+      background: var(--ink);
+    }
+
+    .arrow::after {
+      content: "";
+      width: 0;
+      height: 0;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      border-left: 15px solid var(--ink);
+    }
+
+  </style>
+</head>
+<body>
+  <main>
+    <div class="header">
+      <h1>Hybrid framework overview</h1>
+      <div class="subtitle">Event-scale propagation feeds local three-dimensional impact replay</div>
+    </div>
+
+    <section class="flow" aria-label="One-way coupled tsunami modelling workflow">
+      <article class="node">
+        <div class="tag">Inputs</div>
+        <h2>Source &amp; Terrain</h2>
+        <ul>
+          <li>Finite-fault Δb(x,y)</li>
+          <li>ETOPO terrain b(x,y)</li>
+          <li>Kamaishi corridor</li>
+        </ul>
+      </article>
+
+      <div class="arrow"></div>
+
+      <article class="node regional">
+        <div class="tag">Regional scale</div>
+        <h2>Regional2D NLSWE</h2>
+        <ul>
+          <li>Finite-volume NLSWE</li>
+          <li>η, h, qₓ and qᵧ</li>
+          <li>Event-scale propagation</li>
+        </ul>
+      </article>
+
+      <div class="arrow"></div>
+
+      <article class="node transfer">
+        <div class="tag">Scale transfer</div>
+        <h2>One-Way Interface</h2>
+        <ul>
+          <li>Nearshore wet interface</li>
+          <li>η(t), h(t) and u(t)</li>
+          <li>245–545 s → 0–300 s</li>
+        </ul>
+      </article>
+
+      <div class="arrow"></div>
+
+      <article class="node local">
+        <div class="tag">Local scale</div>
+        <h2>Local3D URANS–VOF</h2>
+        <ul>
+          <li>URANS–VOF flow</li>
+          <li>k–ω SST baseline</li>
+          <li>No-defence / rigid barrier</li>
+        </ul>
+      </article>
+
+      <div class="arrow"></div>
+
+      <article class="node evidence">
+        <div class="tag">Outputs</div>
+        <h2>Evidence &amp; Assessment</h2>
+        <ul>
+          <li>U, p and α fields</li>
+          <li>F, M, probes and y⁺</li>
+          <li>Evidence record</li>
+        </ul>
+      </article>
+    </section>
+  </main>
+</body>
+</html>
