@@ -26,3 +26,6 @@ Dockerfile text eol=lf
 *.gif binary
 *.xlsx binary
 *.zip binary
+
+# Preserve the approved self-contained poster HTML byte-for-byte.
+deliverables/poster/poster.html -whitespace
